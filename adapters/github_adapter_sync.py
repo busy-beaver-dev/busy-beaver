@@ -5,6 +5,8 @@ from typing import Any, Dict, List, NamedTuple, Union
 
 import requests
 
+# from .utilities import parse_header_linksa
+
 BASE_URL = "https://api.github.com"
 USER_AGENT = "BusyBeaver"
 
@@ -35,18 +37,6 @@ class GitHubAdapterSync:
     ################
     # Helper Methods
     ################
-        # extracted_url = link.split('<')[1].split('>')[0]
-        # clearned_url = dirty_url.split("<")[1][:-1]
-
-        # query_string = url_details.query
-        # params = urllib.parse.parse_qs(query_string)
-        # return int(params['page'][0])
-
-    # def _parse_link_header(links: str) -> links:
-
-    #     for link in links.split(", "):
-    #         link_type = link.split("; rel=")
-
     def _get_request(self, url: str) -> Response:
         resp = self.session.get(url)
         if resp.status_code != HTTPStatus.OK:
@@ -67,10 +57,13 @@ class GitHubAdapterSync:
 
     def user_events(self, user: str) -> Response:
         url = BASE_URL + f"/users/{user}/events/public"
-        return self._get_request(url)
+        headers, body = self._get_request(url)
 
 
 if __name__ == "__main__":
     oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")
     client = GitHubAdapterSync(oauth_token)
-    sitemap = client.sitemap()
+
+    my_events = client.user_events("alysivji")
+    headers = my_events.headers
+    body = my_events.json
