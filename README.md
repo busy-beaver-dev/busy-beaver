@@ -6,6 +6,16 @@ Creating synchronous and asynchronous adapters to practice my programming skills
 
 `export GITHUB_OAUTH_TOKEN="[token-here]"`
 
+## Todo
+
+- [ ] pagination
+  - [ ] fetch all repos
+  - [ ] fetch all events in last 24 hours
+  - [ ] fetch all stars
+- [ ] ETag, need to set up DB for this
+  - [ ] mark events that are new
+- [ ] add test with vcr.py
+
 ## Scratchpad
 
 ```python

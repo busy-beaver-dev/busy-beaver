@@ -1,6 +1,7 @@
 from http import HTTPStatus
 import logging
 import os
+from typing import Any, Dict, List, NamedTuple, Union
 
 import requests
 
@@ -8,6 +9,11 @@ BASE_URL = "https://api.github.com"
 USER_AGENT = "BusyBeaver"
 
 logger = logging.getLogger(__name__)
+
+
+class Response(NamedTuple):
+    headers: Dict[str, str]
+    json: Union[List[Dict[str, Any]], Dict[str, Any]]
 
 
 class GitHubAdapter:
@@ -23,27 +29,33 @@ class GitHubAdapter:
         }
         self.session = s
 
-    def _get_request(self, url):
+    def __repr__(self):
+        return "GitHubAdapter_sync"
+
+    ################
+    # Helper Methods
+    ################
+    def _get_request(self, url: str) -> Response:
         resp = self.session.get(url)
         if resp.status_code != HTTPStatus.OK:
             logger.error(f"Recieved {resp.status_code}")
             resp.raise_for_status()
-        return resp
+        return Response(headers=resp.headers, json=resp.json())
 
+    ############
+    # Public API
+    ############
     def sitemap(self):
         url = BASE_URL + "/"
         return self._get_request(url)
 
-    def public_events(self):
+    def all_public_events(self) -> Response:
         url = BASE_URL + "/events"
         return self._get_request(url)
 
-    def events(self, user):
+    def user_events(self, user: str) -> Response:
         url = BASE_URL + f"/users/{user}/events/public"
         return self._get_request(url)
-
-    def __repr__(self):
-        return "GitHubAdapter_sync"
 
 
 if __name__ == "__main__":
