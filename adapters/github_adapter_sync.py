@@ -7,6 +7,7 @@ import requests
 
 BASE_URL = "https://api.github.com"
 USER_AGENT = "BusyBeaver"
+'<https://api.github.com/user/4369343/events/public?page=2>; rel="next"'
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +17,7 @@ class Response(NamedTuple):
     json: Union[List[Dict[str, Any]], Dict[str, Any]]
 
 
-class GitHubAdapter:
+class GitHubAdapterSync:
     """Synchronous version using requests"""
 
     def __init__(self, oauth_token):
@@ -35,6 +36,18 @@ class GitHubAdapter:
     ################
     # Helper Methods
     ################
+        # extracted_url = link.split('<')[1].split('>')[0]
+        # clearned_url = dirty_url.split("<")[1][:-1]
+
+        # query_string = url_details.query
+        # params = urllib.parse.parse_qs(query_string)
+        # return int(params['page'][0])
+
+    # def _parse_link_header(links: str) -> links:
+
+    #     for link in links.split(", "):
+    #         link_type = link.split("; rel=")
+
     def _get_request(self, url: str) -> Response:
         resp = self.session.get(url)
         if resp.status_code != HTTPStatus.OK:
@@ -61,3 +74,4 @@ class GitHubAdapter:
 if __name__ == "__main__":
     oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")
     client = GitHubAdapter(oauth_token)
+    sitemap = client.sitemap()
