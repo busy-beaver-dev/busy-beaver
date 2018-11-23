@@ -1,12 +1,14 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 from http import HTTPStatus
 import logging
 import os
 from typing import Any, Dict, List, NamedTuple, Union
 
+from dateutil.parser import parse as dateutil_parse
+import pytz
 import requests
 
-from .utilities import create_github_navigation_panel
+from adapters.utilities import create_github_navigation_panel, page_from_url
 
 BASE_URL = "https://api.github.com"
 USER_AGENT = "BusyBeaver"
@@ -39,8 +41,8 @@ class GitHubAdapterSync:
     ################
     # Helper Methods
     ################
-    def _get_request(self, url: str) -> Response:
-        resp = self.session.get(url)
+    def _get_request(self, url: str, params: dict) -> Response:
+        resp = self.session.get(url, params=params)
         if resp.status_code != HTTPStatus.OK:
             logger.error(f"Recieved {resp.status_code}")
             resp.raise_for_status()
@@ -59,18 +61,32 @@ class GitHubAdapterSync:
 
     def latest_user_events(self, user: str, period: timedelta) -> Response:
         url = BASE_URL + f"/users/{user}/events/public"
-        page = 1
-        complete = False
 
         all_events = []
-        while not complete:
-            headers, resp_json = self._get_request(url)
+        page_num = 1
+
+        now = pytz.utc.localize(datetime.utcnow())
+        boundary_dt = now + period
+        while True:
+            headers, resp_json = self._get_request(url, {"page": page_num})
+            all_events.extend(resp_json)
             nav = create_github_navigation_panel(headers["Link"])
 
-            # TODO scan multiple pages, if needed
+            earliest_event_in_batch = dateutil_parse(resp_json[-1]["created_at"])
+            fetch_next_page = (
+                page_num < page_from_url(nav.last_link)
+                and boundary_dt <= earliest_event_in_batch
+            )
+            if not fetch_next_page:
+                break
 
-            all_events.extend(resp_json)
-            complete = True
+            page_num = page_num + 1
+
+        while True:
+            if dateutil_parse(all_events[-1]["created_at"]) >= boundary_dt:
+                break
+            all_events.pop()
+
         return all_events
 
 
@@ -78,6 +94,4 @@ if __name__ == "__main__":
     oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")
     client = GitHubAdapterSync(oauth_token)
 
-    my_events = client.user_events("alysivji")
-    headers = my_events.headers
-    body = my_events.json
+    my_events = client.latest_user_events("alysivji", period=timedelta(days=-1))

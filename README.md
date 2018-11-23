@@ -9,8 +9,9 @@ Creating synchronous and asynchronous adapters to practice my programming skills
 ## Todo
 
 - [ ] pagination
+  - [x] fetch all events in last 24 hours
+    - [ ] refactor and add tests
   - [ ] fetch all repos
-  - [ ] fetch all events in last 24 hours
   - [ ] fetch all stars
 - [ ] ETag, need to set up DB for this
   - [ ] mark events that are new
