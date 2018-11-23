@@ -1,6 +1,6 @@
 import pytest
 
-from adapters.utilities import create_github_navigation_panel, APINav
+from adapters.utilities import create_github_navigation_panel, APINav, page_from_url
 
 
 @pytest.mark.unit
@@ -35,3 +35,16 @@ def test_parsing_header_links_empty():
     # Assert
     with pytest.raises(ValueError):
         create_github_navigation_panel(link_header)
+
+
+@pytest.mark.parametrize("url, expected_page_num", [
+    ("https://api.github.com/user/4369343/events/public?page=1", 1),
+    ("https://api.github.com/user/4369343/events/public?page=3", 3),
+    ("https://api.github.com/user/4369343/events/public?page=10", 10),
+])
+def test_page_from_url(url, expected_page_num):
+    # Act
+    result = page_from_url(url)
+
+    # Assert
+    assert result == expected_page_num

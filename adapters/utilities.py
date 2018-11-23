@@ -1,4 +1,5 @@
 from typing import NamedTuple, Tuple
+import urllib
 
 
 class APINav(NamedTuple):
@@ -42,3 +43,10 @@ def _all_links(links: str) -> Tuple[str, str]:
         cleaned_url = dirty_url.split("<")[1][:-1]
         cleaned_type = dirty_type.split('="')[1][:-1]
         yield GitHubLink(cleaned_type, cleaned_url)
+
+
+def page_from_url(url) -> int:
+    url_details = urllib.parse.urlparse(url)
+    query_string = url_details.query
+    params = urllib.parse.parse_qs(query_string)
+    return int(params['page'][0])

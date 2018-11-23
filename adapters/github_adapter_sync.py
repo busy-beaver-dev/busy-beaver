@@ -1,3 +1,4 @@
+from datetime import timedelta
 from http import HTTPStatus
 import logging
 import os
@@ -5,7 +6,7 @@ from typing import Any, Dict, List, NamedTuple, Union
 
 import requests
 
-# from .utilities import parse_header_linksa
+from .utilities import create_github_navigation_panel
 
 BASE_URL = "https://api.github.com"
 USER_AGENT = "BusyBeaver"
@@ -30,6 +31,7 @@ class GitHubAdapterSync:
             "User-Agent": f"{USER_AGENT}_sync",
         }
         self.session = s
+        self.nav = None
 
     def __repr__(self):
         return "GitHubAdapter_sync"
@@ -55,9 +57,21 @@ class GitHubAdapterSync:
         url = BASE_URL + "/events"
         return self._get_request(url)
 
-    def user_events(self, user: str) -> Response:
+    def latest_user_events(self, user: str, period: timedelta) -> Response:
         url = BASE_URL + f"/users/{user}/events/public"
-        headers, body = self._get_request(url)
+        page = 1
+        complete = False
+
+        all_events = []
+        while not complete:
+            headers, resp_json = self._get_request(url)
+            nav = create_github_navigation_panel(headers["Link"])
+
+            # TODO scan multiple pages, if needed
+
+            all_events.extend(resp_json)
+            complete = True
+        return all_events
 
 
 if __name__ == "__main__":
