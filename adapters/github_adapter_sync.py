@@ -7,7 +7,6 @@ import requests
 
 BASE_URL = "https://api.github.com"
 USER_AGENT = "BusyBeaver"
-'<https://api.github.com/user/4369343/events/public?page=2>; rel="next"'
 
 logger = logging.getLogger(__name__)
 
@@ -73,5 +72,5 @@ class GitHubAdapterSync:
 
 if __name__ == "__main__":
     oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")
-    client = GitHubAdapter(oauth_token)
+    client = GitHubAdapterSync(oauth_token)
     sitemap = client.sitemap()
