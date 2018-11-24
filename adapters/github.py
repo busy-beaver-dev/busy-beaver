@@ -85,8 +85,12 @@ class GitHubAdapter:
     def _get_all_items(self, url: str, *, max_pages: int = 5) -> List[Dict]:
         resp = self._head(url)
         headers = resp.headers
-        nav = create_github_navigation_panel(headers["Link"])
-        last_page = page_from_url(nav.last_link)
+
+        try:
+            nav = create_github_navigation_panel(headers["Link"])
+            last_page = page_from_url(nav.last_link)
+        except KeyError:
+            last_page = 1
 
         all_items = []
         for page_num in range(1, min(last_page, max_pages) + 1):
