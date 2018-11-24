@@ -1,3 +1,4 @@
+from datetime import datetime
 from http import HTTPStatus
 import logging
 import os
@@ -55,14 +56,15 @@ class GitHubAdapterSync:
         return Response(headers=resp.headers, json=None)
 
     def _get(self, url: str, params: dict) -> Response:
-        combined_params = self.params.copy().update(params)
+        combined_params = self.params.copy()
+        combined_params.update(params)
         resp = self._request("get", url, params=combined_params)
         if resp.status_code != HTTPStatus.OK:
             logger.error(f"Recieved {resp.status_code}")
             resp.raise_for_status()
         return Response(headers=resp.headers, json=resp.json())
 
-    def _get_items_after_timestamp(self, url, *, timestamp):
+    def _get_items_after_timestamp(self, url: str, *, timestamp: datetime) -> List[Dict]:
         """Keep fetching until we have captured the timestamp or are on the last page"""
         all_items = []
         page_num = 1
@@ -82,6 +84,19 @@ class GitHubAdapterSync:
         filtered_items = filter_items_before(timestamp=timestamp, items=all_items)
         return filtered_items
 
+    def _get_all_items(self, url: str, *, max_pages: int = 5) -> List[Dict]:
+        resp = self._head(url)
+        headers = resp.headers
+        nav = create_github_navigation_panel(headers["Link"])
+        last_page = page_from_url(nav.last_link)
+
+        all_items = []
+        for page_num in range(1, min(last_page, max_pages) + 1):
+            headers, resp_json = self._get(url, params={"page": page_num})
+            all_items.extend(resp_json)
+
+        return all_items
+
     ############
     # Public API
     ############
@@ -95,17 +110,7 @@ class GitHubAdapterSync:
 
     def all_user_stars(self, user: str, max_pages=10):
         url = BASE_URL + f"/users/{user}/starred"
-
-        resp = self._head(url)
-        headers = resp.headers
-        nav = create_github_navigation_panel(headers["Link"])
-        last_page = page_from_url(nav.last_link)
-
-        all_stars = []
-        for page_num in range(1, min(last_page, max_pages) + 1):
-            headers, resp_json = self._get(url, params={"page": page_num})
-            all_stars.extend(resp_json)
-
+        all_stars = self._get_all_items(url)
         return all_stars
 
     def user_activity_after(self, user: str, timestamp) -> List[Dict]:
@@ -122,4 +127,3 @@ if __name__ == "__main__":
     from adapters.utilities import subtract_timedelta
 
     boundary_dt = subtract_timedelta(timedelta(days=1))
-    x = client.user_activity_after("alysivji", timestamp=boundary_dt)
