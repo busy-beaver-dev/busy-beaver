@@ -61,11 +61,12 @@ def subtract_timedelta(period: timedelta):
 
 
 def filter_items_before(timestamp: datetime, items: list):
-    """If event happened before timestamp, discard"""
-    remove_item = [date_parse(item["created_at"]) < timestamp for item in items]
+    """If event happened after timestamp, keep it"""
+    keep_item = [date_parse(item["created_at"]) > timestamp for item in items]
 
     filtered_items = items[:]
-    for _ in range(sum(remove_item)):
+    items_to_pop = len(items) - sum(keep_item)
+    for _ in range(items_to_pop):
         filtered_items.pop()
 
     return filtered_items

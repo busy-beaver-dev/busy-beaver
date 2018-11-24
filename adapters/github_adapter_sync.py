@@ -60,6 +60,7 @@ class GitHubAdapterSync:
         return Response(headers=resp.headers, json=resp.json())
 
     def _get_items_after_timestamp(self, url, *, timestamp):
+        """Keep fetching until we have captured the timestamp or are on the last page"""
         all_items = []
         page_num = 1
         while True:
@@ -69,12 +70,14 @@ class GitHubAdapterSync:
             last_page = page_from_url(nav.last_link)
 
             min_batch_timestamp = date_parse(resp_json[-1]["created_at"])
-            continue_fetching = timestamp <= min_batch_timestamp and page_num < last_page
-            if not continue_fetching:
+            keep_fetching = timestamp <= min_batch_timestamp and page_num < last_page
+            if not keep_fetching:
                 break
 
             page_num = page_num + 1
-        return all_items
+
+        filtered_items = filter_items_before(timestamp=timestamp, items=all_items)
+        return filtered_items
 
     ############
     # Public API
@@ -105,8 +108,7 @@ class GitHubAdapterSync:
     def user_activity_after(self, user: str, timestamp) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/events/public"
         user_events = self._get_items_after_timestamp(url, timestamp=timestamp)
-        filtered_user_events = filter_items_before(timestamp=timestamp, items=user_events)
-        return filtered_user_events
+        return user_events
 
 
 if __name__ == "__main__":
@@ -115,5 +117,6 @@ if __name__ == "__main__":
 
     from datetime import timedelta
     from adapters.utilities import subtract_timedelta
+
     boundary_dt = subtract_timedelta(timedelta(days=1))
     x = client.user_activity_after("alysivji", timestamp=boundary_dt)
