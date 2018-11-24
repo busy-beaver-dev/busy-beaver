@@ -41,6 +41,13 @@ class GitHubAdapterSync:
     ################
     # Helper Methods
     ################
+    def _head_request(self, url: str) -> Response:
+        resp = self.session.head(url)
+        if resp.status_code != HTTPStatus.OK:
+            logger.error(f"Recieved {resp.status_code}")
+            resp.raise_for_status()
+        return Response(headers=resp.headers, json=None)
+
     def _get_request(self, url: str, params: dict) -> Response:
         resp = self.session.get(url, params=params)
         if resp.status_code != HTTPStatus.OK:
@@ -59,7 +66,22 @@ class GitHubAdapterSync:
         url = BASE_URL + "/events"
         return self._get_request(url)
 
-    def latest_user_events(self, user: str, period: timedelta) -> Response:
+    def all_user_stars(self, user: str, max_pages=10):
+        url = BASE_URL + f"/users/{user}/starred"
+
+        resp = self._head_request(url)
+        headers = resp.headers
+        nav = create_github_navigation_panel(headers["Link"])
+        last_page = page_from_url(nav.last_link)
+
+        all_stars = []
+        for page_num in range(1, min(last_page, max_pages) + 1):
+            headers, resp_json = self._get_request(url, {"page": page_num})
+            all_stars.extend(resp_json)
+
+        return all_stars
+
+    def latest_user_events(self, user: str, period: timedelta) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/events/public"
 
         all_events = []
