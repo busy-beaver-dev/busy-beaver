@@ -44,16 +44,19 @@ class GitHubAdapterSync:
     ################
     # Helper Methods
     ################
-    def _head_request(self, url: str) -> Response:
-        resp = self.session.head(url)
+    def _request(self, method: str, url: str, **kwargs) -> requests.Response:
+        return self.session.request(method, url, **kwargs)
+
+    def _head(self, url: str) -> Response:
+        resp = self._request("head", url)
         if resp.status_code != HTTPStatus.OK:
             logger.error(f"Recieved {resp.status_code}")
             resp.raise_for_status()
         return Response(headers=resp.headers, json=None)
 
-    def _get_request(self, url: str, params: dict) -> Response:
+    def _get(self, url: str, params: dict) -> Response:
         combined_params = self.params.copy().update(params)
-        resp = self.session.get(url, params=combined_params)
+        resp = self._request("get", url, params=combined_params)
         if resp.status_code != HTTPStatus.OK:
             logger.error(f"Recieved {resp.status_code}")
             resp.raise_for_status()
@@ -64,7 +67,7 @@ class GitHubAdapterSync:
         all_items = []
         page_num = 1
         while True:
-            headers, resp_json = self._get_request(url, params={"page": page_num})
+            headers, resp_json = self._get(url, params={"page": page_num})
             all_items.extend(resp_json)
             nav = create_github_navigation_panel(headers["Link"])
             last_page = page_from_url(nav.last_link)
@@ -84,23 +87,23 @@ class GitHubAdapterSync:
     ############
     def sitemap(self):
         url = BASE_URL + "/"
-        return self._get_request(url)
+        return self._get(url)
 
     def all_public_events(self) -> Response:
         url = BASE_URL + "/events"
-        return self._get_request(url)
+        return self._get(url)
 
     def all_user_stars(self, user: str, max_pages=10):
         url = BASE_URL + f"/users/{user}/starred"
 
-        resp = self._head_request(url)
+        resp = self._head(url)
         headers = resp.headers
         nav = create_github_navigation_panel(headers["Link"])
         last_page = page_from_url(nav.last_link)
 
         all_stars = []
         for page_num in range(1, min(last_page, max_pages) + 1):
-            headers, resp_json = self._get_request(url, params={"page": page_num})
+            headers, resp_json = self._get(url, params={"page": page_num})
             all_stars.extend(resp_json)
 
         return all_stars
