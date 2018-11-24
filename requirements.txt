@@ -1,3 +1,5 @@
 dateutil
 pytz
 requests
+vcrpy
+pytest-vcr

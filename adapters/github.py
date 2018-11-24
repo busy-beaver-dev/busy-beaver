@@ -31,14 +31,14 @@ class GitHubAdapter:
             "Accept": "application/vnd.github.v3+json",
             "Authorization": f"token {oauth_token}",
             "Content-Type": "application/json",
-            "User-Agent": f"{USER_AGENT}_sync",
+            "User-Agent": USER_AGENT,
         }
         self.session = s
         self.params = {"per_page": 30}
         self.nav = None
 
     def __repr__(self):
-        return "GitHubAdapter_sync"
+        return "GitHubAdapter"
 
     ################
     # Helper Methods
@@ -53,7 +53,7 @@ class GitHubAdapter:
             resp.raise_for_status()
         return Response(headers=resp.headers, json=None)
 
-    def _get(self, url: str, params: dict) -> Response:
+    def _get(self, url: str, *, params: dict) -> Response:
         combined_params = self.params.copy()
         combined_params.update(params)
         resp = self._request("get", url, params=combined_params)
