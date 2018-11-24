@@ -8,14 +8,11 @@ Creating synchronous and asynchronous adapters to practice my programming skills
 
 ## Todo
 
-- [ ] pagination
-  - [x] fetch all events in last 24 hours
-    - [ ] refactor and add tests
-  - [ ] fetch all repos
-  - [ ] fetch all stars
+- [ ] tests
+  - [ ] [vcr.py](https://github.com/kevin1024/vcrpy)
 - [ ] ETag, need to set up DB for this
   - [ ] mark events that are new
-- [ ] add test with vcr.py
+- [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
 
 ## Scratchpad
 

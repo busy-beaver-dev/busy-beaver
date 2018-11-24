@@ -105,12 +105,18 @@ class GitHubAdapterSync:
         return self._get(url)
 
     def all_public_events(self) -> Response:
+        # refactor
         url = BASE_URL + "/events"
         return self._get(url)
 
-    def all_user_stars(self, user: str, max_pages=10):
+    def all_user_repos(self, user: str, *, max_pages=10):
+        url = BASE_URL + f"/users/{user}/repos"
+        all_repos = self._get_all_items(url, max_pages=max_pages)
+        return all_repos
+
+    def all_user_stars(self, user: str, *, max_pages=10):
         url = BASE_URL + f"/users/{user}/starred"
-        all_stars = self._get_all_items(url)
+        all_stars = self._get_all_items(url, max_pages=max_pages)
         return all_stars
 
     def user_activity_after(self, user: str, timestamp) -> List[Dict]:
