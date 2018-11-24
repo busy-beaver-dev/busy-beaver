@@ -10,7 +10,7 @@ pip install -r requirements.txt
 ```
 
 ```python
-from adapters.github import GithubAdapter
+from adapters.github import GitHubAdapter
 
 client = GithubAdapter(oauth_token="[insert_token_here]")
 ```
