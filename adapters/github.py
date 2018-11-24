@@ -24,9 +24,7 @@ class Response(NamedTuple):
     json: Union[List[Dict[str, Any]], Dict[str, Any]]
 
 
-class GitHubAdapterSync:
-    """Synchronous version using requests"""
-
+class GitHubAdapter:
     def __init__(self, oauth_token):
         s = requests.Session()
         s.headers = {
@@ -109,17 +107,17 @@ class GitHubAdapterSync:
         url = BASE_URL + "/events"
         return self._get(url)
 
-    def all_user_repos(self, user: str, *, max_pages=10):
+    def all_user_repos(self, user: str, *, max_pages: int = 10) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/repos"
         all_repos = self._get_all_items(url, max_pages=max_pages)
         return all_repos
 
-    def all_user_stars(self, user: str, *, max_pages=10):
+    def all_user_stars(self, user: str, *, max_pages: int = 10) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/starred"
         all_stars = self._get_all_items(url, max_pages=max_pages)
         return all_stars
 
-    def user_activity_after(self, user: str, timestamp) -> List[Dict]:
+    def user_activity_after(self, user: str, timestamp: datetime) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/events/public"
         user_events = self._get_items_after_timestamp(url, timestamp=timestamp)
         return user_events
@@ -127,7 +125,7 @@ class GitHubAdapterSync:
 
 if __name__ == "__main__":
     oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")
-    client = GitHubAdapterSync(oauth_token)
+    client = GitHubAdapter(oauth_token)
 
     from datetime import timedelta
     from adapters.utilities import subtract_timedelta

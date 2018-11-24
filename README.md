@@ -2,9 +2,18 @@
 
 Creating synchronous and asynchronous adapters to practice my programming skills.
 
-## Setup
+## Usage
 
-`export GITHUB_OAUTH_TOKEN="[token-here]"`
+```console
+export GITHUB_OAUTH_TOKEN="[token-here]"
+pip install -r requirements.txt
+```
+
+```python
+from adapters.github import GithubAdapter
+
+client = GithubAdapter(oauth_token="[insert_token_here]")
+```
 
 ## Todo
 
@@ -13,6 +22,7 @@ Creating synchronous and asynchronous adapters to practice my programming skills
 - [ ] ETag, need to set up DB for this
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
+- [ ] [GraphQL](https://developer.github.com/v4/)
 
 ## Scratchpad
 
