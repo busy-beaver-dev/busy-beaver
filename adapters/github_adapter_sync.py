@@ -1,14 +1,16 @@
-from datetime import datetime, timedelta
 from http import HTTPStatus
 import logging
 import os
 from typing import Any, Dict, List, NamedTuple, Union
 
-from dateutil.parser import parse as dateutil_parse
-import pytz
+from dateutil.parser import parse as date_parse
 import requests
 
-from adapters.utilities import create_github_navigation_panel, page_from_url
+from adapters.utilities import (
+    create_github_navigation_panel,
+    filter_items_before,
+    page_from_url,
+)
 
 BASE_URL = "https://api.github.com"
 USER_AGENT = "BusyBeaver"
@@ -33,6 +35,7 @@ class GitHubAdapterSync:
             "User-Agent": f"{USER_AGENT}_sync",
         }
         self.session = s
+        self.params = {"per_page": 30}
         self.nav = None
 
     def __repr__(self):
@@ -49,11 +52,29 @@ class GitHubAdapterSync:
         return Response(headers=resp.headers, json=None)
 
     def _get_request(self, url: str, params: dict) -> Response:
-        resp = self.session.get(url, params=params)
+        combined_params = self.params.copy().update(params)
+        resp = self.session.get(url, params=combined_params)
         if resp.status_code != HTTPStatus.OK:
             logger.error(f"Recieved {resp.status_code}")
             resp.raise_for_status()
         return Response(headers=resp.headers, json=resp.json())
+
+    def _get_items_after_timestamp(self, url, *, timestamp):
+        all_items = []
+        page_num = 1
+        while True:
+            headers, resp_json = self._get_request(url, params={"page": page_num})
+            all_items.extend(resp_json)
+            nav = create_github_navigation_panel(headers["Link"])
+            last_page = page_from_url(nav.last_link)
+
+            min_batch_timestamp = date_parse(resp_json[-1]["created_at"])
+            continue_fetching = timestamp <= min_batch_timestamp and page_num < last_page
+            if not continue_fetching:
+                break
+
+            page_num = page_num + 1
+        return all_items
 
     ############
     # Public API
@@ -76,44 +97,23 @@ class GitHubAdapterSync:
 
         all_stars = []
         for page_num in range(1, min(last_page, max_pages) + 1):
-            headers, resp_json = self._get_request(url, {"page": page_num})
+            headers, resp_json = self._get_request(url, params={"page": page_num})
             all_stars.extend(resp_json)
 
         return all_stars
 
-    def latest_user_events(self, user: str, period: timedelta) -> List[Dict]:
+    def user_activity_after(self, user: str, timestamp) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/events/public"
-
-        all_events = []
-        page_num = 1
-
-        now = pytz.utc.localize(datetime.utcnow())
-        boundary_dt = now + period
-        while True:
-            headers, resp_json = self._get_request(url, {"page": page_num})
-            all_events.extend(resp_json)
-            nav = create_github_navigation_panel(headers["Link"])
-
-            earliest_event_in_batch = dateutil_parse(resp_json[-1]["created_at"])
-            fetch_next_page = (
-                page_num < page_from_url(nav.last_link)
-                and boundary_dt <= earliest_event_in_batch
-            )
-            if not fetch_next_page:
-                break
-
-            page_num = page_num + 1
-
-        while True:
-            if dateutil_parse(all_events[-1]["created_at"]) >= boundary_dt:
-                break
-            all_events.pop()
-
-        return all_events
+        user_events = self._get_items_after_timestamp(url, timestamp=timestamp)
+        filtered_user_events = filter_items_before(timestamp=timestamp, items=user_events)
+        return filtered_user_events
 
 
 if __name__ == "__main__":
     oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")
     client = GitHubAdapterSync(oauth_token)
 
-    my_events = client.latest_user_events("alysivji", period=timedelta(days=-1))
+    from datetime import timedelta
+    from adapters.utilities import subtract_timedelta
+    boundary_dt = subtract_timedelta(timedelta(days=1))
+    x = client.user_activity_after("alysivji", timestamp=boundary_dt)
