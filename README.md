@@ -15,10 +15,22 @@ from adapters.github import GithubAdapter
 client = GithubAdapter(oauth_token="[insert_token_here]")
 ```
 
+### Stack
+
+- [requests](https://github.com/requests/requests)
+
+#### Tests
+
+- [pytest](https://github.com/pytest-dev/pytest)
+- [vcr.py](https://github.com/kevin1024/vcrpy)
+- [pytest-vcr](https://github.com/ktosiek/pytest-vcr)
+
+`vcr.py` records cassettes of requests and responses for new tests, and replays them for previously written tests. Make sure to [filter credentials](https://vcrpy.readthedocs.io/en/latest/advanced.html#filter-information-from-http-headers).
+
+---
+
 ## Todo
 
-- [ ] tests
-  - [ ] [vcr.py](https://github.com/kevin1024/vcrpy)
 - [ ] ETag, need to set up DB for this
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
