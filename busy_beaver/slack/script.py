@@ -1,3 +1,5 @@
+import os
+
 from slackclient import SlackClient
 
 from busy_beaver.userstats.script import recent_activity_text

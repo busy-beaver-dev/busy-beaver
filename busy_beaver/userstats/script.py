@@ -1,5 +1,4 @@
 from datetime import timedelta
-import os
 
 from busy_beaver.adapters.github import GitHubAdapter
 from busy_beaver.adapters.utilities import subtract_timedelta  # noq
