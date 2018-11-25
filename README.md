@@ -1,19 +1,26 @@
 # Busy Beaver
 
-Project to aggregate ChiPy members GitHub activity to post on Slack.
+Project to aggregate GitHub activity of ChiPy members to post on Slack.
 
-## Usage
+## Installation Instructions
 
 ```console
 export GITHUB_OAUTH_TOKEN="[token-here]"
+export PYTHONPATH=.
 pip install -r requirements.txt
-python scripts/ipython_shell.py
 ```
 
 ### Development Environment
 
 ```console
 pip install -r requirements_dev.txt
+```
+
+### Development Shell
+
+```console
+$ python scripts/ipython_shell.py
+>>> db.create_all()
 ```
 
 ### Stack
@@ -32,6 +39,7 @@ pip install -r requirements_dev.txt
 
 ## Todo
 
+- [ ] database via SQLALchemy layer
 - [ ] ETag, need to set up DB for this
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
