@@ -106,3 +106,6 @@ ENV/
 # misc
 .DS_Store
 .vscode
+
+# local installation files
+busy_beaver.db
