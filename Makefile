@@ -16,13 +16,13 @@ help:
 
 
 migration: ## Create migrations using alembic
-	alembic revision --autogenerate -m "$(m)"
+	alembic --config=./migrations/alembic.ini revision --autogenerate -m "$(m)"
 
 migrate-up: ## Run migrations using alembic
-	alembic upgrade head
+	alembic --config=./migrations/alembic.ini upgrade head
 
 migrate-down: ## Rollback migrations using alembic
-	alembic downgrade -1
+	alembic --config=./migrations/alembic.ini downgrade -1
 
 test:
 	pytest
