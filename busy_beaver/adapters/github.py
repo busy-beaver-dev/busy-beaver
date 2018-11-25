@@ -5,16 +5,15 @@ import os
 from typing import Any, Dict, List, NamedTuple, Union
 
 from dateutil.parser import parse as date_parse
-import requests
 
-from adapters.utilities import (
+from .requests_client import RequestsClient
+from .utilities import (
     create_github_navigation_panel,
     filter_items_before,
     page_from_url,
 )
 
 BASE_URL = "https://api.github.com"
-USER_AGENT = "BusyBeaver"
 
 logger = logging.getLogger(__name__)
 
@@ -25,15 +24,8 @@ class Response(NamedTuple):
 
 
 class GitHubAdapter:
-    def __init__(self, oauth_token):
-        s = requests.Session()
-        s.headers = {
-            "Accept": "application/vnd.github.v3+json",
-            "Authorization": f"token {oauth_token}",
-            "Content-Type": "application/json",
-            "User-Agent": USER_AGENT,
-        }
-        self.session = s
+    def __init__(self, oauth_token: str):
+        self.client = RequestsClient(oauth_token)
         self.params = {"per_page": 30}
         self.nav = None
 
@@ -43,11 +35,8 @@ class GitHubAdapter:
     ################
     # Helper Methods
     ################
-    def _request(self, method: str, url: str, **kwargs) -> requests.Response:
-        return self.session.request(method, url, **kwargs)
-
     def _head(self, url: str) -> Response:
-        resp = self._request("head", url)
+        resp = self.client.request("head", url)
         if resp.status_code != HTTPStatus.OK:
             logger.error(f"Recieved {resp.status_code}")
             resp.raise_for_status()
@@ -56,7 +45,7 @@ class GitHubAdapter:
     def _get(self, url: str, *, params: dict) -> Response:
         combined_params = self.params.copy()
         combined_params.update(params)
-        resp = self._request("get", url, params=combined_params)
+        resp = self.client.request("get", url, params=combined_params)
         if resp.status_code != HTTPStatus.OK:
             logger.error(f"Recieved {resp.status_code}")
             resp.raise_for_status()
