@@ -31,14 +31,23 @@ def recent_activity_text(user):
             repos = list(set([event['repo'] for event in events]))
             repo_count = len(repos)
 
+            if repo_count > 1:
+                repo_s = "s"
+            else:
+                repo_s = ""
+
             if event_type == 'PushEvent':
                 commit_count = sum([event['commit_count'] for event in events])
+                if commit_count > 1:
+                    commit_s = "s"
+                else:
+                    commit_s = ""
                 text += (
-                    f"  • pushed {commit_count} commits to "
-                    f"{repo_count} repo(s): {', '.join(repos)}\n"
+                    f">:arrow_up: {commit_count} commit{commit_s} to "
+                    f"{repo_count} repo{repo_s}: {', '.join(repos)}\n"
                 )
             if event_type == 'WatchEvent':
-                text += f"  • starred {repo_count} repo(s): {', '.join(repos)}\n"
+                text += f">:star: {repo_count} repo{repo_s}: {', '.join(repos)}\n"
         text += "\n"
     else:
         text = ""
