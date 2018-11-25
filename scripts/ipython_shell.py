@@ -10,9 +10,20 @@ from busy_beaver import db  # noqa
 from busy_beaver.models import *  # noqa
 
 
+def create_db():
+    # TODO need to check existence test?
+    db.create_all()
+
+
 oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")
 github = GitHubAdapter(oauth_token)
 
 boundary_dt = subtract_timedelta(timedelta(days=1))
 
-embed()
+display_text = "Busy Beaver Development Shell"
+num_char = len(display_text)
+print("*" * num_char)
+print(display_text)
+print("*" * num_char)
+
+embed()  # start IPython shell

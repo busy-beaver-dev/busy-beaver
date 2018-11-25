@@ -10,7 +10,7 @@ help:
 	@echo ' make test-fast        run tests without migrations                '
 	@echo ' make lint             run flake8 linter                           '
 	@echo '                                                                   '
-	@echo ' make shell-ipython    connect to api container in new bash shell  '
+	@echo ' make shell            open ipython shell with application context '
 	@echo ' make shell-db         shell into psql inside database container   '
 	@echo '                                                                   '
 
@@ -39,5 +39,5 @@ test-skipvcr:
 lint:
 	flake8
 
-shell-ipython:
+shell:
 	python `pwd`/scripts/ipython_shell.py
