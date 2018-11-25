@@ -25,7 +25,7 @@ def recent_activity_text(user):
             events_of_interest.append(event_of_interest)
 
     if len(events_of_interest) > 1:
-        text = f"{user}\n"
+        text = f"*{user}*\n"
         for event_type in sorted(list(set([e['type'] for e in events_of_interest]))):
             events = [event for event in events_of_interest if event['type']==event_type]
             repos = list(set([event['repo'] for event in events]))
