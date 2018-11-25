@@ -37,6 +37,8 @@ pip install -r requirements_dev.txt
 
 ## Todo
 
+- [ ] Builds on Travis
+  - [ ] Get codecov working
 - [ ] ETag, need to set up DB for this
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)

@@ -1,0 +1,19 @@
+# misc
+notifications:
+  email: false
+sudo: false
+
+# python settings
+language: python
+python:
+  - "3.6"
+  - "3.7"
+
+# install packages
+install:
+  - pip install -r requirements_dev.txt
+
+# run test
+script:
+  - python -m pytest --cov=./
+  - flake8
