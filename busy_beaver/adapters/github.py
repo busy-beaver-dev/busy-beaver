@@ -1,13 +1,11 @@
 from datetime import datetime
-from http import HTTPStatus
-import logging
 import os
-from typing import Any, Dict, List, NamedTuple, Union
+from typing import Dict, List
 
 from dateutil.parser import parse as date_parse
-import requests
 
-from adapters.utilities import (
+from .requests_client import RequestsClient
+from .utilities import (
     create_github_navigation_panel,
     filter_items_before,
     page_from_url,
@@ -16,24 +14,16 @@ from adapters.utilities import (
 BASE_URL = "https://api.github.com"
 USER_AGENT = "BusyBeaver"
 
-logger = logging.getLogger(__name__)
-
-
-class Response(NamedTuple):
-    headers: Dict[str, str]
-    json: Union[List[Dict[str, Any]], Dict[str, Any]]
-
 
 class GitHubAdapter:
-    def __init__(self, oauth_token):
-        s = requests.Session()
-        s.headers = {
+    def __init__(self, oauth_token: str):
+        self.client = RequestsClient()
+        self.headers = {
             "Accept": "application/vnd.github.v3+json",
             "Authorization": f"token {oauth_token}",
             "Content-Type": "application/json",
             "User-Agent": USER_AGENT,
         }
-        self.session = s
         self.params = {"per_page": 30}
         self.nav = None
 
@@ -43,47 +33,8 @@ class GitHubAdapter:
     ################
     # Helper Methods
     ################
-    def _request(self, method: str, url: str, **kwargs) -> requests.Response:
-        return self.session.request(method, url, **kwargs)
-
-    def _head(self, url: str) -> Response:
-        resp = self._request("head", url)
-        if resp.status_code != HTTPStatus.OK:
-            logger.error(f"Recieved {resp.status_code}")
-            resp.raise_for_status()
-        return Response(headers=resp.headers, json=None)
-
-    def _get(self, url: str, *, params: dict) -> Response:
-        combined_params = self.params.copy()
-        combined_params.update(params)
-        resp = self._request("get", url, params=combined_params)
-        if resp.status_code != HTTPStatus.OK:
-            logger.error(f"Recieved {resp.status_code}")
-            resp.raise_for_status()
-        return Response(headers=resp.headers, json=resp.json())
-
-    def _get_items_after_timestamp(self, url: str, *, timestamp: datetime) -> List[Dict]:
-        """Keep fetching until we have captured the timestamp or are on the last page"""
-        all_items = []
-        page_num = 1
-        while True:
-            headers, resp_json = self._get(url, params={"page": page_num})
-            all_items.extend(resp_json)
-            nav = create_github_navigation_panel(headers["Link"])
-            last_page = page_from_url(nav.last_link)
-
-            min_batch_timestamp = date_parse(resp_json[-1]["created_at"])
-            keep_fetching = timestamp <= min_batch_timestamp and page_num < last_page
-            if not keep_fetching:
-                break
-
-            page_num = page_num + 1
-
-        filtered_items = filter_items_before(timestamp=timestamp, items=all_items)
-        return filtered_items
-
     def _get_all_items(self, url: str, *, max_pages: int = 5) -> List[Dict]:
-        resp = self._head(url)
+        resp = self.client.head(url)
         headers = resp.headers
 
         try:
@@ -94,21 +45,41 @@ class GitHubAdapter:
 
         all_items = []
         for page_num in range(1, min(last_page, max_pages) + 1):
-            headers, resp_json = self._get(url, params={"page": page_num})
-            all_items.extend(resp_json)
+            combined_params = self.params.copy()
+            combined_params.update({"page": page_num})
+            resp = self.client.get(url, params=combined_params)
+            all_items.extend(resp.json)
 
         return all_items
+
+    def _get_items_after_timestamp(self, url: str, *, timestamp: datetime) -> List[Dict]:
+        """Keep fetching until we have captured the timestamp or are on the last page"""
+        all_items = []
+        page_num = 1
+        while True:
+            combined_params = self.params.copy()
+            combined_params.update({"page": page_num})
+            resp = self.client.get(url, params=combined_params)
+            all_items.extend(resp.json)
+            nav = create_github_navigation_panel(resp.headers["Link"])
+            last_page = page_from_url(nav.last_link)
+
+            min_batch_timestamp = date_parse(resp.json[-1]["created_at"])
+            keep_fetching = timestamp <= min_batch_timestamp and page_num < last_page
+            if not keep_fetching:
+                break
+
+            page_num = page_num + 1
+
+        filtered_items = filter_items_before(timestamp=timestamp, items=all_items)
+        return filtered_items
 
     ############
     # Public API
     ############
     def sitemap(self):
         url = BASE_URL + "/"
-        return self._get(url, params={})
-
-    def all_public_events(self) -> Response:
-        url = BASE_URL + "/events"
-        return self._get(url, params={})
+        return self.client.get(url)
 
     def all_user_repos(self, user: str, *, max_pages: int = 10) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/repos"

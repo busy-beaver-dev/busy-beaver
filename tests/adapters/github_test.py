@@ -4,7 +4,7 @@ import os
 import pytest
 import pytz
 
-from adapters.github import GitHubAdapter
+from busy_beaver.adapters.github import GitHubAdapter
 
 
 @pytest.fixture
