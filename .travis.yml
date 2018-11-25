@@ -15,5 +15,5 @@ install:
 
 # run test
 script:
-  - python -m pytest --cov=./
+  - pytest -m 'not vcr' --cov=./
   - flake8
