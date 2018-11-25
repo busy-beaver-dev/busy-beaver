@@ -104,12 +104,11 @@ class GitHubAdapter:
     ############
     def sitemap(self):
         url = BASE_URL + "/"
-        return self._get(url)
+        return self._get(url, params={})
 
     def all_public_events(self) -> Response:
-        # refactor
         url = BASE_URL + "/events"
-        return self._get(url)
+        return self._get(url, params={})
 
     def all_user_repos(self, user: str, *, max_pages: int = 10) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/repos"
