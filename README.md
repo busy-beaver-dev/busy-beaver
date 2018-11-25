@@ -7,12 +7,7 @@ Project to aggregate ChiPy members GitHub activity to post on Slack.
 ```console
 export GITHUB_OAUTH_TOKEN="[token-here]"
 pip install -r requirements.txt
-```
-
-```python
-from adapters.github import GitHubAdapter
-
-client = GithubAdapter(oauth_token="[insert_token_here]")
+python scripts/ipython_shell.py
 ```
 
 ### Development Environment
@@ -41,6 +36,7 @@ pip install -r requirements_dev.txt
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
 - [ ] [GraphQL](https://developer.github.com/v4/)
+- [ ] logging (grab `LOGGING_CONFIG` from other projects)
 
 ## Scratchpad
 

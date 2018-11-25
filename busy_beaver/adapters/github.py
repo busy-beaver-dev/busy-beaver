@@ -111,13 +111,3 @@ class GitHubAdapter:
         url = BASE_URL + f"/users/{user}/events/public"
         user_events = self._get_items_after_timestamp(url, timestamp=timestamp)
         return user_events
-
-
-if __name__ == "__main__":
-    oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")
-    github = GitHubAdapter(oauth_token)
-
-    from datetime import timedelta
-    from adapters.utilities import subtract_timedelta
-
-    boundary_dt = subtract_timedelta(timedelta(days=1))
