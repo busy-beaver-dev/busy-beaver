@@ -40,4 +40,4 @@ lint:
 	flake8
 
 shell:
-	python `pwd`/scripts/ipython_shell.py
+	python scripts/ipython_shell.py
