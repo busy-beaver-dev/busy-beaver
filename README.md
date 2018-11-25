@@ -1,6 +1,6 @@
-# Github Adapter
+# Busy Beaver
 
-Creating synchronous and asynchronous adapters to practice my programming skills.
+Project to aggregate ChiPy members GitHub activity to post on Slack.
 
 ## Usage
 
@@ -13,6 +13,12 @@ pip install -r requirements.txt
 from adapters.github import GitHubAdapter
 
 client = GithubAdapter(oauth_token="[insert_token_here]")
+```
+
+### Development Environment
+
+```console
+pip install -r requirements_dev.txt
 ```
 
 ### Stack
@@ -31,6 +37,8 @@ client = GithubAdapter(oauth_token="[insert_token_here]")
 
 ## Todo
 
+- [x] Builds on Travis
+  - [ ] Get codecov working
 - [ ] ETag, need to set up DB for this
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)

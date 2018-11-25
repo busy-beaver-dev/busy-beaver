@@ -1,0 +1,25 @@
+# misc
+notifications:
+  email: false
+sudo: false
+
+# python settings
+language: python
+sudo: required
+dist: xenial
+python:
+  - "3.6"
+  - "3.7"
+
+# install packages
+install:
+  - pip install -r requirements_dev.txt
+  - pip install codecov
+
+# run test
+script:
+  - pytest --cov=./
+  - flake8
+
+after_success:
+  - codecov
