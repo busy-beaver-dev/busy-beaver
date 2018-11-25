@@ -1,25 +1,26 @@
 # Busy Beaver
 
-Project to aggregate ChiPy members GitHub activity to post on Slack.
+Project to aggregate GitHub activity of ChiPy members to post on Slack.
 
-## Usage
+## Installation Instructions
 
 ```console
 export GITHUB_OAUTH_TOKEN="[token-here]"
+export PYTHONPATH=.
 pip install -r requirements.txt
-```
-
-### Interactive Shell
-
-```console
-$ python scripts/ipython_shell.py
->>> db.create_all()
 ```
 
 ### Development Environment
 
 ```console
 pip install -r requirements_dev.txt
+```
+
+### Development Shell
+
+```console
+$ python scripts/ipython_shell.py
+>>> db.create_all()
 ```
 
 ### Stack

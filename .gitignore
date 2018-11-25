@@ -107,5 +107,5 @@ ENV/
 .DS_Store
 .vscode
 
-# local installation files
+# local development files
 busy_beaver.db
