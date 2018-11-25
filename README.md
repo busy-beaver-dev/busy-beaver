@@ -39,7 +39,6 @@ $ python scripts/ipython_shell.py
 
 ## Todo
 
-- [ ] database via SQLALchemy layer
 - [ ] ETag, need to set up DB for this
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
