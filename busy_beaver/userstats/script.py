@@ -1,10 +1,9 @@
 from datetime import timedelta
-import os
 
 from busy_beaver.adapters.github import GitHubAdapter
 from busy_beaver.adapters.utilities import subtract_timedelta  # noq
+from busy_beaver.config import oauth_token
 
-oauth_token = os.getenv('GITHUB_OAUTH_TOKEN')
 github = GitHubAdapter(oauth_token)
 
 boundary_dt = subtract_timedelta(timedelta(days=1))
@@ -18,7 +17,7 @@ def recent_activity_text(user):
         if event['type'] in ['PushEvent', 'WatchEvent']:
             event_of_interest = {}
             event_of_interest['type'] = event['type']
-            event_of_interest['repo'] = event['repo']['name']
+            event_of_interest['repo'] = f"<{event['repo']['url']}|{event['repo']['name']}>"
 
             if event['type'] == 'PushEvent':
                 event_of_interest['commit_count'] = len(event['payload']['commits'])
@@ -32,14 +31,24 @@ def recent_activity_text(user):
             repos = list(set([event['repo'] for event in events]))
             repo_count = len(repos)
 
+            if repo_count > 1:
+                repo_s = "s"
+            else:
+                repo_s = ""
+
             if event_type == 'PushEvent':
                 commit_count = sum([event['commit_count'] for event in events])
+                if commit_count > 1:
+                    commit_s = "s"
+                else:
+                    commit_s = ""
                 text += (
-                    f"* pushed {commit_count} commits to "
-                    f"{repo_count} repo(s): {', '.join(repos)}\n"
+                    f">:arrow_up: {commit_count} commit{commit_s} to "
+                    f"{repo_count} repo{repo_s}: {', '.join(repos)}\n"
                 )
             if event_type == 'WatchEvent':
-                text += f"* starred {repo_count} repo(s): {', '.join(repos)}\n"
+                text += f">:star: {repo_count} repo{repo_s}: {', '.join(repos)}\n"
+        text += "\n"
     else:
         text = ""
 
