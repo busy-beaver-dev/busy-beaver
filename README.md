@@ -37,7 +37,7 @@ pip install -r requirements_dev.txt
 
 ## Todo
 
-- [ ] Builds on Travis
+- [x] Builds on Travis
   - [ ] Get codecov working
 - [ ] ETag, need to set up DB for this
   - [ ] mark events that are new

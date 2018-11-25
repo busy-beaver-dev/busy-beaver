@@ -14,8 +14,12 @@ python:
 # install packages
 install:
   - pip install -r requirements_dev.txt
+  - pip install codecov
 
 # run test
 script:
   - pytest --cov=./
   - flake8
+
+after_success:
+  - codecov
