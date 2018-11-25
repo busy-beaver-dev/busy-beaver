@@ -1,5 +1,4 @@
 from datetime import datetime
-import os
 from typing import Dict, List
 
 from dateutil.parser import parse as date_parse

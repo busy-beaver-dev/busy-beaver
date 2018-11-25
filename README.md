@@ -7,7 +7,13 @@ Project to aggregate ChiPy members GitHub activity to post on Slack.
 ```console
 export GITHUB_OAUTH_TOKEN="[token-here]"
 pip install -r requirements.txt
-python scripts/ipython_shell.py
+```
+
+### Interactive Shell
+
+```console
+$ python scripts/ipython_shell.py
+>>> db.create_all()
 ```
 
 ### Development Environment
@@ -32,6 +38,7 @@ pip install -r requirements_dev.txt
 
 ## Todo
 
+- [ ] database via SQLALchemy layer
 - [ ] ETag, need to set up DB for this
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)

@@ -21,8 +21,15 @@ class GitHubLink(NamedTuple):
 
 
 def create_github_navigation_panel(links):
+    def all_links(links: str) -> Tuple[str, str]:
+        for link in links.split(", "):
+            dirty_url, dirty_type = link.split("; ")
+            cleaned_url = dirty_url.split("<")[1][:-1]
+            cleaned_type = dirty_type.split('="')[1][:-1]
+            yield GitHubLink(cleaned_type, cleaned_url)
+
     first_link, last_link, next_link, prev_link = [None, None, None, None]
-    for link in _all_links(links):
+    for link in all_links(links):
         if link.type_ == "first":
             first_link = link.url
         elif link.type_ == "last":
@@ -41,12 +48,16 @@ def create_github_navigation_panel(links):
     )
 
 
-def _all_links(links: str) -> Tuple[str, str]:
-    for link in links.split(", "):
-        dirty_url, dirty_type = link.split("; ")
-        cleaned_url = dirty_url.split("<")[1][:-1]
-        cleaned_type = dirty_type.split('="')[1][:-1]
-        yield GitHubLink(cleaned_type, cleaned_url)
+def filter_items_before(timestamp: datetime, items: list):
+    """If event happened after timestamp, keep it"""
+    keep_item = [date_parse(item["created_at"]) > timestamp for item in items]
+
+    filtered_items = items[:]
+    items_to_pop = len(items) - sum(keep_item)
+    for _ in range(items_to_pop):
+        filtered_items.pop()
+
+    return filtered_items
 
 
 def page_from_url(url) -> int:
@@ -58,15 +69,3 @@ def page_from_url(url) -> int:
 
 def subtract_timedelta(period: timedelta):
     return pytz.utc.localize(datetime.utcnow()) - period
-
-
-def filter_items_before(timestamp: datetime, items: list):
-    """If event happened after timestamp, keep it"""
-    keep_item = [date_parse(item["created_at"]) > timestamp for item in items]
-
-    filtered_items = items[:]
-    items_to_pop = len(items) - sum(keep_item)
-    for _ in range(items_to_pop):
-        filtered_items.pop()
-
-    return filtered_items
