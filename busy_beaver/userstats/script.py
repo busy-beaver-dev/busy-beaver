@@ -34,8 +34,10 @@ def recent_activity_text(user):
 
             if event_type == 'PushEvent':
                 commit_count = sum([event['commit_count'] for event in events])
-                text += f"* pushed {commit_count} commits to " +
-                        f"{repo_count} repo(s): {', '.join(repos)}\n"
+                text += (
+                    f"* pushed {commit_count} commits to "
+                    f"{repo_count} repo(s): {', '.join(repos)}\n"
+                )
             if event_type == 'WatchEvent':
                 text += f"* starred {repo_count} repo(s): {', '.join(repos)}\n"
     else:
