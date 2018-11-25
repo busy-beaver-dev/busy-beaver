@@ -21,8 +21,10 @@ class RequestsClient:
     def __repr__(self):
         return "RequestsClient"
 
-    def _request(self, method: str, url: str, **kwargs) -> requests.Response:
+    def _request(self, method: str, url: str, **kwargs) -> Response:
         r = self.session.request(method, url, **kwargs)
+        r.raise_for_status()
+
         try:
             resp = Response(status_code=r.status_code, headers=r.headers, json=r.json())
         except JSONDecodeError:

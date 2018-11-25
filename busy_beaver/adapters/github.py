@@ -4,7 +4,8 @@ from typing import Dict, List
 
 from dateutil.parser import parse as date_parse
 
-from .requests_client import RequestsClient
+from ..exceptions import UnexpectedStatusCode
+from .requests_client import RequestsClient, Response
 from .utilities import (
     create_github_navigation_panel,
     filter_items_before,
@@ -31,10 +32,25 @@ class GitHubAdapter:
         return "GitHubAdapter"
 
     ################
+    # Adapter-Client
+    ################
+    def __get(self, url: str, **kwargs) -> Response:
+        resp = self.client.get(url, **kwargs)
+        if resp.status_code != 200:
+            raise UnexpectedStatusCode
+        return resp
+
+    def __head(self, url: str, **kwargs) -> Response:
+        resp = self.client.head(url, **kwargs)
+        if resp.status_code != 200:
+            raise UnexpectedStatusCode
+        return resp
+
+    ################
     # Helper Methods
     ################
     def _get_all_items(self, url: str, *, max_pages: int = 5) -> List[Dict]:
-        resp = self.client.head(url)
+        resp = self.__head(url)
         headers = resp.headers
 
         try:
@@ -47,7 +63,7 @@ class GitHubAdapter:
         for page_num in range(1, min(last_page, max_pages) + 1):
             combined_params = self.params.copy()
             combined_params.update({"page": page_num})
-            resp = self.client.get(url, params=combined_params)
+            resp = self.__get(url, params=combined_params)
             all_items.extend(resp.json)
 
         return all_items
@@ -59,7 +75,7 @@ class GitHubAdapter:
         while True:
             combined_params = self.params.copy()
             combined_params.update({"page": page_num})
-            resp = self.client.get(url, params=combined_params)
+            resp = self.__get(url, params=combined_params)
             all_items.extend(resp.json)
             nav = create_github_navigation_panel(resp.headers["Link"])
             last_page = page_from_url(nav.last_link)
@@ -79,7 +95,7 @@ class GitHubAdapter:
     ############
     def sitemap(self):
         url = BASE_URL + "/"
-        return self.client.get(url)
+        return self.__get(url)
 
     def all_user_repos(self, user: str, *, max_pages: int = 10) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/repos"
@@ -99,7 +115,7 @@ class GitHubAdapter:
 
 if __name__ == "__main__":
     oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")
-    client = GitHubAdapter(oauth_token)
+    github = GitHubAdapter(oauth_token)
 
     from datetime import timedelta
     from adapters.utilities import subtract_timedelta
