@@ -5,15 +5,10 @@ from IPython import embed
 
 from busy_beaver.adapters.github import GitHubAdapter  # noqa
 from busy_beaver.adapters.utilities import subtract_timedelta  # noqa
-from busy_beaver.userstats.script import recent_activity_text  # noqa
+from busy_beaver.main import recent_activity_text  # noqa
 
 from busy_beaver import db  # noqa
 from busy_beaver.models import *  # noqa
-
-
-def create_db():
-    # TODO need to check existence test?
-    db.create_all()
 
 
 oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")
