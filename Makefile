@@ -40,4 +40,4 @@ lint:
 	flake8
 
 shell:
-	python scripts/dev_shell.py
+	ipython -i scripts/dev_shell.py
