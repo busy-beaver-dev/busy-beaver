@@ -12,8 +12,8 @@ from .adapters.slack import SlackAdapter
 
 CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID")
 CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET")
-GITHUB_REDIRECT_URI = "http://fbacc527.ngrok.io/github-integration"
-SLACK_CALLBACK_URI = "http://fbacc527.ngrok.io/slack-event-subscription"
+GITHUB_REDIRECT_URI = "https://busybeaver.sivji.com/github-integration"
+SLACK_CALLBACK_URI = "https://busybeaver.sivji.com/slack-event-subscription"
 
 SLACK_TOKEN = os.getenv("SLACK_API_TOKEN")
 slack = SlackAdapter(SLACK_TOKEN)
@@ -26,6 +26,15 @@ def debug(s=2, *, data):
     time.sleep(s)
     # import pdb; pdb.set_trace()
     print("slept!")
+
+
+class HelloWorldResource:
+    """For testing purposes"""
+    def on_get(self, req, resp):
+        resp.media = {"Hello": "World"}
+
+
+api.add_route("/hello", HelloWorldResource())
 
 
 #######

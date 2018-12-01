@@ -14,36 +14,53 @@ help:
 	@echo ' make shell-db         shell into psql inside database container   '
 	@echo '                                                                   '
 
+build:
+	docker-compose build
+
+up:
+	docker-compose up -d
+
+down:
+	docker-compose down
+
+start:
+	docker-compose start
+
+stop:
+	docker-compose stop
 
 migration: ## Create migrations using alembic
-	alembic --config=./migrations/alembic.ini revision --autogenerate -m "$(m)"
+	docker-compose exec app alembic --config=./migrations/alembic.ini revision --autogenerate -m "$(m)"
 
 migrate-up: ## Run migrations using alembic
-	alembic --config=./migrations/alembic.ini upgrade head
+	docker-compose exec app alembic --config=./migrations/alembic.ini upgrade head
 
 migrate-down: ## Rollback migrations using alembic
-	alembic --config=./migrations/alembic.ini downgrade -1
+	docker-compose exec app alembic --config=./migrations/alembic.ini downgrade -1
 
 test:
-	pytest
+	docker-compose exec app pytest
 
 test-cov:
-	pytest --cov ./
+	docker-compose exec app pytest --cov ./
 
 test-covhtml:
-	pytest --cov --cov-report html && open ./htmlcov/index.html
+	docker-compose exec app pytest --cov --cov-report html && open ./htmlcov/index.html
 
 test-skipvcr:
-	pytest -m 'not vcr'
+	docker-compose exec app pytest -m 'not vcr'
 
 lint:
-	flake8
+	docker-compose exec app flake8
+
+ipython:
+	docker-compose exec app ipython -i scripts/dev_shell.py
 
 shell:
-	ipython -i scripts/dev_shell.py
+	docker-compose exec app bash
 
-serve:
-	uvicorn busy_beaver.backend:api --host 0.0.0.0 --port 5100 --debug
+# serve:
+# 	uvicorn busy_beaver.backend:api --host 0.0.0.0 --port 5100 --debug
 
-ngrok:
-	ngrok http 5100
+# ngrok:
+# 	ngrok http 5100

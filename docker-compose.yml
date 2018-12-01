@@ -1,0 +1,28 @@
+version: '3.6'
+
+networks:
+  sivnet:
+    external: true
+
+services:
+  app:
+    build:
+      context: .
+    command: ["uvicorn", "busy_beaver.backend:api", "--host", "0.0.0.0", "--port", "5100"]
+    environment:
+      PYTHONPATH: .
+      DATABASE_URI: sqlite:////app/busy_beaver.db
+      SLACK_API_TOKEN: ${SLACK_API_TOKEN}
+      GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}
+      GITHUB_APP_CLIENT_ID: ${GITHUB_APP_CLIENT_ID}
+      GITHUB_APP_CLIENT_SECRET: ${GITHUB_APP_CLIENT_SECRET}
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app/
+    networks:
+      - sivnet
+    labels:
+      - traefik.enable=true
+      - traefik.backend=busybeaver
+      - traefik.frontend.rule=Host:busybeaver.sivji.com
