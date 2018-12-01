@@ -12,8 +12,8 @@ from .adapters.slack import SlackAdapter
 
 CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID")
 CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET")
-GITHUB_REDIRECT_URI = "http://fbacc527.ngrok.io/github-integration"
-SLACK_CALLBACK_URI = "http://fbacc527.ngrok.io/slack-event-subscription"
+GITHUB_REDIRECT_URI = "https://busybeaver.sivji.com/github-integration"
+SLACK_CALLBACK_URI = "http://busybeaver.sivji.com/slack-event-subscription"
 
 SLACK_TOKEN = os.getenv("SLACK_API_TOKEN")
 slack = SlackAdapter(SLACK_TOKEN)

@@ -22,7 +22,6 @@ RUN groupadd -g 901 -r sivdev && \
 EXPOSE 5100
 
 # Switch from root user for security
-RUN chown -R sivdev_user /app
-USER sivdev_user
+# USER sivdev_user
 
 CMD ["uvicorn", "busy_beaver.backend:api", "--host", "0.0.0.0", "--port", "5100"]
