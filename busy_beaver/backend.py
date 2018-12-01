@@ -23,7 +23,7 @@ api = responder.API()
 @api.background.task
 def debug(s=2, *, data):
     time.sleep(s)
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     print("slept!")
 
 
