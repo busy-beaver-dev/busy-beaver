@@ -17,13 +17,9 @@ python:
 # install packages
 install:
   - pip install -r requirements_dev.txt
-  - pip install codecov
 
 # run test
 script:
   - alembic --config=./migrations/alembic.ini upgrade head
   - pytest --cov=./
   - flake8
-
-after_success:
-  - codecov
