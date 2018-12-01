@@ -1,7 +1,6 @@
 from typing import List
 
-from . import db
-from .models import User
+from . import db, User
 
 
 def fetch_all_users() -> List[User]:

@@ -41,3 +41,6 @@ lint:
 
 shell:
 	ipython -i scripts/dev_shell.py
+
+serve:
+	uvicorn busy_beaver.server:api --host 0.0.0.0 --port 5100 --debug
