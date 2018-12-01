@@ -18,7 +18,7 @@ install:
 
 # run test
 script:
-  - alembic --config=./migrations/alembic.ini upgrade head
+  - alembic --config="./migrations/alembic.ini" upgrade head
   - pytest --cov=./
   - flake8
 
