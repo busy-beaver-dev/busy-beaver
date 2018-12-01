@@ -3,8 +3,10 @@ FROM python:3.7.1-stretch
 LABEL maintainer="Aly Sivji <alysivji@gmail.com>" \
     description="Image for BusyBeaver"
 
-ARG GMAIL_ADDRESS
-ARG GMAIL_APPLICATION_PASSWORD
+# Install libyaml
+RUN apt-get update -y \
+    && apt-get install -y libyaml-dev \
+    && apt-get clean
 
 WORKDIR /app
 

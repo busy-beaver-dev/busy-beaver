@@ -14,6 +14,9 @@ help:
 	@echo ' make shell-db         shell into psql inside database container   '
 	@echo '                                                                   '
 
+build:
+	docker-compose build
+
 up:
 	docker-compose up -d
 
