@@ -1,0 +1,20 @@
+version: '3.6'
+
+services:
+  app:
+    build:
+      context: .
+    command: ["uvicorn", "busy_beaver.backend:api", "--host", "0.0.0.0", "--port", "5100"]
+    environment:
+      DATABASE_URL: sqlite:////app/busy_beaver.db
+      PYTHONPATH: .
+      SLACK_API_TOKEN: $SLACK_API_TOKEN
+      GITHUB_OAUTH_TOKEN: $GITHUB_OAUTH_TOKEN
+      GITHUB_APP_CLIENT_ID: $GITHUB_APP_CLIENT_ID
+      GITHUB_APP_CLIENT_SECRET: $GITHUB_APP_CLIENT_SECRET
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app/
+    ports:
+      - "5100:5100"

@@ -28,6 +28,15 @@ def debug(s=2, *, data):
     print("slept!")
 
 
+class HelloWorldResource:
+    """For testing purposes"""
+    def on_get(self, req, resp):
+        resp.media = {"Hello": "World"}
+
+
+api.add_route("/hello", HelloWorldResource())
+
+
 #######
 # Slack
 #######
