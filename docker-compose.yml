@@ -8,13 +8,17 @@ services:
     environment:
       DATABASE_URL: sqlite:////app/busy_beaver.db
       PYTHONPATH: .
-      SLACK_API_TOKEN: $SLACK_API_TOKEN
-      GITHUB_OAUTH_TOKEN: $GITHUB_OAUTH_TOKEN
-      GITHUB_APP_CLIENT_ID: $GITHUB_APP_CLIENT_ID
-      GITHUB_APP_CLIENT_SECRET: $GITHUB_APP_CLIENT_SECRET
+      SLACK_API_TOKEN: ${SLACK_API_TOKEN}
+      GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}
+      GITHUB_APP_CLIENT_ID: ${GITHUB_APP_CLIENT_ID}
+      GITHUB_APP_CLIENT_SECRET: ${GITHUB_APP_CLIENT_SECRET}
     stdin_open: true
     tty: true
     volumes:
       - .:/app/
-    ports:
-      - "5100:5100"
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=sivnet
+      - traefik.backend=busybeaver
+      - traefik.frontend.rule=Host:busybeaver.sivji.com
+      - traefik.port=5100
