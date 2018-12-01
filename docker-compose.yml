@@ -1,5 +1,9 @@
 version: '3.6'
 
+networks:
+  sivnet:
+    external: true
+
 services:
   app:
     build:
