@@ -16,9 +16,9 @@ services:
     tty: true
     volumes:
       - .:/app/
+    networks:
+      - sivnet
     labels:
       - traefik.enable=true
-      - traefik.docker.network=sivnet
       - traefik.backend=busybeaver
       - traefik.frontend.rule=Host:busybeaver.sivji.com
-      - traefik.port=5100
