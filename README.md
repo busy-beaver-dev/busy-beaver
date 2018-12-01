@@ -44,8 +44,7 @@ $ python scripts/ipython_shell.py
 
 ## Todo
 
-- [ ] Deploy web app on server
-- [ ] Figure out Slack permissions we need to only see and respond to DMs
+- [ ] Make it easier to deploy
 - [ ] ETag, need to set up DB for this
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
