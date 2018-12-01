@@ -1,6 +1,7 @@
 from typing import List
 
-from . import db, User
+from . import db
+from .models import User
 
 
 def fetch_all_users() -> List[User]:
@@ -8,4 +9,4 @@ def fetch_all_users() -> List[User]:
 
 
 def fetch_matched_users(slack_names: List[str]) -> List[User]:
-    return db.query(User).filter(User.slack.in_(slack_names)).all()
+    return db.query(User).filter(User.slack_id.in_(slack_names)).all()

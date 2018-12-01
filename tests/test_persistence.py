@@ -12,8 +12,8 @@ def persisted_user():
 
     for _ in range(2):
         user = User(**{
-            "slack": "test_slack",
-            "github": "github_account",
+            "slack_id": "test_slack",
+            "github_id": "github_account",
         })
         db.session.add(user)
     db.session.commit()
@@ -30,15 +30,15 @@ def persisted_full_db():
 
     for _ in range(2):
         user = User(**{
-            "slack": "test_slack_account",
-            "github": "github_account",
+            "slack_id": "test_slack_account",
+            "github_id": "github_account",
         })
         db.session.add(user)
 
     for _ in range(20):
         user = User(**{
-            "slack": "noise",
-            "github": "noise",
+            "slack_id": "noise",
+            "github_id": "noise",
         })
         db.session.add(user)
 
