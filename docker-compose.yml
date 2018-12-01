@@ -6,8 +6,8 @@ services:
       context: .
     command: ["uvicorn", "busy_beaver.backend:api", "--host", "0.0.0.0", "--port", "5100"]
     environment:
-      DATABASE_URL: sqlite:////app/busy_beaver.db
       PYTHONPATH: .
+      DATABASE_URI: sqlite:////app/busy_beaver.db
       SLACK_API_TOKEN: ${SLACK_API_TOKEN}
       GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}
       GITHUB_APP_CLIENT_ID: ${GITHUB_APP_CLIENT_ID}

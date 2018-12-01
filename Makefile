@@ -14,6 +14,17 @@ help:
 	@echo ' make shell-db         shell into psql inside database container   '
 	@echo '                                                                   '
 
+up:
+	docker-compose up -d
+
+down:
+	docker-compose down
+
+start:
+	docker-compose start
+
+stop:
+	docker-compose stop
 
 migration: ## Create migrations using alembic
 	docker-compose exec app alembic --config=./migrations/alembic.ini revision --autogenerate -m "$(m)"
@@ -39,8 +50,11 @@ test-skipvcr:
 lint:
 	docker-compose exec app flake8
 
-shell:
+ipython:
 	docker-compose exec app ipython -i scripts/dev_shell.py
+
+shell:
+	docker-compose exec app bash
 
 # serve:
 # 	uvicorn busy_beaver.backend:api --host 0.0.0.0 --port 5100 --debug
