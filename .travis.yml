@@ -4,7 +4,7 @@ notifications:
 sudo: false
 
 env:
-  - PYTHONPATH=. DATABASE_URI="sqlite:///:memory:"
+  - PYTHONPATH=.
 
 # python settings
 language: python
