@@ -4,9 +4,11 @@ LABEL maintainer="Aly Sivji <alysivji@gmail.com>" \
     description="Image for BusyBeaver"
 
 # Install libyaml
-RUN apt-get update -y \
-    && apt-get install -y libyaml-dev \
-    && apt-get clean
+RUN git clone https://github.com/yaml/pyyaml.git /tmp/pyyaml \
+    && cd /tmp/pyyaml \
+    && python setup.py --without-libyaml install \
+    && cd ../../ \
+    && rm -rf /tmp/pyyaml
 
 WORKDIR /app
 
