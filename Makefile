@@ -44,3 +44,6 @@ shell:
 
 serve:
 	uvicorn busy_beaver.backend:api --host 0.0.0.0 --port 5100 --debug
+
+ngrok:
+	ngrok http 5100
