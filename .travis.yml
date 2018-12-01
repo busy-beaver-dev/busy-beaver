@@ -3,6 +3,9 @@ notifications:
   email: false
 sudo: false
 
+env:
+  - DATABASE_URI="sqlite:///:memory:"
+
 # python settings
 language: python
 sudo: required
@@ -18,7 +21,7 @@ install:
 
 # run test
 script:
-  - alembic --config="./migrations/alembic.ini" upgrade head
+  - alembic --config=./migrations/alembic.ini upgrade head
   - pytest --cov=./
   - flake8
 
