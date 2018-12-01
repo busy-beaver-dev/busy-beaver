@@ -1,3 +1,6 @@
 Dockerfile
 docker-compose.yml
 busy_beaver.db
+.git
+.vscode
+.envrc
