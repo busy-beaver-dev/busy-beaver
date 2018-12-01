@@ -63,10 +63,10 @@ def reply_to_user_with_github_login_link(event):
         return
 
     user_record = db.query(User).filter_by(slack_id=slack_id).first()
-    # if user_record:
-    #     # TODO send message
-    #     print("already exists")
-    #     return
+    if user_record:
+        # TODO send message
+        print("already exists")
+        return
 
     # generate unique identifer to track user during authentication process
     state = str(uuid.uuid4())
