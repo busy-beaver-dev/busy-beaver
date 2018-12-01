@@ -28,7 +28,7 @@ test:
 	pytest
 
 test-cov:
-	pytest --cov
+	pytest --cov ./
 
 test-covhtml:
 	pytest --cov --cov-report html && open ./htmlcov/index.html
@@ -40,4 +40,7 @@ lint:
 	flake8
 
 shell:
-	python scripts/ipython_shell.py
+	ipython -i scripts/dev_shell.py
+
+serve:
+	uvicorn busy_beaver.backend:api --host 0.0.0.0 --port 5100 --debug

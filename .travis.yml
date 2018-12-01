@@ -3,6 +3,9 @@ notifications:
   email: false
 sudo: false
 
+env:
+  - PYTHONPATH=. DATABASE_URI="sqlite:///busy_beaver.db"
+
 # python settings
 language: python
 sudo: required
@@ -18,6 +21,7 @@ install:
 
 # run test
 script:
+  - alembic --config=./migrations/alembic.ini upgrade head
   - pytest --cov=./
   - flake8
 

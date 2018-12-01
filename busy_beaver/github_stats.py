@@ -1,8 +1,8 @@
 from datetime import timedelta
 
-from busy_beaver.adapters.github import GitHubAdapter
-from busy_beaver.adapters.utilities import subtract_timedelta  # noq
-from busy_beaver.config import oauth_token
+from .adapters.github import GitHubAdapter
+from .adapters.utilities import subtract_timedelta  # noq
+from .config import oauth_token
 
 github = GitHubAdapter(oauth_token)
 

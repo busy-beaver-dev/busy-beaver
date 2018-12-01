@@ -5,9 +5,14 @@ Project to aggregate GitHub activity of ChiPy members to post on Slack.
 ## Installation Instructions
 
 ```console
-export GITHUB_OAUTH_TOKEN="[token-here]"
+export GITHUB_OAUTH_TOKEN=[token-here]
 export PYTHONPATH=.
 pip install -r requirements.txt
+```
+
+```console
+export GITHUB_APP_CLIENT_ID=[client-id]
+export GITHUB_APP_CLIENT_SECRET=[client-secret]
 ```
 
 ### Development Environment
@@ -39,11 +44,14 @@ $ python scripts/ipython_shell.py
 
 ## Todo
 
+- [ ] Deploy web app on server
+- [ ] Figure out Slack permissions we need to only see and respond to DMs
 - [ ] ETag, need to set up DB for this
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
 - [ ] [GraphQL](https://developer.github.com/v4/)
 - [ ] logging (grab `LOGGING_CONFIG` from other projects)
+- [ ] use sqlite memory for tests
 
 ## Scratchpad
 
