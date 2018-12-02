@@ -12,7 +12,7 @@ services:
     environment:
       PYTHONPATH: .
       DATABASE_URI: sqlite:////app/busy_beaver.db
-      SLACK_API_TOKEN: ${SLACK_API_TOKEN}
+      SLACK_BOTUSER_OAUTH_TOKEN: ${SLACK_BOTUSER_OAUTH_TOKEN}
       GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}
       GITHUB_APP_CLIENT_ID: ${GITHUB_APP_CLIENT_ID}
       GITHUB_APP_CLIENT_SECRET: ${GITHUB_APP_CLIENT_SECRET}
@@ -26,3 +26,5 @@ services:
       - traefik.enable=true
       - traefik.backend=busybeaver
       - traefik.frontend.rule=Host:busybeaver.sivji.com
+    ports:
+      - 5100:5100
