@@ -81,9 +81,10 @@ def reply_to_user_with_github_login_link(event):
         slack.post_message(
             channel,
             (
-                "I already sent you an activation link. If you misplaced it "
-                "type `link me again`. To change account associations, "
-                "please contact an administrator."
+                "I already sent you an activation link. "
+                "If you've misplaced it, "
+                "type `link me again`. To change your account associations, "
+                "contact an administrator."
             ),
         )
         print("already exists")
