@@ -5,6 +5,7 @@ Project to aggregate GitHub activity of ChiPy members to post on Slack.
 ## Installation Instructions
 
 ```console
+export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
 export GITHUB_OAUTH_TOKEN=[token-here]
 export PYTHONPATH=.
 pip install -r requirements.txt

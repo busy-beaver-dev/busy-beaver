@@ -109,3 +109,4 @@ ENV/
 
 # local development files
 busy_beaver.db
+creds.txt

@@ -15,7 +15,7 @@ CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET")
 GITHUB_REDIRECT_URI = "https://busybeaver.sivji.com/github-integration"
 SLACK_CALLBACK_URI = "https://busybeaver.sivji.com/slack-event-subscription"
 
-SLACK_TOKEN = os.getenv("SLACK_API_TOKEN")
+SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN")
 slack = SlackAdapter(SLACK_TOKEN)
 
 api = responder.API()
@@ -51,6 +51,7 @@ class SlackEventSubscriptionResource:
         event = data["event"]
         if event["type"] == "message" and event.get("subtype") == "bot_message":
             return
+
         if event["type"] == "message" and event["channel_type"] == "im":
             reply_to_user_with_github_login_link(event)
 
@@ -64,36 +65,51 @@ def reply_to_user_with_github_login_link(event):
     slack_id = event["user"]
     channel = event["channel"]
 
-    if "link me" not in chat_text:
-        print("didn't say the magic words")
-        return
-
-    user_record = db.query(User).filter_by(slack_id=slack_id).first()
-    if user_record:
+    if chat_text not in ["link me", "link me again"]:
         slack.post_message(
             channel,
             (
-                "You already have a GitHub ID associated with this account. "
-                "Please contact an administrator to change"
+                "Hi! I don't recognize that command. "
+                "Type `link me` to validate your GitHub account."
+            ),
+        )
+        return
+
+    user_record = db.query(User).filter_by(slack_id=slack_id).first()
+
+    if user_record and chat_text == "link me":
+        slack.post_message(
+            channel,
+            (
+                "I already sent you an activation link. "
+                "If you've misplaced it, "
+                "type `link me again`. To change your account associations, "
+                "contact an administrator."
             ),
         )
         print("already exists")
         return
 
-    # generate unique identifer to track user during authentication process
-    state = str(uuid.uuid4())
+    if user_record and chat_text == "link me again":
+        state = user_record.github_state
 
-    user = User()
-    user.slack_id = slack_id
-    user.github_state = state
+    if not user_record:
+        # generate unique identifer to track user during authentication process
+        state = str(uuid.uuid4())
 
-    db.session.add(user)
-    db.session.commit()
+        user = User()
+        user.slack_id = slack_id
+        user.github_state = state
+
+        db.session.add(user)
+        db.session.commit()
 
     data = {"client_id": CLIENT_ID, "redirect_uri": GITHUB_REDIRECT_URI, "state": state}
     query_params = urlencode(data)
     url = f"https://github.com/login/oauth/authorize?{query_params}"
     slack.post_message(channel, url)
+
+    return
 
 
 ########

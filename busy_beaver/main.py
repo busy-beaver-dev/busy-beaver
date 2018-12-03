@@ -3,7 +3,7 @@ import os
 from .adapters.slack import SlackAdapter
 from .github_stats import recent_activity_text
 
-slack_token = os.environ["SLACK_API_TOKEN"]
+slack_token = os.environ["SLACK_BOTUSER_OAUTH_TOKEN"]
 slack = SlackAdapter(slack_token)
 
 
