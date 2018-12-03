@@ -66,7 +66,8 @@ def reply_to_user_with_github_login_link(event):
     channel = event["channel"]
 
     if chat_text not in ["link me", "link me again"]:
-        slack.post_message(channel,
+        slack.post_message(
+            channel,
             (
                 "Hi! I don't recognize that command. "
                 "Type `link me` to validate your GitHub account."

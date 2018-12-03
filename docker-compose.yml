@@ -26,5 +26,3 @@ services:
       - traefik.enable=true
       - traefik.backend=busybeaver
       - traefik.frontend.rule=Host:busybeaver.sivji.com
-    ports:
-      - 5100:5100
