@@ -53,11 +53,11 @@ test-skipvcr:
 lint:
 	docker-compose exec app flake8
 
-ipython:
-	docker-compose exec app ipython -i scripts/dev_shell.py
-
 shell:
 	docker-compose exec app bash
+
+shell-dev:
+	docker-compose exec app ipython -i scripts/dev_shell.py
 
 # serve:
 # 	uvicorn busy_beaver.backend:api --host 0.0.0.0 --port 5100 --debug
