@@ -1,14 +1,16 @@
 import os
+import logging
 import time
 from urllib.parse import urlencode
 import uuid
 
 import requests
-import responder
 
-from . import db
+from . import api, db
 from .models import User
 from .adapters.slack import SlackAdapter
+
+logger = logging.getLogger(__name__)
 
 CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID")
 CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET")
@@ -18,9 +20,10 @@ SLACK_CALLBACK_URI = "https://busybeaver.sivji.com/slack-event-subscription"
 SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN")
 slack = SlackAdapter(SLACK_TOKEN)
 
-api = responder.API()
 
-
+#########
+# Sandbox
+#########
 @api.background.task
 def debug(s=2, *, data):
     time.sleep(s)
@@ -30,7 +33,9 @@ def debug(s=2, *, data):
 
 class HelloWorldResource:
     """For testing purposes"""
+
     def on_get(self, req, resp):
+        logger.info("[Busy-Beaver] Hit hello world endpoint", extra={"test": "payload"})
         resp.media = {"Hello": "World"}
 
 
@@ -66,28 +71,22 @@ def reply_to_user_with_github_login_link(event):
     channel = event["channel"]
 
     if chat_text not in ["link me", "link me again"]:
-        slack.post_message(
-            channel,
-            (
-                "Hi! I don't recognize that command. "
-                "Type `link me` to validate your GitHub account."
-            ),
+        msg = (
+            "Hi! I don't recognize that command. "
+            "Type `link me` to validate your GitHub account."
         )
+        slack.post_message(channel, msg)
         return
 
     user_record = db.query(User).filter_by(slack_id=slack_id).first()
-
     if user_record and chat_text == "link me":
-        slack.post_message(
-            channel,
-            (
-                "I already sent you an activation link. "
-                "If you've misplaced it, "
-                "type `link me again`. To change your account associations, "
-                "contact an administrator."
-            ),
+        msg = (
+            "I already sent you an activation link. "
+            "If you've misplaced it, "
+            "type `link me again`. To change your account associations, "
+            "contact an administrator."
         )
-        print("already exists")
+        slack.post_message(channel, msg)
         return
 
     if user_record and chat_text == "link me again":
@@ -108,7 +107,6 @@ def reply_to_user_with_github_login_link(event):
     query_params = urlencode(data)
     url = f"https://github.com/login/oauth/authorize?{query_params}"
     slack.post_message(channel, url)
-
     return
 
 
@@ -116,7 +114,7 @@ def reply_to_user_with_github_login_link(event):
 # GitHub
 ########
 class GitHubIntegrationResource:
-    async def on_get(self, req, resp):
+    def on_get(self, req, resp):
         params = req.params
         code = params.get("code")
         state = params.get("state")

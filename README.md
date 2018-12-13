@@ -50,7 +50,6 @@ $ python scripts/ipython_shell.py
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
 - [ ] [GraphQL](https://developer.github.com/v4/)
-- [ ] logging (grab `LOGGING_CONFIG` from other projects)
 - [ ] use sqlite memory for tests
 
 ## Scratchpad

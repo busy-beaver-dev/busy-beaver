@@ -1,0 +1,5 @@
+logs:
+ - type: file
+   path: /busy-beaver/logs/busy_beaver_log.json
+   service: busy-beaver
+   source: python

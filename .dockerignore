@@ -4,3 +4,6 @@ busy_beaver.db
 .git
 .vscode
 .envrc
+.travis.yml
+logs/
+creds.txt
