@@ -1,15 +1,16 @@
 import os
+import logging
 import time
 from urllib.parse import urlencode
 import uuid
 
 import requests
-import responder
-import sentry_sdk
 
-from . import db
+from . import api, db
 from .models import User
 from .adapters.slack import SlackAdapter
+
+logger = logging.getLogger(__name__)
 
 CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID")
 CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET")
@@ -19,9 +20,10 @@ SLACK_CALLBACK_URI = "https://busybeaver.sivji.com/slack-event-subscription"
 SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN")
 slack = SlackAdapter(SLACK_TOKEN)
 
-api = responder.API()
 
-
+#########
+# Sandbox
+#########
 @api.background.task
 def debug(s=2, *, data):
     time.sleep(s)
@@ -33,6 +35,7 @@ class HelloWorldResource:
     """For testing purposes"""
 
     def on_get(self, req, resp):
+        logger.info("[Busy-Beaver] Hit hello world endpoint")
         resp.media = {"Hello": "World"}
 
 
