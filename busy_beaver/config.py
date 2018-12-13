@@ -20,22 +20,21 @@ LOGGING_CONFIG = {
         },
         "json": {
             "class": "pythonjsonlogger.jsonlogger.JsonFormatter",
-            "format": "%(asctime)s %(name)s %(lineno)s %(message)s",
-            "datefmt": "%Y-%m-%d %H:%M:%S",
+            "format": "%(asctime)s %(filename)s %(funcName)s %(lineno)s %(message)s",
         },
     },
     "handlers": {
         "console": {"class": "logging.StreamHandler", "formatter": "standard"},
         "datadog_file": {
             "class": "logging.FileHandler",
-            "filename": "busy_beaver_log.json",
+            "filename": "logs/busy_beaver_log.json",
             "mode": "w",
             "formatter": "json",
         },
     },
     "loggers": {
         "busy_beaver": {
-            "handlers": ["console", "datadog_file"],
+            "handlers": ["datadog_file"] if IN_PRODUCTION else ["console"],
             "level": "INFO" if IN_PRODUCTION else "DEBUG",
         }
     },

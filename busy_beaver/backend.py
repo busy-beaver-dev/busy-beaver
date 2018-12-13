@@ -35,7 +35,7 @@ class HelloWorldResource:
     """For testing purposes"""
 
     def on_get(self, req, resp):
-        logger.info("[Busy-Beaver] Hit hello world endpoint")
+        logger.info("[Busy-Beaver] Hit hello world endpoint", extra={"test": "payload"})
         resp.media = {"Hello": "World"}
 
 
