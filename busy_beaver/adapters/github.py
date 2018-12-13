@@ -21,8 +21,6 @@ class GitHubAdapter:
         self.headers = {
             "Accept": "application/vnd.github.v3+json",
             "Authorization": f"token {oauth_token}",
-            "Content-Type": "application/json",
-            "User-Agent": USER_AGENT,
         }
         self.params = {"per_page": 30}
         self.nav = None
@@ -34,13 +32,13 @@ class GitHubAdapter:
     # Adapter-Client
     ################
     def __get(self, url: str, **kwargs) -> Response:
-        resp = self.client.get(url, **kwargs)
+        resp = self.client.get(url, headers=self.headers, **kwargs)
         if resp.status_code != 200:
             raise UnexpectedStatusCode
         return resp
 
     def __head(self, url: str, **kwargs) -> Response:
-        resp = self.client.head(url, **kwargs)
+        resp = self.client.head(url, headers=self.headers, **kwargs)
         if resp.status_code != 200:
             raise UnexpectedStatusCode
         return resp
