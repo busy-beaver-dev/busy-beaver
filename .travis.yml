@@ -16,21 +16,18 @@ python:
 install:
   - pip install -r requirements_dev.txt
 
-before_script:
-  - docker pull ${IMAGE_NAME}:latest || true
-
-# run test
 script:
   - alembic --config=./migrations/alembic.ini upgrade head
   - pytest --cov=./
   - flake8
-  - docker build --pull --cache-from ${IMAGE_NAME}:latest --tag ${IMAGE_NAME} --tag ${IMAGE_NAME}:${TRAVIS_COMMIT} .
 
 before_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker pull ${IMAGE_NAME} || true
+  - docker build --pull --cache-from ${IMAGE_NAME} --tag ${IMAGE_NAME} --tag ${IMAGE_NAME}:${TRAVIS_COMMIT} .
 deploy:
   provider: script
   script:
-    - docker push ${IMAGE_NAME}:latest && docker push ${IMAGE_NAME}:${TRAVIS_COMMIT}
+    - docker push ${IMAGE_NAME} && docker push ${IMAGE_NAME}:${TRAVIS_COMMIT}
   on:
     branch: master
