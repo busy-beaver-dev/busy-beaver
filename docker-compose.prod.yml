@@ -6,9 +6,7 @@ networks:
 
 services:
   app:
-    # image inside container registry
-    build:
-      context: .
+    image: alysivji/busy-beaver-prod
     command: ["uvicorn", "busy_beaver:api", "--host", "0.0.0.0", "--port", "5100"]
     environment:
       IN_PRODUCTION: 1
@@ -18,10 +16,9 @@ services:
       GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}
       GITHUB_APP_CLIENT_ID: ${GITHUB_APP_CLIENT_ID}
       GITHUB_APP_CLIENT_SECRET: ${GITHUB_APP_CLIENT_SECRET}
-    stdin_open: true
-    tty: true
     volumes:
       - ./logs:/app/logs/
+      - ./busy_beaver.db:/app/busy_beaver.db
     networks:
       - sivnet
     labels:

@@ -1,14 +1,7 @@
 FROM python:3.7.1-stretch
 
 LABEL maintainer="Aly Sivji <alysivji@gmail.com>" \
-    description="Development image for BusyBeaver"
-
-# Install pyyaml without libyaml
-RUN git clone https://github.com/yaml/pyyaml.git /tmp/pyyaml \
-    && cd /tmp/pyyaml \
-    && python setup.py --without-libyaml install \
-    && cd ../../ \
-    && rm -rf /tmp/pyyaml
+    description="BusyBeaver -- Development image"
 
 WORKDIR /app
 
@@ -21,6 +14,7 @@ RUN groupadd -g 901 -r sivdev && \
 
 EXPOSE 5100
 
+# TODO only b/c we need to write to disk, once we move to postgres change
 # Switch from root user for security
 # USER sivdev_user
 
