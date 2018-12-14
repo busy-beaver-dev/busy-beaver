@@ -29,5 +29,5 @@ deploy:
     - docker pull ${IMAGE_NAME} || true
     - docker build --pull --cache-from ${IMAGE_NAME} --tag ${IMAGE_NAME} --tag ${IMAGE_NAME}:${TRAVIS_COMMIT} .
     - docker push ${IMAGE_NAME} && docker push ${IMAGE_NAME}:${TRAVIS_COMMIT}
-  # on:
-  #   branch: master
+  on:
+    branch: cicd-final-cleanup
