@@ -1,7 +1,7 @@
 FROM python:3.7.1-stretch
 
 LABEL maintainer="Aly Sivji <alysivji@gmail.com>" \
-    description="Image for BusyBeaver"
+    description="Development image for BusyBeaver"
 
 # Install pyyaml without libyaml
 RUN git clone https://github.com/yaml/pyyaml.git /tmp/pyyaml \
