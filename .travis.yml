@@ -1,7 +1,7 @@
 # misc
 notifications:
   email: false
-sudo: false
+sudo: required
 
 env:
   - PYTHONPATH=. DATABASE_URI="sqlite:///busy_beaver.db" IMAGE_NAME="alysivji/busy-beaver"
