@@ -72,3 +72,7 @@ async def main():
 
 asyncio.run(main())
 ```
+
+### CI/CD
+
+`docker build -f docker/prod/Dockerfile -t alysivji/busy-beaver-prod .`

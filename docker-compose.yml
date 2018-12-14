@@ -1,13 +1,10 @@
 version: '3.6'
 
-networks:
-  sivnet:
-    external: true
-
 services:
   app:
     build:
       context: .
+      dockerfile: ./docker/dev/Dockerfile
     command: ["uvicorn", "busy_beaver:api", "--host", "0.0.0.0", "--port", "5100"]
     environment:
       PYTHONPATH: .
@@ -19,33 +16,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      # TODO remove app volume in production
       - .:/app/
       - ./logs:/app/logs/
-    networks:
-      - sivnet
-    labels:
-      - traefik.enable=true
-      - traefik.backend=busybeaver
-      - traefik.frontend.rule=Host:busybeaver.sivji.com
-  # agents
-  # TODO enable for production only
-  # datadog:
-  #   build: datadog
-  #   depends_on:
-  #     - app
-  #   links:
-  #     - app
-  #   environment:
-  #     - DD_API_KEY=${DATADOG_API_KEY}
-  #     - DD_HOSTNAME=busybeaver.sivji.com
-  #     - DD_LOGS_ENABLED=true
-  #     - DD_ENABLE_PAYLOADS_EVENTS=false
-  #     - DD_ENABLE_PAYLOADS_SERIES=false
-  #     - DD_ENABLE_PAYLOADS_SERVICE_CHECKS=false
-  #     - DD_ENABLE_PAYLOADS_SKETCHES=false
-  #   volumes:
-  #     - ./logs:/busy-beaver/logs
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - /proc/:/host/proc/:ro
-  #     - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
+    ports:
+      - 5000:5100

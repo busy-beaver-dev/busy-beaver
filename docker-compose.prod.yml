@@ -1,0 +1,47 @@
+version: '3.6'
+
+networks:
+  sivnet:
+    external: true
+
+services:
+  app:
+    image: alysivji/busy-beaver
+    command: ["uvicorn", "busy_beaver:api", "--host", "0.0.0.0", "--port", "5100"]
+    environment:
+      IN_PRODUCTION: 1
+      PYTHONPATH: .
+      DATABASE_URI: ${DATABASE_URI}
+      SLACK_BOTUSER_OAUTH_TOKEN: ${SLACK_BOTUSER_OAUTH_TOKEN}
+      GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}
+      GITHUB_APP_CLIENT_ID: ${GITHUB_APP_CLIENT_ID}
+      GITHUB_APP_CLIENT_SECRET: ${GITHUB_APP_CLIENT_SECRET}
+    volumes:
+      - ./logs:/app/logs/
+      - ./busy_beaver.db:/app/busy_beaver.db
+    networks:
+      - sivnet
+    labels:
+      - traefik.enable=true
+      - traefik.backend=busybeaver
+      - traefik.frontend.rule=Host:busybeaver.sivji.com
+  # agents
+  datadog:
+    build: datadog
+    depends_on:
+      - app
+    links:
+      - app
+    environment:
+      - DD_API_KEY=${DATADOG_API_KEY}
+      - DD_HOSTNAME=busybeaver.sivji.com
+      - DD_LOGS_ENABLED=true
+      - DD_ENABLE_PAYLOADS_EVENTS=false
+      - DD_ENABLE_PAYLOADS_SERIES=false
+      - DD_ENABLE_PAYLOADS_SERVICE_CHECKS=false
+      - DD_ENABLE_PAYLOADS_SKETCHES=false
+    volumes:
+      - ./logs:/busy-beaver/logs
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /proc/:/host/proc/:ro
+      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
