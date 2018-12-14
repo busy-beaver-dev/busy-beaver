@@ -6,12 +6,12 @@ networks:
 
 services:
   app:
-    image: alysivji/busy-beaver-prod
+    image: alysivji/busy-beaver
     command: ["uvicorn", "busy_beaver:api", "--host", "0.0.0.0", "--port", "5100"]
     environment:
       IN_PRODUCTION: 1
       PYTHONPATH: .
-      DATABASE_URI: sqlite:////app/busy_beaver.db
+      DATABASE_URI: ${DATABASE_URI}
       SLACK_BOTUSER_OAUTH_TOKEN: ${SLACK_BOTUSER_OAUTH_TOKEN}
       GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}
       GITHUB_APP_CLIENT_ID: ${GITHUB_APP_CLIENT_ID}

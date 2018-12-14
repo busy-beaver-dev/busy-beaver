@@ -1,15 +1,13 @@
-# misc
 notifications:
   email: false
+
+dist: xenial
 sudo: required
 
 env:
   - PYTHONPATH=. DATABASE_URI="sqlite:///busy_beaver.db" IMAGE_NAME="alysivji/busy-beaver"
 
-# python settings
 language: python
-sudo: required
-dist: xenial
 python:
   - "3.7"
 
