@@ -6,7 +6,6 @@ sudo: required
 env:
   - PYTHONPATH=. DATABASE_URI="sqlite:///busy_beaver.db" IMAGE_NAME="alysivji/busy-beaver"
 
-
 # python settings
 language: python
 sudo: required
@@ -16,7 +15,6 @@ python:
 
 install:
   - pip install -r requirements_dev.txt
-
 
 before_script:
   - docker pull ${IMAGE_NAME}:latest || true
@@ -29,7 +27,7 @@ script:
   - docker build --pull --cache-from ${IMAGE_NAME}:latest --tag ${IMAGE_NAME} .
 
 before_deploy:
-  - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker tag ${IMAGE_NAME} ${IMAGE_NAME}:latest
   - docker tag ${IMAGE_NAME} ${IMAGE_NAME}:${git_sha}
 deploy:
