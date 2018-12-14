@@ -11,16 +11,14 @@ language: python
 sudo: required
 dist: xenial
 python:
-  - "3.6"
   - "3.7"
 
 # install packages
 install:
   - pip install -r requirements_dev.txt
 
-
 before_script:
-  - docker login -u "${DOCKER_USERNAME}" -p "${DOCKER_PASSWORD}"
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker pull ${IMAGE_NAME}:latest || true
 
 # run test
