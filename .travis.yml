@@ -30,4 +30,4 @@ deploy:
   script:
     - docker push ${IMAGE_NAME} && docker push ${IMAGE_NAME}:${TRAVIS_COMMIT}
   on:
-    branch: cicd-final-cleanup
+    branch: master
