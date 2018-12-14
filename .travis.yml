@@ -13,12 +13,10 @@ dist: xenial
 python:
   - "3.7"
 
-# install packages
-# install:
-  # - pip install -r requirements_dev.txt
+install:
+  - pip install -r requirements_dev.txt
 
 before_script:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker pull ${IMAGE_NAME}:latest || true
 
 # run test
@@ -29,6 +27,7 @@ script:
   - docker build --pull --cache-from ${IMAGE_NAME}:latest --tag ${IMAGE_NAME} .
 
 before_deploy:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker tag ${IMAGE_NAME} ${IMAGE_NAME}:latest
   - docker tag ${IMAGE_NAME} ${IMAGE_NAME}:${git_sha}
 deploy:
