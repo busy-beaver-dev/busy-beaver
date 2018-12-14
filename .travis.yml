@@ -23,11 +23,11 @@ script:
 
 before_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker pull ${IMAGE_NAME} || true
+  - docker build --pull --cache-from ${IMAGE_NAME} --tag ${IMAGE_NAME} --tag ${IMAGE_NAME}:${TRAVIS_COMMIT} .
 deploy:
   provider: script
   script:
-    - docker pull ${IMAGE_NAME} || true
-    - docker build --pull --cache-from ${IMAGE_NAME} --tag ${IMAGE_NAME} --tag ${IMAGE_NAME}:${TRAVIS_COMMIT} .
     - docker push ${IMAGE_NAME} && docker push ${IMAGE_NAME}:${TRAVIS_COMMIT}
   on:
     branch: cicd-final-cleanup
