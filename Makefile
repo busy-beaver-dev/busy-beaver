@@ -80,5 +80,5 @@ prod-pull-image:
 	docker pull alysivji/busy-beaver:latest
 
 prod-deploy: prod-pull-image
-	docker-compose down
-	docker-compose up -d
+	make prod-down
+	make prod-up
