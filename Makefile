@@ -2,16 +2,27 @@ help:
 	@echo 'Makefile for managing application                                  '
 	@echo '                                                                   '
 	@echo 'Usage:                                                             '
+	@echo ' make build            rebuild containers .                        '
+	@echo ' make up               start local dev environment                 '
+	@echo ' make down             stop local dev environment                  '
 	@echo ' make migration        create migration m="message"                '
 	@echo ' make migrate-up       run all migration                           '
 	@echo ' make migrate-dow      roll back last migration                    '
 	@echo ' make test             run tests                                   '
 	@echo ' make test-cov         run tests with coverage.py                  '
-	@echo ' make test-fast        run tests without migrations                '
+	@echo ' make test-covhtml     run tests and load html coverage report     '
+	@echo ' make test-skipvcr     run non-vcr tests                           '
 	@echo ' make lint             run flake8 linter                           '
 	@echo '                                                                   '
-	@echo ' make shell            open ipython shell with application context '
-	@echo ' make shell-db         shell into psql inside database container   '
+	@echo ' make shell            log into into app container -- bash-shell   '
+	@echo ' make shell-dev        open ipython shell with application context '
+	@echo ' make ngrok            start ngrok to forward port                 '
+	@echo '                                                                   '
+	@echo ' make prod-build       build production images                     '
+	@echo ' make prod-up          start prod environment                      '
+	@echo ' make prod-down        stop prod environment                       '
+	@echo ' make prod-pull-imge   pull latest deployment image                '
+	@echo ' make prod-deploy      redeploy application                        '
 	@echo '                                                                   '
 
 build:
@@ -22,12 +33,6 @@ up:
 
 down:
 	docker-compose down
-
-start:
-	docker-compose start
-
-stop:
-	docker-compose stop
 
 migration: ## Create migrations using alembic
 	docker-compose exec app alembic --config=./migrations/alembic.ini revision --autogenerate -m "$(m)"
@@ -59,11 +64,8 @@ shell:
 shell-dev:
 	docker-compose exec app ipython -i scripts/dev_shell.py
 
-# serve:
-# 	uvicorn busy_beaver.backend:api --host 0.0.0.0 --port 5100 --debug
-
-# ngrok:
-# 	ngrok http 5100
+ngrok:
+	ngrok http 5000
 
 prod-build:
 	docker-compose -f docker-compose.prod.yml build
@@ -73,3 +75,10 @@ prod-up:
 
 prod-down:
 	docker-compose -f docker-compose.prod.yml down
+
+prod-pull-image:
+	docker pull alysivji/busy-beaver:latest
+
+prod-deploy: prod-pull-image
+	docker-compose down
+	docker-compose up -d

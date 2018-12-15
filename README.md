@@ -1,37 +1,26 @@
 # Busy Beaver
 
-Project to aggregate GitHub activity of ChiPy members to post on Slack.
+[![Build Status](https://travis-ci.org/alysivji/busy-beaver.svg?branch=master)](https://travis-ci.org/alysivji/busy-beaver)
 
-## Installation Instructions
+Slack bot that GitHub activity summaries for registered users.
 
-```console
-export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
-export GITHUB_OAUTH_TOKEN=[token-here]
-export PYTHONPATH=.
-pip install -r requirements.txt
-```
+## Introduction
 
-```console
-export GITHUB_APP_CLIENT_ID=[client-id]
-export GITHUB_APP_CLIENT_SECRET=[client-secret]
-```
+With over four thousand members, the [Chicago Python Users Group](https://www.chipy.org/) is one of the largest Python communities in the world. Slack has become the primary method of communication amongst our members in-between events. We decided to develop a Slack bot that summaries GitHub activity for registered users in a specific channel to increase member engagement. The goal is to spark conversations around tools and projects.
 
-### Development Environment
+Users can sign up for an account by messaging the bot with a specific passphrase. The bot will request that the user sign into GitHub with a provided link. This process will ensure that only authorized GitHub activity is posted in the channel.
 
-```console
-pip install -r requirements_dev.txt
-```
-
-### Development Shell
-
-```console
-$ python scripts/ipython_shell.py
->>> db.create_all()
-```
+## Project Information
 
 ### Stack
 
 - [requests](https://github.com/requests/requests)
+- [responder](https://github.com/kennethreitz/responder)
+- [sqlalchemy](https://www.sqlalchemy.org/)
+
+### Workflow Diagram
+
+- TODO
 
 #### Tests
 
@@ -39,40 +28,44 @@ $ python scripts/ipython_shell.py
 - [vcr.py](https://github.com/kevin1024/vcrpy)
 - [pytest-vcr](https://github.com/ktosiek/pytest-vcr)
 
-`vcr.py` records cassettes of requests and responses for new tests, and replays them for previously written tests. Make sure to [filter credentials](https://vcrpy.readthedocs.io/en/latest/advanced.html#filter-information-from-http-headers).
+`vcr.py` records cassettes of requests and responses for new tests, and replays them for previously written tests. Make sure to [filter credentials](https://vcrpy.readthedocs.io/en/latest/advanced.html#filter-information-from-http-headers)
+
+## Development Environment
+
+```console
+export DATABASE_URI=sqlite:///busy_beaver.db
+
+export GITHUB_APP_CLIENT_ID=[client-id]
+export GITHUB_APP_CLIENT_SECRET=[client-secret]
+export GITHUB_OAUTH_TOKEN=[token-here]
+
+export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
+```
+
+Leverage Docker-Compose to create a containerized local development environment. Please see the `Makefile` for available commands.
+
+## Deployment
+
+```console
+export DATABASE_URI=[database-uri]
+
+export GITHUB_APP_CLIENT_ID=[client-id]
+export GITHUB_APP_CLIENT_SECRET=[client-secret]
+export GITHUB_OAUTH_TOKEN=[token-here]
+
+export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
+
+export SENTRY_DSN=[sentry-dsn]
+export DATADOG_API_KEY=[datadog-api-key]
+```
+
+Commits into `master` kick-off the build of the deployment docker image. Currently, an admin needs to ssh into the deployment box to manually trigger a refresh. Future iterations will investigate using container orchestration and/or the use of a development box for builds.
 
 ---
 
-## Todo
+## Long Horizon Todo
 
-- [ ] Make it easier to deploy
 - [ ] ETag, need to set up DB for this
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
 - [ ] [GraphQL](https://developer.github.com/v4/)
-- [ ] use sqlite memory for tests
-
-## Scratchpad
-
-```python
-import aiohttp
-import asyncio
-
-
-async def fetch(session, url):
-    async with session.get(url) as response:
-        return await response.text()
-
-
-async def main():
-    async with aiohttp.ClientSession() as session:
-        html = await fetch(session, "http://python.org")
-        print(html)
-
-
-asyncio.run(main())
-```
-
-### CI/CD
-
-`docker build -f docker/prod/Dockerfile -t alysivji/busy-beaver-prod .`
