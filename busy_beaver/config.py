@@ -1,6 +1,6 @@
 import os
 
-IN_PRODUCTION = os.getenv("ENV_NAME", False)
+IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
 
 # infrastructure
 local_db = "sqlite:///busy_beaver.db"
