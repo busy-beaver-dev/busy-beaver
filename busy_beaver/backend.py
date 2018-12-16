@@ -49,19 +49,32 @@ class SlackEventSubscriptionResource:
     async def on_post(self, req, resp):
         data = await req.media()
 
-        if data["type"] == "url_verification":
+        verification_request = data["type"] == "url_verification"
+        if verification_request:
             resp.media = {"challenge": data["challenge"]}
             return
 
         event = data["event"]
-        if event["type"] == "message" and event.get("subtype") == "bot_message":
+        msg_from_bot = event.get("subtype") == "bot_message"
+        if event["type"] == "message" and msg_from_bot:
             return
 
-        if event["type"] == "message" and event["channel_type"] == "im":
+        dm_to_bot = event["channel_type"] == "im"
+        if event["type"] == "message" and dm_to_bot:
             reply_to_user_with_github_login_link(event)
 
 
 api.add_route("/slack-event-subscription", SlackEventSubscriptionResource())
+
+SEND_LINK_COMMANDS = ["link me"]
+RESEND_LINK_COMMANDS = ["link me again"]
+ALL_LINK_COMMANDS = SEND_LINK_COMMANDS + RESEND_LINK_COMMANDS
+
+UNKNOWN_COMMAND_MSG = "Don't recognize your command. Type `link me` link your GitHub."
+ACCOUNT_ALREADY_ASSOCIATED_MSG = (
+    "You have already associated a GitHub account with your Slack handle. "
+    "Please type `link me again` to link to a different account."
+)
 
 
 @api.background.task
@@ -70,32 +83,22 @@ def reply_to_user_with_github_login_link(event):
     slack_id = event["user"]
     channel = event["channel"]
 
-    if chat_text not in ["link me", "link me again"]:
-        msg = (
-            "Hi! I don't recognize that command. "
-            "Type `link me` to validate your GitHub account."
-        )
-        slack.post_message(channel, msg)
+    if chat_text not in ALL_LINK_COMMANDS:
+        slack.post_message(channel, UNKNOWN_COMMAND_MSG)
         return
 
     user_record = db.query(User).filter_by(slack_id=slack_id).first()
-    if user_record and chat_text == "link me":
-        msg = (
-            "I already sent you an activation link. "
-            "If you've misplaced it, "
-            "type `link me again`. To change your account associations, "
-            "contact an administrator."
-        )
-        slack.post_message(channel, msg)
+    if user_record and chat_text in SEND_LINK_COMMANDS:
+        slack.post_message(channel, ACCOUNT_ALREADY_ASSOCIATED_MSG)
         return
 
-    if user_record and chat_text == "link me again":
-        state = user_record.github_state
-
+    # generate unique identifer to track user during authentication process
+    state = str(uuid.uuid4())
+    if user_record and chat_text in RESEND_LINK_COMMANDS:
+        user_record.github_state = state
+        db.session.add(user_record)
+        db.session.commit()
     if not user_record:
-        # generate unique identifer to track user during authentication process
-        state = str(uuid.uuid4())
-
         user = User()
         user.slack_id = slack_id
         user.github_state = state
@@ -156,6 +159,7 @@ def exchange_code_for_access_token(code, state, user):
 
     # add to user record in database (with access_token)
     user.github_id = body["id"]
+    user.github_username = body["login"]
     user.github_state = None
     user.github_access_token = access_token
 

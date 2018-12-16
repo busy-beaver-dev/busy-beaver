@@ -18,6 +18,7 @@ services:
       GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}
       GITHUB_APP_CLIENT_ID: ${GITHUB_APP_CLIENT_ID}
       GITHUB_APP_CLIENT_SECRET: ${GITHUB_APP_CLIENT_SECRET}
+      SENTRY_DSN: ${SENTRY_DSN}
     volumes:
       - ./logs:/app/logs/
       - ./busy_beaver.db:/app/busy_beaver.db

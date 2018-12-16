@@ -1,8 +1,8 @@
-"""create user table
+"""make user table
 
-Revision ID: 0c21a605424e
+Revision ID: 3f5a7657912d
 Revises: 
-Create Date: 2018-11-30 17:06:42.184320
+Create Date: 2018-12-16 03:58:02.045980
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '0c21a605424e'
+revision = '3f5a7657912d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -24,6 +24,7 @@ def upgrade():
     sa.Column('date_modified', sa.DateTime(), nullable=True),
     sa.Column('slack_id', sa.String(length=300), nullable=False),
     sa.Column('github_id', sa.String(length=300), nullable=True),
+    sa.Column('github_username', sa.String(length=300), nullable=True),
     sa.Column('github_state', sa.String(length=36), nullable=True),
     sa.Column('github_access_token', sa.String(length=100), nullable=True),
     sa.PrimaryKeyConstraint('id')

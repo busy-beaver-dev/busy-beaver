@@ -30,6 +30,7 @@ build:
 
 up:
 	docker-compose up -d
+	make migrate-up
 
 down:
 	docker-compose down
@@ -67,11 +68,18 @@ shell-dev:
 ngrok:
 	ngrok http 5000
 
+prod-build-image:
+	docker build -f docker/prod/Dockerfile --tag alysivji/busy-beaver .
+
 prod-build:
 	docker-compose -f docker-compose.prod.yml build
 
+prod-migrate-up:
+	docker-compose -f docker-compose.prod.yml exec app alembic --config=./migrations/alembic.ini upgrade head
+
 prod-up:
 	docker-compose -f docker-compose.prod.yml up -d
+	make prod-migrate-up
 
 prod-down:
 	docker-compose -f docker-compose.prod.yml down
