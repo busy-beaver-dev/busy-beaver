@@ -5,6 +5,8 @@ from . import BaseModel
 class User(BaseModel):
     """User table"""
 
+    __tablename__ = "user"
+
     def __repr__(self):
         return f"<User slack: {self.slack_id} github: {self.github_id}>"
 

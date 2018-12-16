@@ -68,6 +68,9 @@ shell-dev:
 ngrok:
 	ngrok http 5000
 
+prod-build-image:
+	docker build -f docker/prod/Dockerfile --tag alysivji/busy-beaver .
+
 prod-build:
 	docker-compose -f docker-compose.prod.yml build
 
