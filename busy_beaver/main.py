@@ -28,6 +28,6 @@ def post_update(channel: str) -> None:
     text = ""
     github_usernames: List[User] = db.query(User).filter(User.slack_id.in_(members))
     for user in github_usernames:
-        text += github_stats.recent_activity_text(user.github_username)
+        text += github_stats.recent_activity_text(user)
 
     slack.post_message(channel_id, text)

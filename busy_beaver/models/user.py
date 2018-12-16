@@ -9,7 +9,7 @@ class User(BaseModel):
         return f"<User slack: {self.slack_id} github: {self.github_id}>"
 
     # Attributes
-    # this is unique
+    id = db.Column(db.Integer, primary_key=True)
     slack_id = db.Column(db.String(300), nullable=False)
 
     github_id = db.Column(db.String(300), nullable=True)
