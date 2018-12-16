@@ -91,13 +91,13 @@ def reply_to_user_with_github_login_link(event):
         slack.post_message(channel, ACCOUNT_ALREADY_ASSOCIATED_MSG)
         return
 
+    # generate unique identifer to track user during authentication process
+    state = str(uuid.uuid4())
     if user_record and chat_text in RESEND_LINK_COMMANDS:
-        state = user_record.github_state
-
+        user_record.github_state = state
+        db.session.add(user_record)
+        db.session.commit()
     if not user_record:
-        # generate unique identifer to track user during authentication process
-        state = str(uuid.uuid4())
-
         user = User()
         user.slack_id = slack_id
         user.github_state = state
