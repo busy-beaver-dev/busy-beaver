@@ -76,6 +76,7 @@ ACCOUNT_ALREADY_ASSOCIATED_MSG = (
     "Please type `link me again` to link to a different account."
 )
 
+
 @api.background.task
 def reply_to_user_with_github_login_link(event):
     chat_text = str.lower(event["text"])
