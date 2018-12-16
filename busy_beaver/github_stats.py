@@ -18,9 +18,13 @@ def recent_activity_text(user: User):
         if event["type"] in ["PushEvent", "WatchEvent"]:
             event_of_interest = {}
             event_of_interest["type"] = event["type"]
-            event_of_interest[
-                "repo"
-            ] = f"<{event['repo']['url']}|{event['repo']['name']}>"
+            repo_url = event['repo']['url']
+            repo_url = repo_url.replace(
+                "https://api.github.com/repos/",
+                "https://www.github.com/"
+            )
+            repo_name = event['repo']['name']
+            event_of_interest["repo"] = f"<{repo_url}|{repo_name}>"
 
             if event["type"] == "PushEvent":
                 event_of_interest["commit_count"] = len(event["payload"]["commits"])
@@ -28,7 +32,10 @@ def recent_activity_text(user: User):
             events_of_interest.append(event_of_interest)
 
     if len(events_of_interest) > 1:
-        text = f"<@{user.slack_id}> as <https://github.com/{user.github_username}>\n"
+        text = (
+            f"<@{user.slack_id}> as <https://github.com/{user.github_username}|"
+            f"{user.github_username}>\n"
+        )
         for event_type in sorted(list(set([e["type"] for e in events_of_interest]))):
             events = [
                 event for event in events_of_interest if event["type"] == event_type
