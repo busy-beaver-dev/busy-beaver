@@ -79,6 +79,7 @@ ACCOUNT_ASSOCIATE_MSG = (
     "I'll reference your GitHub username to track your public activity."
 )
 
+
 @api.background.task
 def reply_to_user_with_github_login_link(event):
     chat_text = str.lower(event["text"])
