@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/alysivji/busy-beaver.svg?branch=master)](https://travis-ci.org/alysivji/busy-beaver)
 
-Slack bot that GitHub activity summaries for registered users.
+Slack bot that posts GitHub activity summaries for registered users.
 
 ## Introduction
 
@@ -60,6 +60,27 @@ export DATADOG_API_KEY=[datadog-api-key]
 ```
 
 Commits into `master` kick-off the build of the deployment docker image. Currently, an admin needs to ssh into the deployment box to manually trigger a refresh. Future iterations will investigate using container orchestration and/or the use of a development box for builds.
+
+---
+
+## Slack Permission Scopes
+
+```text
+CONVERSATIONS
+Access information about user’s public channels
+channels:read
+
+Send messages as BusyBeaverStaging
+chat:write:bot
+
+INTERACTIVITY
+Add a bot user with the username @busybeaver
+bot
+
+BOT EVENTS
+A message was posted in a direct message channel
+message.im
+```
 
 ---
 

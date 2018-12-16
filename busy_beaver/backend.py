@@ -48,17 +48,15 @@ api.add_route("/hello", HelloWorldResource())
 class SlackEventSubscriptionResource:
     async def on_post(self, req, resp):
         data = await req.media()
+        logger.info("[Busy-Beaver] Recieved event from Slack", extra={"req_json": data})
 
         verification_request = data["type"] == "url_verification"
         if verification_request:
+            logger.info("[Busy-Beaver] Slack -- API Verification")
             resp.media = {"challenge": data["challenge"]}
             return
 
         event = data["event"]
-        msg_from_bot = event.get("subtype") == "bot_message"
-        if event["type"] == "message" and msg_from_bot:
-            return
-
         dm_to_bot = event["channel_type"] == "im"
         if event["type"] == "message" and dm_to_bot:
             reply_to_user_with_github_login_link(event)
@@ -66,14 +64,14 @@ class SlackEventSubscriptionResource:
 
 api.add_route("/slack-event-subscription", SlackEventSubscriptionResource())
 
-SEND_LINK_COMMANDS = ["link me"]
-RESEND_LINK_COMMANDS = ["link me again"]
+SEND_LINK_COMMANDS = ["connect"]
+RESEND_LINK_COMMANDS = ["reconnect"]
 ALL_LINK_COMMANDS = SEND_LINK_COMMANDS + RESEND_LINK_COMMANDS
 
-UNKNOWN_COMMAND_MSG = "Don't recognize your command. Type `link me` link your GitHub."
+UNKNOWN_COMMAND_MSG = "Don't recognize your command. Type `connect` link your GitHub."
 ACCOUNT_ALREADY_ASSOCIATED_MSG = (
     "You have already associated a GitHub account with your Slack handle. "
-    "Please type `link me again` to link to a different account."
+    "Please type `reconnect` to link to a different account."
 )
 
 
@@ -84,21 +82,25 @@ def reply_to_user_with_github_login_link(event):
     channel = event["channel"]
 
     if chat_text not in ALL_LINK_COMMANDS:
+        logger.info("[Busy-Beaver] Unknown command")
         slack.post_message(channel, UNKNOWN_COMMAND_MSG)
         return
 
     user_record = db.query(User).filter_by(slack_id=slack_id).first()
     if user_record and chat_text in SEND_LINK_COMMANDS:
+        logger.info("[Busy-Beaver] Slack acount already linked to GitHub")
         slack.post_message(channel, ACCOUNT_ALREADY_ASSOCIATED_MSG)
         return
 
     # generate unique identifer to track user during authentication process
     state = str(uuid.uuid4())
     if user_record and chat_text in RESEND_LINK_COMMANDS:
+        logger.info("[Busy-Beaver] Relinking GitHub account.")
         user_record.github_state = state
         db.session.add(user_record)
         db.session.commit()
     if not user_record:
+        logger.info("[Busy-Beaver] New user. Linking GitHub account.")
         user = User()
         user.slack_id = slack_id
         user.github_state = state
@@ -118,15 +120,18 @@ def reply_to_user_with_github_login_link(event):
 ########
 class GitHubIntegrationResource:
     def on_get(self, req, resp):
+        logger.info("[Busy-Beaver] GitHub Redirect")
         params = req.params
         code = params.get("code")
         state = params.get("state")
 
         user = db.query(User).filter_by(github_state=state).first()
         if not user:
+            logger.error("[Busy-Beaver] GitHub state does not match")
             return {"Error": "Unknown"}
 
         exchange_code_for_access_token(code, state, user)
+        logger.info("[Busy-Beaver] Account is linked to GitHub")
         resp.media = {"Login": "successful"}
 
 
@@ -144,6 +149,7 @@ def exchange_code_for_access_token(code, state, user):
 
     headers = {"Accept": "application/json"}
 
+    logger.info("[Busy-Beaver] Changing code for OAuth token")
     resp = requests.post(
         "https://github.com/login/oauth/access_token", data=data, headers=headers
     )

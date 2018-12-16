@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/dev/Dockerfile
-    command: ["uvicorn", "busy_beaver:api", "--host", "0.0.0.0", "--port", "5100"]
+    command: ["uvicorn", "busy_beaver:api", "--debug", "--host", "0.0.0.0", "--port", "5100"]
     environment:
       PYTHONPATH: .
       DATABASE_URI: sqlite:////app/busy_beaver.db
@@ -13,7 +13,6 @@ services:
       GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}
       GITHUB_APP_CLIENT_ID: ${GITHUB_APP_CLIENT_ID}
       GITHUB_APP_CLIENT_SECRET: ${GITHUB_APP_CLIENT_SECRET}
-      SENTRY_DSN: ${SENTRY_DSN}
     stdin_open: true
     tty: true
     volumes:
