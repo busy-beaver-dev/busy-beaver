@@ -13,5 +13,6 @@ class User(BaseModel):
     slack_id = db.Column(db.String(300), nullable=False)
 
     github_id = db.Column(db.String(300), nullable=True)
+    github_username = db.Column(db.String(300), nullable=True)
     github_state = db.Column(db.String(36), nullable=True)
     github_access_token = db.Column(db.String(100), nullable=True)

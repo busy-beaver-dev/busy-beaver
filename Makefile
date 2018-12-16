@@ -30,6 +30,7 @@ build:
 
 up:
 	docker-compose up -d
+	make migrate-up
 
 down:
 	docker-compose down
@@ -70,8 +71,12 @@ ngrok:
 prod-build:
 	docker-compose -f docker-compose.prod.yml build
 
+prod-migrate-up:
+	docker-compose -f docker-compose.prod.yml exec app alembic --config=./migrations/alembic.ini upgrade head
+
 prod-up:
 	docker-compose -f docker-compose.prod.yml up -d
+	make prod-migrate-up
 
 prod-down:
 	docker-compose -f docker-compose.prod.yml down
