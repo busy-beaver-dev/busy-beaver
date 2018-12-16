@@ -194,3 +194,27 @@ def exchange_code_for_access_token(code, state, user):
 
     db.session.add(user)
     db.session.commit()
+
+
+##########
+# CRON job
+##########
+class PublishGitHubSummaryResource:
+    def on_post(self, req, resp):
+        logger.info("[Busy-Beaver] Post GitHub Summary Request")
+
+        # token based authentication
+        # header: "Authorization": f"token {access_token}"
+
+        # look up in database
+        # if authorized user, allow
+        # write this in docs
+
+        # kick off background job
+        # TODO maybe add a task queue here
+
+        logger.info("[Busy-Beaver] Post GitHub Summary Successful")
+        resp.media = {"run": "kicked_off"}
+
+
+api.add_route("/github-summary", PublishGitHubSummaryResource())
