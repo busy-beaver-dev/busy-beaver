@@ -1,5 +1,6 @@
-import os
+import json
 import logging
+import os
 import time
 from urllib.parse import urlencode
 import uuid
@@ -68,10 +69,14 @@ SEND_LINK_COMMANDS = ["connect"]
 RESEND_LINK_COMMANDS = ["reconnect"]
 ALL_LINK_COMMANDS = SEND_LINK_COMMANDS + RESEND_LINK_COMMANDS
 
-UNKNOWN_COMMAND_MSG = "Don't recognize your command. Type `connect` link your GitHub."
+UNKNOWN_COMMAND_MSG = "I don't recognize your command. Type `connect` to link your GitHub account."
 ACCOUNT_ALREADY_ASSOCIATED_MSG = (
     "You have already associated a GitHub account with your Slack handle. "
     "Please type `reconnect` to link to a different account."
+)
+ACCOUNT_ASSOCIATE_MSG = (
+    "Follow the link below to validate your GitHub account. "
+    "I'll reference your GitHub username to track your public activity."
 )
 
 
@@ -111,7 +116,23 @@ def reply_to_user_with_github_login_link(event):
     data = {"client_id": CLIENT_ID, "redirect_uri": GITHUB_REDIRECT_URI, "state": state}
     query_params = urlencode(data)
     url = f"https://github.com/login/oauth/authorize?{query_params}"
-    slack.post_message(channel, url)
+    post_text = {
+        "text": ACCOUNT_ASSOCIATE_MSG,
+        "attachments": [
+            {
+                "fallback": url,
+                "attachment_type": "default",
+                "actions": [
+                    {
+                        "text": "Associate GitHub Profile",
+                        "type": "button",
+                        "url": url
+                    }
+                ]
+            }
+        ]
+    }
+    slack.post_message(channel, json.dumps(post_text))
     return
 
 
