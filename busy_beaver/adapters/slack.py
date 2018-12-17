@@ -21,5 +21,5 @@ class SlackAdapter:
     def get_channel_info(self, channel_id):
         return self.sc.api_call("channels.info", channel=channel_id)
 
-    def post_message(self, channel_id, text):
-        return self.sc.api_call("chat.postMessage", channel=channel_id, text=text)
+    def post_message(self, channel_id, text, attachments=None):
+        return self.sc.api_call("chat.postMessage", channel=channel_id, text=text, attachments=attachments)
