@@ -1,6 +1,6 @@
 import os
 
-IN_PRODUCTION = os.getenv("ENV_NAME", False)
+IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
 
 # infrastructure
 local_db = "sqlite:///busy_beaver.db"
@@ -15,12 +15,12 @@ LOGGING_CONFIG = {
     "disable_existing_loggers": False,
     "formatters": {
         "standard": {
-            "format": "[%(asctime)s] %(name)s:%(lineno)s %(message)s",
+            "format": "[%(asctime)s] %(levelname)s %(name)s:%(lineno)s %(message)s",
             "datefmt": "%Y-%m-%d %H:%M:%S",
         },
         "json": {
             "class": "pythonjsonlogger.jsonlogger.JsonFormatter",
-            "format": "%(asctime)s %(filename)s %(funcName)s %(lineno)s %(message)s",
+            "format": "%(asctime)s %(levelname)s %(filename)s %(funcName)s %(lineno)s %(message)s",
         },
     },
     "handlers": {
