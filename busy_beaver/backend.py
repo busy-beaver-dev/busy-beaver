@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 import time
@@ -130,7 +129,7 @@ def reply_to_user_with_github_login_link(event):
         }
     ]
     slack.post_message(
-        channel=channel, text=ACCOUNT_ASSOCIATE_MSG, attachments=json.dumps(attachment)
+        channel=channel, text=ACCOUNT_ASSOCIATE_MSG, attachments=attachment)
     )
     return
 
