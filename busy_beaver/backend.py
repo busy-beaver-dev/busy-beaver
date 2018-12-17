@@ -1,4 +1,3 @@
-import json
 import logging
 import os
 import time
@@ -116,23 +115,22 @@ def reply_to_user_with_github_login_link(event):
     data = {"client_id": CLIENT_ID, "redirect_uri": GITHUB_REDIRECT_URI, "state": state}
     query_params = urlencode(data)
     url = f"https://github.com/login/oauth/authorize?{query_params}"
-    post_text = {
-        "text": ACCOUNT_ASSOCIATE_MSG,
-        "attachments": [
-            {
-                "fallback": url,
-                "attachment_type": "default",
-                "actions": [
-                    {
-                        "text": "Associate GitHub Profile",
-                        "type": "button",
-                        "url": url
-                    }
-                ]
-            }
-        ]
-    }
-    slack.post_message(channel, json.dumps(post_text))
+    attachment = [
+        {
+            "fallback": url,
+            "attachment_type": "default",
+            "actions": [
+                {
+                    "text": "Associate GitHub Profile",
+                    "type": "button",
+                    "url": url
+                }
+            ]
+        }
+    ]
+    slack.post_message(
+        channel=channel, text=ACCOUNT_ASSOCIATE_MSG, attachments=attachment
+    )
     return
 
 

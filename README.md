@@ -12,17 +12,23 @@ Users can sign up for an account by messaging the bot with a specific passphrase
 
 ## Project Information
 
+### Installation Notes
+
+Create a Slack app via the [Slack API](https://api.slack.com/). The app will need **Event Subscriptions** configured to send information to a server for processing. Specifically, the Slack app is subscribed to [message.im](https://api.slack.com/events/message.im) bot events, which include direct messages sent to the bot. The app will also need scopes configured in **OAuth & Permissions** (see [here](#Slack-Permission-Scopes)).
+
+Configure a server with an endpoint URL to receive HTTP POST requests when `message.im` events occur. A service like [ngrok](https://ngrok.com/) is useful here for local development purposes.
+
+Create a GitHub app. The sole function of this app is to provide a means for the Slack user to validate their GitHub account.
+
+When a Slack user chats "connect" to the bot user via direct message, the server receives the event details and generates a unique `state` identifier. The server logs the Slack user and identifier to our server database. The bot user chats a GitHub URL containing our GitHub app's `client_id` and the `state` identifier. The URL leads the user to a validation page in which they log in to GitHub and approve access to basic public information. Upon approval, the GitHub user's details and `state` identifier are sent to another server endpoint. The server updates the Slack user record with GitHub user details by using the `state` identifier as a common key.
+
 ### Stack
 
 - [requests](https://github.com/requests/requests)
 - [responder](https://github.com/kennethreitz/responder)
 - [sqlalchemy](https://www.sqlalchemy.org/)
 
-### Workflow Diagram
-
-- TODO
-
-#### Tests
+### Tests
 
 - [pytest](https://github.com/pytest-dev/pytest)
 - [vcr.py](https://github.com/kevin1024/vcrpy)
