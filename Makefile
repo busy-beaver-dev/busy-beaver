@@ -59,6 +59,12 @@ test-skipvcr:
 lint:
 	docker-compose exec app flake8
 
+attach:
+	docker attach `docker-compose ps -q app`
+
+logger:
+	docker logs `docker-compose ps -q app`
+
 shell:
 	docker-compose exec app bash
 

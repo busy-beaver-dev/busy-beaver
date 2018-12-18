@@ -57,6 +57,10 @@ class SlackEventSubscriptionResource:
             return
 
         event = data["event"]
+        msg_from_bot = event.get("subtype") == "bot_message"
+        if event["type"] == "message" and msg_from_bot:
+            return
+
         dm_to_bot = event["channel_type"] == "im"
         if event["type"] == "message" and dm_to_bot:
             reply_to_user_with_github_login_link(event)
