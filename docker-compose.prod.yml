@@ -27,8 +27,10 @@ services:
       - local
     labels:
       - traefik.enable=true
+      - traefik.docker.network=sivnet
       - traefik.backend=busybeaver
       - traefik.frontend.rule=Host:busybeaver.sivji.com
+      - traefik.port=5100
   # agents
   datadog:  # collect logs
     build: datadog

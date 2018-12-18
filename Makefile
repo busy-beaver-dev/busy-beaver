@@ -14,6 +14,8 @@ help:
 	@echo ' make test-skipvcr     run non-vcr tests                           '
 	@echo ' make lint             run flake8 linter                           '
 	@echo '                                                                   '
+	@echo ' make debug            attach to app container for debugging       '
+	@echo ' make log              attach to logs                              '
 	@echo ' make shell            log into into app container -- bash-shell   '
 	@echo ' make shell-dev        open ipython shell with application context '
 	@echo ' make ngrok            start ngrok to forward port                 '
@@ -59,11 +61,11 @@ test-skipvcr:
 lint:
 	docker-compose exec app flake8
 
-attach:
-	docker attach `docker-compose ps -q app`
-
-logger:
+log:
 	docker logs `docker-compose ps -q app`
+
+debug:
+	docker attach `docker-compose ps -q app`
 
 shell:
 	docker-compose exec app bash

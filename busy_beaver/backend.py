@@ -7,8 +7,9 @@ import uuid
 import requests
 
 from . import api, db
-from .models import User
+from .models import ApiUser, User
 from .adapters.slack import SlackAdapter
+from .post_summary_stats import post_summary
 
 logger = logging.getLogger(__name__)
 
@@ -72,7 +73,9 @@ SEND_LINK_COMMANDS = ["connect"]
 RESEND_LINK_COMMANDS = ["reconnect"]
 ALL_LINK_COMMANDS = SEND_LINK_COMMANDS + RESEND_LINK_COMMANDS
 
-UNKNOWN_COMMAND_MSG = "I don't recognize your command. Type `connect` to link your GitHub account."
+UNKNOWN_COMMAND_MSG = (
+    "I don't recognize your command. Type `connect` to link your GitHub account."
+)
 ACCOUNT_ALREADY_ASSOCIATED_MSG = (
     "You have already associated a GitHub account with your Slack handle. "
     "Please type `reconnect` to link to a different account."
@@ -203,17 +206,31 @@ class PublishGitHubSummaryResource:
     def on_post(self, req, resp):
         logger.info("[Busy-Beaver] Post GitHub Summary Request")
 
-        # token based authentication
-        # header: "Authorization": f"token {access_token}"
+        if "authorization" not in req.headers:
+            logger.error("[Busy-Beaver] Post GitHub Summary Request -- no auth header")
+            resp.status_code = 401
+            resp.media = {"message": "Include header: Authorization: 'token {token}'"}
+            return
 
-        # look up in database
+        token = req.headers["authorization"]
+        api_user: ApiUser = db.query(ApiUser).filter_by(token=token).first()
+        if not api_user:
+            logger.error("[Busy-Beaver] Invalid token")
+            resp.status_code = 401
+            resp.media = {"message": "Invalid token, please talk to admin"}
+            return
+
         # if authorized user, allow
-        # write this in docs
+        logger.error(
+            "[Busy-Beaver] Post GitHub Summary Request -- login successful",
+            extra={"user": api_user.username},
+        )
 
+        # write this in docs
         # kick off background job
         # TODO maybe add a task queue here
 
-        logger.info("[Busy-Beaver] Post GitHub Summary Successful")
+        logger.info("[Busy-Beaver] Post GitHub Summary -- kicked-off")
         resp.media = {"run": "kicked_off"}
 
 

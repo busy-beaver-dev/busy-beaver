@@ -8,7 +8,7 @@ class User(BaseModel):
     __tablename__ = "user"
 
     def __repr__(self):
-        return f"<User slack: {self.slack_id} github: {self.github_id}>"
+        return f"<User slack: {self.slack_id} github: {self.github_username}>"
 
     # Attributes
     slack_id = db.Column(db.String(300), nullable=False)

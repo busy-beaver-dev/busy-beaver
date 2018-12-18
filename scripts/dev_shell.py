@@ -2,10 +2,10 @@ from datetime import timedelta
 import os
 
 from busy_beaver import db  # noqa
+from busy_beaver.models import *  # noqa
 from busy_beaver.adapters.github import GitHubAdapter  # noqa
 from busy_beaver.adapters.utilities import subtract_timedelta  # noqa
-from busy_beaver.post_summary_stats import post_update  # noqa
-from busy_beaver.models import *  # noqa
+from busy_beaver.post_summary_stats import post_summary  # noqa
 
 
 oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")

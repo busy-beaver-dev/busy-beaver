@@ -67,6 +67,14 @@ export DATADOG_API_KEY=[datadog-api-key]
 
 Commits into `master` kick-off the build of the deployment docker image. Currently, an admin needs to ssh into the deployment box to manually trigger a refresh. Future iterations will investigate using container orchestration and/or the use of a development box for builds.
 
+### Creating Account for API
+
+```python
+admin = ApiUser(username="admin", token="abc123!")
+db.session.add(admin)
+db.session.commit()
+```
+
 ---
 
 ## Slack Permission Scopes
