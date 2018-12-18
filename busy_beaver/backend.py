@@ -7,8 +7,9 @@ import uuid
 import requests
 
 from . import api, db
-from .models import User
+from .models import ApiUser, User
 from .adapters.slack import SlackAdapter
+from .post_summary_stats import post_summary
 
 logger = logging.getLogger(__name__)
 
@@ -194,3 +195,45 @@ def exchange_code_for_access_token(code, state, user):
 
     db.session.add(user)
     db.session.commit()
+
+
+##########
+# CRON job
+##########
+class PublishGitHubSummaryResource:
+    async def on_post(self, req, resp):
+        logger.info("[Busy-Beaver] Post GitHub Summary Request")
+
+        if "authorization" not in req.headers:
+            logger.error("[Busy-Beaver] Post GitHub Summary Request -- no auth header")
+            resp.status_code = 401
+            resp.media = {"message": "Include header: Authorization: 'token {token}'"}
+            return
+
+        token = req.headers["authorization"].split("token ")[1]
+        api_user: ApiUser = db.query(ApiUser).filter_by(token=token).first()
+        if not api_user:
+            logger.error("[Busy-Beaver] Invalid token")
+            resp.status_code = 401
+            resp.media = {"message": "Invalid token, please talk to admin"}
+            return
+
+        # if authorized user, allow
+        logger.info(
+            "[Busy-Beaver] Post GitHub Summary Request -- login successful",
+            extra={"user": api_user.username},
+        )
+
+        # TODO maybe add a task queue here
+        data = await req.media()
+        if "channel" not in data:
+            logger.error("[Busy-Beaver] Post GitHub Summary Request -- need channel in JSON body")
+            return
+        channel = data["channel"]
+        post_summary(channel=channel)
+
+        logger.info("[Busy-Beaver] Post GitHub Summary -- kicked-off")
+        resp.media = {"run": "kicked_off"}
+
+
+api.add_route("/github-summary", PublishGitHubSummaryResource())

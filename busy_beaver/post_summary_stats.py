@@ -4,10 +4,10 @@ from typing import List
 from . import github_stats
 from .adapters.slack import SlackAdapter
 
-from . import db
+from . import db, api
 from .models import User
 
-slack_token = os.environ["SLACK_BOTUSER_OAUTH_TOKEN"]
+slack_token = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN")
 slack = SlackAdapter(slack_token)
 
 
@@ -21,7 +21,8 @@ def get_channel_members(channel_id: str) -> List[str]:
     return channel_info["channel"]["members"]
 
 
-def post_update(channel: str) -> None:
+@api.background.task
+def post_summary(channel: str) -> None:
     channel_id = get_channel_id(channel)
     members = get_channel_members(channel_id)
 

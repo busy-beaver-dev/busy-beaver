@@ -109,5 +109,5 @@ ENV/
 
 # local development files
 logs/
-busy_beaver.db
+busy_beaver*db
 creds.txt

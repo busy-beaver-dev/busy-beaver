@@ -22,6 +22,16 @@ Create a GitHub app. The sole function of this app is to provide a means for the
 
 When a Slack user chats "connect" to the bot user via direct message, the server receives the event details and generates a unique `state` identifier. The server logs the Slack user and identifier to our server database. The bot user chats a GitHub URL containing our GitHub app's `client_id` and the `state` identifier. The URL leads the user to a validation page in which they log in to GitHub and approve access to basic public information. Upon approval, the GitHub user's details and `state` identifier are sent to another server endpoint. The server updates the Slack user record with GitHub user details by using the `state` identifier as a common key.
 
+### API Docs
+
+- Kick off summary run by making a `POST` request to `/github-summary` with `Authentication` header set to `token {token}` and JSON body:
+
+```json
+{
+  "channel": "channel_to_post"
+}
+```
+
 ### Stack
 
 - [requests](https://github.com/requests/requests)
@@ -66,6 +76,14 @@ export DATADOG_API_KEY=[datadog-api-key]
 ```
 
 Commits into `master` kick-off the build of the deployment docker image. Currently, an admin needs to ssh into the deployment box to manually trigger a refresh. Future iterations will investigate using container orchestration and/or the use of a development box for builds.
+
+### Creating Account for API
+
+```python
+admin = ApiUser(username="admin", token="abc123!")
+db.session.add(admin)
+db.session.commit()
+```
 
 ---
 
