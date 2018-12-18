@@ -73,9 +73,7 @@ SEND_LINK_COMMANDS = ["connect"]
 RESEND_LINK_COMMANDS = ["reconnect"]
 ALL_LINK_COMMANDS = SEND_LINK_COMMANDS + RESEND_LINK_COMMANDS
 
-UNKNOWN_COMMAND_MSG = (
-    "I don't recognize your command. Type `connect` to link your GitHub account."
-)
+UNKNOWN_COMMAND_MSG = "I don't recognize your command. Type `connect` to link your GitHub account."
 ACCOUNT_ALREADY_ASSOCIATED_MSG = (
     "You have already associated a GitHub account with your Slack handle. "
     "Please type `reconnect` to link to a different account."
@@ -203,7 +201,7 @@ def exchange_code_for_access_token(code, state, user):
 # CRON job
 ##########
 class PublishGitHubSummaryResource:
-    def on_post(self, req, resp):
+    async def on_post(self, req, resp):
         logger.info("[Busy-Beaver] Post GitHub Summary Request")
 
         if "authorization" not in req.headers:
@@ -212,7 +210,7 @@ class PublishGitHubSummaryResource:
             resp.media = {"message": "Include header: Authorization: 'token {token}'"}
             return
 
-        token = req.headers["authorization"]
+        token = req.headers["authorization"].split("token ")[1]
         api_user: ApiUser = db.query(ApiUser).filter_by(token=token).first()
         if not api_user:
             logger.error("[Busy-Beaver] Invalid token")
@@ -221,14 +219,18 @@ class PublishGitHubSummaryResource:
             return
 
         # if authorized user, allow
-        logger.error(
+        logger.info(
             "[Busy-Beaver] Post GitHub Summary Request -- login successful",
             extra={"user": api_user.username},
         )
 
-        # write this in docs
-        # kick off background job
         # TODO maybe add a task queue here
+        data = await req.media()
+        if "channel" not in data:
+            logger.error("[Busy-Beaver] Post GitHub Summary Request -- need channel in JSON body")
+            return
+        channel = data["channel"]
+        post_summary(channel=channel)
 
         logger.info("[Busy-Beaver] Post GitHub Summary -- kicked-off")
         resp.media = {"run": "kicked_off"}

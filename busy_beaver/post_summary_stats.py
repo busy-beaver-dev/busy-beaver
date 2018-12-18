@@ -7,7 +7,7 @@ from .adapters.slack import SlackAdapter
 from . import db, api
 from .models import User
 
-slack_token = os.environ["SLACK_BOTUSER_OAUTH_TOKEN"]
+slack_token = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN")
 slack = SlackAdapter(slack_token)
 
 
