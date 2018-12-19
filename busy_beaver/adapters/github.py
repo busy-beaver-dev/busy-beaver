@@ -69,14 +69,19 @@ class GitHubAdapter:
         """Keep fetching until we have captured the timestamp or are on the last page"""
         all_items = []
         page_num = 1
+
         while True:
             combined_params = self.params.copy()
             combined_params.update({"page": page_num})
             resp = self.__get(url, params=combined_params)
             all_items.extend(resp.json)
+
+            single_page_of_activity = "Link" not in resp.headers
+            if single_page_of_activity:
+                break
+
             nav = create_github_navigation_panel(resp.headers["Link"])
             last_page = page_from_url(nav.last_link)
-
             min_batch_timestamp = date_parse(resp.json[-1]["created_at"])
             keep_fetching = timestamp <= min_batch_timestamp and page_num < last_page
             if not keep_fetching:
