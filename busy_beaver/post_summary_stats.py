@@ -1,8 +1,7 @@
 import os
 from typing import List
 
-from . import db, api
-from . import github_stats
+from . import api, db, github_stats
 from .adapters.slack import SlackAdapter
 from .models import User
 
