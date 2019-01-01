@@ -1,6 +1,6 @@
 # Busy Beaver
 
-<center><img src="assets/logo.png" alt="Busy Beaver Logo" width=300 /></center>
+<p align="center"><img src="assets/logo.png" alt="Busy Beaver Logo" width=300 /></p>
 
 [![Build Status](https://travis-ci.org/alysivji/busy-beaver.svg?branch=master)](https://travis-ci.org/alysivji/busy-beaver)
 
