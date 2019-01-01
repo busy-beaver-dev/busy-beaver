@@ -12,7 +12,7 @@ def recent_activity_text(user: User):
     boundary_dt = subtract_timedelta(timedelta(days=1))
     activity = github.user_activity_after(user.github_username, boundary_dt)
     events_of_interest = find_events_of_interest(activity)
-    return generate_recent_activity_text(events_of_interest)
+    return generate_recent_activity_text(user, events_of_interest)
 
 
 def find_events_of_interest(activity):
