@@ -28,24 +28,25 @@ class GitHubAdapter:
     def __repr__(self):
         return "GitHubAdapter"
 
-    ################
-    # Adapter-Client
-    ################
-    def __get(self, url: str, **kwargs) -> Response:
-        resp = self.client.get(url, headers=self.headers, **kwargs)
-        if resp.status_code != 200:
-            raise UnexpectedStatusCode
-        return resp
+    def sitemap(self):
+        url = BASE_URL + "/"
+        return self.__get(url)
 
-    def __head(self, url: str, **kwargs) -> Response:
-        resp = self.client.head(url, headers=self.headers, **kwargs)
-        if resp.status_code != 200:
-            raise UnexpectedStatusCode
-        return resp
+    def all_user_repos(self, user: str, *, max_pages: int = 10) -> List[Dict]:
+        url = BASE_URL + f"/users/{user}/repos"
+        all_repos = self._get_all_items(url, max_pages=max_pages)
+        return all_repos
 
-    ################
-    # Helper Methods
-    ################
+    def all_user_stars(self, user: str, *, max_pages: int = 10) -> List[Dict]:
+        url = BASE_URL + f"/users/{user}/starred"
+        all_stars = self._get_all_items(url, max_pages=max_pages)
+        return all_stars
+
+    def user_activity_after(self, user: str, timestamp: datetime) -> List[Dict]:
+        url = BASE_URL + f"/users/{user}/events/public"
+        user_events = self._get_items_after_timestamp(url, timestamp=timestamp)
+        return user_events
+
     def _get_all_items(self, url: str, *, max_pages: int = 5) -> List[Dict]:
         resp = self.__head(url)
         headers = resp.headers
@@ -92,24 +93,14 @@ class GitHubAdapter:
         filtered_items = filter_items_before(timestamp=timestamp, items=all_items)
         return filtered_items
 
-    ############
-    # Public API
-    ############
-    def sitemap(self):
-        url = BASE_URL + "/"
-        return self.__get(url)
+    def __get(self, url: str, **kwargs) -> Response:
+        resp = self.client.get(url, headers=self.headers, **kwargs)
+        if resp.status_code != 200:
+            raise UnexpectedStatusCode
+        return resp
 
-    def all_user_repos(self, user: str, *, max_pages: int = 10) -> List[Dict]:
-        url = BASE_URL + f"/users/{user}/repos"
-        all_repos = self._get_all_items(url, max_pages=max_pages)
-        return all_repos
-
-    def all_user_stars(self, user: str, *, max_pages: int = 10) -> List[Dict]:
-        url = BASE_URL + f"/users/{user}/starred"
-        all_stars = self._get_all_items(url, max_pages=max_pages)
-        return all_stars
-
-    def user_activity_after(self, user: str, timestamp: datetime) -> List[Dict]:
-        url = BASE_URL + f"/users/{user}/events/public"
-        user_events = self._get_items_after_timestamp(url, timestamp=timestamp)
-        return user_events
+    def __head(self, url: str, **kwargs) -> Response:
+        resp = self.client.head(url, headers=self.headers, **kwargs)
+        if resp.status_code != 200:
+            raise UnexpectedStatusCode
+        return resp
