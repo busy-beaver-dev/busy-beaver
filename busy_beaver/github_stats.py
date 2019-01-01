@@ -5,11 +5,10 @@ from .adapters.utilities import subtract_timedelta
 from .config import oauth_token
 from .models import User
 
-github = GitHubAdapter(oauth_token)
-
 
 def recent_activity_text(user: User):
     boundary_dt = subtract_timedelta(timedelta(days=1))
+    github = GitHubAdapter(oauth_token)
     activity = github.user_activity_after(user.github_username, boundary_dt)
 
     events_of_interest = []
