@@ -55,7 +55,9 @@ class GitHubUserEvents:
     def _create_repos_text(self):
         repos = [generate_link(event) for event in self.forked_repos]
         repo_count = len(repos)
-        if repo_count > 1:
+        if repo_count == 0:
+            return ""
+        elif repo_count > 1:
             repo_s = "s"
         else:
             repo_s = ""
@@ -76,7 +78,9 @@ class GitHubUserEvents:
     def _commits_text(self):
         repos = set([generate_link(event) for event in self.commits])
         repo_count = len(repos)
-        if repo_count > 1:
+        if repo_count == 0:
+            return ""
+        elif repo_count > 1:
             repo_s = "s"
         else:
             repo_s = ""
@@ -97,7 +101,9 @@ class GitHubUserEvents:
     def _starred_repos_text(self):
         repos = [generate_link(event) for event in self.starred_repos]
         repo_count = len(repos)
-        if repo_count > 1:
+        if repo_count == 0:
+            return ""
+        elif repo_count > 1:
             repo_s = "s"
         else:
             repo_s = ""
