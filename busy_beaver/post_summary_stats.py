@@ -16,14 +16,13 @@ def post_summary(channel: str) -> None:
     channel_id = get_channel_id(channel)
     members = get_channel_members(channel_id)
 
-    text = ""
-    users: List[User] = db.query(User).filter(
-        and_(User.slack_id.in_(members)), User.github_username.isnot(None)
-    ).all()
+    conditions = and_(User.slack_id.in_(members)), User.github_username.isnot(None)
+    users: List[User] = db.query(User).filter(conditions).all()
+    message = ""
     for user in users:
-        text += github_stats.generate_recent_activity_text(user)
+        message += github_stats.generate_recent_activity_text(user)
 
-    slack.post_message(channel_id, text)
+    slack.post_message(channel_id, message)
 
 
 def get_channel_id(channel_name):
