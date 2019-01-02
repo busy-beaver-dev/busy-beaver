@@ -55,13 +55,35 @@ class GitHubUserEvents:
     releases_published: List[dict] = field(default_factory=list)
     starred_repos: List[dict] = field(default_factory=list)
 
-    def _create_repos_text(self):
-        repos = [generate_link(event) for event in self.forked_repos]
-        repo_count = len(repos)
-        if repo_count == 0:
+    def generate_summary_text(self):
+        # TODO implement rest
+        text = ""
+        text += self._create_repos_text()
+        # text += self._forked_repos_text()
+        # text += self._issues_opened_text()
+        # text += self._publicized_repos_text()
+        # text += self._pull_requests_text()
+        text += self._commits_text()
+        # text += self._releases_published_text()
+        text += self._starred_repos_text()
+
+        if not text:
             return ""
 
-        return f">:sparkles: {repo_count} {repo_text(repo_count)}: {', '.join(repos)}\n"
+        text = (
+            f"<@{self.user.slack_id}> as "
+            f"<https://github.com/{self.user.github_username}|"
+            f"{self.user.github_username}>\n"
+        ) + text
+        return text + "\n"
+
+    def _create_repos_text(self):
+        if not self.forked_repos:
+            return ""
+
+        repos = [generate_repo_link(event) for event in self.forked_repos]
+        count = len(repos)
+        return f">:sparkles: {count} new {repo_text(count)}: {', '.join(repos)}\n"
 
     def _forked_repos_text(self):
         return ""
@@ -76,51 +98,30 @@ class GitHubUserEvents:
         return ""
 
     def _commits_text(self):
-        repos = set([generate_link(event) for event in self.commits])
-        repo_count = len(repos)
-        num_commits = sum([event["payload"]["distinct_size"] for event in self.commits])
-        if repo_count == 0:
+        if not self.commits:
             return ""
 
+        repos = set([generate_repo_link(event) for event in self.commits])
+        count = len(repos)
+        num_commits = sum([event["payload"]["distinct_size"] for event in self.commits])
         return (
             f">:arrow_up: {num_commits} {commit_text(num_commits)} to "
-            f"{repo_count} {repo_text(repo_count)}: {', '.join(repos)}\n"
+            f"{count} {repo_text(count)}: {', '.join(repos)}\n"
         )
 
     def _releases_published_text(self):
         return ""
 
     def _starred_repos_text(self):
-        repos = [generate_link(event) for event in self.starred_repos]
-        repo_count = len(repos)
-        if repo_count == 0:
+        if not self.starred_repos:
             return ""
 
-        return f">:star: {repo_count} {repo_text(repo_count)}: {', '.join(repos)}\n"
-
-    def generate_summary_text(self):
-        text = ""
-        text += self._create_repos_text()
-        text += self._forked_repos_text()
-        text += self._issues_opened_text()
-        text += self._publicized_repos_text()
-        text += self._pull_requests_text()
-        text += self._commits_text()
-        text += self._releases_published_text()
-        text += self._starred_repos_text()
-
-        if text == "":
-            return ""
-
-        text = (
-            f"<@{self.user.slack_id}> as "
-            f"<https://github.com/{self.user.github_username}|"
-            f"{self.user.github_username}>\n"
-        ) + text
-        return text + "\n"
+        repos = [generate_repo_link(event) for event in self.starred_repos]
+        count = len(repos)
+        return f">:star: {count} {repo_text(count)}: {', '.join(repos)}\n"
 
 
-def generate_link(event):
+def generate_repo_link(event):
     repo_url = event["repo"]["url"]
     repo_url = repo_url.replace(
         "https://api.github.com/repos/", "https://www.github.com/"
