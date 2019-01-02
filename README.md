@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/alysivji/busy-beaver.svg?branch=master)](https://travis-ci.org/alysivji/busy-beaver)
 
-Slack bot that posts GitHub activity summaries for registered users.
+Slack bot that summarizes public GitHub activity for registered users.
 
 ## Introduction
 
