@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import timedelta
+import gettext
 from typing import List
 
 from .adapters.github import GitHubAdapter
@@ -8,6 +9,8 @@ from .config import oauth_token
 from .models import User
 
 github = GitHubAdapter(oauth_token)
+repo_text = lambda n: gettext.ngettext("repo", "repos", n)  # noqa
+commit_text = lambda n: gettext.ngettext("commit", "commits", n)  # noqa
 
 
 def generate_recent_activity_text(user: User):
@@ -57,11 +60,8 @@ class GitHubUserEvents:
         repo_count = len(repos)
         if repo_count == 0:
             return ""
-        elif repo_count > 1:
-            repo_s = "s"
-        else:
-            repo_s = ""
-        return f">:sparkles: {repo_count} new repo{repo_s}: {', '.join(repos)}\n"
+
+        return f">:sparkles: {repo_count} {repo_text(repo_count)}: {', '.join(repos)}\n"
 
     def _forked_repos_text(self):
         return ""
@@ -78,21 +78,13 @@ class GitHubUserEvents:
     def _commits_text(self):
         repos = set([generate_link(event) for event in self.commits])
         repo_count = len(repos)
+        num_commits = sum([event["payload"]["distinct_size"] for event in self.commits])
         if repo_count == 0:
             return ""
-        elif repo_count > 1:
-            repo_s = "s"
-        else:
-            repo_s = ""
 
-        num_commits = sum([event["payload"]["distinct_size"] for event in self.commits])
-        if num_commits > 1:
-            commit_s = "s"
-        else:
-            commit_s = ""
         return (
-            f">:arrow_up: {num_commits} commit{commit_s} to "
-            f"{repo_count} repo{repo_s}: {', '.join(repos)}\n"
+            f">:arrow_up: {num_commits} {commit_text(num_commits)} to "
+            f"{repo_count} {repo_text(repo_count)}: {', '.join(repos)}\n"
         )
 
     def _releases_published_text(self):
@@ -103,11 +95,8 @@ class GitHubUserEvents:
         repo_count = len(repos)
         if repo_count == 0:
             return ""
-        elif repo_count > 1:
-            repo_s = "s"
-        else:
-            repo_s = ""
-        return f">:star: {repo_count} repo{repo_s}: {', '.join(repos)}\n"
+
+        return f">:star: {repo_count} {repo_text(repo_count)}: {', '.join(repos)}\n"
 
     def generate_summary_text(self):
         text = ""
