@@ -67,5 +67,5 @@ def page_from_url(url) -> int:
     return int(params['page'][0])
 
 
-def subtract_date(period: timedelta):
+def date_subtract(period: timedelta):
     return pytz.utc.localize(datetime.utcnow()) - period
