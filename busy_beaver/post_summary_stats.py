@@ -21,7 +21,7 @@ def post_summary(channel: str) -> None:
         and_(User.slack_id.in_(members)), User.github_username.isnot(None)
     ).all()
     for user in users:
-        text += github_stats.recent_activity_text(user)
+        text += github_stats.generate_recent_activity_text(user)
 
     slack.post_message(channel_id, text)
 

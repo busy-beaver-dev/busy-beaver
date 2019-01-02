@@ -1,72 +1,134 @@
+from dataclasses import dataclass, field
 from datetime import timedelta
+from typing import List
 
 from .adapters.github import GitHubAdapter
-from .adapters.utilities import subtract_timedelta
+from .adapters.utilities import subtract_date
 from .config import oauth_token
 from .models import User
 
 github = GitHubAdapter(oauth_token)
 
 
-def recent_activity_text(user: User):
-    boundary_dt = subtract_timedelta(timedelta(days=1))
-    activity = github.user_activity_after(user.github_username, boundary_dt)
-    events_of_interest = find_events_of_interest(activity)
-    return generate_recent_activity_text(user, events_of_interest)
+def generate_recent_activity_text(user: User):
+    boundary_dt = subtract_date(timedelta(days=1))
+    user_timeline = github.user_activity_after(user.github_username, boundary_dt)
+    user_events = classify_events(user, user_timeline)
+    return user_events.generate_summary_text()
 
 
-def find_events_of_interest(activity):
-    events_of_interest = []
-    for event in activity:
-        if event["type"] in ["PushEvent", "WatchEvent"]:
-            event_of_interest = {}
-            event_of_interest["type"] = event["type"]
-            repo_url = event['repo']['url']
-            repo_url = repo_url.replace(
-                "https://api.github.com/repos/",
-                "https://www.github.com/"
-            )
-            repo_name = event['repo']['name']
-            event_of_interest["repo"] = f"<{repo_url}|{repo_name}>"
+def classify_events(user: User, timeline: List[dict]):
+    user_events = GitHubUserEvents(user=user)
+    for event in timeline:
+        etype = event["type"]
+        if etype == "CreateEvent" and event["payload"].get("ref_type") == "repository":
+            user_events.created_repos.append(event)
+        elif etype == "ForkEvent":
+            user_events.forked_repos.append(event)
+        elif etype == "IssueEvents" and event["payload"].get("action") == "opened":
+            user_events.issues_opened.append(event)
+        elif event["type"] == "PublicEvent":
+            user_events.publicized_repos.append(event)
+        elif etype == "PullRequestEvent" and event["payload"].get("action") == "opened":
+            user_events.pull_requests.append(event)
+        elif etype == "PushEvent":
+            user_events.commits.append(event)
+        elif etype == "ReleaseEvent":
+            user_events.releases_published.append(event)
+        elif etype == "WatchEvent" and event["payload"].get("action") == "started":
+            user_events.starred_repos.append(event)
+    return user_events
 
-            if event["type"] == "PushEvent":
-                event_of_interest["commit_count"] = len(event["payload"]["commits"])
 
-            events_of_interest.append(event_of_interest)
-    return events_of_interest
+@dataclass
+class GitHubUserEvents:
+    user: User
+    created_repos: List[dict] = field(default_factory=list)
+    forked_repos: List[dict] = field(default_factory=list)
+    issues_opened: List[dict] = field(default_factory=list)
+    publicized_repos: List[dict] = field(default_factory=list)
+    pull_requests: List[dict] = field(default_factory=list)
+    commits: List[dict] = field(default_factory=list)
+    releases_published: List[dict] = field(default_factory=list)
+    starred_repos: List[dict] = field(default_factory=list)
 
+    def _create_repos_text(self):
+        repos = [generate_link(event) for event in self.forked_repos]
+        repo_count = len(repos)
+        if repo_count > 1:
+            repo_s = "s"
+        else:
+            repo_s = ""
+        return f">:sparkles: {repo_count} new repo{repo_s}: {', '.join(repos)}\n"
 
-def generate_recent_activity_text(user, events_of_interest):
-    if not events_of_interest:
+    def _forked_repos_text(self):
         return ""
 
-    text = (
-        f"<@{user.slack_id}> as <https://github.com/{user.github_username}|"
-        f"{user.github_username}>\n"
-    )
-    for event_type in sorted(list(set([e["type"] for e in events_of_interest]))):
-        events = [
-            event for event in events_of_interest if event["type"] == event_type
-        ]
-        repos = list(set([event["repo"] for event in events]))
-        repo_count = len(repos)
+    def _issues_opened_text(self):
+        return ""
 
+    def _publicized_repos_text(self):
+        return ""
+
+    def _pull_requests_text(self):
+        return ""
+
+    def _commits_text(self):
+        repos = set([generate_link(event) for event in self.commits])
+        repo_count = len(repos)
         if repo_count > 1:
             repo_s = "s"
         else:
             repo_s = ""
 
-        if event_type == "PushEvent":
-            commit_count = sum([event["commit_count"] for event in events])
-            if commit_count > 1:
-                commit_s = "s"
-            else:
-                commit_s = ""
-            text += (
-                f">:arrow_up: {commit_count} commit{commit_s} to "
-                f"{repo_count} repo{repo_s}: {', '.join(repos)}\n"
-            )
-        if event_type == "WatchEvent":
-            text += f">:star: {repo_count} repo{repo_s}: {', '.join(repos)}\n"
-    text += "\n"
-    return text
+        num_commits = sum([event["payload"]["distinct_size"] for event in self.commits])
+        if num_commits > 1:
+            commit_s = "s"
+        else:
+            commit_s = ""
+        return (
+            f">:arrow_up: {num_commits} commit{commit_s} to "
+            f"{repo_count} repo{repo_s}: {', '.join(repos)}\n"
+        )
+
+    def _releases_published_text(self):
+        return ""
+
+    def _starred_repos_text(self):
+        repos = [generate_link(event) for event in self.starred_repos]
+        repo_count = len(repos)
+        if repo_count > 1:
+            repo_s = "s"
+        else:
+            repo_s = ""
+        return f">:star: {repo_count} repo{repo_s}: {', '.join(repos)}\n"
+
+    def generate_summary_text(self):
+        text = ""
+        text += self._create_repos_text()
+        text += self._forked_repos_text()
+        text += self._issues_opened_text()
+        text += self._publicized_repos_text()
+        text += self._pull_requests_text()
+        text += self._commits_text()
+        text += self._releases_published_text()
+        text += self._starred_repos_text()
+
+        if text == "":
+            return ""
+
+        text = (
+            f"<@{self.user.slack_id}> as "
+            f"<https://github.com/{self.user.github_username}|"
+            f"{self.user.github_username}>\n"
+        ) + text
+        return text + "\n"
+
+
+def generate_link(event):
+    repo_url = event["repo"]["url"]
+    repo_url = repo_url.replace(
+        "https://api.github.com/repos/", "https://www.github.com/"
+    )
+    repo_name = event["repo"]["name"]
+    return f"<{repo_url}|{repo_name}>"

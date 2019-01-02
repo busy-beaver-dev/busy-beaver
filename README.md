@@ -116,3 +116,17 @@ message.im
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
 - [ ] [GraphQL](https://developer.github.com/v4/)
+
+### GitHub Events
+
+- [ ] [CreateEvent](https://developer.github.com/v3/activity/events/types/#createevent) `ref_type` repository
+- [ ] [ForkEvent](https://developer.github.com/v3/activity/events/types/#forkevent)
+- [ ] [IssuesEvent](https://developer.github.com/v3/activity/events/types/#issuesevent) `action` opened
+- [ ] [PublicEvent](https://developer.github.com/v3/activity/events/types/#publicevent)
+- [ ] [PullRequestEvent](https://developer.github.com/v3/activity/events/types/#pullrequestevent) `action` opened
+- [ ] [PushEvent](https://developer.github.com/v3/activity/events/types/#pushevent)
+- [ ] [ReleaseEvent](https://developer.github.com/v3/activity/events/types/#releaseevent)
+- [ ] [WatchEvent](https://developer.github.com/v3/activity/events/types/#watchevent) `action` started
+
+- [ ] [PullRequestReviewEvent](https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent) `action` submitted **maybe**
+- [ ] [RepositoryEvent](https://developer.github.com/v3/activity/events/types/#repositoryevent) (not a timeline event)
