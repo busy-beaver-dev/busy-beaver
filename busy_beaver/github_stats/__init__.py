@@ -3,10 +3,10 @@ from datetime import timedelta
 import gettext
 from typing import List
 
-from .adapters.github import GitHubAdapter
-from .adapters.utilities import date_subtract
-from .config import oauth_token
-from .models import User
+from ..adapters.github import GitHubAdapter
+from ..adapters.utilities import date_subtract
+from ..config import oauth_token
+from ..models import User
 
 github = GitHubAdapter(oauth_token)
 repo_text = lambda n: gettext.ngettext("repo", "repos", n)  # noqa
