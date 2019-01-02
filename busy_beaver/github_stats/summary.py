@@ -25,7 +25,7 @@ def _classify_events(user: User, timeline: List[dict]):
             user_events.created_repos.append(event)
         elif event["type"] == "ForkEvent":
             user_events.forked_repos.append(event)
-        elif event["type"] == "IssueEvents" and payload.get("action") == "opened":
+        elif event["type"] == "IssuesEvent" and payload.get("action") == "opened":
             user_events.issues_opened.append(event)
         elif event["type"] == "PublicEvent":
             user_events.publicized_repos.append(event)

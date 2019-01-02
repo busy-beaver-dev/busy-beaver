@@ -4,8 +4,11 @@ from typing import List
 
 from ..models import User
 
-repo_text = lambda n: gettext.ngettext("repo", "repos", n)  # noqa
-commit_text = lambda n: gettext.ngettext("commit", "commits", n)  # noqa
+commit_form = lambda n: gettext.ngettext("commit", "commits", n)  # noqa
+issue_form = lambda n: gettext.ngettext("issue", "issues", n)  # noqa
+pr_form = lambda n: gettext.ngettext("PR", "PRs", n)  # noqa
+release_form = lambda n: gettext.ngettext("release", "releases", n)  # noqa
+repo_form = lambda n: gettext.ngettext("repo", "repos", n)  # noqa
 
 
 @dataclass
@@ -21,15 +24,14 @@ class GitHubUserEvents:
     starred_repos: List[dict] = field(default_factory=list)
 
     def generate_summary_text(self):
-        # TODO implement rest
         summary = ""
+        summary += self._releases_published_text()
         summary += self._create_repos_text()
-        # text += self._forked_repos_text()
-        # text += self._issues_opened_text()
-        # text += self._publicized_repos_text()
-        # text += self._pull_requests_text()
+        summary += self._publicized_repos_text()
+        summary += self._forked_repos_text()
+        summary += self._pull_requests_text()
+        summary += self._issues_opened_text()
         summary += self._commits_text()
-        # text += self._releases_published_text()
         summary += self._starred_repos_text()
 
         if not summary:
@@ -42,40 +44,60 @@ class GitHubUserEvents:
         }
         return user_info.format(**params) + summary + "\n"
 
+    def _releases_published_text(self):
+        if not self.releases_published:
+            return ""
+
+        r = [generate_repo_link(event) for event in self.releases_published]
+        return f">:ship: {len(r)} new {release_form(len(r))}: {', '.join(r)}\n"
+
     def _create_repos_text(self):
+        if not self.created_repos:
+            return ""
+
+        r = [generate_repo_link(event) for event in self.created_repos]
+        return f">:sparkles: {len(r)} new {repo_form(len(r))}: {', '.join(r)}\n"
+
+    def _publicized_repos_text(self):
+        if not self.publicized_repos:
+            return ""
+
+        emoji = ":speaking_head_in_silhouette:"
+        r = [generate_repo_link(event) for event in self.publicized_repos]
+        return f">{emoji} {len(r)} {repo_form(len(r))} open-sourced: {', '.join(r)}\n"
+
+    def _forked_repos_text(self):
         if not self.forked_repos:
             return ""
 
-        repos = [generate_repo_link(event) for event in self.forked_repos]
-        count = len(repos)
-        return f">:sparkles: {count} new {repo_text(count)}: {', '.join(repos)}\n"
-
-    def _forked_repos_text(self):
-        return ""
-
-    def _issues_opened_text(self):
-        return ""
-
-    def _publicized_repos_text(self):
-        return ""
+        emoji = ":fork_and_knife:"
+        r = [generate_repo_link(event) for event in self.forked_repos]
+        return f">{emoji} {len(r)} forked {repo_form(len(r))}: {', '.join(r)}\n"
 
     def _pull_requests_text(self):
-        return ""
+        if not self.pull_requests:
+            return ""
+
+        r = [generate_repo_link(event) for event in self.pull_requests]
+        return f">:arrow_heading_up: {len(r)} {pr_form(len(r))}: {', '.join(r)}\n"
+
+    def _issues_opened_text(self):
+        if not self.issues_opened:
+            return ""
+
+        r = [generate_issue_link(event) for event in self.issues_opened]
+        return f">:interrobang: {len(r)} new {issue_form(len(r))}: {', '.join(r)}\n"
 
     def _commits_text(self):
         if not self.commits:
             return ""
 
-        repos = set([generate_repo_link(event) for event in self.commits])
-        count = len(repos)
+        r = set([generate_repo_link(event) for event in self.commits])
         num_commits = sum([event["payload"]["distinct_size"] for event in self.commits])
         return (
-            f">:arrow_up: {num_commits} {commit_text(num_commits)} to "
-            f"{count} {repo_text(count)}: {', '.join(repos)}\n"
+            f">:arrow_up: {num_commits} {commit_form(num_commits)} to "
+            f"{len(r)} {repo_form(len(r))}: {', '.join(r)}"
         )
-
-    def _releases_published_text(self):
-        return ""
 
     def _starred_repos_text(self):
         if not self.starred_repos:
@@ -83,7 +105,7 @@ class GitHubUserEvents:
 
         repos = [generate_repo_link(event) for event in self.starred_repos]
         count = len(repos)
-        return f">:star: {count} {repo_text(count)}: {', '.join(repos)}\n"
+        return f">:star: {count} {repo_form(count)}: {', '.join(repos)}\n"
 
 
 def generate_repo_link(event):
@@ -93,3 +115,10 @@ def generate_repo_link(event):
     )
     repo_name = event["repo"]["name"]
     return f"<{repo_url}|{repo_name}>"
+
+
+def generate_issue_link(event):
+    issue_url = event["payload"]["issue"]["url"]
+    issue_number = event["payload"]["issue"]["number"]
+    repo_name = event["repo"]["name"]
+    return f"<{issue_url}|{repo_name}#{issue_number}>"

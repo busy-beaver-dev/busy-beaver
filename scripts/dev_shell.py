@@ -2,9 +2,10 @@ from datetime import timedelta
 import os
 
 from busy_beaver import db  # noqa
-from busy_beaver.models import *  # noqa
 from busy_beaver.adapters.github import GitHubAdapter  # noqa
-from busy_beaver.adapters.utilities import date_subtract  # noqa
+from busy_beaver.adapters.utilities import date_subtract  # noq
+from busy_beaver.github_stats import generate_summary  # noqa
+from busy_beaver.models import *  # noqa
 from busy_beaver.post_summary_stats import post_summary  # noqa
 
 

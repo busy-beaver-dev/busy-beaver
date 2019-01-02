@@ -119,14 +119,14 @@ message.im
 
 ### GitHub Events
 
-- [ ] [CreateEvent](https://developer.github.com/v3/activity/events/types/#createevent) `ref_type` repository
-- [ ] [ForkEvent](https://developer.github.com/v3/activity/events/types/#forkevent)
-- [ ] [IssuesEvent](https://developer.github.com/v3/activity/events/types/#issuesevent) `action` opened
-- [ ] [PublicEvent](https://developer.github.com/v3/activity/events/types/#publicevent)
-- [ ] [PullRequestEvent](https://developer.github.com/v3/activity/events/types/#pullrequestevent) `action` opened
-- [ ] [PushEvent](https://developer.github.com/v3/activity/events/types/#pushevent)
-- [ ] [ReleaseEvent](https://developer.github.com/v3/activity/events/types/#releaseevent)
-- [ ] [WatchEvent](https://developer.github.com/v3/activity/events/types/#watchevent) `action` started
+- [x] [CreateEvent](https://developer.github.com/v3/activity/events/types/#createevent) `ref_type` repository
+- [x] [ForkEvent](https://developer.github.com/v3/activity/events/types/#forkevent)
+- [x] [IssuesEvent](https://developer.github.com/v3/activity/events/types/#issuesevent) `action` opened
+- [x] [PublicEvent](https://developer.github.com/v3/activity/events/types/#publicevent)
+- [x] [PullRequestEvent](https://developer.github.com/v3/activity/events/types/#pullrequestevent) `action` opened
+- [x] [PushEvent](https://developer.github.com/v3/activity/events/types/#pushevent)
+- [x] [ReleaseEvent](https://developer.github.com/v3/activity/events/types/#releaseevent)
+- [x] [WatchEvent](https://developer.github.com/v3/activity/events/types/#watchevent) `action` started
 
 - [ ] [PullRequestReviewEvent](https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent) `action` submitted **maybe**
 - [ ] [RepositoryEvent](https://developer.github.com/v3/activity/events/types/#repositoryevent) (not a timeline event)
