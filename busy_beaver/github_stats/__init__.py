@@ -1,1 +1,1 @@
-from .generate_summary import generate_recent_activity_text  # noqa
+from .summary import generate_summary  # noqa

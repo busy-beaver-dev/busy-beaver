@@ -20,7 +20,7 @@ def post_summary(channel: str) -> None:
     users: List[User] = db.query(User).filter(conditions).all()
     message = ""
     for user in users:
-        message += github_stats.generate_recent_activity_text(user)
+        message += github_stats.generate_summary(user)
 
     slack.post_message(channel_id, message)
 

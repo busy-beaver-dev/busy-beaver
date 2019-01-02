@@ -10,7 +10,7 @@ from ..models import User
 github = GitHubAdapter(oauth_token)
 
 
-def generate_recent_activity_text(user: User):
+def generate_summary(user: User):
     boundary_dt = date_subtract(timedelta(days=1))
     user_timeline = github.user_activity_after(user.github_username, boundary_dt)
     user_events = _classify_events(user, user_timeline)
