@@ -3,7 +3,7 @@ from typing import List
 
 from .user_events import GitHubUserEvents
 from ..adapters.github import GitHubAdapter
-from ..adapters.utilities import date_subtract
+from ..adapters.utilities import utc_now_minus
 from ..config import oauth_token
 from ..models import User
 
@@ -11,7 +11,7 @@ github = GitHubAdapter(oauth_token)
 
 
 def generate_summary(user: User):
-    boundary_dt = date_subtract(timedelta(days=1))
+    boundary_dt = utc_now_minus(timedelta(days=1))
     user_timeline = github.user_activity_after(user.github_username, boundary_dt)
     user_events = _classify_events(user, user_timeline)
     return user_events.generate_summary_text()
