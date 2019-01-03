@@ -218,13 +218,11 @@ class PublishGitHubSummaryResource:
             resp.media = {"message": "Invalid token, please talk to admin"}
             return
 
-        # if authorized user, allow
+        # TODO maybe add a task queue here
         logger.info(
             "[Busy-Beaver] Post GitHub Summary Request -- login successful",
-            extra={"user": api_user.username},
+            extra={"api_user": api_user.username},
         )
-
-        # TODO maybe add a task queue here
         data = await req.media()
         if "channel" not in data:
             logger.error("[Busy-Beaver] Post GitHub Summary Request -- need channel in JSON body")

@@ -90,7 +90,7 @@ class GitHubUserEvents:
         num_commits = sum([event["payload"]["distinct_size"] for event in self.commits])
         return (
             f">:arrow_up: {num_commits} {commit_form(num_commits)} to "
-            f"{len(r)} {repo_form(len(r))}: {', '.join(r)}"
+            f"{len(r)} {repo_form(len(r))}: {', '.join(r)}\n"
         )
 
     def _starred_repos_text(self):

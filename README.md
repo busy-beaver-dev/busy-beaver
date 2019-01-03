@@ -66,6 +66,7 @@ Leverage Docker-Compose to create a containerized local development environment.
 
 ```console
 export DATABASE_URI=[database-uri]
+export BUSY_BEAVER_API_TOKEN=[bb-api-token]
 
 export GITHUB_APP_CLIENT_ID=[client-id]
 export GITHUB_APP_CLIENT_SECRET=[client-secret]

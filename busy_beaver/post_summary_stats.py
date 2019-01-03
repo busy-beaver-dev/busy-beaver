@@ -16,8 +16,9 @@ def post_summary(channel: str) -> None:
     channel_id = get_channel_id(channel)
     members = get_channel_members(channel_id)
 
-    conditions = and_(User.slack_id.in_(members)), User.github_username.isnot(None)
-    users: List[User] = db.query(User).filter(conditions).all()
+    users: List[User] = db.query(User).filter(
+        and_(User.slack_id.in_(members)), User.github_username.isnot(None))
+    ).all()
     message = ""
     for user in users:
         message += github_stats.generate_summary(user)
