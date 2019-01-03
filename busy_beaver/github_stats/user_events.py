@@ -4,12 +4,6 @@ from typing import List
 
 from ..models import User
 
-commit_form = lambda n: gettext.ngettext("commit", "commits", n)  # noqa
-issue_form = lambda n: gettext.ngettext("issue", "issues", n)  # noqa
-pr_form = lambda n: gettext.ngettext("PR", "PRs", n)  # noqa
-release_form = lambda n: gettext.ngettext("release", "releases", n)  # noqa
-repo_form = lambda n: gettext.ngettext("repo", "repos", n)  # noqa
-
 
 @dataclass
 class GitHubUserEvents:
@@ -103,9 +97,8 @@ class GitHubUserEvents:
         if not self.starred_repos:
             return ""
 
-        repos = [generate_repo_link(event) for event in self.starred_repos]
-        count = len(repos)
-        return f">:star: {count} {repo_form(count)}: {', '.join(repos)}\n"
+        r = [generate_repo_link(event) for event in self.starred_repos]
+        return f">:star: {len(r)} {repo_form(len(r))}: {', '.join(r)}\n"
 
 
 def generate_repo_link(event):
@@ -122,3 +115,11 @@ def generate_issue_link(event):
     issue_number = event["payload"]["issue"]["number"]
     repo_name = event["repo"]["name"]
     return f"<{issue_url}|{repo_name}#{issue_number}>"
+
+
+# Singular or Plural Form in Summary
+commit_form = lambda n: gettext.ngettext("commit", "commits", n)  # noqa
+issue_form = lambda n: gettext.ngettext("issue", "issues", n)  # noqa
+pr_form = lambda n: gettext.ngettext("PR", "PRs", n)  # noqa
+release_form = lambda n: gettext.ngettext("release", "releases", n)  # noqa
+repo_form = lambda n: gettext.ngettext("repo", "repos", n)  # noqa
