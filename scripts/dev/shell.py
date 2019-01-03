@@ -1,4 +1,3 @@
-from datetime import timedelta
 import os
 
 from busy_beaver import db  # noqa
