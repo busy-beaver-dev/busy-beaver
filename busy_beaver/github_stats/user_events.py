@@ -111,7 +111,7 @@ def generate_repo_link(event):
 
 
 def generate_issue_link(event):
-    issue_url = event["payload"]["issue"]["url"]
+    issue_url = event["payload"]["issue"]["html_url"]
     issue_number = event["payload"]["issue"]["number"]
     repo_name = event["repo"]["name"]
     return f"<{issue_url}|{repo_name}#{issue_number}>"
