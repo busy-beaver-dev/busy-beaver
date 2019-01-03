@@ -7,8 +7,8 @@ import uuid
 import requests
 
 from . import api, db
-from .models import ApiUser, User
 from .adapters.slack import SlackAdapter
+from .models import ApiUser, User
 from .post_summary_stats import post_summary
 
 logger = logging.getLogger(__name__)

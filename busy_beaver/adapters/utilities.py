@@ -1,14 +1,11 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import NamedTuple, Tuple
 import urllib
 
 from dateutil.parser import parse as date_parse
-import pytz
 
 
 class APINav(NamedTuple):
-    """API Navigation Panel"""
-
     first_link: str = None
     last_link: str = None
     next_link: str = None
@@ -65,7 +62,3 @@ def page_from_url(url) -> int:
     query_string = url_details.query
     params = urllib.parse.parse_qs(query_string)
     return int(params['page'][0])
-
-
-def utc_now_minus(period: timedelta):
-    return pytz.utc.localize(datetime.utcnow()) - period
