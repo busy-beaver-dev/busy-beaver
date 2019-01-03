@@ -1,3 +1,6 @@
+from datetime import timedelta
+
+from busy_beaver.backend import utc_now_minus
 from busy_beaver.github_stats import generate_summary
 from busy_beaver.models import User
 
@@ -13,5 +16,5 @@ def user():
 
 @pytest.mark.vcr()
 def test_generate_summary(user):
-    result = generate_summary(user)
+    result = generate_summary(user, utc_now_minus(timedelta(days=1)))
     assert "github.com/alysivji" in result
