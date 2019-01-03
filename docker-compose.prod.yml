@@ -8,7 +8,7 @@ networks:
 
 services:
   app:
-    image: alysivji/busy-beaver
+    image: alysivji/busy-beaver:latest
     command: ["uvicorn", "busy_beaver:api", "--host", "0.0.0.0", "--port", "5100"]
     environment:
       IN_PRODUCTION: 1
@@ -26,12 +26,21 @@ services:
       - sivnet
       - local
     labels:
+      - com.centurylinklabs.watchtower.enable=true
       - traefik.enable=true
       - traefik.docker.network=sivnet
       - traefik.backend=busybeaver
       - traefik.frontend.rule=Host:busybeaver.sivji.com
       - traefik.port=5100
+
   # agents
+  watchtower: # restart app container when new releases
+    image: v2tec/watchtower
+    command: --label-enable --cleanup
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - local
   datadog:  # collect logs
     build: datadog
     depends_on:
