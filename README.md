@@ -77,7 +77,9 @@ export SENTRY_DSN=[sentry-dsn]
 export DATADOG_API_KEY=[datadog-api-key]
 ```
 
-Commits into `master` kick-off the build of the deployment docker image. Currently, an admin needs to ssh into the deployment box to manually trigger a refresh. Future iterations will investigate using container orchestration and/or the use of a development box for builds.
+- [Travis CI](https://travis-ci.org/alysivji/busy-beaver) kicks off build of the deployment docker image when `master` has new commits.
+- Image is uploaded to [DockerHub](https://cloud.docker.com/u/alysivji/repository/docker/alysivji/busy-beaver)
+- [watchtower](https://github.com/v2tec/watchtower) monitors DockerHub and deploys latest image
 
 ### Creating Account for API
 
