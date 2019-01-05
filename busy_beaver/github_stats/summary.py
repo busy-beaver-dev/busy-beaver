@@ -27,7 +27,7 @@ def generate_summary(user: User, boundary_dt: datetime):
 class GitHubUserEvents:
     def __init__(self, user: User, timeline: List[dict]):
         self.user = user
-        self.events = {
+        self.events = {  # this is the order of summary output
             "releases_published": ReleasesPublishedList(),
             "created_repos": CreatedReposList(),
             "publicized_repos": PublicizedReposList(),
@@ -38,33 +38,6 @@ class GitHubUserEvents:
             "starred_repos": StarredReposList(),
         }
         self._classify_events(timeline)
-        pass
-
-    def _classify_events(self, timeline):
-        for event in timeline:
-            payload = event["payload"]
-            if (
-                event["type"] == "CreateEvent"
-                and payload.get("ref_type") == "repository"
-            ):
-                self.events["created_repos"].append(event)
-            elif event["type"] == "ForkEvent":
-                self.events["forked_repos"].append(event)
-            elif event["type"] == "IssuesEvent" and payload.get("action") == "opened":
-                self.events["issues_opened"].append(event)
-            elif event["type"] == "PublicEvent":
-                self.events["publicized_repos"].append(event)
-            elif (
-                event["type"] == "PullRequestEvent"
-                and payload.get("action") == "opened"
-            ):
-                self.events["pull_requests"].append(event)
-            elif event["type"] == "PushEvent":
-                self.events["commits"].append(event)
-            elif event["type"] == "ReleaseEvent":
-                self.events["releases_published"].append(event)
-            elif event["type"] == "WatchEvent" and payload.get("action") == "started":
-                self.events["starred_repos"].append(event)
 
     def generate_summary_text(self):
         summary = ""
@@ -80,3 +53,23 @@ class GitHubUserEvents:
             "github_id": self.user.github_username,
         }
         return user_info.format(**params) + summary + "\n"
+
+    def _classify_events(self, timeline):
+        for event in timeline:
+            data = event["payload"]
+            if event["type"] == "CreateEvent" and data.get("ref_type") == "repository":
+                self.events["created_repos"].append(event)
+            elif event["type"] == "ForkEvent":
+                self.events["forked_repos"].append(event)
+            elif event["type"] == "IssuesEvent" and data.get("action") == "opened":
+                self.events["issues_opened"].append(event)
+            elif event["type"] == "PublicEvent":
+                self.events["publicized_repos"].append(event)
+            elif event["type"] == "PullRequestEvent" and data.get("action") == "opened":
+                self.events["pull_requests"].append(event)
+            elif event["type"] == "PushEvent":
+                self.events["commits"].append(event)
+            elif event["type"] == "ReleaseEvent":
+                self.events["releases_published"].append(event)
+            elif event["type"] == "WatchEvent" and data.get("action") == "started":
+                self.events["starred_repos"].append(event)

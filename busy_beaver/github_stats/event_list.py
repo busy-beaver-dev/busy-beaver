@@ -37,10 +37,14 @@ class EventList:
         return f"<{repo_url}|{repo_name}>"
 
 
-class ReleasesPublishedList(EventList):
+class CommitsList(EventList):
     def _format_text(self, links):
         num = len(links)
-        return f">:ship: {num} new {release_form(num)}: {', '.join(links)}\n"
+        n_commits = sum([event["payload"]["distinct_size"] for event in self.events])
+        return (
+            f">:arrow_up: {n_commits} {commit_form(n_commits)} to "
+            f"{num} {repo_form(num)}: {', '.join(links)}\n"
+        )
 
 
 class CreatedReposList(EventList):
@@ -49,24 +53,11 @@ class CreatedReposList(EventList):
         return f">:ship: {num} new {release_form(num)}: {', '.join(links)}\n"
 
 
-class PublicizedReposList(EventList):
-    def _format_text(self, links):
-        emoji = ":speaking_head_in_silhouette:"
-        num = len(links)
-        return f">{emoji} {num} {repo_form(num)} open-sourced: {', '.join(links)}\n"
-
-
 class ForkedReposList(EventList):
     def _format_text(self, links):
         emoji = ":fork_and_knife:"
         num = len(links)
         return f">{emoji} {num} forked {repo_form(num)}: {', '.join(links)}\n"
-
-
-class PullRequestsList(EventList):
-    def _format_text(self, links):
-        num = len(links)
-        return f">:arrow_heading_up: {num} {pr_form(num)}: {', '.join(links)}\n"
 
 
 class IssuesOpenedList(EventList):
@@ -82,14 +73,23 @@ class IssuesOpenedList(EventList):
         return f"<{issue_url}|{repo_name}#{issue_number}>"
 
 
-class CommitsList(EventList):
+class PublicizedReposList(EventList):
+    def _format_text(self, links):
+        emoji = ":speaking_head_in_silhouette:"
+        num = len(links)
+        return f">{emoji} {num} {repo_form(num)} open-sourced: {', '.join(links)}\n"
+
+
+class PullRequestsList(EventList):
     def _format_text(self, links):
         num = len(links)
-        n_commits = sum([event["payload"]["distinct_size"] for event in self.events])
-        return (
-            f">:arrow_up: {n_commits} {commit_form(n_commits)} to "
-            f"{num} {repo_form(num)}: {', '.join(links)}\n"
-        )
+        return f">:arrow_heading_up: {num} {pr_form(num)}: {', '.join(links)}\n"
+
+
+class ReleasesPublishedList(EventList):
+    def _format_text(self, links):
+        num = len(links)
+        return f">:ship: {num} new {release_form(num)}: {', '.join(links)}\n"
 
 
 class StarredReposList(EventList):
