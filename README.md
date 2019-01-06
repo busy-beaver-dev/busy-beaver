@@ -62,6 +62,22 @@ export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
 
 Leverage Docker-Compose to create a containerized local development environment. Please see the `Makefile` for available commands.
 
+### [pdb++](https://pypi.org/project/pdbpp/) Configuration
+
+```python
+# ./.pdbrc.py
+
+import pdb
+
+
+class Config(pdb.DefaultConfig):
+    sticky_by_default = True  # start in sticky mode
+    current_line_color = 40  # black
+
+    # Presentation
+    # current_line_color = 47  # grey
+```
+
 ## Deployment
 
 ```console
