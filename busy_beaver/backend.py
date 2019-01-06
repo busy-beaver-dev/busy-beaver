@@ -76,7 +76,9 @@ SEND_LINK_COMMANDS = ["connect"]
 RESEND_LINK_COMMANDS = ["reconnect"]
 ALL_LINK_COMMANDS = SEND_LINK_COMMANDS + RESEND_LINK_COMMANDS
 
-UNKNOWN_COMMAND_MSG = "I don't recognize your command. Type `connect` to link your GitHub account."
+UNKNOWN_COMMAND_MSG = (
+    "I don't recognize your command. Type `connect` to link your GitHub account."
+)
 ACCOUNT_ALREADY_ASSOCIATED_MSG = (
     "You have already associated a GitHub account with your Slack handle. "
     "Please type `reconnect` to link to a different account."
@@ -128,12 +130,8 @@ def reply_to_user_with_github_login_link(event):
             "fallback": url,
             "attachment_type": "default",
             "actions": [
-                {
-                    "text": "Associate GitHub Profile",
-                    "type": "button",
-                    "url": url
-                }
-            ]
+                {"text": "Associate GitHub Profile", "type": "button", "url": url}
+            ],
         }
     ]
     slack.post_message(
@@ -228,7 +226,10 @@ class PublishGitHubSummaryResource:
         )
         data = await req.media()
         if "channel" not in data:
-            logger.error("[Busy-Beaver] Post GitHub Summary Request -- need channel in JSON body")
+            logger.error(
+                "[Busy-Beaver] Post GitHub Summary Request -- ",
+                "need channel in JSON body",
+            )
             return
         post_github_summary_to_slack(data["channel"])
 
