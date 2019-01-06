@@ -1,15 +1,18 @@
+from datetime import datetime, timedelta
 import logging
 import os
 import time
+from typing import List
 from urllib.parse import urlencode
 import uuid
 
+from sqlalchemy import and_
+import pytz
 import requests
 
-from . import api, db
-from .models import ApiUser, User
+from . import api, db, github_stats
 from .adapters.slack import SlackAdapter
-from .post_summary_stats import post_summary
+from .models import ApiUser, User
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +76,9 @@ SEND_LINK_COMMANDS = ["connect"]
 RESEND_LINK_COMMANDS = ["reconnect"]
 ALL_LINK_COMMANDS = SEND_LINK_COMMANDS + RESEND_LINK_COMMANDS
 
-UNKNOWN_COMMAND_MSG = "I don't recognize your command. Type `connect` to link your GitHub account."
+UNKNOWN_COMMAND_MSG = (
+    "I don't recognize your command. Type `connect` to link your GitHub account."
+)
 ACCOUNT_ALREADY_ASSOCIATED_MSG = (
     "You have already associated a GitHub account with your Slack handle. "
     "Please type `reconnect` to link to a different account."
@@ -125,12 +130,8 @@ def reply_to_user_with_github_login_link(event):
             "fallback": url,
             "attachment_type": "default",
             "actions": [
-                {
-                    "text": "Associate GitHub Profile",
-                    "type": "button",
-                    "url": url
-                }
-            ]
+                {"text": "Associate GitHub Profile", "type": "button", "url": url}
+            ],
         }
     ]
     slack.post_message(
@@ -218,22 +219,42 @@ class PublishGitHubSummaryResource:
             resp.media = {"message": "Invalid token, please talk to admin"}
             return
 
-        # if authorized user, allow
+        # TODO maybe add a task queue here
         logger.info(
             "[Busy-Beaver] Post GitHub Summary Request -- login successful",
-            extra={"user": api_user.username},
+            extra={"api_user": api_user.username},
         )
-
-        # TODO maybe add a task queue here
         data = await req.media()
         if "channel" not in data:
-            logger.error("[Busy-Beaver] Post GitHub Summary Request -- need channel in JSON body")
+            logger.error(
+                "[Busy-Beaver] Post GitHub Summary Request -- ",
+                "need channel in JSON body",
+            )
             return
-        channel = data["channel"]
-        post_summary(channel=channel)
+        post_github_summary_to_slack(data["channel"])
 
         logger.info("[Busy-Beaver] Post GitHub Summary -- kicked-off")
         resp.media = {"run": "kicked_off"}
 
 
 api.add_route("/github-summary", PublishGitHubSummaryResource())
+
+
+@api.background.task
+def post_github_summary_to_slack(channel: str) -> None:
+    boundary_dt = utc_now_minus(timedelta(days=1))
+    channel_id = slack.get_channel_id(channel)
+    members = slack.get_channel_members(channel_id)
+
+    users: List[User] = db.query(User).filter(
+        and_(User.slack_id.in_(members), User.github_username.isnot(None))
+    ).all()
+    message = ""
+    for user in users:
+        message += github_stats.generate_summary(user, boundary_dt)
+
+    slack.post_message(channel_id, message)
+
+
+def utc_now_minus(period: timedelta):
+    return pytz.utc.localize(datetime.utcnow()) - period

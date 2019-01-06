@@ -71,7 +71,7 @@ shell:
 	docker-compose exec app bash
 
 shell-dev:
-	docker-compose exec app ipython -i scripts/dev_shell.py
+	docker-compose exec app ipython -i scripts/dev/shell.py
 
 ngrok:
 	ngrok http 5000

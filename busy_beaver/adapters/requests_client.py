@@ -25,6 +25,12 @@ class RequestsClient:
     def __repr__(self):
         return "RequestsClient"
 
+    def get(self, url: str, **kwargs) -> Response:
+        return self._request("get", url, **kwargs)
+
+    def head(self, url: str, **kwargs) -> Response:
+        return self._request("head", url, **kwargs)
+
     def _request(self, method: str, url: str, **kwargs) -> Response:
         req_headers = self.headers.copy()
         if "headers" in kwargs:
@@ -39,9 +45,3 @@ class RequestsClient:
         except JSONDecodeError:
             resp = Response(status_code=r.status_code, headers=r.headers)
         return resp
-
-    def get(self, url: str, **kwargs) -> Response:
-        return self._request("get", url, **kwargs)
-
-    def head(self, url: str, **kwargs) -> Response:
-        return self._request("head", url, **kwargs)

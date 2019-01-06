@@ -4,7 +4,7 @@
 
 [![Build Status](https://travis-ci.org/alysivji/busy-beaver.svg?branch=master)](https://travis-ci.org/alysivji/busy-beaver)
 
-Slack bot that posts GitHub activity summaries for registered users.
+Slack bot that summarizes public GitHub activity for registered users.
 
 ## Introduction
 
@@ -62,10 +62,27 @@ export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
 
 Leverage Docker-Compose to create a containerized local development environment. Please see the `Makefile` for available commands.
 
+### [pdb++](https://pypi.org/project/pdbpp/) Configuration
+
+```python
+# ./.pdbrc.py
+
+import pdb
+
+
+class Config(pdb.DefaultConfig):
+    sticky_by_default = True  # start in sticky mode
+    current_line_color = 40  # black
+
+    # Presentation
+    # current_line_color = 47  # grey
+```
+
 ## Deployment
 
 ```console
 export DATABASE_URI=[database-uri]
+export BUSY_BEAVER_API_TOKEN=[bb-api-token]
 
 export GITHUB_APP_CLIENT_ID=[client-id]
 export GITHUB_APP_CLIENT_SECRET=[client-secret]
@@ -77,7 +94,9 @@ export SENTRY_DSN=[sentry-dsn]
 export DATADOG_API_KEY=[datadog-api-key]
 ```
 
-Commits into `master` kick-off the build of the deployment docker image. Currently, an admin needs to ssh into the deployment box to manually trigger a refresh. Future iterations will investigate using container orchestration and/or the use of a development box for builds.
+- [Travis CI](https://travis-ci.org/alysivji/busy-beaver) kicks off build of the deployment docker image when `master` has new commits.
+- Image is uploaded to [DockerHub](https://cloud.docker.com/u/alysivji/repository/docker/alysivji/busy-beaver)
+- [watchtower](https://github.com/v2tec/watchtower) monitors DockerHub and deploys latest image
 
 ### Creating Account for API
 
@@ -116,3 +135,17 @@ message.im
   - [ ] mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
 - [ ] [GraphQL](https://developer.github.com/v4/)
+
+### GitHub Events
+
+- [x] [CreateEvent](https://developer.github.com/v3/activity/events/types/#createevent) `ref_type` repository
+- [x] [ForkEvent](https://developer.github.com/v3/activity/events/types/#forkevent)
+- [x] [IssuesEvent](https://developer.github.com/v3/activity/events/types/#issuesevent) `action` opened
+- [x] [PublicEvent](https://developer.github.com/v3/activity/events/types/#publicevent)
+- [x] [PullRequestEvent](https://developer.github.com/v3/activity/events/types/#pullrequestevent) `action` opened
+- [x] [PushEvent](https://developer.github.com/v3/activity/events/types/#pushevent)
+- [x] [ReleaseEvent](https://developer.github.com/v3/activity/events/types/#releaseevent)
+- [x] [WatchEvent](https://developer.github.com/v3/activity/events/types/#watchevent) `action` started
+
+- [ ] [PullRequestReviewEvent](https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent) `action` submitted **maybe**
+- [ ] [RepositoryEvent](https://developer.github.com/v3/activity/events/types/#repositoryevent) (not a timeline event)
