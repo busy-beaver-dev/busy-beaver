@@ -2,7 +2,7 @@
 
 <p align="center"><img src="assets/logo.png" alt="Busy Beaver Logo" width=300 /></p>
 
-[![Build Status](https://travis-ci.org/alysivji/busy-beaver.svg?branch=master)](https://travis-ci.org/alysivji/busy-beaver)
+[![Build Status](https://travis-ci.org/alysivji/busy-beaver.svg?branch=master)](https://travis-ci.org/alysivji/busy-beaver) [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
 
 Slack bot that summarizes public GitHub activity for registered users.
 
