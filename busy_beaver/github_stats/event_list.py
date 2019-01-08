@@ -30,9 +30,7 @@ class EventList:
     @staticmethod
     def _generate_link(event):
         repo_url = event["repo"]["url"]
-        repo_url = repo_url.replace(
-            "https://api.github.com/repos/", "https://www.github.com/"
-        )
+        repo_url = repo_url.replace("api.github.com/repos/", "www.github.com/")
         repo_name = event["repo"]["name"]
         return f"<{repo_url}|{repo_name}>"
 
