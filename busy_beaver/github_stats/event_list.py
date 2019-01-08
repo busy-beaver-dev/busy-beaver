@@ -48,7 +48,7 @@ class CommitsList(EventList):
 class CreatedReposList(EventList):
     def _format_text(self, links):
         num = len(links)
-        return f">:ship: {num} new {release_form(num)}: {', '.join(links)}\n"
+        return f">:sparkles: {num} new {repo_form(num)}: {', '.join(links)}\n"
 
 
 class ForkedReposList(EventList):
