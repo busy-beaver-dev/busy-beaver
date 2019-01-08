@@ -7,12 +7,6 @@ import requests
 logger = logging.getLogger(__name__)
 
 
-class Response(NamedTuple):
-    status_code: int
-    headers: Dict[str, str]
-    json: Union[List[Dict[str, Any]], Dict[str, Any]] = None
-
-
 class RequestsClient:
     def __init__(self):
         s = requests.Session()
@@ -45,3 +39,9 @@ class RequestsClient:
         except JSONDecodeError:
             resp = Response(status_code=r.status_code, headers=r.headers)
         return resp
+
+
+class Response(NamedTuple):
+    status_code: int
+    headers: Dict[str, str]
+    json: Union[List[Dict[str, Any]], Dict[str, Any]] = None
