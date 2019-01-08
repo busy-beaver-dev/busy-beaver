@@ -14,8 +14,8 @@ def user():
     return new_user
 
 
-@pytest.mark.smoke
+# TODO make freze_time into a test helper that pulls from the cassette directly
 @pytest.mark.vcr()
+@pytest.mark.freeze_time("2019-01-05")
 def test_generate_summary(user):
-    generate_summary(user, utc_now_minus(timedelta(days=1)))
-    assert True
+    assert "alysivji" in generate_summary(user, utc_now_minus(timedelta(days=1)))

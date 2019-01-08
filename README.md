@@ -146,6 +146,3 @@ message.im
 - [x] [PushEvent](https://developer.github.com/v3/activity/events/types/#pushevent)
 - [x] [ReleaseEvent](https://developer.github.com/v3/activity/events/types/#releaseevent)
 - [x] [WatchEvent](https://developer.github.com/v3/activity/events/types/#watchevent) `action` started
-
-- [ ] [PullRequestReviewEvent](https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent) `action` submitted **maybe**
-- [ ] [RepositoryEvent](https://developer.github.com/v3/activity/events/types/#repositoryevent) (not a timeline event)

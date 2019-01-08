@@ -3,11 +3,6 @@ from typing import List, NamedTuple
 from slackclient import SlackClient
 
 
-class Channel(NamedTuple):
-    id_: str
-    name: str
-
-
 class SlackAdapter:
     def __init__(self, slack_token):
         self.sc = SlackClient(slack_token)
@@ -33,3 +28,8 @@ class SlackAdapter:
 
     def _get_channel_info(self, channel_id):
         return self.sc.api_call("channels.info", channel=channel_id)
+
+
+class Channel(NamedTuple):
+    id_: str
+    name: str

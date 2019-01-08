@@ -5,6 +5,7 @@ help:
 	@echo ' make build            rebuild containers .                        '
 	@echo ' make up               start local dev environment                 '
 	@echo ' make down             stop local dev environment                  '
+	@echo ' make attach           attach to process for debugging purposes    '
 	@echo ' make migration        create migration m="message"                '
 	@echo ' make migrate-up       run all migration                           '
 	@echo ' make migrate-dow      roll back last migration                    '
@@ -36,6 +37,9 @@ up:
 
 down:
 	docker-compose down
+
+attach:
+	docker attach `docker-compose ps -q app`
 
 migration: ## Create migrations using alembic
 	docker-compose exec app alembic --config=./migrations/alembic.ini revision --autogenerate -m "$(m)"

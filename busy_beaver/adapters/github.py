@@ -43,7 +43,7 @@ class GitHubAdapter:
         user_events = self._get_items_after_timestamp(url, timestamp=timestamp)
         return user_events
 
-    def _get_all_items(self, url: str, *, max_pages: int = 5) -> List[Dict]:
+    def _get_all_items(self, url, *, max_pages=5) -> List[Dict]:
         resp = self.__head(url)
         headers = resp.headers
 
@@ -62,9 +62,7 @@ class GitHubAdapter:
 
         return all_items
 
-    def _get_items_after_timestamp(
-        self, url: str, *, timestamp: datetime
-    ) -> List[Dict]:
+    def _get_items_after_timestamp(self, url, *, timestamp) -> List[Dict]:
         """Keep fetching until we have captured the timestamp or are on the last page"""
         all_items = []
         page_num = 1
@@ -91,13 +89,13 @@ class GitHubAdapter:
         filtered_items = filter_items_before(timestamp=timestamp, items=all_items)
         return filtered_items
 
-    def __get(self, url: str, **kwargs) -> Response:
+    def __get(self, url, **kwargs) -> Response:
         resp = self.client.get(url, headers=self.headers, **kwargs)
         if resp.status_code != 200:
             raise UnexpectedStatusCode
         return resp
 
-    def __head(self, url: str, **kwargs) -> Response:
+    def __head(self, url, **kwargs) -> Response:
         resp = self.client.head(url, headers=self.headers, **kwargs)
         if resp.status_code != 200:
             raise UnexpectedStatusCode
@@ -144,7 +142,7 @@ def filter_items_before(timestamp: datetime, items: list):
     return filtered_items
 
 
-def page_from_url(url) -> int:
+def page_from_url(url: str) -> int:
     url_details = urllib.parse.urlparse(url)
     query_string = url_details.query
     params = urllib.parse.parse_qs(query_string)

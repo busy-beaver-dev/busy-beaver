@@ -30,9 +30,7 @@ class EventList:
     @staticmethod
     def _generate_link(event):
         repo_url = event["repo"]["url"]
-        repo_url = repo_url.replace(
-            "https://api.github.com/repos/", "https://www.github.com/"
-        )
+        repo_url = repo_url.replace("api.github.com/repos/", "www.github.com/")
         repo_name = event["repo"]["name"]
         return f"<{repo_url}|{repo_name}>"
 
@@ -50,7 +48,7 @@ class CommitsList(EventList):
 class CreatedReposList(EventList):
     def _format_text(self, links):
         num = len(links)
-        return f">:ship: {num} new {release_form(num)}: {', '.join(links)}\n"
+        return f">:sparkles: {num} new {repo_form(num)}: {', '.join(links)}\n"
 
 
 class ForkedReposList(EventList):
