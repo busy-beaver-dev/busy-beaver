@@ -28,7 +28,7 @@ def test_all_user_stars(client):
 @pytest.mark.vcr()
 def test_all_user_activity_after(client):
     # TODO don't like how I hardcoded date, think of more robust solution
-    vrcpy_timestamp = pytz.utc.localize(datetime(2018, 11, 24, 22, 55, 3, 767521))
+    vrcpy_timestamp = pytz.utc.localize(datetime(2018, 11, 24, 22, 55, 3, 767_521))
     boundary_dt = vrcpy_timestamp - timedelta(days=1)
     user_activity = client.user_activity_after(user="alysivji", timestamp=boundary_dt)
 
