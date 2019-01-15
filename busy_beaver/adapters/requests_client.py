@@ -14,12 +14,11 @@ class Response(NamedTuple):
 
 
 class RequestsClient:
+    """Wrapper around requests to simplify interaction with JSON REST APIs"""
+
     def __init__(self):
         s = requests.Session()
-        self.headers = {
-            "User-Agent": "BusyBeaver",
-            "Content-Type": "application/json",
-        }
+        self.headers = {"User-Agent": "BusyBeaver", "Content-Type": "application/json"}
         self.session = s
 
     def __repr__(self):

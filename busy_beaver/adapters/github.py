@@ -8,7 +8,6 @@ from ..exceptions import UnexpectedStatusCode
 from .requests_client import RequestsClient, Response
 
 BASE_URL = "https://api.github.com"
-USER_AGENT = "BusyBeaver"
 
 
 class GitHubAdapter:

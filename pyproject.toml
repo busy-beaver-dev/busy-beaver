@@ -1,0 +1,16 @@
+[tool.black]
+line-length = 88
+py36 = true
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.vscode
+  | dist
+  | migrations
+  | venv
+)/
+'''
