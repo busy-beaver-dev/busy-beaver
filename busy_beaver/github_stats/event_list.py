@@ -83,6 +83,13 @@ class PullRequestsList(EventList):
         num = len(links)
         return f">:arrow_heading_up: {num} {pr_form(num)}: {', '.join(links)}\n"
 
+    @staticmethod
+    def _generate_link(event):
+        pr_url = event["payload"]["pull_request"]["html_url"]
+        pr_number = event["payload"]["pull_request"]["number"]
+        repo_name = event["repo"]["name"]
+        return f"<{pr_url}|{repo_name}#{pr_number}>"
+
 
 class ReleasesPublishedList(EventList):
     def _format_text(self, links):
