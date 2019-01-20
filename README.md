@@ -10,9 +10,9 @@ Slack bot that summarizes public GitHub activity for registered users.
 
 With over four thousand members, the [Chicago Python Users Group](https://www.chipy.org/) (ChiPy) is one of the largest Python communities in the world. Slack has become the primary method of communication amongst our members in-between events. We developed a Slack bot for the community, codename: Busy Beaver, to increase member engagement.
 
-Busy-Beaver's first attempt at increasing engagement is to spark conversation around GitHub activity. We have created a `#busy-beaver` channel on the [ChiPy Slack](https://chipy.slack.com/) where a daily summary of public GitHub activity is posted for registered users.
+Busy-Beaver's first attempt at increasing engagement is to spark conversation around GitHub activity. We created a `#busy-beaver` channel on the [ChiPy Slack](https://chipy.slack.com/) where the bot posts daily summaries of public GitHub activity for registered users.
 
-Users can sign up for an account by messaging the bot with a specific passphrase. The bot will request that the user sign into GitHub with a provided link. This process will ensure that only authorized GitHub activity is posted in the channel.
+Users sign up for an account by `DM`ing the bot with the phrase: `connect`. The bot requires users to sign into GitHub to ensure only authorized activity is posted in the channel.
 
 Busy-Beaver was released on January 10th, 2019 at the monthly Chicago Python Meetup. [Slides are available](http://bit.ly/busy-beaver) and a YouTube link is forthcoming.
 
