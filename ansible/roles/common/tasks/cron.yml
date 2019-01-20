@@ -1,0 +1,11 @@
+---
+- cron:
+    name: Post GitHub summary
+    user: "{{ user }}"
+    state: present
+    minute: 0
+    hour: 19
+    day: "*"
+    month: "*"
+    weekday: "*"
+    job: "/bin/bash {{ run_summary_cron }}"

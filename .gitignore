@@ -113,3 +113,4 @@ busy_beaver*db
 creds.txt
 .pdbrc.py
 docker-compose.override.yml
+*.retry
