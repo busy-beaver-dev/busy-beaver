@@ -1,6 +1,0 @@
----
-- name: deploy app to server
-  hosts: all
-  user: "{{ user }}"
-  roles:
-    - common

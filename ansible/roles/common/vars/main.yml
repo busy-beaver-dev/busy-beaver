@@ -1,0 +1,5 @@
+---
+app_name: busy-beaver
+app_dir: "/home/{{ user }}/{{ app_name }}"
+run_summary_cron: "{{ app_dir }}/scripts/prod/run_github_summary_report.sh"
+code_repository: https://github.com/alysivji/busy-beaver.git
