@@ -6,6 +6,8 @@ from busy_beaver.adapters.slack import SlackAdapter
 from busy_beaver.github_stats import generate_summary  # noqa
 from busy_beaver.models import *  # noqa
 
+# from busy_beaver.retweeter import api  # noqa
+
 
 OAUTH_TOKEN = os.getenv("GITHUB_OAUTH_TOKEN")
 github = GitHubAdapter(OAUTH_TOKEN)
