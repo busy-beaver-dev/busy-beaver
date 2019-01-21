@@ -8,9 +8,13 @@ Slack bot that summarizes public GitHub activity for registered users.
 
 ## Introduction
 
-With over four thousand members, the [Chicago Python Users Group](https://www.chipy.org/) is one of the largest Python communities in the world. Slack has become the primary method of communication amongst our members in-between events. We decided to develop a Slack bot that summaries GitHub activity for registered users in a specific channel to increase member engagement. The goal is to spark conversations around tools and projects.
+With over four thousand members, the [Chicago Python Users Group](https://www.chipy.org/) (ChiPy) is one of the largest Python communities in the world. Slack has become the primary method of communication amongst our members in-between events. We developed a Slack bot for the community, codename: Busy Beaver, to increase member engagement.
 
-Users can sign up for an account by messaging the bot with a specific passphrase. The bot will request that the user sign into GitHub with a provided link. This process will ensure that only authorized GitHub activity is posted in the channel.
+Busy-Beaver's first attempt at increasing engagement is to spark conversation around GitHub activity. We created a `#busy-beaver` channel on the [ChiPy Slack](https://chipy.slack.com/) where the bot posts daily summaries of public GitHub activity for registered users.
+
+Users sign up for an account by `DM`ing the bot with the phrase: `connect`. The bot requires users to sign into GitHub to ensure only authorized activity is posted in the channel.
+
+Busy-Beaver was released on January 10th, 2019 at the monthly Chicago Python Meetup. [Slides are available](http://bit.ly/busy-beaver) and a YouTube link is forthcoming.
 
 ## Project Information
 
@@ -80,19 +84,9 @@ class Config(pdb.DefaultConfig):
 
 ## Deployment
 
-```console
-export DATABASE_URI=[database-uri]
-export BUSY_BEAVER_API_TOKEN=[bb-api-token]
+- See `ansible` folder for instructions on how to set up deployment server
 
-export GITHUB_APP_CLIENT_ID=[client-id]
-export GITHUB_APP_CLIENT_SECRET=[client-secret]
-export GITHUB_OAUTH_TOKEN=[token-here]
-
-export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
-
-export SENTRY_DSN=[sentry-dsn]
-export DATADOG_API_KEY=[datadog-api-key]
-```
+### CI/CD
 
 - [Travis CI](https://travis-ci.org/alysivji/busy-beaver) kicks off build of the deployment docker image when `master` has new commits.
 - Image is uploaded to [DockerHub](https://cloud.docker.com/u/alysivji/repository/docker/alysivji/busy-beaver)

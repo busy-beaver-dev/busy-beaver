@@ -1,28 +1,7 @@
-# Production Scripts
+# Busy-Beaver Production Scripts
 
-## `run_github_summary_report.sh`
+## Contents
 
-### CRON Settings
+### `run_github_summary_report.sh`
 
-0 19 * * * /bin/bash /home/alysivji/busy-beaver/scripts/prod/run_github_summary_report.sh
-
-## Lambda Function
-
-`Under construction`
-
-```python
-import json
-from botocore.vendored import requests
-
-CHANNEL_ID = ""
-CHANNEL_NAME = "busy-beaver"
-TOKEN = ""
-
-
-def lambda_handler(event, context):
-    url = "https://busybeaver.sivji.com/github-summary"
-    headers = {"Authorization": f"token {TOKEN}"}
-    payload = {"channel": CHANNEL_ID}
-
-    return requests.post(url, headers=headers, data=json.dumps(payload))
-```
+Script that posts daily Summary Reports on Slack. This script is configured to run via a CRON job at 19:00 UTC everyday. CRON job has been documented in ansible configuration.
