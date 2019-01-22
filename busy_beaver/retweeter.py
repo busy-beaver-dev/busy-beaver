@@ -31,7 +31,7 @@ def exclude_recent_tweets(tweets):
     return [tweet for tweet in tweets if tweet.created_at <= boundary_dt]
 
 
-def post_to_slack(username, tweets, channel="bot-testing"):
+def post_to_slack(username, tweets, channel):
     message = "https://twitter.com/{username}/statuses/{id}"
     channel_id = slack.get_channel_id(channel)
     for tweet in tweets:
@@ -39,9 +39,9 @@ def post_to_slack(username, tweets, channel="bot-testing"):
         kv_store.put_int(LAST_TWEET_KEY, tweet.id_)
 
 
-def main(username="ChicagoPython"):
+def main(username, channel):
     logger.info("Posting tweets")
     tweets = get_tweets(username)
     tweets_to_post = exclude_recent_tweets(tweets)
     logger.info("{0}".format(len(tweets_to_post)))
-    post_to_slack(username, tweets_to_post)
+    post_to_slack(username, tweets_to_post, channel)
