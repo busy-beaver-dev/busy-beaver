@@ -23,11 +23,13 @@ auth = tweepy.OAuthHandler(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET)
 auth.set_access_token(TWITTER_ACCESS_TOKEN, TWITTER_ACCESS_TOKEN_SECRET)
 api = tweepy.API(auth)
 
+LAST_TWEET_KEY = "last_posted_tweet_id"
+
 
 def get_tweets(twitter_username):
     """Get latest tweets after last_posted_tweet_id"""
     tweets = api.user_timeline(screen_name=twitter_username, tweet_mode="extended")
-    last_posted_tweet_id = kv_store.get_int("last_posted_tweet_id")
+    last_posted_tweet_id = kv_store.get_int(LAST_TWEET_KEY)
     recent_tweets = [tweet for tweet in tweets if tweet.id > last_posted_tweet_id]
     return list(reversed(recent_tweets))
 
@@ -39,21 +41,20 @@ def exclude_recent_tweets(tweets):
     return [tweet for tweet in tweets if tweet.created_at <= boundary_dt]
 
 
-def post_to_slack(username, tweets):
-    channel_id = slack.get_channel_id("bot-testing")
+def post_to_slack(username, tweets, channel="bot-testing"):
     message = "https://twitter.com/{username}/statuses/{id}"
-
+    channel_id = slack.get_channel_id(channel)
     for tweet in tweets:
         slack.post_message(channel_id, message.format(username=username, id=tweet.id))
-        # TODO update key-value in database
+        kv_store.put_int(LAST_TWEET_KEY, tweet.id)
 
 
-def main():
+def main(username="ChicagoPython"):
     logger.info("Posting tweets")
-    tweets = get_tweets("ChicagoPython")
+    tweets = get_tweets(username)
     tweets_to_post = exclude_recent_tweets(tweets)
     logger.info("{0}".format(len(tweets_to_post)))
-    post_to_slack("ChicagoPython", tweets_to_post)
+    post_to_slack(username, tweets_to_post)
 
 
 if __name__ == "__main__":
