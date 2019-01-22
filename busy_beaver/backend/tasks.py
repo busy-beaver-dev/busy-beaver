@@ -1,19 +1,14 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 import logging
-import os
 from typing import List
 
 from sqlalchemy import and_
-import pytz
 
-from .. import api, db, github_stats
-from ..adapters.slack import SlackAdapter
+from .. import api, db, github_stats, slack
 from ..models import ApiUser, User
+from ..toolbox import utc_now_minus
 
 logger = logging.getLogger(__name__)
-
-SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN")
-slack = SlackAdapter(SLACK_TOKEN)
 
 
 class PublishGitHubSummaryResource:
@@ -69,7 +64,3 @@ def post_github_summary_to_slack(channel: str) -> None:
         message += github_stats.generate_summary(user, boundary_dt)
 
     slack.post_message(channel_id, message)
-
-
-def utc_now_minus(period: timedelta):
-    return pytz.utc.localize(datetime.utcnow()) - period
