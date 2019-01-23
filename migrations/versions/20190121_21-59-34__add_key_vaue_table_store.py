@@ -30,8 +30,11 @@ def upgrade():
     # ### end Alembic commands ###
 
     # initialize datastore with value of last tweet
-    # NOTE: if this breaks, we need to think about how to populate
-    kv_store.put_int(LAST_TWEET_KEY, twitter.get_last_tweet_id())
+    try:
+        last_id = twitter.get_last_tweet_id()
+    except Exception:  # NOT a fan, but it makes migration in prod easier
+        last_id = 42
+    kv_store.put_int(LAST_TWEET_KEY, last_id)
 
 
 def downgrade():
