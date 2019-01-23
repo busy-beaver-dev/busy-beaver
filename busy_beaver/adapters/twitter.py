@@ -4,6 +4,8 @@ from typing import List, NamedTuple
 import tweepy
 import pytz
 
+from ..config import TWITTER_USERNAME
+
 
 class Tweet(NamedTuple):
     id_: int
@@ -23,3 +25,7 @@ class TwitterAdapter:
             dt = pytz.utc.localize(tweet.created_at)
             cleaned_tweets.append(Tweet(id_=tweet.id, created_at=dt))
         return cleaned_tweets
+
+    def get_last_tweet_id(self, username: str = TWITTER_USERNAME) -> int:
+        tweets = self.client.user_timeline(screen_name=username, tweet_mode="extended")
+        return tweets[0].id

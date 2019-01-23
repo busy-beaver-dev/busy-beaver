@@ -8,6 +8,7 @@ Create Date: 2019-01-21 21:59:34.979693
 from alembic import op
 import sqlalchemy as sa
 
+from busy_beaver import twitter
 from busy_beaver.models import kv_store
 from busy_beaver.retweeter import LAST_TWEET_KEY
 
@@ -28,8 +29,9 @@ def upgrade():
     )
     # ### end Alembic commands ###
 
-    # initialize datastore with correct value
-    kv_store.put_int(LAST_TWEET_KEY, 1087838982736629760)
+    # initialize datastore with value of last tweet
+    # NOTE: if this breaks, we need to think about how to populate
+    kv_store.put_int(LAST_TWEET_KEY, twitter.get_last_tweet_id())
 
 
 def downgrade():
