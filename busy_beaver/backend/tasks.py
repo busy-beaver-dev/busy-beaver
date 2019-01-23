@@ -3,9 +3,10 @@ import logging
 from .. import db
 from ..models import ApiUser
 from ..tasks import post_github_summary_to_slack
-from ..retweeter import main
+from ..retweeter import post_tweets_to_slack
 
 logger = logging.getLogger(__name__)
+# TODO add authentication middleware
 
 
 class PublishGitHubSummaryResource:
@@ -79,7 +80,7 @@ class TwitterPollingResource:
                 "[Busy-Beaver] Twitter Summary Poll -- need channel in JSON body",
             )
             return
-        main(username="ChicagoPython", channel=data["channel"])
+        post_tweets_to_slack(username="ChicagoPython", channel=data["channel"])
 
         logger.info("[Busy-Beaver] Twitter Summary Poll -- kicked-off")
         resp.media = {"run": "kicked_off"}

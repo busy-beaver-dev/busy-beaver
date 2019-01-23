@@ -1,7 +1,5 @@
-# required feature: env variable - min time to wait before posting tweet
-# create endpoint that kicks off this process
 # run with cron, add task to ansible script
-# how to disable bot from posting, keyword in tweet?
+# how to disable bot from posting, if they are not in the channel
 
 from datetime import timedelta
 import logging
@@ -24,24 +22,25 @@ def get_tweets(username):
     return list(reversed(recent_tweets))
 
 
-def exclude_recent_tweets(tweets):
+def exclude_tweets_inside_window(tweets, *, window: timedelta):
     """Buffer to delete tweets before retweeting to Slack"""
-    # TODO make timedelta a parameter
-    boundary_dt = utc_now_minus(timedelta(minutes=30))
+    boundary_dt = utc_now_minus(window)
     return [tweet for tweet in tweets if tweet.created_at <= boundary_dt]
 
 
-def post_to_slack(username, tweets, channel):
-    message = "https://twitter.com/{username}/statuses/{id}"
+def post_to_slack(channel, tweets, twitter_username):
+    """Twitter Slack app unfurls URLs in Slack to show tweet details"""
+    url = "https://twitter.com/{username}/statuses/{id}"
     channel_id = slack.get_channel_id(channel)
     for tweet in tweets:
-        slack.post_message(channel_id, message.format(username=username, id=tweet.id_))
+        tweet_url = url.format(username=twitter_username, id=tweet.id_)
+        slack.post_message(channel_id, tweet_url)
         kv_store.put_int(LAST_TWEET_KEY, tweet.id_)
 
 
-def main(username, channel):
-    logger.info("Posting tweets")
+def post_tweets_to_slack(username, channel):
+    logger.info("[Busy-Beaver] Fetching tweets to post")
     tweets = get_tweets(username)
-    tweets_to_post = exclude_recent_tweets(tweets)
-    logger.info("{0}".format(len(tweets_to_post)))
-    post_to_slack(username, tweets_to_post, channel)
+    tweets_to_post = exclude_tweets_inside_window(tweets, window=timedelta(minutes=30))
+    logger.info("[Busy-Beaver] posting {0} tweets".format(len(tweets_to_post)))
+    post_to_slack(channel, tweets_to_post, username)
