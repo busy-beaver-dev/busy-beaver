@@ -4,8 +4,8 @@ from slackclient import SlackClient
 
 
 class Channel(NamedTuple):
-    id: str
     name: str
+    id: str
     members: List[str] = None
 
 
@@ -16,7 +16,7 @@ class SlackAdapter:
     def get_channel_info(self, channel) -> Channel:
         channel_id = self._get_channel_id(channel)
         members = self._get_channel_members(channel_id)
-        return Channel(channel_id, channel, members)
+        return Channel(channel, channel_id, members)
 
     def post_message(self, message, *, attachments=None, channel=None, channel_id=None):
         if not channel and not channel_id:
@@ -41,4 +41,4 @@ class SlackAdapter:
 
     def _get_all_channels(self):
         channels = self.sc.api_call("channels.list")
-        return [Channel(c["id"], c["name"]) for c in channels["channels"]]
+        return [Channel(c["name"], c["id"]) for c in channels["channels"]]
