@@ -1,6 +1,7 @@
 import logging
 
 from .. import db
+from ..config import TWITTER_USERNAME
 from ..models import ApiUser
 from ..tasks import post_github_summary_to_slack
 from ..retweeter import post_tweets_to_slack
@@ -80,7 +81,7 @@ class TwitterPollingResource:
                 "[Busy-Beaver] Twitter Summary Poll -- need channel in JSON body",
             )
             return
-        post_tweets_to_slack(username="ChicagoPython", channel=data["channel"])
+        post_tweets_to_slack(username=TWITTER_USERNAME, channel=data["channel"])
 
         logger.info("[Busy-Beaver] Twitter Summary Poll -- kicked-off")
         resp.media = {"run": "kicked_off"}

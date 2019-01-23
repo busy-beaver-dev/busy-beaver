@@ -1,2 +1,5 @@
-group: sivdev
-user: sivdev_user
+group: alysivji
+user: alysivji
+
+app_name: busy-beaver
+app_dir: "/home/{{ user }}/{{ app_name }}"
