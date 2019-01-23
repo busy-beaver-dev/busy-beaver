@@ -5,10 +5,10 @@ from busy_beaver.adapters.twitter import TwitterAdapter
 
 @pytest.fixture
 def client():
-    TWITTER_CONSUMER_KEY = os.getenv("TWITTER_CONSUMER_KEY", 1)
-    TWITTER_CONSUMER_SECRET = os.getenv("TWITTER_CONSUMER_SECRET", 2)
-    TWITTER_ACCESS_TOKEN = os.getenv("TWITTER_ACCESS_TOKEN", 3)
-    TWITTER_ACCESS_TOKEN_SECRET = os.getenv("TWITTER_ACCESS_TOKEN_SECRET", 4)
+    TWITTER_CONSUMER_KEY = os.getenv("TWITTER_CONSUMER_KEY", "test")
+    TWITTER_CONSUMER_SECRET = os.getenv("TWITTER_CONSUMER_SECRET", "test")
+    TWITTER_ACCESS_TOKEN = os.getenv("TWITTER_ACCESS_TOKEN", "test")
+    TWITTER_ACCESS_TOKEN_SECRET = os.getenv("TWITTER_ACCESS_TOKEN_SECRET", "test")
     yield TwitterAdapter(
         TWITTER_CONSUMER_KEY,
         TWITTER_CONSUMER_SECRET,
