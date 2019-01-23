@@ -8,6 +8,8 @@ Create Date: 2019-01-21 21:59:34.979693
 from alembic import op
 import sqlalchemy as sa
 
+from busy_beaver.models import kv_store
+from busy_beaver.retweeter import LAST_TWEET_KEY
 
 # revision identifiers, used by Alembic.
 revision = "78514b173380"
@@ -24,8 +26,10 @@ def upgrade():
         sa.Column("value", sa.LargeBinary(), nullable=False),
         sa.PrimaryKeyConstraint("key"),
     )
-    # TODO add something here to go out and fetch what itemshould be populated with
     # ### end Alembic commands ###
+
+    # initialize datastore with correct value
+    kv_store.put_int(LAST_TWEET_KEY, 1087838982736629760)
 
 
 def downgrade():
