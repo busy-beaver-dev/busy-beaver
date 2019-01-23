@@ -18,7 +18,7 @@ class TwitterAdapter:
         auth.set_access_token(token, token_secret)
         self.client = tweepy.API(auth)
 
-    def get_user_timeline(self, username: str) -> List[Tweet]:
+    def get_user_timeline(self, username: str = TWITTER_USERNAME) -> List[Tweet]:
         tweets = self.client.user_timeline(screen_name=username, tweet_mode="extended")
         cleaned_tweets = []
         for tweet in tweets:
