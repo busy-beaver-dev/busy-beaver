@@ -6,8 +6,18 @@ IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
 local_db = "sqlite:///busy_beaver.db"
 DATABASE_URI = os.getenv("DATABASE_URI", local_db)
 
+# social media details
+TWITTER_USERNAME = "ChicagoPython"
+
 # credentials
-oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")
+GITHUB_OAUTH_TOKEN = os.getenv("GITHUB_OAUTH_TOKEN")
+GITHUB_CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID")
+GITHUB_CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET")
+SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN")
+TWITTER_CONSUMER_KEY = os.getenv("TWITTER_CONSUMER_KEY", None)
+TWITTER_CONSUMER_SECRET = os.getenv("TWITTER_CONSUMER_SECRET", None)
+TWITTER_ACCESS_TOKEN = os.getenv("TWITTER_ACCESS_TOKEN", None)
+TWITTER_ACCESS_TOKEN_SECRET = os.getenv("TWITTER_ACCESS_TOKEN_SECRET", None)
 
 # observability
 LOGGING_CONFIG = {
@@ -20,7 +30,7 @@ LOGGING_CONFIG = {
         },
         "json": {
             "class": "pythonjsonlogger.jsonlogger.JsonFormatter",
-            "format": "%(asctime)s %(levelname)s %(filename)s %(funcName)s %(lineno)s %(message)s",
+            "format": "%(asctime)s %(levelname)s %(filename)s %(funcName)s %(lineno)s %(message)s",  # noqa
         },
     },
     "handlers": {

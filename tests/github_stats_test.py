@@ -1,8 +1,8 @@
 from datetime import timedelta
 
-from busy_beaver.backend.tasks import utc_now_minus
 from busy_beaver.github_stats import generate_summary
 from busy_beaver.models import User
+from busy_beaver.toolbox import utc_now_minus
 
 import pytest
 

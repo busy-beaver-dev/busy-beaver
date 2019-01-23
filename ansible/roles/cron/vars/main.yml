@@ -1,0 +1,3 @@
+---
+run_summary: "{{ app_dir }}/scripts/prod/run_github_summary_report.sh"
+twitter_poller: "{{ app_dir }}/scripts/prod/twitter_poller.sh"

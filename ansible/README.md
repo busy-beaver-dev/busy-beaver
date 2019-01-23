@@ -14,6 +14,11 @@ export GITHUB_OAUTH_TOKEN=[token-here]
 
 export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
 
+export TWITTER_CONSUMER_KEY=[]
+export TWITTER_CONSUMER_SECRET=[]
+export TWITTER_ACCESS_TOKEN=[]
+export TWITTER_ACCESS_TOKEN_SECRET=[]
+
 export SENTRY_DSN=[sentry-dsn]
 export DATADOG_API_KEY=[datadog-api-key]
 ```

@@ -5,4 +5,11 @@
     state: present
     minute: 0
     hour: 19
-    job: "/bin/bash {{ run_summary_cron }}"
+    job: "/bin/bash {{ run_summary }}"
+
+- cron:
+    name: Run Twitter poller to retweet new posts to Slack
+    user: "{{ user }}"
+    state: present
+    minute: */13
+    job: "/bin/bash {{ twitter_poller }}"

@@ -1,19 +1,13 @@
-from datetime import datetime, timedelta
 import logging
-import os
-from typing import List
 
-from sqlalchemy import and_
-import pytz
-
-from .. import api, db, github_stats
-from ..adapters.slack import SlackAdapter
-from ..models import ApiUser, User
+from .. import db
+from ..config import TWITTER_USERNAME
+from ..models import ApiUser
+from ..tasks import post_github_summary_to_slack
+from ..retweeter import post_tweets_to_slack
 
 logger = logging.getLogger(__name__)
-
-SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN")
-slack = SlackAdapter(SLACK_TOKEN)
+# TODO add authentication middleware
 
 
 class PublishGitHubSummaryResource:
@@ -55,21 +49,39 @@ class PublishGitHubSummaryResource:
         resp.media = {"run": "kicked_off"}
 
 
-@api.background.task
-def post_github_summary_to_slack(channel: str) -> None:
-    boundary_dt = utc_now_minus(timedelta(days=1))
-    channel_id = slack.get_channel_id(channel)
-    members = slack.get_channel_members(channel_id)
+class TwitterPollingResource:
+    """Endpoint to trigger polling of Twitter for new tweets to post to channel
+    """
 
-    users: List[User] = db.query(User).filter(
-        and_(User.slack_id.in_(members), User.github_username.isnot(None))
-    ).all()
-    message = ""
-    for user in users:
-        message += github_stats.generate_summary(user, boundary_dt)
+    async def on_post(self, req, resp):
+        logger.info("[Busy-Beaver] Twitter Summary Poll")
 
-    slack.post_message(channel_id, message)
+        if "authorization" not in req.headers:
+            logger.error("[Busy-Beaver] Twitter Summary Poll -- no auth header")
+            resp.status_code = 401
+            resp.media = {"message": "Include header: Authorization: 'token {token}'"}
+            return
 
+        token = req.headers["authorization"].split("token ")[1]
+        api_user: ApiUser = db.query(ApiUser).filter_by(token=token).first()
+        if not api_user:
+            logger.error("[Busy-Beaver] Invalid token")
+            resp.status_code = 401
+            resp.media = {"message": "Invalid token, please talk to admin"}
+            return
 
-def utc_now_minus(period: timedelta):
-    return pytz.utc.localize(datetime.utcnow()) - period
+        # TODO maybe add a task queue here
+        logger.info(
+            "[Busy-Beaver] Twitter Summary Poll -- login successful",
+            extra={"api_user": api_user.username},
+        )
+        data = await req.media()
+        if "channel" not in data:
+            logger.error(
+                "[Busy-Beaver] Twitter Summary Poll -- need channel in JSON body",
+            )
+            return
+        post_tweets_to_slack(username=TWITTER_USERNAME, channel=data["channel"])
+
+        logger.info("[Busy-Beaver] Twitter Summary Poll -- kicked-off")
+        resp.media = {"run": "kicked_off"}

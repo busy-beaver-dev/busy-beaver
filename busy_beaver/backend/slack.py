@@ -3,8 +3,7 @@ import os
 from urllib.parse import urlencode
 import uuid
 
-from .. import api, db
-from ..adapters.slack import SlackAdapter
+from .. import api, db, slack
 from ..models import User
 
 logger = logging.getLogger(__name__)
@@ -12,11 +11,6 @@ logger = logging.getLogger(__name__)
 CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID")
 CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET")
 GITHUB_REDIRECT_URI = "https://busybeaver.sivji.com/github-integration"
-SLACK_CALLBACK_URI = "https://busybeaver.sivji.com/slack-event-subscription"
-
-SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN")
-slack = SlackAdapter(SLACK_TOKEN)
-
 
 SEND_LINK_COMMANDS = ["connect"]
 RESEND_LINK_COMMANDS = ["reconnect"]
