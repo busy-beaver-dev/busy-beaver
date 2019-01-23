@@ -11,11 +11,8 @@ from .event_list import (
     ReleasesPublishedList,
     StarredReposList,
 )
-from ..adapters.github import GitHubAdapter
-from ..config import oauth_token
+from .. import github
 from ..models import User
-
-github = GitHubAdapter(oauth_token)
 
 
 def generate_summary(user: User, boundary_dt: datetime):

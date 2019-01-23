@@ -10,7 +10,7 @@ DATABASE_URI = os.getenv("DATABASE_URI", local_db)
 TWITTER_USERNAME = "ChicagoPython"
 
 # credentials
-oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")
+GITHUB_OAUTH_TOKEN = os.getenv("GITHUB_OAUTH_TOKEN")
 GITHUB_CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID")
 GITHUB_CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET")
 SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN")
