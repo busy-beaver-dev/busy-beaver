@@ -16,14 +16,14 @@ SEND_LINK_COMMANDS = ["connect"]
 RESEND_LINK_COMMANDS = ["reconnect"]
 ALL_LINK_COMMANDS = SEND_LINK_COMMANDS + RESEND_LINK_COMMANDS
 
-UNKNOWN_COMMAND_MSG = (
+UNKNOWN_COMMAND = (
     "I don't recognize your command. Type `connect` to link your GitHub account."
 )
-ACCOUNT_ALREADY_ASSOCIATED_MSG = (
+ACCOUNT_ALREADY_ASSOCIATED = (
     "You have already associated a GitHub account with your Slack handle. "
     "Please type `reconnect` to link to a different account."
 )
-ACCOUNT_ASSOCIATE_MSG = (
+VERIFY_ACCOUNT = (
     "Follow the link below to validate your GitHub account. "
     "I'll reference your GitHub username to track your public activity."
 )
@@ -35,6 +35,7 @@ class SlackEventSubscriptionResource:
     TODO: refactor to make more modular and readable, bot makes minimal use of slack
     event subscriptions; low priority
     """
+
     async def on_post(self, req, resp):
         data = await req.media()
         logger.info("[Busy-Beaver] Recieved event from Slack", extra={"req_json": data})
@@ -59,17 +60,17 @@ class SlackEventSubscriptionResource:
 def reply_to_user_with_github_login_link(event):
     chat_text = str.lower(event["text"])
     slack_id = event["user"]
-    channel = event["channel"]
+    channel_id = event["channel"]
 
     if chat_text not in ALL_LINK_COMMANDS:
         logger.info("[Busy-Beaver] Unknown command")
-        slack.post_message(channel, UNKNOWN_COMMAND_MSG)
+        slack.post_message(UNKNOWN_COMMAND, channel_id=channel_id)
         return
 
     user_record = db.query(User).filter_by(slack_id=slack_id).first()
     if user_record and chat_text in SEND_LINK_COMMANDS:
         logger.info("[Busy-Beaver] Slack acount already linked to GitHub")
-        slack.post_message(channel, ACCOUNT_ALREADY_ASSOCIATED_MSG)
+        slack.post_message(ACCOUNT_ALREADY_ASSOCIATED, channel_id=channel_id)
         return
 
     # generate unique identifer to track user during authentication process
@@ -100,7 +101,5 @@ def reply_to_user_with_github_login_link(event):
             ],
         }
     ]
-    slack.post_message(
-        channel=channel, text=ACCOUNT_ASSOCIATE_MSG, attachments=attachment
-    )
+    slack.post_message(VERIFY_ACCOUNT, channel_id=channel_id, attachments=attachment)
     return

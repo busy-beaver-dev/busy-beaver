@@ -18,7 +18,7 @@ def get_tweets(username):
     """Get latest tweets after last_posted_tweet_id"""
     tweets = twitter.get_user_timeline(username)
     last_posted_tweet_id = kv_store.get_int(LAST_TWEET_KEY)
-    recent_tweets = [tweet for tweet in tweets if tweet.id_ > last_posted_tweet_id]
+    recent_tweets = [tweet for tweet in tweets if tweet.id > last_posted_tweet_id]
     return list(reversed(recent_tweets))
 
 
@@ -31,11 +31,10 @@ def exclude_tweets_inside_window(tweets, *, window: timedelta):
 def post_to_slack(channel, tweets, twitter_username):
     """Twitter Slack app unfurls URLs in Slack to show tweet details"""
     url = "https://twitter.com/{username}/statuses/{id}"
-    channel_id = slack.get_channel_id(channel)
     for tweet in tweets:
-        tweet_url = url.format(username=twitter_username, id=tweet.id_)
-        slack.post_message(channel_id, tweet_url)
-        kv_store.put_int(LAST_TWEET_KEY, tweet.id_)
+        tweet_url = url.format(username=twitter_username, id=tweet.id)
+        slack.post_message(tweet_url, channel=channel)
+        kv_store.put_int(LAST_TWEET_KEY, tweet.id)
 
 
 def post_tweets_to_slack(username, channel):
