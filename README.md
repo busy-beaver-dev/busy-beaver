@@ -4,19 +4,63 @@
 
 [![Build Status](https://travis-ci.org/alysivji/busy-beaver.svg?branch=master)](https://travis-ci.org/alysivji/busy-beaver) [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
 
-Slack bot that summarizes public GitHub activity for registered users.
+Chicago Python's Community Engagement Slack bot.
 
 ## Introduction
 
-With over four thousand members, the [Chicago Python Users Group](https://www.chipy.org/) (ChiPy) is one of the largest Python communities in the world. Slack has become the primary method of communication amongst our members in-between events. We developed a Slack bot for the community, codename: Busy Beaver, to increase member engagement.
+With over four thousand members, the [Chicago Python Users Group](https://www.chipy.org/) (ChiPy) is one of the largest Python communities in the world. Slack has become the primary method of communication amongst our members in-between events. We developed an open-source Slack bot, codename: Busy Beaver, to increase community engagement.
 
-Busy-Beaver's first attempt at increasing engagement is to spark conversation around GitHub activity. We created a `#busy-beaver` channel on the [ChiPy Slack](https://chipy.slack.com/) where the bot posts daily summaries of public GitHub activity for registered users.
+[Slides from Busy Beaver's release announcement](http://bit.ly/busy-beaver). YouTube link is forthcoming.
+
+## Features
+
+### GitHub Activity
+
+Busy-Beaver posts daily summaries of public GitHub activity for registered users in the `#busy-beaver` channel on the [ChiPy Slack](https://chipy.slack.com/). The goal of this feature is to increase engagement by sparking conversations around GitHub activity.
 
 Users sign up for an account by `DM`ing the bot with the phrase: `connect`. The bot requires users to sign into GitHub to ensure only authorized activity is posted in the channel.
 
-Busy-Beaver was released on January 10th, 2019 at the monthly Chicago Python Meetup. [Slides are available](http://bit.ly/busy-beaver) and a YouTube link is forthcoming.
+### Retweeter
 
-## Project Information
+Busy-Beaver retweets posts made to the [@ChicagoPython Twitter account](https://twitter.com/ChicagoPython) in the `#at-chicagopython` channel on the [ChiPy Slack](https://chipy.slack.com/).
+
+### Roadmap
+
+We are currently working on additional features to improve ChiPy community engagement. Please join the conversation in `#busy-beaver-meta` on the [ChiPy Slack](https://chipy.slack.com/).
+
+## Development Notes
+
+Busy-Beaver is an open source project where all artificats (code, Docker image, etc) are online. We use the [Twelve-Factor Application Methodology](https://12factor.net) for building services to design the CICD process and to keep information secure.
+
+### Web Application Stack
+
+- [sqlite](https://www.sqlite.org)
+- [responder](https://github.com/kennethreitz/responder)
+- [sqlalchemy](https://www.sqlalchemy.org/) with [sqla-wrapper](https://github.com/jpscaletti/sqla-wrapper)
+- [requests](https://github.com/requests/requests)
+
+### Tests
+
+- [pytest](https://github.com/pytest-dev/pytest)
+- [vcr.py](https://github.com/kevin1024/vcrpy)
+- [pytest-vcr](https://github.com/ktosiek/pytest-vcr)
+- [pytest-freezegun](https://github.com/ktosiek/pytest-freezegun)
+
+`vcr.py` records cassettes of requests and responses for new tests, and replays them for previously written tests. Make sure to [filter credentials](https://vcrpy.readthedocs.io/en/latest/advanced.html#filter-information-from-http-headers)
+
+### DevOps
+
+- [watchtower](https://github.com/v2tec/watchtower) (monitors DockerHub, downloads and deploys latest image)
+- [Ansible](https://www.ansible.com/)
+- [DigitalOcean](https://www.digitalocean.com)
+
+### Services
+
+We are grateful to the following organizations for providing free services to open source projects:
+
+- [GitHub](https://github.com) (code repo, issues)
+- [DockerHub](https://hub.docker.com) (hosting Docker images)
+- [Travis CI](https://travis-ci.org/) (continuous integration platform)
 
 ### Installation Notes
 
@@ -30,27 +74,35 @@ When a Slack user chats "connect" to the bot user via direct message, the server
 
 ### API Docs
 
-- Kick off summary run by making a `POST` request to `/github-summary` with `Authentication` header set to `token {token}` and JSON body:
+Can make requests to REST endpoints to kick off processes. Currently we are using CRON to run repetitive tasks; [this is managed by Ansible](https://github.com/alysivji/busy-beaver/blob/master/ansible/roles/cron/tasks/main.yml) to avoid manual configuration.
+
+#### GitHub Summary Endpoint
+
+- Start the process to run a summary by making a `POST` request to `/poll-twitter` with `Authentication` header set to `token {token}` and JSON body:
 
 ```json
 {
-  "channel": "channel_to_post"
+  "channel": "busy-beaver"
 }
 ```
 
-### Stack
+#### Retweeter Endpoint
 
-- [requests](https://github.com/requests/requests)
-- [responder](https://github.com/kennethreitz/responder)
-- [sqlalchemy](https://www.sqlalchemy.org/)
+- Check Twitter feed for new posts to share on Slack by making a `POST` request to `/github-summary` with `Authentication` header set to `token {token}` and JSON body:
 
-### Tests
+```json
+{
+  "channel": "at-chicagopython"
+}
+```
 
-- [pytest](https://github.com/pytest-dev/pytest)
-- [vcr.py](https://github.com/kevin1024/vcrpy)
-- [pytest-vcr](https://github.com/ktosiek/pytest-vcr)
+#### Creating API Account and Token
 
-`vcr.py` records cassettes of requests and responses for new tests, and replays them for previously written tests. Make sure to [filter credentials](https://vcrpy.readthedocs.io/en/latest/advanced.html#filter-information-from-http-headers)
+```python
+admin = ApiUser(username="admin", token="abc123!")
+db.session.add(admin)
+db.session.commit()
+```
 
 ## Development Environment
 
@@ -62,11 +114,18 @@ export GITHUB_APP_CLIENT_SECRET=[client-secret]
 export GITHUB_OAUTH_TOKEN=[token-here]
 
 export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
+
+export TWITTER_CONSUMER_KEY=[token-here]
+export TWITTER_CONSUMER_SECRET=[token-here]
+export TWITTER_ACCESS_TOKEN=[token-here]
+export TWITTER_ACCESS_TOKEN_SECRET=[token-here]
 ```
 
 Leverage Docker-Compose to create a containerized local development environment. Please see the `Makefile` for available commands.
 
 ### [pdb++](https://pypi.org/project/pdbpp/) Configuration
+
+PDB++ improves the debugging experience inside the shell.
 
 ```python
 # ./.pdbrc.py
@@ -77,32 +136,13 @@ import pdb
 class Config(pdb.DefaultConfig):
     sticky_by_default = True  # start in sticky mode
     current_line_color = 40  # black
-
-    # Presentation
-    # current_line_color = 47  # grey
-```
-
-## Deployment
-
-- See `ansible` folder for instructions on how to set up deployment server
-
-### CI/CD
-
-- [Travis CI](https://travis-ci.org/alysivji/busy-beaver) kicks off build of the deployment docker image when `master` has new commits.
-- Image is uploaded to [DockerHub](https://cloud.docker.com/u/alysivji/repository/docker/alysivji/busy-beaver)
-- [watchtower](https://github.com/v2tec/watchtower) monitors DockerHub and deploys latest image
-
-### Creating Account for API
-
-```python
-admin = ApiUser(username="admin", token="abc123!")
-db.session.add(admin)
-db.session.commit()
 ```
 
 ---
 
 ## Slack Permission Scopes
+
+TODO: elaborate on permissions
 
 ```text
 CONVERSATIONS
@@ -123,11 +163,12 @@ message.im
 
 ---
 
-## Long Horizon Todo
+## Todo
 
 - [ ] ETag, need to set up DB for this
-  - [ ] mark events that are new
+  - mark events that are new
 - [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
+  - far away concern
 - [ ] [GraphQL](https://developer.github.com/v4/)
 
 ### GitHub Events

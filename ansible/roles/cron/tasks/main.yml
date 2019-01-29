@@ -11,5 +11,5 @@
     name: Run Twitter poller to retweet new posts to Slack
     user: "{{ user }}"
     state: present
-    minute: */13
+    minute: "*/13"
     job: "/bin/bash {{ twitter_poller }}"
