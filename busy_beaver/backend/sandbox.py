@@ -9,16 +9,16 @@ logger = logging.getLogger(__name__)
 class HelloWorldResource:
     """For testing purposes"""
 
-    @authentication_required
-    async def on_get(self, req, resp, user, *, greeting):
+    async def on_get(self, req, resp):
         logger.info("[Busy-Beaver] Hit hello world endpoint", extra={"test": "payload"})
-        resp.media = {"Hello": f"World {greeting}"}
+        resp.media = {"Hello": "World"}
 
 
 class GoodbyeWorldResource:
     """For testing purposes, part deux"""
 
-    async def on_get(self, req, resp):
+    @authentication_required
+    async def on_get(self, req, resp, user):
         resp.media = {"See You": "Space Cowboy"}
 
 
