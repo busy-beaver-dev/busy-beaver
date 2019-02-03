@@ -14,10 +14,10 @@ MODULE_TO_TEST = "busy_beaver.retweeter"
 def patcher(monkeypatch):
     """Helper to patch in the correct spot"""
 
-    def _patcher(namespace, mock_to_return):
+    def _patcher(namespace, replacement_object):
         namespace_to_patch = f"{MODULE_TO_TEST}.{namespace}"
-        monkeypatch.setattr(namespace_to_patch, mock_to_return)
-        return mock_to_return
+        monkeypatch.setattr(namespace_to_patch, replacement_object)
+        return replacement_object
 
     yield _patcher
 
@@ -31,8 +31,8 @@ def patched_twitter(patcher):
         def get_user_timeline(self, username):
             return self.tweets
 
-    def _wrapper(mock_to_return):
-        fake_twitter = FakeTwitter(mock_to_return)
+    def _wrapper(tweets):
+        fake_twitter = FakeTwitter(tweets)
         patcher("twitter", fake_twitter)
 
     return _wrapper
