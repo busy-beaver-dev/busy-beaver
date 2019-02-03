@@ -8,8 +8,7 @@ Create Date: 2019-01-21 21:59:34.979693
 from alembic import op
 import sqlalchemy as sa
 
-from busy_beaver import twitter
-from busy_beaver.models import kv_store
+from busy_beaver import kv_store, twitter
 from busy_beaver.retweeter import LAST_TWEET_KEY
 
 # revision identifiers, used by Alembic.

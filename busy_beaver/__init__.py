@@ -18,7 +18,7 @@ from .config import (
     TWITTER_CONSUMER_KEY,
     TWITTER_CONSUMER_SECRET,
 )
-from .adapters import GitHubAdapter, SlackAdapter, TwitterAdapter
+from .adapters import GitHubAdapter, KeyValueStore, SlackAdapter, TwitterAdapter
 
 pathlib.Path("logs").mkdir(exist_ok=True)
 
@@ -42,4 +42,5 @@ logger.info("[BusyBeaver] Starting Server")
 api = responder.API()
 db = SQLAlchemy(DATABASE_URI)
 from . import models  # noqa
+kv_store = KeyValueStore(models.store)
 from . import backend  # noqa
