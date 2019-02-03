@@ -3,7 +3,7 @@ from . import BaseModel
 
 
 class ApiUser(BaseModel):
-    """User table"""
+    """API User table"""
 
     __tablename__ = "api_user"
 
