@@ -1,8 +1,7 @@
 from datetime import timedelta
 import logging
 
-from . import slack, twitter
-from .models import kv_store
+from . import kv_store, slack, twitter
 from .toolbox import utc_now_minus
 
 LAST_TWEET_KEY = "last_posted_tweet_id"

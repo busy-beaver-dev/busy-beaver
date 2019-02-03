@@ -1,9 +1,8 @@
 from datetime import timedelta
 import pytest
 
-from busy_beaver import db
+from busy_beaver import kv_store
 from busy_beaver.adapters.twitter import Tweet
-from busy_beaver.models import kv_store
 from busy_beaver.retweeter import post_tweets_to_slack, LAST_TWEET_KEY
 from busy_beaver.toolbox import utc_now_minus
 
