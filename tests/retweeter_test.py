@@ -48,10 +48,11 @@ def patched_slack(patcher):
 
 @pytest.fixture
 def patch_key_value_store():
-    checkpoint = db.session.begin_nested()
+    """KeyValue store does not use ORM so we can't use nested sessions here"""
+    value = kv_store.get_int(LAST_TWEET_KEY)
     kv_store.put_int(LAST_TWEET_KEY, 0)
     yield
-    checkpoint.rollback()
+    kv_store.put_int(LAST_TWEET_KEY, value)
 
 
 @pytest.mark.integration
