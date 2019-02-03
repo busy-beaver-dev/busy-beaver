@@ -3,8 +3,7 @@ import os
 IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
 
 # infrastructure
-local_db = "sqlite:///busy_beaver.db"
-DATABASE_URI = os.getenv("DATABASE_URI", local_db)
+DATABASE_URI = os.getenv("DATABASE_URI")
 
 # social media details
 TWITTER_USERNAME = "ChicagoPython"
