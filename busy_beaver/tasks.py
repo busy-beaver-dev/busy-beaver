@@ -24,8 +24,10 @@ def post_github_summary_to_slack(channel: str) -> None:
         logger.info("[Busy-Beaver] Compiling stats for {0}".format(user))
         message += github_stats.generate_summary(user, boundary_dt)
 
-    if message == "":
-        message = ('"If code falls outside version control, and no one is around to read it, '
-                   'does it make a sound?" - Zax Rosenberg')
+    if not message:
+        message = (
+            '"If code falls outside version control, and no one is around to read it, '
+            'does it make a sound?" - Zax Rosenberg'
+        )
 
     slack.post_message(message, channel_id=channel_info.id)
