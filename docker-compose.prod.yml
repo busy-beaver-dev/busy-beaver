@@ -6,7 +6,25 @@ networks:
   local:
     external: false
 
+volumes:
+  pgdata:
+  bb-logs:
+
 services:
+  db:
+    image: postgres:10.3-alpine
+    environment:
+      POSTGRES_DB: busy-beaver
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    networks:
+      - local
+    labels:
+      - traefik.enable=false
+
+
   app:
     image: alysivji/busy-beaver:latest
     command: ["uvicorn", "busy_beaver:api", "--host", "0.0.0.0", "--port", "5100"]
@@ -24,8 +42,7 @@ services:
       TWITTER_ACCESS_TOKEN_SECRET: ${TWITTER_ACCESS_TOKEN_SECRET}
       SENTRY_DSN: ${SENTRY_DSN}
     volumes:
-      - ./logs:/app/logs/
-      - ./busy_beaver.db:/app/busy_beaver.db
+      - bb-logs:/app/logs/
     networks:
       - sivnet
       - local
@@ -45,6 +62,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - local
+    labels:
+      - traefik.enable=false
   datadog:  # collect logs
     build: datadog
     depends_on:
@@ -60,7 +79,7 @@ services:
       - DD_ENABLE_PAYLOADS_SERVICE_CHECKS=false
       - DD_ENABLE_PAYLOADS_SKETCHES=false
     volumes:
-      - ./logs:/busy-beaver/logs
+      - bb-logs:/busy-beaver/logs
       - /var/run/docker.sock:/var/run/docker.sock
       - /proc/:/host/proc/:ro
       - /sys/fs/cgroup:/host/sys/fs/cgroup:ro

@@ -5,7 +5,9 @@ This folder contains Ansible configuration settings to deploy Busy-Beaver on a V
 ## `~/.bash_profile`
 
 ```console
-export DATABASE_URI=[database-uri]
+export POSTGRES_USER=[user]
+export POSTGRES_PASSWORD=[password]
+export DATABASE_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/busy-beaver
 export BUSY_BEAVER_API_TOKEN=[bb-api-token]
 
 export GITHUB_APP_CLIENT_ID=[client-id]
