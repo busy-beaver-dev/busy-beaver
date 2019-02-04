@@ -107,7 +107,9 @@ db.session.commit()
 ## Development Environment
 
 ```console
-export DATABASE_URI=sqlite:///busy_beaver.db
+export POSTGRES_USER=[username]
+export POSTGRES_PASSWORD=[password]
+export DATABASE_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/busy-beaver
 
 export GITHUB_APP_CLIENT_ID=[client-id]
 export GITHUB_APP_CLIENT_SECRET=[client-secret]
