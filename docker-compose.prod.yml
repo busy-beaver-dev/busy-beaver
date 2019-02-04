@@ -19,11 +19,12 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - pgdata:/var/lib/postgresql/data/
+    ports:
+      - "9432:5432"
     networks:
       - local
     labels:
       - traefik.enable=false
-
 
   app:
     image: alysivji/busy-beaver:latest
