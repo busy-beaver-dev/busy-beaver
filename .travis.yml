@@ -6,19 +6,21 @@ sudo: required
 
 services:
   - postgresql
-
-env:
-  - PYTHONPATH=. DATABASE_URI="postgresql://postgres@127.0.0.1:5432/busy-beaver-test" IMAGE_NAME="alysivji/busy-beaver"
+addons:
+  postgresql: "10"
 
 language: python
 python:
   - "3.7"
 
+env:
+  - PYTHONPATH=. DATABASE_URI="postgresql://postgres@127.0.0.1:5432/busy_beaver_test" IMAGE_NAME="alysivji/busy-beaver"
+
 install:
   - pip install -r requirements_dev.txt
 
 before_script:
-  - psql -c 'create database busy-beaver-test;' -U postgres
+  - psql -c 'create database busy_beaver_test;' -U postgres
 
 script:
   - alembic --config=./migrations/alembic.ini upgrade head
