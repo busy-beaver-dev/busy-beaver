@@ -4,8 +4,11 @@ notifications:
 dist: xenial
 sudo: required
 
+services:
+  - postgresql
+
 env:
-  - PYTHONPATH=. DATABASE_URI="sqlite:///busy_beaver.db" IMAGE_NAME="alysivji/busy-beaver"
+  - PYTHONPATH=. DATABASE_URI="postgresql://bb_user:bb_pass@0.0.0.0:5432/busy-beaver-test" IMAGE_NAME="alysivji/busy-beaver"
 
 language: python
 python:
@@ -13,6 +16,10 @@ python:
 
 install:
   - pip install -r requirements_dev.txt
+
+before_script:
+  - psql -c "CREATE DATABASE busy-beaver-test;" -U postgres
+  - psql -c "CREATE USER bb_user WITH PASSWORD 'bb_pass';" -U postgres
 
 script:
   - alembic --config=./migrations/alembic.ini upgrade head
