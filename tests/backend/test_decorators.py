@@ -82,10 +82,20 @@ def test_auth_with_url_variable(api, persist_api_user):
 def test_auth_header_with_incorrect_value(input, api, persist_api_user):
     r = api.requests.get("/auth-required", headers={"Authorization": input})
     assert r.status_code == 401
-    assert "Authorization specification" in r.text
+    assert "Expected header" in r.text
 
 
 def test_unauthorized_role(api, persist_api_user):
     r = api.requests.get("/auth-required-user-role", headers=AUTH_HEADER)
     assert r.status_code == 401
     assert "Not authorized to access endpoint" in r.text
+
+
+def test_raising_valueerror_by_passing_incorrect_roles_type():
+    api = responder.API()
+
+    with pytest.raises(ValueError):
+        @api.route("/auth")
+        @authentication_required(roles="user")
+        def auth(req, resp):
+            resp.text = "hello, world!"

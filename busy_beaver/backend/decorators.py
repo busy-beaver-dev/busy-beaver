@@ -9,7 +9,10 @@ logger = logging.getLogger(__name__)
 AUTH_STRING = re.compile(r"token (?P<token>.*)")
 
 
-def authentication_required(roles=None):
+def authentication_required(roles):
+    if not isinstance(roles, list):
+        raise ValueError
+
     def auth_decorator(func):
         async def _token_auth(*args, **kwargs):
             req = resp = None
