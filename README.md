@@ -99,7 +99,7 @@ Can make requests to REST endpoints to kick off processes. Currently we are usin
 #### Creating API Account and Token
 
 ```python
-admin = ApiUser(username="admin", token="abc123!")
+admin = ApiUser(username="admin", token="abc123!", role="admin")
 db.session.add(admin)
 db.session.commit()
 ```
