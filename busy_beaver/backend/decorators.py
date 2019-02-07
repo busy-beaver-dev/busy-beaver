@@ -40,13 +40,13 @@ def authentication_required(roles):
                 if not api_user:
                     logger.error("[Busy-Beaver] Invalid token")
                     resp.status_code = 401
-                    resp.media = {"message": "Invalid token, please talk to admin"}
+                    resp.media = {"message": "Invalid token, contact admin"}
                     return
 
                 if api_user.role not in roles:
                     logger.error("[Busy-Beaver] Unauthorized access of endpoint")
                     resp.status_code = 401
-                    resp.media = {"message": "Not authorized to access endpoint, please talk to admin"}
+                    resp.media = {"message": "Not authorized to access endpoint, contact to admin"}
                     return
 
                 return await func(*args, **kwargs, user=api_user)
