@@ -102,3 +102,7 @@ prod-pull-image:
 prod-deploy: prod-pull-image
 	make prod-down
 	make prod-up
+
+clear-db:
+	make down
+	docker volume rm busy-beaver_pgdata

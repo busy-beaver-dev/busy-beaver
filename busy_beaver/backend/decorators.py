@@ -1,9 +1,12 @@
 import logging
+import re
 import responder
+
 from .. import db
 from ..models import ApiUser
 
 logger = logging.getLogger(__name__)
+AUTH_STRING = re.compile(r"token (?P<token>.*)")
 
 
 def authentication_required(func):
@@ -22,7 +25,13 @@ def authentication_required(func):
                 resp.media = {"message": "Missing header: Authorization: 'token {tkn}'"}
                 return
 
-            token = req.headers["authorization"].split("token ")[1]
+            m = AUTH_STRING.match(req.headers["authorization"])
+            if not m:
+                resp.status_code = 401
+                resp.media = {"message": "Authorization specification: 'token {tkn}'"}
+                return
+
+            token = m.group("token")
             api_user: ApiUser = db.query(ApiUser).filter_by(token=token).first()
             if not api_user:
                 logger.error("[Busy-Beaver] Invalid token")

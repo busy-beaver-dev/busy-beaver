@@ -50,24 +50,31 @@ def test_no_auth_endpoint(api):
     assert r.text == "hello, world!"
 
 
-def test_auth_endpoint_without_headers(api):
+def test_auth_without_headers(api):
     r = api.requests.get("/auth-required")
     assert r.status_code == 401
     assert "Missing header: Authorization" in r.text
 
 
-def test_auth_endpoint_incorrect_token(api):
+def test_auth_incorrect_token(api):
     r = api.requests.get("/auth-required", headers={"Authorization": "token not-there"})
     assert r.status_code == 401
     assert "Invalid token" in r.text
 
 
-def test_auth_endpoint_success(api, persist_api_user):
+def test_auth_success(api, persist_api_user):
     r = api.requests.get("/auth-required", headers=AUTH_HEADER)
     assert r.status_code == 200
 
 
-def test_auth_endpoint_with_url_variable(api, persist_api_user):
+def test_auth_with_url_variable(api, persist_api_user):
     RANDOM_STRING = "asdfbadsf"
     r = api.requests.get(f"/more-auth/{RANDOM_STRING}", headers=AUTH_HEADER)
     assert RANDOM_STRING in r.text
+
+
+@pytest.mark.parametrize("input", ["asdf", "jwt asdfasdfasdfasdf"])
+def test_auth_header_with_incorrect_value(input, api, persist_api_user):
+    r = api.requests.get("/auth-required", headers={"Authorization": input})
+    assert r.status_code == 401
+    assert "Authorization specification" in r.text
