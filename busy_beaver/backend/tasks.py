@@ -12,7 +12,7 @@ class PublishGitHubSummaryResource:
     """Endpoint to trigger process of creating and publishing GitHub Summary to Slack
     """
 
-    @authentication_required
+    @authentication_required(roles=["admin"])
     async def on_post(self, req, resp, user):
         logger.info(
             "[Busy-Beaver] Post GitHub Summary Request -- login successful",
@@ -37,7 +37,7 @@ class TwitterPollingResource:
     """Endpoint to trigger polling of Twitter for new tweets to post to channel
     """
 
-    @authentication_required
+    @authentication_required(roles=["admin"])
     async def on_post(self, req, resp, user):
         logger.info(
             "[Busy-Beaver] Twitter Summary Poll -- login successful",

@@ -13,3 +13,4 @@ class ApiUser(BaseModel):
     # Attributes
     username = db.Column(db.String(255), nullable=False)
     token = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(255), nullable=False, default="user")

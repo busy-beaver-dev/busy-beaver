@@ -17,7 +17,7 @@ class HelloWorldResource:
 class GoodbyeWorldResource:
     """For testing purposes, part deux"""
 
-    @authentication_required
+    @authentication_required(roles=["admin"])
     async def on_get(self, req, resp, user):
         resp.media = {"See You": "Space Cowboy"}
 

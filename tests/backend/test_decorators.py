@@ -18,14 +18,19 @@ def api():
         resp.text = "hello, world!"
 
     @api.route("/auth-required")
-    @authentication_required
+    @authentication_required(roles=["admin"])
     def auth_required(req, resp, user):
         resp.text = "hello, world!"
 
     @api.route("/more-auth/{greeting}")
-    @authentication_required
+    @authentication_required(roles=["admin"])
     def more_auth(req, resp, user, *, greeting):
         resp.text = f"echo greeting: {greeting}"
+
+    @api.route("/auth-required-user-role")
+    @authentication_required(roles=["user"])
+    def auth_required_user_role(req, resp, user, *, greeting):
+        resp.text = "hello, user!"
 
     return api
 
@@ -35,7 +40,7 @@ def persist_api_user():
     savepoint = db.session.begin_nested()
     db.session.begin_nested()
 
-    user = ApiUser(username="test", token=TOKEN)
+    user = ApiUser(username="test", token=TOKEN, role="admin")
     db.session.add(user)
     db.session.commit()
     db.session.refresh(user)
@@ -78,3 +83,9 @@ def test_auth_header_with_incorrect_value(input, api, persist_api_user):
     r = api.requests.get("/auth-required", headers={"Authorization": input})
     assert r.status_code == 401
     assert "Authorization specification" in r.text
+
+
+def test_unauthorized_role(api, persist_api_user):
+    r = api.requests.get("/auth-required-user-role", headers=AUTH_HEADER)
+    assert r.status_code == 401
+    assert "Not authorized to access endpoint" in r.text

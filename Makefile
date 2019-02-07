@@ -59,6 +59,9 @@ test-cov:
 test-covhtml:
 	docker-compose exec app pytest --cov --cov-report html && open ./htmlcov/index.html
 
+test-pdb:
+	docker-compose exec app pytest --pdb -s
+
 test-skipvcr:
 	docker-compose exec app pytest -m 'not vcr'
 
