@@ -5,6 +5,11 @@ from typing import Any, Dict, List, NamedTuple, Union
 import requests
 
 logger = logging.getLogger(__name__)
+DEFAULT_HEADERS = {
+    "Accept": "application/json",
+    "Content-Type": "application/json",
+    "User-Agent": "BusyBeaver",
+}
 
 
 class Response(NamedTuple):
@@ -16,9 +21,13 @@ class Response(NamedTuple):
 class RequestsClient:
     """Wrapper around requests to simplify interaction with JSON REST APIs"""
 
-    def __init__(self):
+    def __init__(self, headers: dict = None):
+        _headers = dict(DEFAULT_HEADERS)
+        if headers is not None:
+            _headers.update(headers)
+
         s = requests.Session()
-        self.headers = {"User-Agent": "BusyBeaver", "Content-Type": "application/json"}
+        self.headers = _headers
         self.session = s
 
     def __repr__(self):
@@ -31,7 +40,7 @@ class RequestsClient:
         return self._request("head", url, **kwargs)
 
     def _request(self, method: str, url: str, **kwargs) -> Response:
-        req_headers = self.headers.copy()
+        req_headers = dict(self.headers)
         if "headers" in kwargs:
             headers_to_add = kwargs.pop("headers")
             req_headers.update(headers_to_add)

@@ -46,6 +46,7 @@ class SlackEventSubscriptionResource:
             resp.media = {"challenge": data["challenge"]}
             return
 
+        # bot can see its own DMs
         event = data["event"]
         msg_from_bot = event.get("subtype") == "bot_message"
         if event["type"] == "message" and msg_from_bot:
