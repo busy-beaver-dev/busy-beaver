@@ -1,6 +1,5 @@
 from sqlalchemy.ext.declarative import declared_attr
-
-from .. import db
+from busy_beaver.extensions import db
 
 
 class BaseModel(db.Model):

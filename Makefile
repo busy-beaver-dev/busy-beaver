@@ -33,7 +33,6 @@ build:
 
 up:
 	docker-compose up -d
-	make migrate-up
 
 down:
 	docker-compose down

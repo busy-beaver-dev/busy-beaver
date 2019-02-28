@@ -16,7 +16,6 @@ from .config import (
     TWITTER_CONSUMER_KEY,
     TWITTER_CONSUMER_SECRET,
 )
-from .models import kv_store
 
 # Forgot why I do this... probalby should have commented as it is not ovious
 # TODO test if it is needed in datadog
@@ -40,4 +39,6 @@ twitter = TwitterAdapter(
 
 logger.info("[BusyBeaver] Starting Server")
 app = create_app()
-key_value = KeyValueStore(kv_store)
+from .models import *  # noqa
+from .models import key_value_store  # noqa
+kv_store = KeyValueStore(key_value_store)

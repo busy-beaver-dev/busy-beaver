@@ -1,7 +1,7 @@
 alembic==1.0.3
-flask-sqlalchemy==x.x.x
-flask=1.x.x
-gunicorn==x.x.x
+flask-sqlalchemy==2.3.2
+flask==1.0.2
+gunicorn==19.9.0
 psycopg2-binary==2.7.7
 python-dateutil==2.7.5
 python-json-logger==0.1.10

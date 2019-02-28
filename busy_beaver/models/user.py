@@ -1,4 +1,4 @@
-from .. import db
+from busy_beaver.extensions import db
 from . import BaseModel
 
 
