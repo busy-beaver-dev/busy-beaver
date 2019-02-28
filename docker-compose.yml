@@ -20,7 +20,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/dev/Dockerfile
-    command: ["uvicorn", "busy_beaver:api", "--debug", "--host", "0.0.0.0", "--port", "5100"]
+    command: ["gunicorn", "busy_beaver:api", "--debug", "--host", "0.0.0.0", "--port", "5100"]
     environment:
       PYTHONPATH: .
       DATABASE_URI: ${DATABASE_URI}

@@ -1,4 +1,4 @@
 from simplekv.db.sql import SQLAlchemyStore
 from .. import db
 
-store = SQLAlchemyStore(db.engine, db.metadata, 'kv_store')
+kv_store = SQLAlchemyStore(db.engine, db.metadata, 'kv_store')
