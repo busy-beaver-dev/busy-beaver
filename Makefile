@@ -40,14 +40,14 @@ down:
 attach:
 	docker attach `docker-compose ps -q app`
 
-migration: ## Create migrations using alembic
-	docker-compose exec app alembic --config=./migrations/alembic.ini revision --autogenerate -m "$(m)"
+migration: ## Create migrations
+	docker-compose exec app flask db migrate -m "$(m)"
 
-migrate-up: ## Run migrations using alembic
-	docker-compose exec app alembic --config=./migrations/alembic.ini upgrade head
+migrate-up: ## Run migrations
+	docker-compose exec app flask db upgrade
 
-migrate-down: ## Rollback migrations using alembic
-	docker-compose exec app alembic --config=./migrations/alembic.ini downgrade -1
+migrate-down: ## Rollback migrations
+	docker-compose exec app flask db downgrade
 
 test:
 	docker-compose exec app pytest

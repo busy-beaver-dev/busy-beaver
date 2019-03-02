@@ -9,7 +9,6 @@ python-json-logger==0.1.10
 pytz==2018.7
 requests==2.20.1
 sentry-sdk==0.6.2
-simplekv==0.11.11
 slackclient==1.3.0
 SQLAlchemy==1.2.14
 starlette==0.8.8

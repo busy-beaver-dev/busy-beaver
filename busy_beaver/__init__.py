@@ -3,7 +3,7 @@ from logging.config import dictConfig as load_dict_config
 import pathlib
 import sentry_sdk
 
-from .adapters import GitHubAdapter, KeyValueStore, SlackAdapter, TwitterAdapter
+from .adapters import GitHubAdapter, SlackAdapter, TwitterAdapter
 from .app import create_app
 from .config import (
     GITHUB_OAUTH_TOKEN,
@@ -40,5 +40,3 @@ twitter = TwitterAdapter(
 logger.info("[BusyBeaver] Starting Server")
 app = create_app()
 from .models import *  # noqa
-# from .models import key_value_store  # noqa
-# kv_store = KeyValueStore(key_value_store)

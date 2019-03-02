@@ -1,7 +1,7 @@
 from datetime import timedelta
 import logging
 
-from . import kv_store, slack, twitter
+from . import slack, twitter
 from .toolbox import utc_now_minus
 
 LAST_TWEET_KEY = "last_posted_tweet_id"
@@ -19,7 +19,7 @@ def post_tweets_to_slack(username, channel):
 def get_tweets(username):
     """Get latest tweets after last_posted_tweet_id"""
     tweets = twitter.get_user_timeline(username)
-    last_posted_tweet_id = kv_store.get_int(LAST_TWEET_KEY)
+    last_posted_tweet_id = 42  # TODO kv_store.get_int(LAST_TWEET_KEY)
     recent_tweets = [tweet for tweet in tweets if tweet.id > last_posted_tweet_id]
     return list(reversed(recent_tweets))
 
@@ -36,4 +36,5 @@ def _post_to_slack(channel, tweets, twitter_username):
     for tweet in tweets:
         tweet_url = url.format(username=twitter_username, id=tweet.id)
         slack.post_message(tweet_url, channel=channel)
-        kv_store.put_int(LAST_TWEET_KEY, tweet.id)
+        # TODO
+        # kv_store.put_int(LAST_TWEET_KEY, tweet.id)
