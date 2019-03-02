@@ -23,6 +23,8 @@ services:
     command: ["gunicorn", "busy_beaver:app", "-b", "0.0.0.0:5100", "--reload", "--timeout",  "100000"]
     environment:
       PYTHONPATH: .
+      FLASK_APP: /app/busy_beaver/__init__.py
+      FLASK_ENV: development
       DATABASE_URI: ${DATABASE_URI}
       SLACK_BOTUSER_OAUTH_TOKEN: ${SLACK_BOTUSER_OAUTH_TOKEN}
       GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}

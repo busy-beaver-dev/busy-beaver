@@ -40,5 +40,5 @@ twitter = TwitterAdapter(
 logger.info("[BusyBeaver] Starting Server")
 app = create_app()
 from .models import *  # noqa
-from .models import key_value_store  # noqa
-kv_store = KeyValueStore(key_value_store)
+# from .models import key_value_store  # noqa
+# kv_store = KeyValueStore(key_value_store)

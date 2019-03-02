@@ -1,8 +1,8 @@
 from flask import Flask
 
 from .config import DATABASE_URI
-from .extensions import db
-from .exceptions import NotFoundError, DeserializationError, SerializationError
+from .extensions import db, migrate
+# from .exceptions import NotFoundError, DeserializationError, SerializationError
 from .toolbox import make_response
 from .blueprints import healthcheck_bp
 
@@ -29,12 +29,12 @@ def create_app(*, testing=False):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
+    migrate.init_app(app, db)
 
-    app.register_error_handler(NotFoundError, handle_not_found_error)
-    app.register_error_handler(DeserializationError, handle_not_found_error)
-    app.register_error_handler(SerializationError, handle_not_found_error)
+    # app.register_error_handler(NotFoundError, handle_not_found_error)
+    # app.register_error_handler(DeserializationError, handle_not_found_error)
+    # app.register_error_handler(SerializationError, handle_not_found_error)
 
-    # app.register_blueprint(cron_bp, url_prefix="/api/v1/")
-    app.register_blueprint(healthcheck_bp, url_prefix="/api")
+    app.register_blueprint(healthcheck_bp)
 
     return app

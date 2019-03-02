@@ -1,4 +1,5 @@
 alembic==1.0.3
+flask-migrate==2.4.0
 flask-sqlalchemy==2.3.2
 flask==1.0.2
 gunicorn==19.9.0
