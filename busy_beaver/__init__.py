@@ -3,7 +3,7 @@ from logging.config import dictConfig as load_dict_config
 import pathlib
 import sentry_sdk
 
-from .adapters import GitHubAdapter, SlackAdapter, TwitterAdapter
+from .adapters import GitHubAdapter, KeyValueStoreAdapter, SlackAdapter, TwitterAdapter
 from .app import create_app
 from .config import (
     GITHUB_OAUTH_TOKEN,
@@ -29,6 +29,7 @@ if IN_PRODUCTION and SENTRY_DSN:
 
 logger.info("[BusyBeaver] Configure Integrations")
 github = GitHubAdapter(GITHUB_OAUTH_TOKEN)
+kv_store = KeyValueStoreAdapter()
 slack = SlackAdapter(SLACK_TOKEN)
 twitter = TwitterAdapter(
     TWITTER_CONSUMER_KEY,

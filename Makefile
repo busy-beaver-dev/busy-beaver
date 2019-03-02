@@ -33,6 +33,7 @@ build:
 
 up:
 	docker-compose up -d
+	make migrate-up
 
 down:
 	docker-compose down
@@ -58,6 +59,9 @@ test-cov:
 test-covhtml:
 	docker-compose exec app pytest --cov --cov-report html && open ./htmlcov/index.html
 
+test-pdb:
+	docker-compose exec app pytest --pdb -s
+
 test-skipvcr:
 	docker-compose exec app pytest -m 'not vcr'
 
@@ -75,6 +79,8 @@ shell:
 
 shell-dev:
 	docker-compose exec app ipython -i scripts/dev/shell.py
+
+dev-shell: shell-dev
 
 ngrok:
 	ngrok http 5000

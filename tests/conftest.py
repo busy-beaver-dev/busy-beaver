@@ -8,6 +8,7 @@ References:
 import pytest
 
 from busy_beaver.app import create_app, db as _db
+from busy_beaver.adapters import KeyValueStoreAdapter
 
 
 @pytest.fixture(scope="session")
@@ -60,3 +61,8 @@ def session(db):
     transaction.rollback()
     connection.close()
     session.remove()
+
+
+@pytest.fixture
+def kv_store(session):
+    return KeyValueStoreAdapter()
