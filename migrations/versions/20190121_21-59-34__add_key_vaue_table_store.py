@@ -7,10 +7,6 @@ Create Date: 2019-01-21 21:59:34.979693
 """
 from alembic import op
 import sqlalchemy as sa
-# from sqlalchemy.orm import sessionmaker
-
-# from busy_beaver import twitter
-# from busy_beaver.retweeter import LAST_TWEET_KEY
 
 # revision identifiers, used by Alembic.
 revision = "78514b173380"
@@ -28,19 +24,6 @@ def upgrade():
         sa.PrimaryKeyConstraint("key"),
     )
     # ### end Alembic commands ###
-
-    # TODO remove after we set up db for relational key value store
-    # Session = sessionmaker()
-    # bind = op.get_bind()
-    # session = Session(bind=bind)
-
-    # # initialize datastore with value of last tweet
-    # try:
-    #     last_id = twitter.get_last_tweet_id()
-    # except Exception:  # NOT a fan, but it makes migration in prod easier
-    #     last_id = 42
-    # q = f"INSERT INTO kv_store (key, value) VALUES ('{LAST_TWEET_KEY}', '{last_id}')"
-    # session.execute(q)
 
 
 def downgrade():
