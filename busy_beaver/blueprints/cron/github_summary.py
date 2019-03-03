@@ -16,7 +16,7 @@ class PublishGitHubSummaryResource:
             extra={"user": user.username},
         )
 
-        # TODO maybe add a task queue here
+        # TODO need to add a task queue here
         data = await req.media()
         if "channel" not in data:
             logger.error(

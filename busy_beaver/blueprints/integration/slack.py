@@ -101,4 +101,3 @@ def reply_to_user_with_github_login_link(event):
         }
     ]
     slack.post_message(VERIFY_ACCOUNT, channel_id=channel_id, attachments=attachment)
-    return

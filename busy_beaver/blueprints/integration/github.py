@@ -2,8 +2,8 @@ import logging
 
 from flask import jsonify, request
 from flask.views import MethodView
-import requests
 
+from busy_beaver.adapters import RequestsClient
 from busy_beaver.config import (
     GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET,
@@ -13,6 +13,7 @@ from busy_beaver.extensions import db
 from busy_beaver.models import User
 
 logger = logging.getLogger(__name__)
+client = RequestsClient()
 
 
 class GitHubIdentityVerificationCallbackResource(MethodView):
@@ -48,28 +49,17 @@ def exchange_code_for_access_token(code, state, user):
         "state": state,
     }
 
-    import pdb; pdb.set_trace()
-
-    headers = {"Accept": "application/json"}
-
     logger.info("[Busy-Beaver] Changing code for OAuth token")
-    # TODO use request client
-    resp = requests.post(
-        "https://github.com/login/oauth/access_token", data=data, headers=headers
-    )
-    body = resp.json()
-    print(resp.json())
-    access_token = body["access_token"]
+    resp = client.post("https://github.com/login/oauth/access_token", json=data)
+    access_token = resp.json["access_token"]
 
     # use access token to get user details (another function)
-
-    headers = {"Accept": "application/json", "Authorization": f"token {access_token}"}
-    resp = requests.get("https://api.github.com/user", headers=headers)
-    body = resp.json()
+    headers = {"Authorization": f"token {access_token}"}
+    resp = client.get("https://api.github.com/user", headers=headers)
 
     # add to user record in database (with access_token)
-    user.github_id = body["id"]
-    user.github_username = body["login"]
+    user.github_id = resp.json["id"]
+    user.github_username = resp.json["login"]
     user.github_state = None
     user.github_access_token = access_token
 

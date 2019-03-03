@@ -2,7 +2,7 @@ help:
 	@echo 'Makefile for managing application                                  '
 	@echo '                                                                   '
 	@echo 'Usage:                                                             '
-	@echo ' make build            rebuild containers .                        '
+	@echo ' make build            rebuild containers                          '
 	@echo ' make up               start local dev environment                 '
 	@echo ' make down             stop local dev environment                  '
 	@echo ' make attach           attach to process for debugging purposes    '

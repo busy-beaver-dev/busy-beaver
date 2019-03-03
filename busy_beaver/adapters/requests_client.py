@@ -39,6 +39,9 @@ class RequestsClient:
     def head(self, url: str, **kwargs) -> Response:
         return self._request("head", url, **kwargs)
 
+    def post(self, url: str, **kwargs) -> Response:
+        return self._request("post", url, **kwargs)
+
     def _request(self, method: str, url: str, **kwargs) -> Response:
         req_headers = dict(self.headers)
         if "headers" in kwargs:
