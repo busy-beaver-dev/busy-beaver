@@ -4,7 +4,7 @@ from .config import DATABASE_URI
 from .extensions import db, migrate
 # from .exceptions import NotFoundError, DeserializationError, SerializationError
 from .toolbox import make_response
-from .blueprints import healthcheck_bp
+from .blueprints import healthcheck_bp, integration_bp
 
 
 def handle_not_found_error(error):
@@ -36,5 +36,6 @@ def create_app(*, testing=False):
     # app.register_error_handler(SerializationError, handle_not_found_error)
 
     app.register_blueprint(healthcheck_bp)
+    app.register_blueprint(integration_bp)
 
     return app

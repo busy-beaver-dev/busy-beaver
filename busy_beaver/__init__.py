@@ -4,7 +4,6 @@ import pathlib
 import sentry_sdk
 
 from .adapters import GitHubAdapter, KeyValueStoreAdapter, SlackAdapter, TwitterAdapter
-from .app import create_app
 from .config import (
     GITHUB_OAUTH_TOKEN,
     IN_PRODUCTION,
@@ -39,5 +38,6 @@ twitter = TwitterAdapter(
 )
 
 logger.info("[BusyBeaver] Starting Server")
+from .app import create_app  # noqa
 app = create_app()
 from .models import *  # noqa
