@@ -34,7 +34,6 @@ def auth_app(app):
     def auth_return_username():
         return jsonify({"username": f"{request._internal['user'].username}"})
 
-
     yield app
 
 

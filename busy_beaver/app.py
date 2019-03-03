@@ -4,7 +4,7 @@ from .config import DATABASE_URI
 from .extensions import db, migrate
 from .exceptions import NotFoundError
 from .toolbox import make_response
-from .blueprints import healthcheck_bp, integration_bp
+from .blueprints import healthcheck_bp, integration_bp, tasks_bp
 
 
 def handle_not_found_error(error):
@@ -30,6 +30,7 @@ def create_app(*, testing=False):
 
     app.register_blueprint(healthcheck_bp)
     app.register_blueprint(integration_bp)
+    app.register_blueprint(tasks_bp)
 
     @app.before_request
     def add_internal_dictionary():

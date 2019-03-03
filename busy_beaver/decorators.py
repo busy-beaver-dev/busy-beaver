@@ -1,7 +1,7 @@
 import logging
 import re
 
-from flask import g, request
+from flask import request
 
 from .models import ApiUser
 from .toolbox import make_response
@@ -36,7 +36,7 @@ def authentication_required(roles):
 
             if api_user.role not in roles:
                 logger.error("[Busy-Beaver] Unauthorized access of endpoint")
-                data = {"message": "Not authorized to access endpoint, contact to admin"}
+                data = {"message": "Not authorized to access endpoint, contact admin"}
                 return make_response(401, error=data)
 
             request._internal["user"] = api_user

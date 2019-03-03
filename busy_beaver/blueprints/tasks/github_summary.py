@@ -1,30 +1,31 @@
 import logging
-from busy_beaver.decorators import authentication_required
+
+from flask import request
+from flask.views import MethodView
+
 from busy_beaver.tasks import post_github_summary_to_slack
+from busy_beaver.toolbox import make_response
 
 logger = logging.getLogger(__name__)
 
 
-class PublishGitHubSummaryResource:
+class PublishGitHubSummaryResource(MethodView):
     """Endpoint to trigger process of creating and publishing GitHub Summary to Slack
     """
 
-    @authentication_required
-    async def on_post(self, req, resp, user):
+    def post(self):
+        user = request._internal["user"]
         logger.info(
             "[Busy-Beaver] Post GitHub Summary Request -- login successful",
             extra={"user": user.username},
         )
 
         # TODO need to add a task queue here
-        data = await req.media()
+        data = request.json
         if "channel" not in data:
-            logger.error(
-                "[Busy-Beaver] Post GitHub Summary Request -- ",
-                "need channel in JSON body",
-            )
+            logger.error("[Busy-Beaver] Post GitHub Summary Task -- channel in body")
             return
         post_github_summary_to_slack(data["channel"])
 
         logger.info("[Busy-Beaver] Post GitHub Summary -- kicked-off")
-        resp.media = {"run": "kicked_off"}
+        return make_response(200, json={"run": "complete"})

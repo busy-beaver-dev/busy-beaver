@@ -1,14 +1,18 @@
 from flask import blueprints
+
 from .github_summary import PublishGitHubSummaryResource
-from .retweeter import TwitterPollingResource
+# from .retweeter import TwitterPollingResource
+from busy_beaver.decorators import authentication_required
 
-integration_bp = blueprints.Blueprint("integrations", __name__)
+tasks_bp = blueprints.Blueprint("tasks", __name__)
+admin_role_required = authentication_required(roles=["admin"])
 
-integration_bp.add_url_rule(
-    "/github-summary",
-    view_func=PublishGitHubSummaryResource.as_view("post_github_summary"),
+view = PublishGitHubSummaryResource.as_view("post_github_summary")
+tasks_bp.add_url_rule(
+    "/github-summary", view_func=admin_role_required(view), methods=["POST"]
 )
-integration_bp.add_url_rule(
-    "/poll-twitter",
-    view_func=TwitterPollingResource.as_view("twitter_poller"),
-)
+
+# view = TwitterPollingResource.as_view("twitter_poller")
+# tasks_bp.add_url_rule(
+#     "/poll-twitter", view_func=admin_role_required(view), methods=["POST"]
+# )
