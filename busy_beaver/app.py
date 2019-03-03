@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 
 from .config import DATABASE_URI
 from .extensions import db, migrate
@@ -30,5 +30,11 @@ def create_app(*, testing=False):
 
     app.register_blueprint(healthcheck_bp)
     app.register_blueprint(integration_bp)
+
+    @app.before_request
+    def add_internal_dictionary():
+        """Keep request specific data in `_internal` dictionary"""
+        if not getattr(request, "_internal", None):
+            request._internal = {}
 
     return app

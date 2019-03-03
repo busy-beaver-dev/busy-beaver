@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import pytest
 
 from busy_beaver.decorators import authentication_required
@@ -28,6 +28,12 @@ def auth_app(app):
     @authentication_required(roles=["user"])
     def auth_required_user_role(greeting):
         return jsonify({"hello": "user"})
+
+    @app.route("/test-auth-return_user-name")
+    @authentication_required(roles=["admin"])
+    def auth_return_username():
+        return jsonify({"username": f"{request._internal['user'].username}"})
+
 
     yield app
 
@@ -71,7 +77,14 @@ def test_auth_success(client, persist_api_user):
 def test_auth_with_url_variable(client, persist_api_user):
     RANDOM_STRING = "asdfbadsf"
     r = client.get(f"/test-more-auth/{RANDOM_STRING}", headers=AUTH_HEADER)
+    assert r.status_code == 200
     assert RANDOM_STRING in r.json["key"]
+
+
+def test_auth_adds_user_to_request_context(client, persist_api_user):
+    r = client.get("/test-auth-return_user-name", headers=AUTH_HEADER)
+    assert r.status_code == 200
+    assert r.json["username"] == persist_api_user.username
 
 
 @pytest.mark.parametrize("input", ["asdf", "jwt asdfasdfasdfasdf"])

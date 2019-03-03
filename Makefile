@@ -51,7 +51,7 @@ migrate-down: ## Rollback migrations
 	docker-compose exec app flask db downgrade
 
 test:
-	docker-compose exec app pytest
+	docker-compose exec app pytest -k "$(k)"
 
 test-cov:
 	docker-compose exec app pytest --cov ./

@@ -11,7 +11,7 @@ class TwitterPollingResource:
     """
 
     @authentication_required
-    async def on_post(self, req, resp, user):
+    def post(self):
         logger.info(
             "[Busy-Beaver] Twitter Summary Poll -- login successful",
             extra={"user": user.username},
