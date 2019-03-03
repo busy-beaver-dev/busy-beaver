@@ -1,5 +1,4 @@
 import logging
-import os
 from urllib.parse import urlencode
 import uuid
 
@@ -8,14 +7,10 @@ from flask.views import MethodView
 
 from busy_beaver import slack
 from busy_beaver.extensions import db
-from busy_beaver.config import APP_URI
+from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI
 from busy_beaver.models import User
 
 logger = logging.getLogger(__name__)
-
-CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID")
-CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET")
-GITHUB_REDIRECT_URI = f"{APP_URI}/github-integration"
 
 SEND_LINK_COMMANDS = ["connect"]
 RESEND_LINK_COMMANDS = ["reconnect"]
@@ -93,7 +88,7 @@ def reply_to_user_with_github_login_link(event):
         db.session.add(user)
         db.session.commit()
 
-    data = {"client_id": CLIENT_ID, "redirect_uri": GITHUB_REDIRECT_URI, "state": state}
+    data = {"client_id": GITHUB_CLIENT_ID, "redirect_uri": GITHUB_REDIRECT_URI, "state": state}
     query_params = urlencode(data)
     url = f"https://github.com/login/oauth/authorize?{query_params}"
     attachment = [

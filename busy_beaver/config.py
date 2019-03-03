@@ -2,8 +2,9 @@ import os
 
 IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
 PROD_BASE_URI = "https://busybeaver.sivji.com"
-DEV_BASE_URI = os.getenv("NGROK_BASE_URL", None)
+DEV_BASE_URI = os.getenv("NGROK_BASE_URI", None)
 APP_URI = PROD_BASE_URI if IN_PRODUCTION else DEV_BASE_URI
+GITHUB_REDIRECT_URI = f"{APP_URI}/github-integration"
 
 # infrastructure
 DATABASE_URI = os.getenv("DATABASE_URI")
