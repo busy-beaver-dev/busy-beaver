@@ -1,24 +1,28 @@
 import logging
+
+from flask import request
+from flask.views import MethodView
+
 from busy_beaver.config import TWITTER_USERNAME
-from busy_beaver.decorators import authentication_required
 from busy_beaver.retweeter import post_tweets_to_slack
+from busy_beaver.toolbox import make_response
 
 logger = logging.getLogger(__name__)
 
 
-class TwitterPollingResource:
+class TwitterPollingResource(MethodView):
     """Endpoint to trigger polling of Twitter for new tweets to post to channel
     """
 
-    @authentication_required
     def post(self):
+        user = request._internal["user"]
         logger.info(
             "[Busy-Beaver] Twitter Summary Poll -- login successful",
             extra={"user": user.username},
         )
 
-        # TODO maybe add a task queue here
-        data = await req.media()
+        # TODO need to add a task queue here
+        data = request.json
         if "channel" not in data:
             logger.error(
                 "[Busy-Beaver] Twitter Summary Poll -- need channel in JSON body",
@@ -27,4 +31,4 @@ class TwitterPollingResource:
         post_tweets_to_slack(username=TWITTER_USERNAME, channel=data["channel"])
 
         logger.info("[Busy-Beaver] Twitter Summary Poll -- kicked-off")
-        resp.media = {"run": "kicked_off"}
+        return make_response(200, json={"run": "complete"})
