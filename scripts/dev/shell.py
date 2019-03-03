@@ -1,7 +1,7 @@
 import os
 
-from busy_beaver.extensions import db  # noqa
 from busy_beaver.adapters import GitHubAdapter, SlackAdapter, TwitterAdapter # noqa
+from busy_beaver.extensions import db  # noqa
 from busy_beaver.github_stats import generate_summary  # noqa
 from busy_beaver.models import *  # noqa
 
