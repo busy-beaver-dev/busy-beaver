@@ -28,7 +28,7 @@ services:
 
   app:
     image: alysivji/busy-beaver:latest
-    command: ["uvicorn", "busy_beaver:api", "--host", "0.0.0.0", "--port", "5100"]
+    command: ["gunicorn", "busy_beaver:app", "-b", "0.0.0.0:5100"]
     environment:
       IN_PRODUCTION: 1
       PYTHONPATH: .
