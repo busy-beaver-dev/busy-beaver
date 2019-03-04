@@ -57,10 +57,12 @@ class SlackEventSubscriptionResource(MethodView):
         return jsonify(None)
 
 
-def reply_to_user_with_github_login_link(event):
-    chat_text = str.lower(event["text"])
-    slack_id = event["user"]
-    channel_id = event["channel"]
+def reply_to_user_with_github_login_link(message):
+    """Todo break this up... Research spike to find a good abstraction"""
+
+    chat_text = str.lower(message["text"])
+    slack_id = message["user"]
+    channel_id = message["channel"]
 
     if chat_text not in ALL_LINK_COMMANDS:
         logger.info("[Busy-Beaver] Unknown command")
@@ -88,7 +90,11 @@ def reply_to_user_with_github_login_link(event):
         db.session.add(user)
         db.session.commit()
 
-    data = {"client_id": GITHUB_CLIENT_ID, "redirect_uri": GITHUB_REDIRECT_URI, "state": state}
+    data = {
+        "client_id": GITHUB_CLIENT_ID,
+        "redirect_uri": GITHUB_REDIRECT_URI,
+        "state": state,
+    }
     query_params = urlencode(data)
     url = f"https://github.com/login/oauth/authorize?{query_params}"
     attachment = [
