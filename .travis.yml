@@ -14,7 +14,7 @@ python:
   - "3.7"
 
 env:
-  - PYTHONPATH=. FLASK_APP=busy_beaver/__init__.py FLASK_ENV=development DATABASE_URI="postgresql://postgres@127.0.0.1:5432/busy_beaver_test" IMAGE_NAME="alysivji/busy-beaver"
+  - PYTHONPATH=. FLASK_APP=busy_beaver/__init__.py DATABASE_URI="postgresql://postgres@127.0.0.1:5432/busy_beaver_test" IMAGE_NAME="alysivji/busy-beaver"
 
 install:
   - pip install -r requirements_dev.txt
