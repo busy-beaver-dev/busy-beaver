@@ -6,7 +6,7 @@ def test_adding_headers():
     assert requests.headers["Accept"] == "application/json/test"
 
 
-def test_adding_headers():
+def test_add_header_after_initailizing_without_headers():
     requests_client_no_header = RequestsClient()
     requests = RequestsClient(headers={"Accept": "application/json/test"})
 

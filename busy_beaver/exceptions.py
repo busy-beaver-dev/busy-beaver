@@ -13,5 +13,4 @@ class NotFoundError(BusyBeaverException):
         super().__init__()
         self.message = f"{object_type} not found"
 
-
         return self.payload.copy()

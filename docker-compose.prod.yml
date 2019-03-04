@@ -32,6 +32,7 @@ services:
     environment:
       IN_PRODUCTION: 1
       PYTHONPATH: .
+      FLASK_APP: /app/busy_beaver/__init__.py
       DATABASE_URI: ${DATABASE_URI}
       SLACK_BOTUSER_OAUTH_TOKEN: ${SLACK_BOTUSER_OAUTH_TOKEN}
       GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}

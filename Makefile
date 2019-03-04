@@ -92,7 +92,7 @@ prod-build:
 	docker-compose -f docker-compose.prod.yml build
 
 prod-migrate-up:
-	docker-compose -f docker-compose.prod.yml exec app alembic --config=./migrations/alembic.ini upgrade head
+	docker-compose -f docker-compose.prod.yml exec app flask db upgrade
 
 prod-up:
 	docker-compose -f docker-compose.prod.yml up -d
