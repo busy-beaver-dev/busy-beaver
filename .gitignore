@@ -114,3 +114,4 @@ creds.txt
 .pdbrc.py
 docker-compose.override.yml
 *.retry
+tags
