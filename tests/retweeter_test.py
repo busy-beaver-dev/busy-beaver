@@ -1,7 +1,6 @@
 from datetime import timedelta
 import pytest
 
-from busy_beaver import kv_store
 from busy_beaver.adapters.twitter import Tweet
 from busy_beaver.retweeter import post_tweets_to_slack, LAST_TWEET_KEY
 from busy_beaver.toolbox import utc_now_minus
@@ -45,25 +44,15 @@ def patched_slack(patcher):
     return _wrapper
 
 
-@pytest.fixture
-def patch_key_value_store():
-    """KeyValue store does not use ORM so we can't use nested sessions here"""
-    value = kv_store.get_int(LAST_TWEET_KEY)
-    kv_store.put_int(LAST_TWEET_KEY, 0)
-    yield
-    kv_store.put_int(LAST_TWEET_KEY, value)
-
-
 @pytest.mark.integration
-def test_post_tweets_to_slack(
-    mocker, patch_key_value_store, patched_twitter, patched_slack
-):
+def test_post_tweets_to_slack(mocker, kv_store, patched_twitter, patched_slack):
     """
     GIVEN: 3 tweets to post (2 within the window)
     WHEN: post_tweets_to_slack is called
     THEN: we post one tweet
     """
     # Arrange
+    kv_store.put_int(LAST_TWEET_KEY, 0)
     tweets = [
         Tweet(3, utc_now_minus(timedelta())),
         Tweet(2, utc_now_minus(timedelta(days=1))),

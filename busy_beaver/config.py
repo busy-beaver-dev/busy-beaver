@@ -1,6 +1,10 @@
 import os
 
 IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
+PROD_BASE_URI = "https://busybeaver.sivji.com"
+DEV_BASE_URI = os.getenv("NGROK_BASE_URI", None)
+APP_URI = PROD_BASE_URI if IN_PRODUCTION else DEV_BASE_URI
+GITHUB_REDIRECT_URI = f"{APP_URI}/github-integration"
 
 # infrastructure
 DATABASE_URI = os.getenv("DATABASE_URI")
@@ -12,6 +16,7 @@ TWITTER_USERNAME = "ChicagoPython"
 GITHUB_OAUTH_TOKEN = os.getenv("GITHUB_OAUTH_TOKEN")
 GITHUB_CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID")
 GITHUB_CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET")
+GITHUB_REDIRECT_URI = f"{APP_URI}/github-integration"
 SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN")
 TWITTER_CONSUMER_KEY = os.getenv("TWITTER_CONSUMER_KEY", None)
 TWITTER_CONSUMER_SECRET = os.getenv("TWITTER_CONSUMER_SECRET", None)

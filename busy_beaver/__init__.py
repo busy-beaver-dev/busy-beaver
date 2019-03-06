@@ -1,13 +1,10 @@
 import logging
-import logging.config
+from logging.config import dictConfig as load_dict_config
 import pathlib
-
-import responder
 import sentry_sdk
-from sqlalchemy_wrapper import SQLAlchemy
 
+from .adapters import GitHubAdapter, KeyValueStoreAdapter, SlackAdapter, TwitterAdapter
 from .config import (
-    DATABASE_URI,
     GITHUB_OAUTH_TOKEN,
     IN_PRODUCTION,
     LOGGING_CONFIG,
@@ -18,17 +15,20 @@ from .config import (
     TWITTER_CONSUMER_KEY,
     TWITTER_CONSUMER_SECRET,
 )
-from .adapters import GitHubAdapter, KeyValueStore, SlackAdapter, TwitterAdapter
 
+# Forgot why I do this... probalby should have commented as it is not ovious
+# TODO test if it is needed in datadog
 pathlib.Path("logs").mkdir(exist_ok=True)
 
 # observability
-logging.config.dictConfig(LOGGING_CONFIG)
+load_dict_config(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 if IN_PRODUCTION and SENTRY_DSN:
     sentry_sdk.init(SENTRY_DSN)
 
+logger.info("[BusyBeaver] Configure Integrations")
 github = GitHubAdapter(GITHUB_OAUTH_TOKEN)
+kv_store = KeyValueStoreAdapter()
 slack = SlackAdapter(SLACK_TOKEN)
 twitter = TwitterAdapter(
     TWITTER_CONSUMER_KEY,
@@ -37,10 +37,7 @@ twitter = TwitterAdapter(
     TWITTER_ACCESS_TOKEN_SECRET,
 )
 
-# web app
 logger.info("[BusyBeaver] Starting Server")
-api = responder.API()
-db = SQLAlchemy(DATABASE_URI)
-from . import models  # noqa
-kv_store = KeyValueStore(models.store)
-from . import backend  # noqa
+from .app import create_app  # noqa
+app = create_app()
+from .models import *  # noqa

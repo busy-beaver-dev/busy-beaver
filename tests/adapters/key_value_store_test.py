@@ -1,17 +1,4 @@
 import pytest
-from simplekv.db.sql import SQLAlchemyStore
-from sqlalchemy import create_engine, MetaData
-
-from busy_beaver.adapters.key_value_store import KeyValueStore
-
-
-@pytest.fixture
-def kv_store():
-    engine = create_engine('sqlite:///:memory:')
-    metadata = MetaData(bind=engine)
-    store = SQLAlchemyStore(engine, metadata, 'kvstore')
-    metadata.create_all()
-    return KeyValueStore(store)
 
 
 def test_put_get(kv_store):
@@ -30,3 +17,8 @@ def test_put_get_int(kv_store):
     returned_value = kv_store.get_int("key")
 
     assert returned_value == expected_value
+
+
+def test_get_key_does_not_exist_raise_ValueError(kv_store):
+    with pytest.raises(ValueError):
+        kv_store.get("key_does_not_exist")

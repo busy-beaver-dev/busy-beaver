@@ -18,4 +18,4 @@ EXPOSE 5100
 # TODO: as we are writing logs, we need to be root. find a better solution
 COPY ./ /app
 
-CMD ["uvicorn", "busy_beaver.backend:api", "--host", "0.0.0.0", "--port", "5100"]
+CMD ["gunicorn", "busy_beaver:app", "-b", "0.0.0.0:5100"]

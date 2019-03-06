@@ -2,7 +2,7 @@ help:
 	@echo 'Makefile for managing application                                  '
 	@echo '                                                                   '
 	@echo 'Usage:                                                             '
-	@echo ' make build            rebuild containers .                        '
+	@echo ' make build            rebuild containers                          '
 	@echo ' make up               start local dev environment                 '
 	@echo ' make down             stop local dev environment                  '
 	@echo ' make attach           attach to process for debugging purposes    '
@@ -41,23 +41,26 @@ down:
 attach:
 	docker attach `docker-compose ps -q app`
 
-migration: ## Create migrations using alembic
-	docker-compose exec app alembic --config=./migrations/alembic.ini revision --autogenerate -m "$(m)"
+migration: ## Create migrations
+	docker-compose exec app flask db migrate -m "$(m)"
 
-migrate-up: ## Run migrations using alembic
-	docker-compose exec app alembic --config=./migrations/alembic.ini upgrade head
+migrate-up: ## Run migrations
+	docker-compose exec app flask db upgrade
 
-migrate-down: ## Rollback migrations using alembic
-	docker-compose exec app alembic --config=./migrations/alembic.ini downgrade -1
+migrate-down: ## Rollback migrations
+	docker-compose exec app flask db downgrade
 
 test:
-	docker-compose exec app pytest
+	docker-compose exec app pytest -k "$(k)"
 
 test-cov:
 	docker-compose exec app pytest --cov ./
 
 test-covhtml:
 	docker-compose exec app pytest --cov --cov-report html && open ./htmlcov/index.html
+
+test-pdb:
+	docker-compose exec app pytest --pdb -s
 
 test-skipvcr:
 	docker-compose exec app pytest -m 'not vcr'
@@ -77,6 +80,8 @@ shell:
 shell-dev:
 	docker-compose exec app ipython -i scripts/dev/shell.py
 
+dev-shell: shell-dev
+
 ngrok:
 	ngrok http 5000
 
@@ -87,7 +92,7 @@ prod-build:
 	docker-compose -f docker-compose.prod.yml build
 
 prod-migrate-up:
-	docker-compose -f docker-compose.prod.yml exec app alembic --config=./migrations/alembic.ini upgrade head
+	docker-compose -f docker-compose.prod.yml exec app flask db upgrade
 
 prod-up:
 	docker-compose -f docker-compose.prod.yml up -d

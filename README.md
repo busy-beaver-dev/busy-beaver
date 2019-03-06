@@ -24,7 +24,7 @@ Users sign up for an account by `DM`ing the bot with the phrase: `connect`. The 
 
 Busy-Beaver retweets posts made to the [@ChicagoPython Twitter account](https://twitter.com/ChicagoPython) in the `#at-chicagopython` channel on the [ChiPy Slack](https://chipy.slack.com/).
 
-### Roadmap
+## Roadmap
 
 We are currently working on additional features to improve ChiPy community engagement. Please join the conversation in `#busy-beaver-meta` on the [ChiPy Slack](https://chipy.slack.com/).
 
@@ -34,9 +34,12 @@ Busy-Beaver is an open source project where all artificats (code, Docker image, 
 
 ### Web Application Stack
 
-- [sqlite](https://www.sqlite.org)
-- [responder](https://github.com/kennethreitz/responder)
-- [sqlalchemy](https://www.sqlalchemy.org/) with [sqla-wrapper](https://github.com/jpscaletti/sqla-wrapper)
+- [traefik](https://traefik.io) - reverse proxy and load balancer
+- [PostgreSQL](https://www.postgresql.org/)
+- [SQLAlchemy](https://www.sqlalchemy.org/)
+- [Flask](http://flask.pocoo.org/)
+- [flask-sqlalchemy](http://flask-sqlalchemy.pocoo.org/)
+- [flask-migrate](https://flask-migrate.readthedocs.io/en/latest/)
 - [requests](https://github.com/requests/requests)
 
 ### Tests
@@ -50,6 +53,8 @@ Busy-Beaver is an open source project where all artificats (code, Docker image, 
 
 ### DevOps
 
+- [Docker](https://hub.docker.com/search/?type=edition&offering=community)
+- [Docker-Compose](https://docs.docker.com/compose/) is how we deploy to production
 - [watchtower](https://github.com/v2tec/watchtower) (monitors DockerHub, downloads and deploys latest image)
 - [Ansible](https://www.ansible.com/)
 - [DigitalOcean](https://www.digitalocean.com)

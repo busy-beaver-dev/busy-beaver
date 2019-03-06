@@ -12,11 +12,11 @@ BASE_URL = "https://api.github.com"
 
 class GitHubAdapter:
     def __init__(self, oauth_token: str):
-        self.client = RequestsClient()
-        self.headers = {
+        default_headers = {
             "Accept": "application/vnd.github.v3+json",
             "Authorization": f"token {oauth_token}",
         }
+        self.client = RequestsClient(headers=default_headers)
         self.params = {"per_page": 30}
         self.nav = None
 
@@ -89,13 +89,13 @@ class GitHubAdapter:
         return filtered_items
 
     def __get(self, url, **kwargs) -> Response:
-        resp = self.client.get(url, headers=self.headers, **kwargs)
+        resp = self.client.get(url, **kwargs)
         if resp.status_code != 200:
             raise UnexpectedStatusCode
         return resp
 
     def __head(self, url, **kwargs) -> Response:
-        resp = self.client.head(url, headers=self.headers, **kwargs)
+        resp = self.client.head(url, **kwargs)
         if resp.status_code != 200:
             raise UnexpectedStatusCode
         return resp
