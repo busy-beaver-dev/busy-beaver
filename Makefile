@@ -74,10 +74,13 @@ log:
 debug:
 	docker attach `docker-compose ps -q app`
 
-shell:
+db-shell:
+	docker-compose exec db bash
+
+app-shell:
 	docker-compose exec app bash
 
-shell-dev:
+app-shell-dev:
 	docker-compose exec app ipython -i scripts/dev/shell.py
 
 dev-shell: shell-dev
