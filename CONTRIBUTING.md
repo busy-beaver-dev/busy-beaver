@@ -47,12 +47,10 @@ It is recommended that users create a personal Slack workspace to use for bot de
 1. Populate `SLACK_BOTUSER_OAUTH_TOKEN` field with value obtained in previous section
 1. `make up`
 
-## Modifying an Integration
+## Modifying Integration
 
-As each integration requires API credentials, it is recommended that users create apps for integration in their account.
+As each integration requires API credentials, it is recommended that contributors create apps for integration connect to their personal accounts.
 
-## Adding an Integration
+## Adding New Integration
 
 Provide detailed instructions on how to set up the integration so we can roll the feature out to the production instance of Busy-Beaver with correct credentials.
-
-Might be a good idea to set up a Busy-Bevaer email for project admins to deal with user accounts.
