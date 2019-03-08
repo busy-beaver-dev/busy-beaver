@@ -46,6 +46,16 @@ It is recommended that users create a personal Slack workspace to use for bot de
 1. `cp .env.template .env`
 1. Populate `SLACK_BOTUSER_OAUTH_TOKEN` field with value obtained in previous section
 1. `make up`
+1. `make ngrok` to publish the development server on the internet
+1. Populate `NGROK_BASE_URI` field with value from previous step
+1. `make up` to refresh environment variables inside of Busy-Beaver
+1. Update callback URL to `http://[random_hash].ngrok.io/slack-event-subscription` in Slack application settings
+
+### Verify Installation
+
+1. `make dev-shell`
+1. `slack.post_message("test", channel="general")`
+1. Check #general in your Slack workspace to see if the message was posted
 
 ## Modifying Integration
 
