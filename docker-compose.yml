@@ -7,7 +7,7 @@ volumes:
 services:
   db:
     image: postgres:10.3-alpine
-#    env_file: ./db.env   # explicitly defining the name for an `env config` doesn't seem to work!?  :(
+#    env_file: ./db.env   #TODO: explicitly defining the name for an `env config` doesn't seem to work!?  :(
     environment:
       POSTGRES_DB: busy-beaver
       POSTGRES_USER: ${POSTGRES_USER:?env-var 'POSTGRES_USER' is required!}
@@ -22,7 +22,7 @@ services:
       context: .
       dockerfile: ./docker/dev/Dockerfile
     command: ["gunicorn", "busy_beaver:app", "-b", "0.0.0.0:5100", "--reload", "--timeout",  "100000"]
-#    env_file: ./db.env   # explicitly defining the name for an `env config` doesn't seem to work!?  :(
+#    env_file: ./db.env   #TODO: explicitly defining the name for an `env config` doesn't seem to work!?  :(
     environment:
       PYTHONPATH: .
       FLASK_APP: /app/busy_beaver/__init__.py
