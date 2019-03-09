@@ -14,5 +14,5 @@ class KeyValueStore(BaseModel):
 
     # Attributes
     # TODO add slack workspace id once when we start being more than single tenant
-    key = db.Column(db.String(255), nullable=False)
+    key = db.Column(db.String(255), nullable=False, unique=True)
     value = db.Column(db.LargeBinary(), nullable=False)
