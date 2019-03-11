@@ -51,7 +51,7 @@ migrate-down: ## Rollback migrations
 	docker-compose exec app flask db downgrade
 
 test:
-	docker-compose exec app pytest -k "$(k)"
+	docker-compose exec app pytest $(args)
 
 test-cov:
 	docker-compose exec app pytest --cov ./
@@ -76,6 +76,9 @@ debug:
 
 shell:
 	docker-compose exec app bash
+
+shell-db:
+	docker-compose exec db psql -w --username "bbdev_user" --dbname "busy-beaver"
 
 shell-dev:
 	docker-compose exec app ipython -i scripts/dev/shell.py

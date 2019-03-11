@@ -1,3 +1,4 @@
+import functools
 import logging
 import re
 
@@ -16,6 +17,7 @@ def authentication_required(roles):
         raise ValueError
 
     def auth_decorator(func):
+        @functools.wraps(func)
         def _token_auth(*args, **kwargs):
             if "authorization" not in request.headers:
                 logger.error("[Busy-Beaver] No auth header")
@@ -42,8 +44,6 @@ def authentication_required(roles):
             request._internal["user"] = api_user
             return func(*args, **kwargs)
 
-        # TODO Not sure why we need this line... can funtools fix it?
-        # https://stackoverflow.com/questions/17256602/assertionerror-view-function-mapping-is-overwriting-an-existing-endpoint-functi
-        _token_auth.__name__ = func.__name__
         return _token_auth
+
     return auth_decorator
