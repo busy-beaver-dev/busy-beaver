@@ -67,16 +67,6 @@ We are grateful to the following organizations for providing free services to op
 - [DockerHub](https://hub.docker.com) (hosting Docker images)
 - [Travis CI](https://travis-ci.org/) (continuous integration platform)
 
-### Installation Notes
-
-Create a Slack app via the [Slack API](https://api.slack.com/). The app will need **Event Subscriptions** configured to send information to a server for processing. Specifically, the Slack app is subscribed to [message.im](https://api.slack.com/events/message.im) bot events, which include direct messages sent to the bot. The app will also need scopes configured in **OAuth & Permissions** (see [here](#Slack-Permission-Scopes)).
-
-Configure a server with an endpoint URL to receive HTTP POST requests when `message.im` events occur. A service like [ngrok](https://ngrok.com/) is useful here for local development purposes.
-
-Create a GitHub app. The sole function of this app is to provide a means for the Slack user to validate their GitHub account.
-
-When a Slack user chats "connect" to the bot user via direct message, the server receives the event details and generates a unique `state` identifier. The server logs the Slack user and identifier to our server database. The bot user chats a GitHub URL containing our GitHub app's `client_id` and the `state` identifier. The URL leads the user to a validation page in which they log in to GitHub and approve access to basic public information. Upon approval, the GitHub user's details and `state` identifier are sent to another server endpoint. The server updates the Slack user record with GitHub user details by using the `state` identifier as a common key.
-
 ### API Docs
 
 Can make requests to REST endpoints to kick off processes. Currently we are using CRON to run repetitive tasks; [this is managed by Ansible](https://github.com/alysivji/busy-beaver/blob/master/ansible/roles/cron/tasks/main.yml) to avoid manual configuration.
@@ -109,73 +99,9 @@ db.session.add(admin)
 db.session.commit()
 ```
 
-## Development Environment
+## Contributing
 
-```console
-export POSTGRES_USER=[username]
-export POSTGRES_PASSWORD=[password]
-export DATABASE_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/busy-beaver
-
-export GITHUB_APP_CLIENT_ID=[client-id]
-export GITHUB_APP_CLIENT_SECRET=[client-secret]
-export GITHUB_OAUTH_TOKEN=[token-here]
-
-export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
-
-export TWITTER_CONSUMER_KEY=[token-here]
-export TWITTER_CONSUMER_SECRET=[token-here]
-export TWITTER_ACCESS_TOKEN=[token-here]
-export TWITTER_ACCESS_TOKEN_SECRET=[token-here]
-```
-
-Leverage Docker-Compose to create a containerized local development environment. Please see the `Makefile` for available commands.
-
-### [pdb++](https://pypi.org/project/pdbpp/) Configuration
-
-PDB++ improves the debugging experience inside the shell.
-
-```python
-# ./.pdbrc.py
-
-import pdb
-
-
-class Config(pdb.DefaultConfig):
-    sticky_by_default = True  # start in sticky mode
-    current_line_color = 40  # black
-```
-
-### [pre-commit](https://pre-commit.com/)
-
-Pre-commit is a tool used to enforce linting with `flake8` and code formatting with `black`. To get started using
-pre-commit, `pip install pre-commit==1.14.4` (this is in the `requirements.txt` file). Then run `pre-commit install`
-to install the `flake8` and `black` environments locally.
-
-Pre-commit will run on files staged for change automatically. You can also check pre-commit hook compliance on staged
-files by running `pre-commit run` at any time. Note that pre-commit ignores files that are not staged for change.
-
----
-
-## Slack Permission Scopes
-
-TODO: elaborate on permissions
-
-```text
-CONVERSATIONS
-Access information about user’s public channels
-channels:read
-
-Send messages as BusyBeaverStaging
-chat:write:bot
-
-INTERACTIVITY
-Add a bot user with the username @busybeaver
-bot
-
-BOT EVENTS
-A message was posted in a direct message channel
-message.im
-```
+Busy-Beaver is always looking for new contributors! Previous open source experience is not required! Please see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
