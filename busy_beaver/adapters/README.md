@@ -1,3 +1,21 @@
+# Adapter Information
+
+<!-- TOC -->
+
+- [GitHub Integration](#github-integration)
+- [Youtube Adapter](#youtube-adapter)
+  - [Where to get your channel id?](#where-to-get-your-channel-id)
+  - [How to create an api key?](#how-to-create-an-api-key)
+  - [Example](#example)
+
+<!-- /TOC -->
+
+## GitHub Integration
+
+Create a [GitHub OAuth App](https://github.com/settings/developers). The sole function of this app is to provide a means for the Slack user to validate their GitHub account.
+
+You will also need need to create a [Personal Access Token](https://github.com/settings/tokens) that can be used to access the GitHub API.
+
 ## Youtube Adapter
 
 ### Where to get your channel id?
@@ -14,7 +32,7 @@ the examples.
 
 ### Example
 
-```
+```python
 api_key = "..."
 channel_id = "..."
 youtube = YoutubeAdapter(api_key=api_key)

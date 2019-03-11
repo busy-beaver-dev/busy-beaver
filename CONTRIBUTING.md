@@ -15,6 +15,8 @@ Busy-Beaver tasks are kicked off through `curl` requests scheduled via CRON.
 The following diagram shows a high-level workflow of the GitHub activity features:
 <img src="assets/architecture.png" width=800 />
 
+> When a Slack user chats "connect" to the bot user via direct message, the server receives the event details and generates a unique `state` identifier. The server logs the Slack user and identifier to our server database. The bot user chats a GitHub URL containing our GitHub app's `client_id` and the `state` identifier. The URL leads the user to a validation page in which they log in to GitHub and approve access to basic public information. Upon approval, the GitHub user's details and `state` identifier are sent to another server endpoint. The server updates the Slack user record with GitHub user details by using the `state` identifier as a common key.
+
 ## Development Environment
 
 It is recommended that users create a personal Slack workspace to use for bot development. This will allow for independent development without having to wait for project maintainers to grant access to the Busy-Beaver development Slack.
@@ -38,10 +40,11 @@ It is recommended that users create a personal Slack workspace to use for bot de
 - Enable Event Subscription
   - callback URL: generate via `ngrok`, see below
   - Subscribe to bot events
-    - message.im
+    - [`message.im`](https://api.slack.com/events/message.im)
 
 ### Setting up Development Environment
 
+1. Install [Git-LFS](https://git-lfs.github.com/)
 1. Clone repo
 1. `cp .env.template .env`
 1. Populate `SLACK_BOTUSER_OAUTH_TOKEN` field with value obtained in previous section
@@ -64,3 +67,20 @@ As each integration requires API credentials, it is recommended that contributor
 ## Adding New Integration
 
 Provide detailed instructions on how to set up the integration so we can roll the feature out to the production instance of Busy-Beaver with correct credentials.
+
+## Notes
+
+### [pdb++](https://pypi.org/project/pdbpp/) Configuration
+
+PDB++ improves the debugging experience inside the shell. Create a `.pdbrc.py` file inside of the root project folder.
+
+```python
+# ./.pdbrc.py
+
+import pdb
+
+
+class Config(pdb.DefaultConfig):
+    sticky_by_default = True  # start in sticky mode
+    current_line_color = 40  # black
+```
