@@ -10,10 +10,14 @@ def utc_now_minus(period: timedelta):
 
 
 def make_response(
-    status_code: int = 200, *, headers: dict = {}, json: dict = {}, error: dict = {}
+    status_code: int = 200,
+    *,
+    headers: dict = None,
+    json: dict = None,
+    error: dict = None,
 ):
     """Build and send response"""
-    resp = {"data": None, "error": None}
+    resp = {"data": {}, "error": {}}
     if json:
         resp["data"] = json
     if error:
@@ -21,7 +25,7 @@ def make_response(
 
     return Response(
         status=status_code,
-        headers=headers,
+        headers=headers if headers else {},
         content_type="application/json",
         response=_json.dumps(resp),
     )
