@@ -2,7 +2,7 @@
 
 <p align="center"><img src="assets/logo.png" alt="Busy Beaver Logo" width=300 /></p>
 
-[![Build Status](https://travis-ci.org/alysivji/busy-beaver.svg?branch=master)](https://travis-ci.org/alysivji/busy-beaver) [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
+[![Build Status](https://travis-ci.org/alysivji/busy-beaver.svg?branch=master)](https://travis-ci.org/alysivji/busy-beaver) [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT) [![Code Style: Black](https://camo.githubusercontent.com/28a51fe3a2c05048d8ca8ecd039d6b1619037326/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d626c61636b2d3030303030302e737667)](https://github.com/ambv/black)
 
 Chicago Python's Community Engagement Slack bot.
 
@@ -144,6 +144,15 @@ class Config(pdb.DefaultConfig):
     sticky_by_default = True  # start in sticky mode
     current_line_color = 40  # black
 ```
+
+### [pre-commit](https://pre-commit.com/)
+
+Pre-commit is a tool used to enforce linting with `flake8` and code formatting with `black`. To get started using
+pre-commit, `pip install pre-commit==1.14.4` (this is in the `requirements.txt` file). Then run `pre-commit install`
+to install the `flake8` and `black` environments locally.
+
+Pre-commit will run on files staged for change automatically. You can also check pre-commit hook compliance on staged
+files by running `pre-commit run` at any time. Note that pre-commit ignores files that are not staged for change.
 
 ---
 
