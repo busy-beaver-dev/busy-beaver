@@ -9,3 +9,7 @@ Script that posts daily Summary Reports on Slack. This script is configured to r
 ### `twitter_poller.sh`
 
 Script that polls `@ChicagoPython` on Twitter to find tweets to publish to Slack. Posts tweets one at a time.
+
+### `backup-db`
+
+Script that runs `pg_dump` and uploads resulting `.sql` file to S3.
