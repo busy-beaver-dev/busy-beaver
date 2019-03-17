@@ -1,11 +1,13 @@
 import os
 
 from busy_beaver import create_app
+from busy_beaver import config
 from busy_beaver.adapters import (
     GitHubAdapter,
     KeyValueStoreAdapter,
     SlackAdapter,
     TwitterAdapter,
+    YoutubeAdapter,
 )
 from busy_beaver.extensions import db, rq  # noqa
 from busy_beaver.models import *  # noqa
@@ -32,6 +34,11 @@ twitter = TwitterAdapter(
     TWITTER_ACCESS_TOKEN,
     TWITTER_ACCESS_TOKEN_SECRET,
 )
+
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+YOUTUBE_CHANNEL = os.getenv("YOUTUBE_CHANNEL")
+youtube = YoutubeAdapter(api_key=YOUTUBE_API_KEY)
+
 
 kv = KeyValueStoreAdapter()
 
