@@ -94,6 +94,9 @@ prod-build-image:
 prod-build:
 	docker-compose -f docker-compose.prod.yml build
 
+prod-backup-db:
+	docker-compose -f docker-compose.prod.yml exec db pg_dump -U ${POSTGRES_USER} busy-beaver > /tmp/data_dump.sql
+
 prod-migrate-up:
 	docker-compose -f docker-compose.prod.yml exec app flask db upgrade
 
@@ -110,3 +113,6 @@ prod-pull-image:
 prod-deploy: prod-pull-image
 	make prod-down
 	make prod-up
+
+prod-shell-db:
+	docker-compose -f docker-compose.prod.yml exec db psql -w --username "${POSTGRES_USER}" --dbname "busy-beaver"
