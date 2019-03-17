@@ -13,3 +13,11 @@
     state: present
     minute: "*/13"
     job: "/bin/bash {{ twitter_poller }}"
+
+- cron:
+    name: Backup database and upload to S3
+    user: "{{ user }}"
+    state: present
+    minute: 30
+    hour: "*/6"
+    job: "/bin/bash {{ db_backup }}"
