@@ -40,3 +40,9 @@ aws_secret_access_key = []
 1. `pip install ansible` installed the machine you will be deploying from
 2. Check to see what the ansible playbook would do, we can run `ansible-playbook -i ./hosts playbook.yml -C`
 3. Remove `-C` option to run playbook to deploy app
+
+## Loading from Database
+
+[Postgres Docs](https://www.postgresql.org/docs/8.1/backup.html#BACKUP-DUMP-RESTORE)
+
+psql -U ${POSTGRES_USER} busy-beaver < [sql_dump]
