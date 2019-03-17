@@ -27,7 +27,7 @@ export DATADOG_API_KEY=[datadog-api-key]
 
 ## AWS Credentials
 
-Create AWS credentials file, `/.aws/credentials`
+Create AWS credentials file, `/.aws/credentials`, using details in the [IAM Console](https://console.aws.amazon.com/iam/home)
 
 ```console
 [default]
