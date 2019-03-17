@@ -25,6 +25,16 @@ export SENTRY_DSN=[sentry-dsn]
 export DATADOG_API_KEY=[datadog-api-key]
 ```
 
+## AWS Credentials
+
+Create AWS credentials file, `/.aws/credentials`
+
+```console
+[default]
+aws_access_key_id = []
+aws_secret_access_key = []
+```
+
 ## Deployment Workflow
 
 1. `pip install ansible` installed the machine you will be deploying from
