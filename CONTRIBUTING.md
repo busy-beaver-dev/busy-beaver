@@ -28,17 +28,19 @@ An in-depth guide can be followed at <a href=docs/development-create-slack-bot/r
 </td></tr></table></br>
 
 1. [Create a Slack workspace](https://get.slack.help/hc/en-us/articles/206845317-Create-a-Slack-workspace)
-2. [Create a Slack App](https://api.slack.com/apps) and set the **Development Slack Workspace** to the workspace from the previous step - [Create a Slack Dev-Bot - Init a Slack App](doc/development-create-slack-bot/readme.md#init-a-slack-app)
-3. Configure the **Slack App** settings - [Create a Slack Dev-Bot - Slack App Settings](doc/development-create-slack-bot/readme.md#Slack-App-Settings)
-4. Install **Slack App** to **Slack Workspace** - [Create a Slack Dev-Bot - Install App to Workspace](doc/development-create-slack-bot/readme.md#Install-App-to-Workspace)
+1. [Create a Slack App](https://api.slack.com/apps) and set the **Development Slack Workspace** to the workspace from the previous step - [Create a Slack Dev-Bot - Init a Slack App](doc/development-create-slack-bot/readme.md#init-a-slack-app)
+1. Configure the **Slack App** settings - [Create a Slack Dev-Bot - Slack App Settings](doc/development-create-slack-bot/readme.md#Slack-App-Settings)
+1. Install **Slack App** to **Slack Workspace** - [Create a Slack Dev-Bot - Install App to Workspace](doc/development-create-slack-bot/readme.md#Install-App-to-Workspace)
 
 ### Setting up Development Environment
 
+1. `pip install pre-commit`
+1. `make
 1. Install [Git-LFS](https://git-lfs.github.com/)
-2. Clone repo
-3. `cd <directory of the git repo>`
-4. `cp .env.template .env`
-5. Define the following `.env` config values:
+1. Clone repo
+1. `cd <directory of the git repo>`
+1. `cp .env.template .env`
+1. Define the following `.env` config values:
 
    |Key|Source Value|Details|
    |---|---|---|
@@ -47,19 +49,19 @@ An in-depth guide can be followed at <a href=docs/development-create-slack-bot/r
 
    Note: The **NGROK_BASE_URI** and **Slack Event Subscription > Request URL** values may need to be updated each time a new **ngrok** instance is created or if the address is expired.
 
-6. `make up` to refresh environment variables inside of Busy-Beaver
+1. `make up` to refresh environment variables inside of Busy-Beaver
 
 ### Verify Installation
 
 1. `make dev-shell`
-2. Try sending a message to a channel for the development **Slack Workspace** with the command:
+1. Try sending a message to a channel for the development **Slack Workspace** with the command:
 
    ```python
    # Make sure the the channel for example "test" exists!
    slack.post_message("This is a test message", channel="test")`
    ```
 
-3. Check **#test** channel in your **Slack Workspace** to see if the message was posted
+1. Check **#test** channel in your **Slack Workspace** to see if the message was posted
 
 ## Modifying Integration
 
@@ -85,7 +87,6 @@ class Config(pdb.DefaultConfig):
     sticky_by_default = True  # start in sticky mode
     current_line_color = 40  # black
 ```
-<<<<<<< HEAD
 
 ### [pre-commit](https://pre-commit.com/)
 
@@ -95,5 +96,3 @@ to install the `flake8` and `black` environments locally.
 
 Pre-commit will run on files staged for change automatically. You can also check pre-commit hook compliance on staged
 files by running `pre-commit run` at any time. Note that pre-commit ignores files that are not staged for change.
-=======
->>>>>>> e081810e688ccccf7090df662084d26ec53cf6d5
