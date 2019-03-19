@@ -10,14 +10,13 @@ note {
 
 This page contains steps for creating a **Slack App** **Bot** in a sandbox **Slack Workspace** for development.
 
-Links:
-
-- [Slack api - Apps](https://api.slack.com/apps)
-
-- [ngrok get started](https://dashboard.ngrok.com/get-started)
-
-- [Using ngrok to develop locally for Slack](https://api.slack.com/tutorials/tunneling-with-ngrok)
-
+<table><tr><td>
+<strong>:link: Links:</strong></br>
+- <a href=https://api.slack.com/apps>Slack api - Apps</a></br>
+- <a href=https://dashboard.ngrok.com/get-started>Ngrok get started</a></br>
+- <a href=https://api.slack.com/tutorials/tunneling-with-ngrok>Using ngrok to develop locally for Slack</a>
+</tr></td></table>
+  
 ## Init a Slack App
 
 1. Create a **Slack App** to contain the Dev-Bot.</br>
@@ -25,37 +24,35 @@ Links:
    <img src="images/init-slack-app-1.png" width=400/>
    </a>
 
-2. Define the **App Name** for the **Slack App** and the **Development Slack Workspace**.</br>
-  <a href="images/init-slack-app-2.png">
-  <img src="images/init-slack-app-2.png" width=400/>
-  </a></br>
-  After creating the **Slack App** will bring you to the **Basic Information** page.</br>
-  <a href="images/init-slack-app-3.png">
-  <img src="images/init-slack-app-3.png" width=400/>
-  </a>
+2. Define the **App Name** for the **Slack App** and the **Development Slack Workspace**.
+   <a href="images/init-slack-app-2.png">
+   <img src="images/init-slack-app-2.png" width=400/>
+   </a></br>
+   After creating the **Slack App** will bring you to the **Basic Information** page.</br>
+   <a href="images/init-slack-app-3.png">
+   <img src="images/init-slack-app-3.png" width=400/>
+   </a>
 
-<div style=background-color:#262626;padding:8px;border-width:1px;border-style:solid;border-color:grey;>
-<b>Note</b>
+<table><tr><td>
+<strong>📝 Note</strong>
 
-Before the **Slack App** can be installed to the **Slack Workspace** a feature or permission needs to be defined.
+Before the **Slack App** can be installed to the **Slack Workspace** a feature or permission needs to be defined.</br>
 <a href="images/init-slack-app-4.png">
   <img src="images/init-slack-app-4.png" width=400/>
-</a></div>
-
-Follow on to setup the **Bot** for the **Slack App**.
-
+</a>
+</tr></td></table>
 
 ## Add a Bot User
 
 1. Add a **Bot User** - Features > Bot Users.</br>
-  <a href="images/add-bot-user-1.png">
-  <img src="images/add-bot-user-1.png" width=400>
-  </a>
+   <a href="images/add-bot-user-1.png">
+   <img src="images/add-bot-user-1.png" width=400>
+   </a>
 
 2. Define the **Display name** and **Default username**.</br>
-  <a href="images/add-bot-user-2.png">
-  <img src="images/add-bot-user-2.png" width=400/>
-  </a>
+   <a href="images/add-bot-user-2.png">
+   <img src="images/add-bot-user-2.png" width=400/>
+   </a>
 
 ## Slack App Settings
 
@@ -76,14 +73,16 @@ Follow on to setup the **Bot** for the **Slack App**.
 
 ### Enable Event Subscription
 
-Links:
+<table><tr><td>
+<strong>:link: Links:</strong></br>
+- <a href=https://dashboard.ngrok.com/get-started>Getting started with ngrok</a></br>
+- <a href=https://api.slack.com/tutorials/tunneling-with-ngrok>Using ngrok to develop locally for Slack</a></br>
+</td></tr></table></br>
 
-- [Getting started with ngrok](https://dashboard.ngrok.com/get-started)
-- [Using ngrok to develop locally for Slack](https://api.slack.com/tutorials/tunneling-with-ngrok)
-
-1. Run `cd <directory of the Busy-Beaver git repo>`
+1. Run `cd <directory of the Busy-Beaver git repo>`.
 2. Run `make up` to spin up a Busy-Beaver service locally.
-3. Run `make ngrok` to open port forwarding to the internet. This will be used for the **slack-event-subscription endpoint** by the local Busy-Beaver instance.</br>
+3. Run `make ngrok` to open port forwarding to the internet.
+This will be used for the **slack-event-subscription endpoint** by the local Busy-Beaver instance.</br>
    <a href="images/event-subscriptions-1.png">
    <img src="images/event-subscriptions-1.png" width=400/>
    </a></br>
@@ -104,10 +103,9 @@ Links:
 6. Click **Change** in the **Request URL** field for the **Slack API** to verify the endpoint responds.
 7. **Save Changes**.
 
-<div style=background-color:#262626;padding:8px;border-width:1px;border-style:solid;border-color:grey;>
-
-Update the **.env** config - `NGROK_BASE_URI` value to **Slack Event Subscription - Request URL*** as described in <a href=../../CONTRIBUTING.md#Setting-up-Development-Environment> Setting up Development Environment </a>
-</div>
+<table><tr><td>
+:link: Update the <strong>.env</strong> config - <strong>NGROK_BASE_URI</strong> value to <strong>Slack Event Subscription - Request URL</strong> as defined in  <a href=../../CONTRIBUTING.md#Setting-up-Development-Environment>Setting up Development Environment</a>.
+</td></tr></table>
 
 ## Install App to Workspace
 
@@ -133,7 +131,6 @@ the `OAuth Access Token` should now be available.
 <img src="images/oauth-tokens-1.png" width=400/>
 </a>
 
-<div style=background-color:#262626;padding:8px;border-width:1px;border-style:solid;border-color:grey;>
-
-Update the **.env** config - `SLACK_BOTUSER_OAUTH_TOKEN` value to **Bot User OAuth Access Token** as defined by [Setting up Development Environment](../../CONTRIBUTING.md#Setting-up-Development-Environment)
-</div>
+<table><tr><td>
+:link: Update the <strong>.env</strong> config - <strong>SLACK_BOTUSER_OAUTH_TOKEN</strong> value to <strong>Bot User OAuth Access Token</strong> as defined in <a href=../../CONTRIBUTING.md#Setting-up-Development-Environment>Setting up Development Environment</a>.
+</td></tr></table>
