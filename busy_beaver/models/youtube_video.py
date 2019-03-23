@@ -22,5 +22,5 @@ class YoutubeVideo(BaseModel):
     @staticmethod
     def date_str_to_datetime(date_str: str) -> datetime:
         """For converting string 'publishedAt'."""
-        date_format = '%Y-%m-%dT%H:%M:%S'
-        return datetime.strptime(date_str.split('.')[0], date_format)
+        date_format = "%Y-%m-%dT%H:%M:%S"
+        return datetime.strptime(date_str.split(".")[0], date_format)

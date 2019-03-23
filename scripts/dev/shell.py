@@ -1,7 +1,6 @@
 import os
 
 from busy_beaver import create_app
-from busy_beaver import config
 from busy_beaver.adapters import (
     GitHubAdapter,
     KeyValueStoreAdapter,

@@ -6,7 +6,7 @@ from busy_beaver.models import YoutubeVideo
 
 
 def sort_by_published(video_json: Dict) -> datetime:
-    publish_at = video_json["snippet"]["publishedAt"].split('.')[0]
+    publish_at = video_json["snippet"]["publishedAt"].split(".")[0]
     return YoutubeVideo.date_str_to_datetime(publish_at)
 
 
@@ -21,18 +21,6 @@ class YoutubeAdapter:
 
     def __str__(self) -> str:
         return "YoutubeAdapter"
-
-    def get_latest_videos_from_channel(self, channel_id: str) -> Response:
-        params = {
-            "channelId": channel_id,
-            "key": self.api_key,
-            "part": "snippet,id",
-            "order": "date",
-            "maxResults": 50,
-            "type": "video",
-        }
-        url = f"{self.base_url}/search"
-        return self.client.get(url, params=params)
 
     def get_latest_videos_from_channel(self, channel_id: str) -> Response:
         params = {
