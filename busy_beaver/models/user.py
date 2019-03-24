@@ -1,5 +1,5 @@
-from busy_beaver.extensions import db
 from . import BaseModel
+from busy_beaver.extensions import db
 
 
 class User(BaseModel):
