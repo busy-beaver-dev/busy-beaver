@@ -34,7 +34,7 @@ services:
     build: &app_build
       context: .
       dockerfile: ./docker/dev/Dockerfile
-    command: ["gunicorn", "busy_beaver:app", "-b", "0.0.0.0:5000", "--reload", "--timeout",  "100000"]
+    command: ["gunicorn", "busy_beaver:create_app()", "-b", "0.0.0.0:5000", "--reload", "--timeout",  "100000"]
     env_file: .env
     depends_on: &app_depends_on
       - db

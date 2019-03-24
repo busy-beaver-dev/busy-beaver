@@ -16,9 +16,9 @@ def create_app(*, testing=False):
     app = Flask(__name__)
 
     if testing:
-        app.config["RQ_ASYNC"] = True
         app.config["TESTING"] = True
         database_uri = "sqlite:///:memory:"
+        app.config["RQ_ASYNC"] = False
     else:
         database_uri = DATABASE_URI
 
@@ -29,7 +29,6 @@ def create_app(*, testing=False):
 
     app.config["RQ_REDIS_URL"] = REDIS_URI
     app.config["RQ_QUEUES"] = ["default", "failed"]
-    app.config["RQ_ASYNC"] = True
     rq.init_app(app)
 
     app.register_error_handler(NotFoundError, handle_not_found_error)
