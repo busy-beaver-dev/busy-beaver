@@ -4,7 +4,7 @@ from typing import List
 
 from sqlalchemy import and_
 
-from . import github_stats
+from .summary import generate_summary
 from busy_beaver import slack
 from busy_beaver.models import User
 from busy_beaver.toolbox import utc_now_minus
@@ -22,7 +22,7 @@ def post_github_summary_to_slack(channel: str) -> None:
     message = ""
     for user in users:
         logger.info("[Busy-Beaver] Compiling stats for {0}".format(user))
-        message += github_stats.generate_summary(user, boundary_dt)
+        message += generate_summary(user, boundary_dt)
 
     if not message:
         message = (
