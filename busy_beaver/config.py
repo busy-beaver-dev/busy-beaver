@@ -8,6 +8,7 @@ GITHUB_REDIRECT_URI = f"{APP_URI}/github-integration"
 
 # infrastructure
 DATABASE_URI = os.getenv("DATABASE_URI")
+REDIS_URI = os.getenv("REDIS_URI")
 
 # social media details
 TWITTER_USERNAME = "ChicagoPython"

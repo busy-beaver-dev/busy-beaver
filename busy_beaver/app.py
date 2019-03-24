@@ -1,7 +1,7 @@
 from flask import Flask, request
 
-from .config import DATABASE_URI
-from .extensions import db, migrate
+from .config import DATABASE_URI, REDIS_URI
+from .extensions import db, migrate, rq
 from .exceptions import NotFoundError
 from .toolbox import make_response
 from .blueprints import healthcheck_bp, integration_bp, tasks_bp
@@ -16,6 +16,7 @@ def create_app(*, testing=False):
     app = Flask(__name__)
 
     if testing:
+        app.config["RQ_ASYNC"] = True
         app.config["TESTING"] = True
         database_uri = "sqlite:///:memory:"
     else:
@@ -25,6 +26,11 @@ def create_app(*, testing=False):
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
     migrate.init_app(app, db)
+
+    app.config["RQ_REDIS_URL"] = REDIS_URI
+    app.config["RQ_QUEUES"] = ["default", "failed"]
+    app.config["RQ_ASYNC"] = True
+    rq.init_app(app)
 
     app.register_error_handler(NotFoundError, handle_not_found_error)
 
