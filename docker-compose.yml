@@ -54,7 +54,7 @@ services:
 
   worker:
     build: *app_build
-    command: ["python"]
+    command: ["python", "start_async_worker.py"]
     env_file: .env
     depends_on: *app_depends_on
     environment: *app_env_vars
