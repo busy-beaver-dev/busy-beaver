@@ -4,9 +4,10 @@ from typing import List
 
 from sqlalchemy import and_
 
-from . import github_stats, slack
-from .models import User
-from .toolbox import utc_now_minus
+from . import github_stats
+from busy_beaver import slack
+from busy_beaver.models import User
+from busy_beaver.toolbox import utc_now_minus
 
 logger = logging.getLogger(__name__)
 
