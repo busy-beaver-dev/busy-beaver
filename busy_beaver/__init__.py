@@ -2,6 +2,7 @@ import logging
 from logging.config import dictConfig as load_dict_config
 import pathlib
 import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 from .adapters import GitHubAdapter, KeyValueStoreAdapter, SlackAdapter, TwitterAdapter
 from .config import (
@@ -24,7 +25,7 @@ pathlib.Path("logs").mkdir(exist_ok=True)
 load_dict_config(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
 if IN_PRODUCTION and SENTRY_DSN:
-    sentry_sdk.init(SENTRY_DSN)
+    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[FlaskIntegration()])
 
 logger.info("[BusyBeaver] Configure Integrations")
 github = GitHubAdapter(GITHUB_OAUTH_TOKEN)

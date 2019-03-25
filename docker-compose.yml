@@ -6,6 +6,7 @@ volumes:
 
 services:
   db:
+    # infrastructure
     image: postgres:10.3-alpine
     environment:
       POSTGRES_DB: busy-beaver
@@ -30,6 +31,7 @@ services:
       retries: 3
       start_period: 10s
 
+  # busy-beaver business logic
   app:
     build: &app_build
       context: .
@@ -51,7 +53,6 @@ services:
       - 5000:5000
     stdin_open: true
     tty: true
-
   worker:
     build: *app_build
     command: ["python", "start_async_worker.py"]
