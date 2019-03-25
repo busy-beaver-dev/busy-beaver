@@ -2,7 +2,7 @@ class BusyBeaverException(Exception):
     pass
 
 
-class UnexpectedStatusCode(BusyBeaverException):
+class AsyncException(BusyBeaverException):
     pass
 
 
@@ -14,3 +14,7 @@ class NotFoundError(BusyBeaverException):
         self.message = f"{object_type} not found"
 
         return self.payload.copy()
+
+
+class UnexpectedStatusCode(BusyBeaverException):
+    pass
