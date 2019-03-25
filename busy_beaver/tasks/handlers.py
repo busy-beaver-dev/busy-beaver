@@ -16,6 +16,7 @@ def retry_failed_job(job, *exc_info):
 
     # TODO save additional information about the job here
     # maybe put into a separate queue for offline viewing?
+    # if a result needs to be save, make sure we save it
 
     num_failures = job.meta["failures"]
     if num_failures >= MAX_FAILURES:
