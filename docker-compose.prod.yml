@@ -74,7 +74,6 @@ services:
       - traefik.backend=busybeaver
       - traefik.frontend.rule=Host:busybeaver.sivji.com
       - traefik.port=5000
-
   worker:
     image: alysivji/busy-beaver:latest
     command: ["python", "start_async_worker.py"]
@@ -115,6 +114,24 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /proc/:/host/proc/:ro
       - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
+    networks:
+      - local
+    labels:
+      - traefik.enable=false
+
+  # tools
+  admin:
+    image: jeffknupp/sandman2
+    environment:
+      DB_TYPE: postgres
+      DB_DRIVER: psycopg2
+      DB_HOST: db
+      DB_PORT: 5432
+      DATABASE: busy-beaver
+      USERNAME: ${POSTGRES_USER}
+      PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - 9000:5000
     networks:
       - local
     labels:
