@@ -76,8 +76,8 @@ services:
   worker:
     image: alysivji/busy-beaver:latest
     command: ["python", "start_async_worker.py"]
-    environment: &app_env_vars
-    volumes: &app_volumes
+    environment: *app_env_vars
+    volumes: *app_volumes
     networks:
       - local
     labels:
