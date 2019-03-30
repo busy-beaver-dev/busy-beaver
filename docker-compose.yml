@@ -6,31 +6,59 @@ volumes:
 
 services:
   db:
+    # infrastructure
     image: postgres:10.3-alpine
     environment:
       POSTGRES_DB: busy-beaver
       POSTGRES_USER: bbdev_user
       POSTGRES_PASSWORD: bbdev_password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
     volumes:
       - pgdata:/var/lib/postgresql/data/
     ports:
       - "9432:5432"
+  redis:
+    image: redis:4.0-alpine
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli","ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
 
+  # busy-beaver business logic
   app:
-    build:
+    build: &app_build
       context: .
       dockerfile: ./docker/dev/Dockerfile
-    command: ["gunicorn", "busy_beaver:app", "-b", "0.0.0.0:5100", "--reload", "--timeout",  "100000"]
+    command: ["gunicorn", "busy_beaver:create_app()", "-b", "0.0.0.0:5000", "--reload", "--timeout",  "100000"]
     env_file: .env
-    environment:
+    depends_on: &app_depends_on
+      - db
+    environment: &app_env_vars
       PYTHONPATH: .
       FLASK_APP: /app/busy_beaver/__init__.py
       FLASK_ENV: development
       DATABASE_URI: postgresql://bbdev_user:bbdev_password@db:5432/busy-beaver
-    stdin_open: true
-    tty: true
-    volumes:
+      REDIS_URI: redis://redis:6379
+    volumes: &app_volumes
       - .:/app/
       - ./logs:/app/logs/
     ports:
-      - 5000:5100
+      - 5000:5000
+    stdin_open: true
+    tty: true
+  worker:
+    build: *app_build
+    command: ["python", "start_async_worker.py"]
+    env_file: .env
+    depends_on: *app_depends_on
+    environment: *app_env_vars
+    volumes: *app_volumes
+    stdin_open: true
+    tty: true

@@ -1,6 +1,9 @@
 import os
 
 IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
+TASK_QUEUE_MAX_RETRIES = 1
+
+# app urls
 PROD_BASE_URI = "https://busybeaver.sivji.com"
 DEV_BASE_URI = os.getenv("NGROK_BASE_URI", None)
 APP_URI = PROD_BASE_URI if IN_PRODUCTION else DEV_BASE_URI
@@ -8,6 +11,7 @@ GITHUB_REDIRECT_URI = f"{APP_URI}/github-integration"
 
 # infrastructure
 DATABASE_URI = os.getenv("DATABASE_URI")
+REDIS_URI = os.getenv("REDIS_URI")
 
 # social media details
 TWITTER_USERNAME = "ChicagoPython"

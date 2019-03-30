@@ -5,6 +5,7 @@ help:
 	@echo ' make build            rebuild containers                          '
 	@echo ' make up               start local dev environment                 '
 	@echo ' make down             stop local dev environment                  '
+	@echo ' make restart          restart local dev environment               '
 	@echo ' make attach           attach to process for debugging purposes    '
 	@echo ' make migration        create migration m="message"                '
 	@echo ' make migrate-up       run all migration                           '
@@ -37,6 +38,9 @@ up:
 
 down:
 	docker-compose down
+
+restart:
+	docker-compose restart $(args)
 
 attach:
 	docker attach `docker-compose ps -q app`

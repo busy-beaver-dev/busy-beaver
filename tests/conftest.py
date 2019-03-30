@@ -7,8 +7,9 @@ References:
 
 import pytest
 
-from busy_beaver.app import create_app, db as _db
 from busy_beaver.adapters import KeyValueStoreAdapter
+from busy_beaver.app import create_app
+from busy_beaver.extensions import db as _db, rq as _rq
 
 
 @pytest.fixture(scope="session")
@@ -66,3 +67,8 @@ def session(db):
 @pytest.fixture
 def kv_store(session):
     return KeyValueStoreAdapter()
+
+
+@pytest.fixture(scope="session")
+def rq(app):
+    yield _rq

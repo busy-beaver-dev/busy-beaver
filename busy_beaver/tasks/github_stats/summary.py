@@ -11,8 +11,8 @@ from .event_list import (
     ReleasesPublishedList,
     StarredReposList,
 )
-from .. import github
-from ..models import User
+from busy_beaver import github
+from busy_beaver.models import User
 
 
 def generate_summary(user: User, boundary_dt: datetime):
