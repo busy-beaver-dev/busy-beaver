@@ -62,3 +62,17 @@ services:
     volumes: *app_volumes
     stdin_open: true
     tty: true
+
+  # tools
+  admin:
+    image: jeffknupp/sandman2
+    environment:
+      DB_TYPE: postgres
+      DB_DRIVER: psycopg2
+      DB_HOST: db
+      DB_PORT: 5432
+      DATABASE: busy-beaver
+      USERNAME: bbdev_user
+      PASSWORD: bbdev_password
+    ports:
+      - 9000:5000
