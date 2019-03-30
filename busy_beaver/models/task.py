@@ -40,3 +40,17 @@ class Task(BaseModel):
 
     def __repr__(self):
         return f"<Task: {self.id}-{self.name}>"
+
+
+class PostGitHubSummaryTask(Task):
+
+    __tablename__ = "post_github_summary_task"
+
+    # Attributes
+    id = db.Column(db.String(36), db.ForeignKey("task.id"), primary_key=True)
+    data = db.Column("data", db.JSON)
+
+    __mapper_args__ = {"polymorphic_identity": "post_github_summary"}
+
+    def __repr__(self):
+        return f"<PostGitHubSummaryTask: {self.data}>"

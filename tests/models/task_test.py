@@ -1,4 +1,4 @@
-from busy_beaver.models import Task
+from busy_beaver.models import Task, PostGitHubSummaryTask
 
 
 def test_create_task(session):
@@ -44,3 +44,21 @@ def test_run_async_task_get_job_from_task(app, rq, session):
     retrieved_job = queued_task.get_rq_job()
 
     assert retrieved_job.id == job.id
+
+
+def test_post_github_summary_task(session):
+    users = ["test_user_1", "test_user_2"]
+    task = PostGitHubSummaryTask(
+        id="abcd",
+        name="task_created_for_test",
+        description="Task created for testing purposes",
+        data={"users": users},
+    )
+
+    session.add(task)
+    session.commit()
+
+    assert task.id == "abcd"
+    assert task.complete is False
+    assert task.failed is False
+    assert task.data["users"] == users
