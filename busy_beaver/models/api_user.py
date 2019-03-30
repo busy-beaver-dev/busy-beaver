@@ -14,3 +14,6 @@ class ApiUser(BaseModel):
     username = db.Column(db.String(255), nullable=False)
     token = db.Column(db.String(255), nullable=False)
     role = db.Column(db.String(255), nullable=False, default="user")
+
+    # Relationships
+    tasks = db.relationship("Task", back_populates="user")

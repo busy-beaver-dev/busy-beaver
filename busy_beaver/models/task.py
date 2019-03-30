@@ -9,8 +9,7 @@ from busy_beaver.extensions import db, rq
 class Task(BaseModel):
     """Task Base Table"""
 
-    def __repr__(self):
-        return f"<Task: {self.id}-{self.name}>"
+    __tablename__ = "task"
 
     # Attributes
     id = db.Column(db.String(36), primary_key=True)
@@ -18,6 +17,15 @@ class Task(BaseModel):
     description = db.Column(db.String(128))
     failed = db.Column(db.Boolean, default=False)
     complete = db.Column(db.Boolean, default=False)
+    user_id = db.Column(
+        db.Integer, db.ForeignKey("api_user.id", name="fk_task_user_id")
+    )
+    type = db.Column(db.String(55))
+
+    __mapper_args__ = {"polymorphic_identity": "task", "polymorphic_on": "type"}
+
+    # Relationships
+    user = db.relationship("ApiUser", back_populates="tasks")
 
     def get_rq_job(self):
         try:
@@ -29,3 +37,6 @@ class Task(BaseModel):
     def get_progress(self):
         job = self.get_rq_job()
         return job.meta.get("progress", 0) if job is not None else 100
+
+    def __repr__(self):
+        return f"<Task: {self.id}-{self.name}>"
