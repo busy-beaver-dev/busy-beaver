@@ -1,36 +1,39 @@
 import pytest
 
 from busy_beaver.adapters.slack import SlackAdapter
+from busy_beaver.config import SLACK_TOKEN
 
 
 MODULE_TO_TEST = "busy_beaver.adapters.slack"
 
 
-@pytest.fixture
-def fake_slack_client():
-    class FakeSlackClient:
-        def __init__(self, handler):
-            self.function_handler = handler
-
-        def api_call(self, *args, **kwargs):
-            return self.function_handler
-
-    def _wrapper(function_handler):
-        return FakeSlackClient(function_handler)
-
-    return _wrapper
+@pytest.fixture(scope="module")
+def slack():
+    return SlackAdapter(SLACK_TOKEN)
 
 
-@pytest.fixture
-def patched_slack_client(patcher):
-    def _wrapper(replacement):
-        return patcher(MODULE_TO_TEST, namespace="SlackClient", replacement=replacement)
+@pytest.mark.vcr()
+def test_slack_get_channel_info(slack: SlackAdapter):
+    # Act
+    result = slack.get_channel_info("general")
 
-    return _wrapper
+    # Assert
+    assert result.name == "general"
+    assert isinstance(result.id, str)
+    assert len(result.members) > 0
 
 
-@pytest.mark.smoke
-def test_create_slack_adapter(patched_slack_client, fake_slack_client):
-    patched_slack_client(fake_slack_client())
-    SlackAdapter("asdf")
-    assert True
+@pytest.mark.vcr()
+def test_slack_post_message_success(slack: SlackAdapter):
+    # Act
+    result = slack.post_message("test", channel="general")
+
+    # Assert
+    assert result["ok"] is True
+    assert result["message"]["text"] == "test"
+
+
+@pytest.mark.vcr()
+def test_slack_post_message_without_specifying_channel(slack: SlackAdapter):
+    with pytest.raises(ValueError):
+        slack.post_message(message="test")
