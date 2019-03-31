@@ -5,11 +5,13 @@ References:
     - http://flask.pocoo.org/docs/1.0/testing/
 """
 
+from datetime import timedelta
 import pytest
 
 from busy_beaver.adapters import KeyValueStoreAdapter
 from busy_beaver.app import create_app
 from busy_beaver.extensions import db as _db, rq as _rq
+from busy_beaver.toolbox import utc_now_minus
 
 
 @pytest.fixture(scope="session")
@@ -84,3 +86,8 @@ def patcher(monkeypatch):
         return replacement
 
     yield _patcher
+
+
+@pytest.fixture
+def t_minus_one_day():
+    return utc_now_minus(timedelta(days=1))

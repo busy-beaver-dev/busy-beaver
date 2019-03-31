@@ -51,4 +51,4 @@ def fetch_github_summary_post_to_slack(channel_name, boundary_dt):
             'does it make a sound?" - Zax Rosenberg'
         )
 
-    slack.post_message(message, channel_id=channel_info.id)
+    slack.post_message(message=message, channel_id=channel_info.id)
