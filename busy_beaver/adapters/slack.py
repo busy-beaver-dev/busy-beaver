@@ -13,10 +13,10 @@ class SlackAdapter:
     def __init__(self, slack_token):
         self.sc = SlackClient(slack_token)
 
-    def get_channel_info(self, channel) -> Channel:
-        channel_id = self._get_channel_id(channel)
+    def get_channel_info(self, channel_name) -> Channel:
+        channel_id = self._get_channel_id(channel_name)
         members = self._get_channel_members(channel_id)
-        return Channel(channel, channel_id, members)
+        return Channel(channel_name, channel_id, members)
 
     def post_message(self, message, *, attachments=None, channel=None, channel_id=None):
         if not channel and not channel_id:

@@ -9,7 +9,7 @@ from busy_beaver.models import Task
 logger = logging.getLogger(__name__)
 
 
-def _set_task_progress(progress):
+def set_task_progress(progress):
     job = get_current_job()
     if job:
         job.meta["progress"] = progress
