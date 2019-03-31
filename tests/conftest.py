@@ -72,3 +72,15 @@ def kv_store(session):
 @pytest.fixture(scope="session")
 def rq(app):
     yield _rq
+
+
+@pytest.fixture
+def patcher(monkeypatch):
+    """Helper to patch in the correct spot"""
+
+    def _patcher(module_to_test, namespace, replacement_object):
+        namespace_to_patch = f"{module_to_test}.{namespace}"
+        monkeypatch.setattr(namespace_to_patch, replacement_object)
+        return replacement_object
+
+    yield _patcher

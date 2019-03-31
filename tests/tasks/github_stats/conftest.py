@@ -1,4 +1,4 @@
-from busy_beaver.models import User
+from busy_beaver.models import ApiUser, User
 import pytest
 
 
@@ -10,3 +10,12 @@ def create_user():
         return new_user
 
     return _new_user
+
+
+@pytest.fixture
+def create_api_user():
+    def _new_api_user(username, *, role="user"):
+        new_api_user = ApiUser(username="test_user", token="abcd", role=role)
+        return new_api_user
+
+    return _new_api_user
