@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 
 def start_post_github_summary_task(task_owner: ApiUser, channel_name: str):
     boundary_dt = utc_now_minus(timedelta(days=1))
+
     job = fetch_github_summary_post_to_slack.queue(channel_name, boundary_dt)
 
     task = PostGitHubSummaryTask(
@@ -23,7 +24,7 @@ def start_post_github_summary_task(task_owner: ApiUser, channel_name: str):
         name="Post GitHub Summary",
         description="Daily task to post GitHub Summary",
         user=task_owner,
-        data={"channel_name": channel_name, "boundary_dt": boundary_dt},
+        data={"channel_name": channel_name, "boundary_dt": boundary_dt.isoformat()},
     )
     db.session.add(task)
     db.session.commit()

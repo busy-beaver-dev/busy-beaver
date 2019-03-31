@@ -78,9 +78,9 @@ def rq(app):
 def patcher(monkeypatch):
     """Helper to patch in the correct spot"""
 
-    def _patcher(module_to_test, namespace, replacement_object):
+    def _patcher(module_to_test, *, namespace, replacement):
         namespace_to_patch = f"{module_to_test}.{namespace}"
-        monkeypatch.setattr(namespace_to_patch, replacement_object)
-        return replacement_object
+        monkeypatch.setattr(namespace_to_patch, replacement)
+        return replacement
 
     yield _patcher
