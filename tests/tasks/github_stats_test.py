@@ -8,14 +8,19 @@ import pytest
 
 
 @pytest.fixture
-def user():
-    new_user = User()
-    new_user.github_username = "alysivji"
-    return new_user
+def create_user():
+    def _new_user(github_username):
+        new_user = User()
+        new_user.github_username = github_username
+        return new_user
+
+    return _new_user
 
 
 # TODO make freze_time into a test helper that pulls from the cassette directly
 @pytest.mark.vcr()
 @pytest.mark.freeze_time("2019-01-05")
-def test_generate_summary(user):
+def test_generate_summary(create_user):
+    user = create_user("alysivji")
+
     assert "alysivji" in generate_summary(user, utc_now_minus(timedelta(days=1)))
