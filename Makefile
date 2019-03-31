@@ -58,7 +58,7 @@ test:
 	docker-compose exec app pytest $(args)
 
 test-cov:
-	docker-compose exec app pytest --cov ./busy_beaver
+	docker-compose exec app pytest --cov ./busy_beaver $(args)
 
 test-covhtml:
 	docker-compose exec app pytest --cov ./busy_beaver --cov-report html && open ./htmlcov/index.html

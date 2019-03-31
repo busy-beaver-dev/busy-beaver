@@ -76,11 +76,14 @@ def patched_slack(mocker, patcher):
 def patched_github_user_events(mocker, patcher):
     class FakeGitHubUserEvents:
         def __init__(self, *, summary_messages: List[str]):
-            mock = mocker.Mock()
-            mock.side_effect = summary_messages
+            self.mock = mocker.MagicMock(side_effect=list(summary_messages))
 
-        def generate_summary_text(self, *args, **kwargs):
+        def generate_summary(self, *args, **kwargs):
             return self.mock(*args, **kwargs)
+
+        def __call__(self, *args, **kwargs):
+            self.mock(*args, **kwargs)
+            return self
 
         def __repr__(self):
             return "<FakeGitHubUserEvents>"
@@ -92,6 +95,7 @@ def patched_github_user_events(mocker, patcher):
     return _wrapper
 
 
+@pytest.mark.unit
 def test_fetch_github_summary_post_to_slack__no_users(
     session, t_minus_one_day, patched_slack, patched_github_user_events
 ):
@@ -99,7 +103,7 @@ def test_fetch_github_summary_post_to_slack__no_users(
     boundary_dt = t_minus_one_day
     channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
-    patched_github_user_events(messages=["a", "b", "c"])
+    patched_github_user_events(messages=["initialization", "a", "b"])
 
     # Act
     fetch_github_summary_post_to_slack("general", boundary_dt=boundary_dt)
@@ -109,3 +113,44 @@ def test_fetch_github_summary_post_to_slack__no_users(
     args, kwargs = post_message_args
     assert "does it make a sound" in kwargs["message"]
     assert "idz" in kwargs["channel_id"]
+
+
+@pytest.mark.unit
+def test_fetch_github_summary_post_to_slack__no_activity(
+    session, create_user, t_minus_one_day, patched_slack, patched_github_user_events
+):
+    # Arrange
+    boundary_dt = t_minus_one_day
+    create_user(slack_id="user1", github_username="user1")
+    channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
+    slack = patched_slack(channel_info=channel_info)
+    patched_github_user_events(messages=["initialization", ""])
+
+    # Act
+    fetch_github_summary_post_to_slack("general", boundary_dt=boundary_dt)
+
+    # Assert
+    post_message_args = slack.mock.call_args_list[-1]
+    args, kwargs = post_message_args
+    assert "does it make a sound" in kwargs["message"]
+
+
+@pytest.mark.unit
+def test_fetch_github_summary_post_to_slack__with_activity(
+    session, create_user, t_minus_one_day, patched_slack, patched_github_user_events
+):
+    # Arrange
+    boundary_dt = t_minus_one_day
+    create_user(slack_id="user1", github_username="user1")
+    create_user(slack_id="user2", github_username="user2")
+    channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
+    slack = patched_slack(channel_info=channel_info)
+    patched_github_user_events(messages=["initialization", "a", "initialization", "c"])
+
+    # Act
+    fetch_github_summary_post_to_slack("general", boundary_dt=boundary_dt)
+
+    # Assert
+    post_message_args = slack.mock.call_args_list[-1]
+    args, kwargs = post_message_args
+    assert "ac" in kwargs["message"]
