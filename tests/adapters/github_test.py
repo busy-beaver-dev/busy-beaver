@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-import os
 
 import pytest
 import pytz
@@ -10,12 +9,12 @@ from busy_beaver.adapters.github import (
     GitHubAdapter,
     page_from_url,
 )
+from busy_beaver.config import GITHUB_OAUTH_TOKEN
 
 
 @pytest.fixture
 def client():
-    oauth_token = os.getenv("GITHUB_OAUTH_TOKEN")
-    yield GitHubAdapter(oauth_token)
+    yield GitHubAdapter(oauth_token=GITHUB_OAUTH_TOKEN)
 
 
 @pytest.mark.vcr()
