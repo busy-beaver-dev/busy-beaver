@@ -5,7 +5,7 @@ from typing import List
 from sqlalchemy import and_
 
 from ..toolbox import set_task_progress
-from .summary import generate_summary
+from .summary import GitHubUserEvents
 from busy_beaver import slack
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import ApiUser, User, PostGitHubSummaryTask
@@ -41,7 +41,8 @@ def fetch_github_summary_post_to_slack(channel_name, boundary_dt):
     num_users = len(users)
     for idx, user in enumerate(users):
         logger.info("[Busy-Beaver] Compiling stats for {0}".format(user))
-        message += generate_summary(user, boundary_dt)
+        user_events = GitHubUserEvents(user, boundary_dt)
+        message += user_events.generate_summary()
         set_task_progress(idx / num_users * 100)
 
     if not message:
