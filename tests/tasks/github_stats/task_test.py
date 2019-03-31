@@ -78,7 +78,7 @@ def patched_github_user_events(mocker, patcher):
         def __init__(self, *, summary_messages: List[str]):
             self.mock = mocker.MagicMock(side_effect=list(summary_messages))
 
-        def generate_summary(self, *args, **kwargs):
+        def generate_summary_text(self, *args, **kwargs):
             return self.mock(*args, **kwargs)
 
         def __call__(self, *args, **kwargs):
@@ -96,7 +96,7 @@ def patched_github_user_events(mocker, patcher):
 
 
 @pytest.mark.unit
-def test_fetch_github_summary_post_to_slack__no_users(
+def test_fetch_github_summary_post_to_slack_with_no_users(
     session, t_minus_one_day, patched_slack, patched_github_user_events
 ):
     # Arrange
@@ -116,7 +116,7 @@ def test_fetch_github_summary_post_to_slack__no_users(
 
 
 @pytest.mark.unit
-def test_fetch_github_summary_post_to_slack__no_activity(
+def test_fetch_github_summary_post_to_slack_with_no_activity(
     session, create_user, t_minus_one_day, patched_slack, patched_github_user_events
 ):
     # Arrange
@@ -136,7 +136,7 @@ def test_fetch_github_summary_post_to_slack__no_activity(
 
 
 @pytest.mark.unit
-def test_fetch_github_summary_post_to_slack__with_activity(
+def test_fetch_github_summary_post_to_slack_with_activity(
     session, create_user, t_minus_one_day, patched_slack, patched_github_user_events
 ):
     # Arrange
@@ -145,7 +145,7 @@ def test_fetch_github_summary_post_to_slack__with_activity(
     create_user(slack_id="user2", github_username="user2")
     channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
-    patched_github_user_events(messages=["initialization", "a", "initialization", "c"])
+    patched_github_user_events(messages=["initialization", "a", "initialization", "b"])
 
     # Act
     fetch_github_summary_post_to_slack("general", boundary_dt=boundary_dt)
@@ -153,4 +153,23 @@ def test_fetch_github_summary_post_to_slack__with_activity(
     # Assert
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
-    assert "ac" in kwargs["message"]
+    assert "ab" in kwargs["message"]
+
+
+@pytest.mark.vcr()
+@pytest.mark.freeze_time("2019-03-31")
+@pytest.mark.integration
+def test_post_github_summary_task__integration(
+    session, create_user, t_minus_one_day, patched_slack
+):
+    channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
+    slack = patched_slack(channel_info=channel_info)
+    create_user(slack_id="user1", github_username="alysivji")
+
+    # Act
+    fetch_github_summary_post_to_slack("general", boundary_dt=t_minus_one_day)
+
+    # Assert
+    post_message_args = slack.mock.call_args_list[-1]
+    args, kwargs = post_message_args
+    assert "<@user1>" in kwargs["message"]
