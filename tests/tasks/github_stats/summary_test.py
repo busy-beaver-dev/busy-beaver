@@ -11,7 +11,7 @@ import pytest
 @pytest.mark.freeze_time("2019-01-05")
 def test_generate_summary(create_user):
     # Arrange
-    user = create_user("alysivji")
+    user = create_user(slack_id="alysivji", github_username="alysivji")
     user_events = GitHubUserEvents(user, utc_now_minus(timedelta(days=1)))
 
     # Act

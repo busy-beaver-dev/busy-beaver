@@ -7,19 +7,22 @@ from busy_beaver.models import ApiUser, User
 
 
 @pytest.fixture
-def create_user():
-    def _new_user(github_username):
-        new_user = User()
-        new_user.github_username = github_username
+def create_user(session):
+    def _new_user(*, slack_id, github_username):
+        new_user = User(slack_id=slack_id, github_username=github_username)
+        session.add(new_user)
+        session.commit()
         return new_user
 
     return _new_user
 
 
 @pytest.fixture
-def create_api_user():
+def create_api_user(session):
     def _new_api_user(username, *, role="user"):
         new_api_user = ApiUser(username="test_user", token="abcd", role=role)
+        session.add(new_api_user)
+        session.commit()
         return new_api_user
 
     return _new_api_user
