@@ -32,6 +32,9 @@ def start_post_github_summary_task(task_owner: ApiUser, channel_name: str):
 
 @rq.job
 def fetch_github_summary_post_to_slack(channel_name, boundary_dt):
+    import pdb
+
+    pdb.set_trace()
     channel_info = slack.get_channel_info(channel_name)
     users: List[User] = User.query.filter(
         and_(User.slack_id.in_(channel_info.members), User.github_username.isnot(None))
