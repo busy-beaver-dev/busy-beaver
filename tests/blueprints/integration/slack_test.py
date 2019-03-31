@@ -13,8 +13,8 @@ MODULE_TO_TEST = "busy_beaver.blueprints.integration.slack"
 
 @pytest.fixture
 def patched_slack(patcher):
-    def _wrapper(mock_to_return):
-        return patcher(MODULE_TO_TEST, namespace="slack", replacement=mock_to_return)
+    def _wrapper(replacement):
+        return patcher(MODULE_TO_TEST, namespace="slack", replacement=replacement)
 
     return _wrapper
 
