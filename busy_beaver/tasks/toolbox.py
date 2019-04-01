@@ -1,6 +1,4 @@
 import logging
-
-from flask import current_app as app  # noqa
 from rq import get_current_job
 
 from busy_beaver.extensions import db
