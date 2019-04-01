@@ -20,7 +20,7 @@ class TwitterPollingResource(MethodView):
             extra={"user": user.username},
         )
 
-        # TODO need to add a task queue here
+        # TODO: replace this with marshmallow
         data = request.json
         if not data or "channel" not in data:
             logger.error(

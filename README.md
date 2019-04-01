@@ -102,24 +102,3 @@ db.session.commit()
 ## Contributing
 
 Busy-Beaver is always looking for new contributors! Previous open source experience is not required! Please see [CONTRIBUTING.md](CONTRIBUTING.md).
-
----
-
-## Todo
-
-- [ ] ETag, need to set up DB for this
-  - mark events that are new
-- [ ] [rate limiting](https://developer.github.com/v3/#rate-limiting)
-  - far away concern
-- [ ] [GraphQL](https://developer.github.com/v4/)
-
-### GitHub Events
-
-- [x] [CreateEvent](https://developer.github.com/v3/activity/events/types/#createevent) `ref_type` repository
-- [x] [ForkEvent](https://developer.github.com/v3/activity/events/types/#forkevent)
-- [x] [IssuesEvent](https://developer.github.com/v3/activity/events/types/#issuesevent) `action` opened
-- [x] [PublicEvent](https://developer.github.com/v3/activity/events/types/#publicevent)
-- [x] [PullRequestEvent](https://developer.github.com/v3/activity/events/types/#pullrequestevent) `action` opened
-- [x] [PushEvent](https://developer.github.com/v3/activity/events/types/#pushevent)
-- [x] [ReleaseEvent](https://developer.github.com/v3/activity/events/types/#releaseevent)
-- [x] [WatchEvent](https://developer.github.com/v3/activity/events/types/#watchevent) `action` started
