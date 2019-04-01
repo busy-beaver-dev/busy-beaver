@@ -1,5 +1,5 @@
 import pytest
-from busy_beaver.blueprints.tasks.retweeter import post_tweets_to_slack
+from busy_beaver.blueprints.tasks.retweeter import start_post_tweets_to_slack_task
 
 MODULE_TO_TEST = "busy_beaver.blueprints.tasks.retweeter"
 
@@ -8,7 +8,7 @@ MODULE_TO_TEST = "busy_beaver.blueprints.tasks.retweeter"
 def patched_retweeter_trigger(mocker, patcher):
     return patcher(
         MODULE_TO_TEST,
-        namespace=post_tweets_to_slack.__name__,
+        namespace=start_post_tweets_to_slack_task.__name__,
         replacement=mocker.Mock(),
     )
 
