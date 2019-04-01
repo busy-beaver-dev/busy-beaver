@@ -3,7 +3,7 @@ import uuid
 
 import pytest
 
-from busy_beaver.models import ApiUser, User
+from busy_beaver.models import User
 
 
 @pytest.fixture
@@ -15,17 +15,6 @@ def create_user(session):
         return new_user
 
     return _new_user
-
-
-@pytest.fixture
-def create_api_user(session):
-    def _new_api_user(username, *, role="user"):
-        new_api_user = ApiUser(username="test_user", token="abcd", role=role)
-        session.add(new_api_user)
-        session.commit()
-        return new_api_user
-
-    return _new_api_user
 
 
 @pytest.fixture

@@ -11,6 +11,7 @@ import pytest
 from busy_beaver.adapters import KeyValueStoreAdapter
 from busy_beaver.app import create_app
 from busy_beaver.extensions import db as _db, rq as _rq
+from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
 
 
@@ -91,3 +92,14 @@ def patcher(monkeypatch):
 @pytest.fixture
 def t_minus_one_day():
     return utc_now_minus(timedelta(days=1))
+
+
+@pytest.fixture
+def create_api_user(session):
+    def _new_api_user(username, *, token="abcd", role="user"):
+        new_api_user = ApiUser(username=username, token=token, role=role)
+        session.add(new_api_user)
+        session.commit()
+        return new_api_user
+
+    return _new_api_user
