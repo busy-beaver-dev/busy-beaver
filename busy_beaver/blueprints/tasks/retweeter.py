@@ -4,7 +4,7 @@ from flask import request
 from flask.views import MethodView
 
 from busy_beaver.config import TWITTER_USERNAME
-from busy_beaver.retweeter import post_tweets_to_slack
+from busy_beaver.tasks.retweeter import post_tweets_to_slack
 from busy_beaver.toolbox import make_response
 
 logger = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ class TwitterPollingResource(MethodView):
         data = request.json
         if "channel" not in data:
             logger.error(
-                "[Busy-Beaver] Twitter Summary Poll -- need channel in JSON body",
+                "[Busy-Beaver] Twitter Summary Poll -- need channel in JSON body"
             )
             return
         post_tweets_to_slack(username=TWITTER_USERNAME, channel=data["channel"])

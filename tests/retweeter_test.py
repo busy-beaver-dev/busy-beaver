@@ -2,10 +2,10 @@ from datetime import timedelta
 import pytest
 
 from busy_beaver.adapters.twitter import Tweet
-from busy_beaver.retweeter import post_tweets_to_slack, LAST_TWEET_KEY
+from busy_beaver.tasks.retweeter import post_tweets_to_slack, LAST_TWEET_KEY
 from busy_beaver.toolbox import utc_now_minus
 
-MODULE_TO_TEST = "busy_beaver.retweeter"
+MODULE_TO_TEST = "busy_beaver.tasks.retweeter"
 
 
 @pytest.fixture
