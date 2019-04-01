@@ -82,7 +82,6 @@ def patched_github_user_events(mocker, patcher):
             return self.mock(*args, **kwargs)
 
         def __call__(self, *args, **kwargs):
-            self.mock(*args, **kwargs)
             return self
 
         def __repr__(self):
@@ -103,7 +102,7 @@ def test_fetch_github_summary_post_to_slack_with_no_users(
     boundary_dt = t_minus_one_day
     channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
-    patched_github_user_events(messages=["initialization", "a", "b"])
+    patched_github_user_events(messages=["a", "b"])
 
     # Act
     fetch_github_summary_post_to_slack("general", boundary_dt=boundary_dt)
@@ -124,7 +123,7 @@ def test_fetch_github_summary_post_to_slack_with_no_activity(
     create_user(slack_id="user1", github_username="user1")
     channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
-    patched_github_user_events(messages=["initialization", ""])
+    patched_github_user_events(messages=[""])
 
     # Act
     fetch_github_summary_post_to_slack("general", boundary_dt=boundary_dt)
@@ -145,7 +144,7 @@ def test_fetch_github_summary_post_to_slack_with_activity(
     create_user(slack_id="user2", github_username="user2")
     channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
-    patched_github_user_events(messages=["initialization", "a", "initialization", "b"])
+    patched_github_user_events(messages=["a", "b"])
 
     # Act
     fetch_github_summary_post_to_slack("general", boundary_dt=boundary_dt)
