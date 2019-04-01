@@ -61,7 +61,7 @@ class PostTweetTask(Task):
     __tablename__ = "post_tweet_task"
 
     # Attributes
-    id = db.Column(db.String(36), db.ForeignKey("task.id"), primary_key=True)
+    id = db.Column(db.Integer, db.ForeignKey("task.id"), primary_key=True)
     data = db.Column("data", db.JSON)
 
     __mapper_args__ = {"polymorphic_identity": "post_tweet"}

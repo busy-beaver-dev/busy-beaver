@@ -1,6 +1,9 @@
-from busy_beaver.models import Task, PostGitHubSummaryTask
+from busy_beaver.models import Task, PostGitHubSummaryTask, PostTweetTask
 
 
+###########
+# Base Task
+###########
 def test_create_task(session):
     task = Task(
         job_id="abcd",
@@ -46,13 +49,16 @@ def test_run_async_task_get_job_from_task(app, rq, session):
     assert retrieved_job.id == job.id
 
 
+#####################
+# GitHub Summary Task
+#####################
 def test_post_github_summary_task(session):
-    users = ["test_user_1", "test_user_2"]
+    channel_name = "test-channel"
     task = PostGitHubSummaryTask(
         job_id="abcd",
         name="task_created_for_test",
         description="Task created for testing purposes",
-        data={"users": users},
+        data={"channel_name": channel_name},
     )
 
     session.add(task)
@@ -61,4 +67,25 @@ def test_post_github_summary_task(session):
     assert task.job_id == "abcd"
     assert task.complete is False
     assert task.failed is False
-    assert task.data["users"] == users
+    assert task.data["channel_name"] == channel_name
+
+
+#################
+# Post Tweet Task
+#################
+def test_post_tweet_task(session):
+    channel_name = "test-channel"
+    task = PostTweetTask(
+        job_id="abcd",
+        name="task_created_for_test",
+        description="Task created for testing purposes",
+        data={"channel_name": channel_name},
+    )
+
+    session.add(task)
+    session.commit()
+
+    assert task.job_id == "abcd"
+    assert task.complete is False
+    assert task.failed is False
+    assert task.data["channel_name"] == channel_name
