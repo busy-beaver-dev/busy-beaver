@@ -3,7 +3,7 @@ from busy_beaver.models import Task, PostGitHubSummaryTask
 
 def test_create_task(session):
     task = Task(
-        id="abcd",
+        job_id="abcd",
         name="task_created_for_test",
         description="Task created for testing purposes",
     )
@@ -11,7 +11,7 @@ def test_create_task(session):
     session.add(task)
     session.commit()
 
-    assert task.id == "abcd"
+    assert task.job_id == "abcd"
     assert task.complete is False
     assert task.failed is False
 
@@ -26,7 +26,7 @@ def test_run_async_task_update_progress(app, rq, session):
     job.meta["progress"] = 100
     job.save_meta()
 
-    queued_task = Task(id=job.id, name="Add", description="Add task")
+    queued_task = Task(job_id=job.id, name="Add", description="Add task")
     session.add(queued_task)
     session.commit()
 
@@ -37,7 +37,7 @@ def test_run_async_task_get_job_from_task(app, rq, session):
     rq.job(add)
     job = add.queue(5, 2)
 
-    queued_task = Task(id=job.id, name="Add", description="Add task")
+    queued_task = Task(job_id=job.id, name="Add", description="Add task")
     session.add(queued_task)
     session.commit()
 
@@ -49,7 +49,7 @@ def test_run_async_task_get_job_from_task(app, rq, session):
 def test_post_github_summary_task(session):
     users = ["test_user_1", "test_user_2"]
     task = PostGitHubSummaryTask(
-        id="abcd",
+        job_id="abcd",
         name="task_created_for_test",
         description="Task created for testing purposes",
         data={"users": users},
@@ -58,7 +58,7 @@ def test_post_github_summary_task(session):
     session.add(task)
     session.commit()
 
-    assert task.id == "abcd"
+    assert task.job_id == "abcd"
     assert task.complete is False
     assert task.failed is False
     assert task.data["users"] == users

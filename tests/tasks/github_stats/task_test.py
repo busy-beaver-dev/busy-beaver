@@ -38,7 +38,7 @@ def test_start_post_github_summary_task(
     # Assert
     api_user = ApiUser.query.get(api_user.id)
     task = api_user.tasks[0]
-    assert task.id == patched_background_task.id
+    assert task.job_id == patched_background_task.id
     assert task.data["channel_name"] == channel_name
     assert "boundary_dt" in task.data
 

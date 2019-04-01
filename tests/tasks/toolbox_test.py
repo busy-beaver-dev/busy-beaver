@@ -9,7 +9,7 @@ from busy_beaver.tasks.toolbox import set_task_progress
 @rq.job
 def add(x, y):
     job = get_current_job()
-    task = Task(id=job.id, name="Test Task", description="Trying things out")
+    task = Task(job_id=job.id, name="Test Task", description="Trying things out")
     db.session.add(task)
     db.session.commit()
 
@@ -21,6 +21,6 @@ def add(x, y):
 def test_set_task_progress(session):
     job = add.queue(1, 2)
 
-    curr_task = Task.query.get(job.id)
+    curr_task = Task.query.filter_by(job_id=job.id).first()
     assert curr_task.complete is True
     assert curr_task.failed is False

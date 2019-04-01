@@ -28,7 +28,7 @@ def add(x, y):
 def test_retry_failed_job_handler_max_failures(app, rq, session, generate_exc_info):
     # create record in db
     job_id = str(uuid.uuid4())
-    task = Task(id=job_id, name="Add", description="Add task")
+    task = Task(job_id=job_id, name="Add", description="Add task")
     session.add(task)
     session.commit()
 
@@ -44,6 +44,6 @@ def test_retry_failed_job_handler_max_failures(app, rq, session, generate_exc_in
     with pytest.raises(AsyncException):
         retry_failed_job(job, exc_info)
 
-    task = Task.query.get(job_id)
+    task = Task.query.filter_by(job_id=job_id).first()
     assert task.failed is True
     assert job.meta["failures"] == TASK_QUEUE_MAX_RETRIES + 1

@@ -20,7 +20,7 @@ def start_post_github_summary_task(task_owner: ApiUser, channel_name: str):
     job = fetch_github_summary_post_to_slack.queue(channel_name, boundary_dt)
 
     task = PostGitHubSummaryTask(
-        id=job.id,
+        job_id=job.id,
         name="Post GitHub Summary",
         description="Daily task to post GitHub Summary",
         user=task_owner,
