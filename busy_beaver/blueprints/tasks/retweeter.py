@@ -23,11 +23,11 @@ class TwitterPollingResource(MethodView):
 
         # TODO need to add a task queue here
         data = request.json
-        if "channel" not in data:
+        if not data or "channel" not in data:
             logger.error(
                 "[Busy-Beaver] Twitter Summary Poll -- need channel in JSON body"
             )
-            return
+            return make_response(422, error={"message": "JSON requires 'channel' key"})
         post_tweets_to_slack(username=TWITTER_USERNAME, channel=data["channel"])
 
         logger.info("[Busy-Beaver] Twitter Summary Poll -- kicked-off")
