@@ -4,8 +4,8 @@ import re
 
 from flask import request
 
-from .exceptions import NotAuthorized
-from .models import ApiUser
+from busy_beaver.exceptions import NotAuthorized
+from busy_beaver.models import ApiUser
 
 logger = logging.getLogger(__name__)
 AUTH_STRING = re.compile(r"token (?P<token>.*)")
