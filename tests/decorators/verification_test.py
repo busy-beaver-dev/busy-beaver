@@ -5,6 +5,8 @@ from busy_beaver.app import handle_http_error
 from busy_beaver.decorators.verification import slack_verification_required
 from busy_beaver.exceptions import UnverifiedSlackRequest
 
+SLACK_SIGNATURE = "v0=a2114d57b48eac39b9ad189dd8316235a7b4a8d21a10bd27519666489c69b503"
+
 
 @pytest.fixture(scope="module")
 def slack_verification_app(app):
@@ -38,7 +40,18 @@ def test_slack_verified_endpoint_failure_without_header(client):
 
 def test_slack_verified_endpoint_failure_with_slack_signature_header(client):
     # TODO this will be constantly changing
-    result = client.get("/slack-only", headers={"X-Slack-Signature": "foo"})
+    result = client.get("/slack-only", headers={"X-Slack-Signature": SLACK_SIGNATURE})
+    assert result.status_code == 401
+
+
+def test_slack_verified_endpoint_failure_without_body(client):
+    result = client.get(
+        "/slack-only",
+        headers={
+            "X-Slack-Signature": SLACK_SIGNATURE,
+            "X-Slack-Request-Timestamp": "foo",
+        },
+    )
     assert result.status_code == 401
 
 
@@ -46,6 +59,10 @@ def test_slack_verified_endpoint_success(client):
     # TODO this will be constantly changing
     result = client.get(
         "/slack-only",
-        headers={"X-Slack-Signature": "foo", "X-Slack-Request-Timestamp": "foo"},
+        headers={
+            "X-Slack-Signature": SLACK_SIGNATURE,
+            "X-Slack-Request-Timestamp": "foo",
+        },
+        data="command=/weather&text=94070",
     )
     assert result.status_code == 200
