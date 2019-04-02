@@ -1,3 +1,4 @@
+import functools
 import hashlib
 import hmac
 from flask import request
@@ -6,21 +7,29 @@ from busy_beaver.exceptions import UnverifiedSlackRequest
 SLACK_SIGNING_SECRET = "8f742231b10e8888abcd99yyyzzz85a5"
 
 
-def slack_verification_required(func):
-    def _wrapper():
-        timestamp = request.headers.get("X-Slack-Request-Timestamp", None)
-        slack_signature = request.headers.get("X-Slack-Signature", None)
-        if not timestamp or not slack_signature:
-            raise UnverifiedSlackRequest("Invalid")
+def slack_verification_required(signing_secret):
 
-        req = str.encode("v0:" + str(timestamp) + ":") + request.get_data()
-        hmac_val = hmac.new(str.encode(SLACK_SIGNING_SECRET), req, hashlib.sha256)
-        request_hash = "v0=" + hmac_val.hexdigest()
-        result = hmac.compare_digest(request_hash, slack_signature)
+    if not isinstance(signing_secret, str):
+        raise ValueError
 
-        if not result:
-            raise UnverifiedSlackRequest("Invalid")
+    def verification_decorator(func):
+        @functools.wraps(func)
+        def _wrapper(*args, **kwargs):
+            timestamp = request.headers.get("X-Slack-Request-Timestamp", None)
+            slack_signature = request.headers.get("X-Slack-Signature", None)
+            if not timestamp or not slack_signature:
+                raise UnverifiedSlackRequest("Invalid")
 
-        return func()
+            req = str.encode("v0:" + str(timestamp) + ":") + request.get_data()
+            hmac_val = hmac.new(str.encode(SLACK_SIGNING_SECRET), req, hashlib.sha256)
+            request_hash = "v0=" + hmac_val.hexdigest()
+            result = hmac.compare_digest(request_hash, slack_signature)
 
-    return _wrapper
+            if not result:
+                raise UnverifiedSlackRequest("Invalid")
+
+            return func(*args, **kwargs)
+
+        return _wrapper
+
+    return verification_decorator
