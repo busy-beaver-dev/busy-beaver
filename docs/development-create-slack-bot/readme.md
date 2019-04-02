@@ -16,7 +16,7 @@ This page contains steps for creating a **Slack App** **Bot** in a sandbox **Sla
 - <a href=https://dashboard.ngrok.com/get-started>Ngrok get started</a></br>
 - <a href=https://api.slack.com/tutorials/tunneling-with-ngrok>Using ngrok to develop locally for Slack</a>
 </tr></td></table>
-  
+
 ## Init a Slack App
 
 1. Create a **Slack App** to contain the Dev-Bot.</br>
@@ -134,3 +134,11 @@ the `OAuth Access Token` should now be available.
 <table><tr><td>
 :link: Update the <strong>.env</strong> config - <strong>SLACK_BOTUSER_OAUTH_TOKEN</strong> value to <strong>Bot User OAuth Access Token</strong> as defined in <a href=../../CONTRIBUTING.md#Setting-up-Development-Environment>Setting up Development Environment</a>.
 </td></tr></table>
+
+### Signing Secret
+
+In order to [verify requests are sent from Slack](https://api.slack.com/docs/verifying-requests-from-slack), find the `Signing Secret` and add it to your `.env` file.
+
+<a href="images/signing-secret-1.png">
+<img src="images/signing-secret-1.png" width=300/>
+</a>
