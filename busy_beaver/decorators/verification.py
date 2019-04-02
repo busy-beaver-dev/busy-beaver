@@ -4,10 +4,8 @@ import hmac
 from flask import request
 from busy_beaver.exceptions import UnverifiedSlackRequest
 
-SLACK_SIGNING_SECRET = "8f742231b10e8888abcd99yyyzzz85a5"
 
-
-def verify_slack_signature(signing_secret):
+def verify_slack_signature(signing_secret: str):
 
     if not isinstance(signing_secret, str):
         raise ValueError
@@ -20,12 +18,8 @@ def verify_slack_signature(signing_secret):
             if not timestamp or not slack_signature:
                 raise UnverifiedSlackRequest("Invalid")
 
-            req = str.encode("v0:" + str(timestamp) + ":") + request.get_data()
-            hmac_val = hmac.new(str.encode(SLACK_SIGNING_SECRET), req, hashlib.sha256)
-            request_hash = "v0=" + hmac_val.hexdigest()
-            result = hmac.compare_digest(request_hash, slack_signature)
-
-            if not result:
+            sig = calculate_signature(signing_secret, timestamp, request.get_data())
+            if signatures_unequal(sig, slack_signature):
                 raise UnverifiedSlackRequest("Invalid")
 
             return func(*args, **kwargs)
@@ -33,3 +27,13 @@ def verify_slack_signature(signing_secret):
         return _wrapper
 
     return verification_decorator
+
+
+def calculate_signature(signing_secret, timestamp, request_body):
+    req = str.encode("v0:" + str(timestamp) + ":") + request_body
+    hmac_val = hmac.new(str.encode(signing_secret), req, hashlib.sha256)
+    return "v0=" + hmac_val.hexdigest()
+
+
+def signatures_unequal(request_hash, slack_signature):
+    return not hmac.compare_digest(request_hash, slack_signature)
