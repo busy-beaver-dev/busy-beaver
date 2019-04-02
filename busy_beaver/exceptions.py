@@ -6,14 +6,20 @@ class AsyncException(BusyBeaverException):
     pass
 
 
-class NotFoundError(BusyBeaverException):
+class NotAuthorized(BusyBeaverException):
+    status_code = 401
+
+    def __init__(self, error):
+        super().__init__()
+        self.message = error
+
+
+class NotFound(BusyBeaverException):
     status_code = 404
 
     def __init__(self, object_type):
         super().__init__()
         self.message = f"{object_type} not found"
-
-        return self.payload.copy()
 
 
 class UnexpectedStatusCode(BusyBeaverException):

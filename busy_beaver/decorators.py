@@ -4,8 +4,8 @@ import re
 
 from flask import request
 
+from .exceptions import NotAuthorized
 from .models import ApiUser
-from .toolbox import make_response
 
 logger = logging.getLogger(__name__)
 AUTH_STRING = re.compile(r"token (?P<token>.*)")
@@ -21,25 +21,21 @@ def authentication_required(roles):
         def _token_auth(*args, **kwargs):
             if "authorization" not in request.headers:
                 logger.error("[Busy-Beaver] No auth header")
-                data = {"message": "Missing header: Authorization: 'token {token}'"}
-                return make_response(401, error=data)
+                raise NotAuthorized("Missing header: Authorization: 'token {token}'")
 
             m = AUTH_STRING.match(request.headers["authorization"])
             if not m:
-                data = {"message": "Expected header: Authorization: 'token {token}'"}
-                return make_response(401, error=data)
+                raise NotAuthorized("Expected header: Authorization: 'token {token}'")
 
             token = m.group("token")
             api_user: ApiUser = ApiUser.query.filter_by(token=token).first()
             if not api_user:
                 logger.error("[Busy-Beaver] Invalid token")
-                data = {"message": "Invalid token, contact admin"}
-                return make_response(401, error=data)
+                raise NotAuthorized("Invalid token, contact admin")
 
             if api_user.role not in roles:
                 logger.error("[Busy-Beaver] Unauthorized access of endpoint")
-                data = {"message": "Not authorized to access endpoint, contact admin"}
-                return make_response(401, error=data)
+                raise NotAuthorized("Not authorized to access endpoint, contact admin")
 
             request._internal["user"] = api_user
             return func(*args, **kwargs)
