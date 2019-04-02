@@ -14,6 +14,10 @@ class NotAuthorized(BusyBeaverException):
         self.message = error
 
 
+class UnverifiedSlackRequest(NotAuthorized):
+    pass
+
+
 class NotFound(BusyBeaverException):
     status_code = 404
 
