@@ -36,7 +36,16 @@ def test_slack_verified_endpoint_failure_without_header(client):
     assert result.status_code == 401
 
 
-def test_slack_verified_endpoint_success(client):
+def test_slack_verified_endpoint_failure_with_slack_signature_header(client):
     # TODO this will be constantly changing
     result = client.get("/slack-only", headers={"X-Slack-Signature": "foo"})
+    assert result.status_code == 401
+
+
+def test_slack_verified_endpoint_success(client):
+    # TODO this will be constantly changing
+    result = client.get(
+        "/slack-only",
+        headers={"X-Slack-Signature": "foo", "X-Slack-Request-Timestamp": "foo"},
+    )
     assert result.status_code == 200
