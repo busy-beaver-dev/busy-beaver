@@ -7,7 +7,7 @@ from busy_beaver.exceptions import UnverifiedSlackRequest
 SLACK_SIGNING_SECRET = "8f742231b10e8888abcd99yyyzzz85a5"
 
 
-def slack_verification_required(signing_secret):
+def verify_slack_signature(signing_secret):
 
     if not isinstance(signing_secret, str):
         raise ValueError

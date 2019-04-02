@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 import pytest
 
 from busy_beaver.app import handle_http_error
-from busy_beaver.decorators.verification import slack_verification_required
+from busy_beaver.decorators.verification import verify_slack_signature
 from busy_beaver.exceptions import UnverifiedSlackRequest
 
 SLACK_SIGNING_SECRET = "8f742231b10e8888abcd99yyyzzz85a5"
@@ -12,7 +12,7 @@ SLACK_SIGNATURE = "v0=a2114d57b48eac39b9ad189dd8316235a7b4a8d21a10bd27519666489c
 @pytest.fixture(scope="module")
 def slack_verification_app(app):
     @app.route("/slack-only")
-    @slack_verification_required(SLACK_SIGNING_SECRET)
+    @verify_slack_signature(SLACK_SIGNING_SECRET)
     def slack_only():
         return jsonify({"authorization": "slack_endpoint"})
 
@@ -83,6 +83,6 @@ def test_slack_verification_decorator_raises_valueerror__signing_secret_env_not_
     with pytest.raises(ValueError):
 
         @api.route("/auth")
-        @slack_verification_required(None)
+        @verify_slack_signature(None)
         def auth():
             return jsonify({"hello": "world!"})
