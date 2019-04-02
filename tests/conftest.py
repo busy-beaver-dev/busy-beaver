@@ -43,7 +43,7 @@ def client(app):
 
 @pytest.fixture(scope="module")
 def db(app):
-    """Session-wide test database."""
+    """Test database."""
     _db.app = app
     _db.create_all()
     yield _db
@@ -53,7 +53,7 @@ def db(app):
 
 @pytest.fixture(scope="function")
 def session(db):
-    """Creates a new database session for a test."""
+    """Creates a new database session for each test."""
     connection = db.engine.connect()
     transaction = connection.begin()
     options = dict(bind=connection, binds={})

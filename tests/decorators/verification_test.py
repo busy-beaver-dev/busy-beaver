@@ -40,7 +40,6 @@ def test_slack_verified_endpoint_failure_without_header(client):
 
 
 def test_slack_verified_endpoint_failure_with_slack_signature_header(client):
-    # TODO this will be constantly changing
     result = client.get("/slack-only", headers={"X-Slack-Signature": SLACK_SIGNATURE})
     assert result.status_code == 401
 
@@ -57,7 +56,6 @@ def test_slack_verified_endpoint_failure_without_body(client):
 
 
 def test_slack_verified_endpoint_success(client):
-    # TODO this will be constantly changing
     result = client.get(
         "/slack-only",
         headers={
@@ -83,6 +81,6 @@ def test_slack_verification_decorator_raises_valueerror__signing_secret_env_not_
     with pytest.raises(ValueError):
 
         @api.route("/auth")
-        @verify_slack_signature(None)
+        @verify_slack_signature(x)
         def auth():
             return jsonify({"hello": "world!"})
