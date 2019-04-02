@@ -49,7 +49,7 @@ def test_slack_verified_endpoint_failure_without_body(client):
         "/slack-only",
         headers={
             "X-Slack-Signature": SLACK_SIGNATURE,
-            "X-Slack-Request-Timestamp": "foo",
+            "X-Slack-Request-Timestamp": 1_531_420_618,
         },
     )
     assert result.status_code == 401
@@ -61,8 +61,15 @@ def test_slack_verified_endpoint_success(client):
         "/slack-only",
         headers={
             "X-Slack-Signature": SLACK_SIGNATURE,
-            "X-Slack-Request-Timestamp": "foo",
+            "X-Slack-Request-Timestamp": 1_531_420_618,
         },
-        data="command=/weather&text=94070",
+        data=(
+            "token=xyzz0WbapA4vBCDEFasx0q6G&team_id=T1DC2JH3J&team_domain=testteamnow&"
+            "channel_id=G8PSS9T3V&channel_name=foobar&user_id=U2CERLKJA&"
+            "user_name=roadrunner&command=%2Fwebhook-collect&text=&"
+            "response_url=https%3A%2F%2Fhooks.slack.com%2Fcommands%2FT1DC2JH3J%2F3977"
+            "00885554%2F96rGlfmibIGlgcZRskXaIFfN&trigger_id=398738663015.47445629121.8"
+            "03a0bc887a14d10d2c447fce8b6703c"
+        ),
     )
     assert result.status_code == 200

@@ -1,31 +1,25 @@
+import hashlib
+import hmac
 from flask import request
 from busy_beaver.exceptions import UnverifiedSlackRequest
 
-VERSION_STRING = "v0"
+SLACK_SIGNING_SECRET = "8f742231b10e8888abcd99yyyzzz85a5"
 
 
 def slack_verification_required(func):
     def _wrapper():
-        slack_request_ts = request.headers.get("X-Slack-Request-Timestamp", None)
+        timestamp = request.headers.get("X-Slack-Request-Timestamp", None)
         slack_signature = request.headers.get("X-Slack-Signature", None)
-        request_body = request.get_data().decode("utf-8")
-        if not slack_request_ts or not slack_signature or not request_body:
+        if not timestamp or not slack_signature:
             raise UnverifiedSlackRequest("Invalid")
 
-        # calcu = f"{VERSION_STRING}:{slack_request_ts}:{request_body}"
+        req = str.encode("v0:" + str(timestamp) + ":") + request.get_data()
+        hmac_val = hmac.new(str.encode(SLACK_SIGNING_SECRET), req, hashlib.sha256)
+        request_hash = "v0=" + hmac_val.hexdigest()
+        result = hmac.compare_digest(request_hash, slack_signature)
 
-        # import pdb; pdb.set_trace()
-
-        # Concatenate the version number, the timestamp, and the body of the request
-        # to form a basestring. Use a colon as the delimiter between the three elements.
-        # For example, v0:123456789:command=/weather&text=94070. The version number
-        # right now is always v0.
-        #
-        # With the help of HMAC SHA256 implemented in your favorite programming, hash
-        # the above basestring, using the Slack Signing Secret as the key.
-
-        # Compare this computed signature to the X-Slack-Signature header on the
-        # request.
+        if not result:
+            raise UnverifiedSlackRequest("Invalid")
 
         return func()
 
