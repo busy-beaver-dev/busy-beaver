@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import List
 
 from .event_list import (
     CommitsList,
@@ -15,14 +14,8 @@ from busy_beaver import github
 from busy_beaver.models import User
 
 
-def generate_summary(user: User, boundary_dt: datetime):
-    timeline = github.user_activity_after(user.github_username, boundary_dt)
-    user_events = GitHubUserEvents(user, timeline)
-    return user_events.generate_summary_text()
-
-
 class GitHubUserEvents:
-    def __init__(self, user: User, timeline: List[dict]):
+    def __init__(self, user: User, boundary_dt: datetime):
         self.user = user
         self.events = {  # this is the order of summary output
             "releases_published": ReleasesPublishedList(),
@@ -34,6 +27,8 @@ class GitHubUserEvents:
             "commits": CommitsList(),
             "starred_repos": StarredReposList(),
         }
+
+        timeline = github.user_activity_after(user.github_username, boundary_dt)
         self._classify_events(timeline)
 
     def generate_summary_text(self):

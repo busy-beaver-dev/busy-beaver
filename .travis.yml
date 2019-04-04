@@ -25,7 +25,7 @@ before_script:
 
 script:
   - flask db upgrade
-  - pytest --cov=./
+  - pytest --cov=./busy_beaver
   - flake8
 
 before_deploy:

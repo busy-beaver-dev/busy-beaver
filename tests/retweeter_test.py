@@ -9,18 +9,6 @@ MODULE_TO_TEST = "busy_beaver.retweeter"
 
 
 @pytest.fixture
-def patcher(monkeypatch):
-    """Helper to patch in the correct spot"""
-
-    def _patcher(namespace, replacement_object):
-        namespace_to_patch = f"{MODULE_TO_TEST}.{namespace}"
-        monkeypatch.setattr(namespace_to_patch, replacement_object)
-        return replacement_object
-
-    yield _patcher
-
-
-@pytest.fixture
 def patched_twitter(patcher):
     class FakeTwitter:
         def __init__(self, tweets):
@@ -31,15 +19,15 @@ def patched_twitter(patcher):
 
     def _wrapper(tweets):
         fake_twitter = FakeTwitter(tweets)
-        patcher("twitter", fake_twitter)
+        patcher(MODULE_TO_TEST, namespace="twitter", replacement=fake_twitter)
 
     return _wrapper
 
 
 @pytest.fixture
 def patched_slack(patcher):
-    def _wrapper(mock_to_return):
-        return patcher("slack", mock_to_return)
+    def _wrapper(replacement):
+        return patcher(MODULE_TO_TEST, namespace="slack", replacement=replacement)
 
     return _wrapper
 

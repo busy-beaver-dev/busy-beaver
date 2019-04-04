@@ -1,1 +1,1 @@
-from .tasks import post_github_summary_to_slack  # noqa
+from .task import start_post_github_summary_task  # noqa
