@@ -1,7 +1,9 @@
 import functools
 import hashlib
 import hmac
+
 from flask import request
+
 from busy_beaver.exceptions import UnverifiedSlackRequest
 
 
@@ -29,10 +31,9 @@ def verify_slack_signature(signing_secret: str):
     return verification_decorator
 
 
-def calculate_signature(signing_secret, timestamp, request_body):
-    req = str.encode("v0:" + str(timestamp) + ":") + request_body
-    hmac_val = hmac.new(str.encode(signing_secret), req, hashlib.sha256)
-    return "v0=" + hmac_val.hexdigest()
+def calculate_signature(signing_secret, timestamp, data):
+    req = str.encode("v0:" + str(timestamp) + ":") + data
+    return "v0=" + hmac.new(str.encode(signing_secret), req, hashlib.sha256).hexdigest()
 
 
 def signatures_unequal(request_hash, slack_signature):

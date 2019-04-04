@@ -18,6 +18,7 @@ export GITHUB_APP_CLIENT_SECRET=[client-secret]
 export GITHUB_OAUTH_TOKEN=[token-here]
 
 export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
+export SLACK_SIGNING_SECRET=[signing-secret]
 
 export TWITTER_CONSUMER_KEY=[]
 export TWITTER_CONSUMER_SECRET=[]
