@@ -1,3 +1,5 @@
+from collections import OrderedDict
+import json
 import pytest
 
 from busy_beaver.blueprints.integration.slack import (
@@ -6,7 +8,9 @@ from busy_beaver.blueprints.integration.slack import (
     VERIFY_ACCOUNT,
     reply_to_user_with_github_login_link,
 )
+from busy_beaver.config import SLACK_SIGNING_SECRET
 from busy_beaver.models import User
+from busy_beaver.decorators.verification import calculate_signature
 
 MODULE_TO_TEST = "busy_beaver.blueprints.integration.slack"
 
@@ -19,20 +23,46 @@ def patched_slack(patcher):
     return _wrapper
 
 
-def test_slack_callback_url_verification(client, session, patched_slack):
+@pytest.fixture
+def create_slack_headers():
+    """Dictionary get sorted when we retrieve the body, account for this"""
+
+    def sort_dict(original_dict):
+        res = OrderedDict()
+        for k, v in sorted(original_dict.items()):
+            if isinstance(v, dict):
+                res[k] = dict(sort_dict(v))
+            else:
+                res[k] = v
+        return dict(res)
+
+    def wrapper(timestamp, json_data):
+        request_body = json.dumps(sort_dict(json_data)).encode("utf-8")
+        sig = calculate_signature(SLACK_SIGNING_SECRET, timestamp, request_body)
+        return {"X-Slack-Request-Timestamp": timestamp, "X-Slack-Signature": sig}
+
+    return wrapper
+
+
+def test_slack_callback_url_verification(
+    client, session, patched_slack, create_slack_headers
+):
     # Arrange
     challenge_code = "test_code"
     data = {"type": "url_verification", "challenge": challenge_code}
+    headers = create_slack_headers(100_000_000, data)
 
     # Act
-    resp = client.post("/slack-event-subscription", json=data)
+    resp = client.post("/slack-event-subscription", headers=headers, json=data)
 
     # Assert
     assert resp.status_code == 200
     assert resp.json == {"challenge": challenge_code}
 
 
-def test_slack_callback_bot_message_is_ignored(mocker, client, session, patched_slack):
+def test_slack_callback_bot_message_is_ignored(
+    mocker, client, session, patched_slack, create_slack_headers
+):
     """Bot get notified of its own DM replies to users... ignore"""
     # Arrange
     slack = patched_slack(mocker.MagicMock())
@@ -41,16 +71,19 @@ def test_slack_callback_bot_message_is_ignored(mocker, client, session, patched_
         "type": "unknown todo",
         "event": {"type": "message", "subtype": "bot_message"},
     }
+    headers = create_slack_headers(100_000_000, data)
 
     # Act
-    resp = client.post("/slack-event-subscription", json=data)
+    resp = client.post("/slack-event-subscription", headers=headers, json=data)
 
     # Assert
     assert resp.status_code == 200
     assert len(slack.mock_calls) == 0
 
 
-def test_slack_callback_user_dms_bot_reply(mocker, client, session, patched_slack):
+def test_slack_callback_user_dms_bot_reply(
+    mocker, client, session, patched_slack, create_slack_headers
+):
     """Bot get notified of its own DM replies to users... ignore"""
     # Arrange
     slack = patched_slack(mocker.MagicMock())
@@ -67,9 +100,10 @@ def test_slack_callback_user_dms_bot_reply(mocker, client, session, patched_slac
             "channel": channel_id,
         },
     }
+    headers = create_slack_headers(100_000_000, data)
 
     # Act
-    resp = client.post("/slack-event-subscription", json=data)
+    resp = client.post("/slack-event-subscription", headers=headers, json=data)
 
     # Assert
     assert resp.status_code == 200

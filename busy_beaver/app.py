@@ -2,13 +2,13 @@ from flask import Flask, request
 
 from .config import DATABASE_URI, REDIS_URI
 from .extensions import db, migrate, rq
-from .exceptions import NotFoundError
+from .exceptions import NotAuthorized
 from .toolbox import make_response
 from .blueprints import healthcheck_bp, integration_bp, tasks_bp
 
 
-def handle_not_found_error(error):
-    data = {"msg": error.message}
+def handle_http_error(error):
+    data = {"message": error.message}
     return make_response(error.status_code, error=data)
 
 
@@ -31,7 +31,7 @@ def create_app(*, testing=False):
     app.config["RQ_QUEUES"] = ["default", "failed"]
     rq.init_app(app)
 
-    app.register_error_handler(NotFoundError, handle_not_found_error)
+    app.register_error_handler(NotAuthorized, handle_http_error)
 
     app.register_blueprint(healthcheck_bp)
     app.register_blueprint(integration_bp)

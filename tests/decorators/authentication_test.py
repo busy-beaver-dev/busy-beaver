@@ -1,7 +1,9 @@
 from flask import Flask, jsonify, request
 import pytest
 
+from busy_beaver.app import handle_http_error
 from busy_beaver.decorators import authentication_required
+from busy_beaver.exceptions import NotAuthorized
 from busy_beaver.models import ApiUser
 
 TOKEN = "test_token_to_insert"
@@ -34,6 +36,7 @@ def auth_app(app):
     def auth_return_username():
         return jsonify({"username": f"{request._internal['user'].username}"})
 
+    app.register_error_handler(NotAuthorized, handle_http_error)
     yield app
 
 
@@ -103,6 +106,7 @@ def test_raising_valueerror_by_passing_incorrect_roles_type():
     api = Flask(__name__)
 
     with pytest.raises(ValueError):
+
         @api.route("/auth")
         @authentication_required(roles="user")
         def auth():
