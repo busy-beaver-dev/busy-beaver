@@ -27,7 +27,7 @@ class TwitterPollingResource(MethodView):
                 "[Busy-Beaver] Twitter Summary Poll -- need channel in JSON body"
             )
             return make_response(422, error={"message": "JSON requires 'channel' key"})
-        start_post_tweets_to_slack_task(user, channel=data["channel"])
+        start_post_tweets_to_slack_task(user, channel_name=data["channel"])
 
         logger.info("[Busy-Beaver] Twitter Summary Poll -- kicked-off")
         return make_response(200, json={"run": "complete"})
