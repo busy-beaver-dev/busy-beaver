@@ -3,8 +3,7 @@ import logging
 from flask import request
 from flask.views import MethodView
 
-from busy_beaver.config import TWITTER_USERNAME
-from busy_beaver.retweeter import post_tweets_to_slack
+from busy_beaver.tasks.retweeter import start_post_tweets_to_slack_task
 from busy_beaver.toolbox import make_response
 
 logger = logging.getLogger(__name__)
@@ -21,14 +20,14 @@ class TwitterPollingResource(MethodView):
             extra={"user": user.username},
         )
 
-        # TODO need to add a task queue here
+        # TODO: replace this with marshmallow
         data = request.json
-        if "channel" not in data:
+        if not data or "channel" not in data:
             logger.error(
-                "[Busy-Beaver] Twitter Summary Poll -- need channel in JSON body",
+                "[Busy-Beaver] Twitter Summary Poll -- need channel in JSON body"
             )
-            return
-        post_tweets_to_slack(username=TWITTER_USERNAME, channel=data["channel"])
+            return make_response(422, error={"message": "JSON requires 'channel' key"})
+        start_post_tweets_to_slack_task(user, channel=data["channel"])
 
         logger.info("[Busy-Beaver] Twitter Summary Poll -- kicked-off")
         return make_response(200, json={"run": "complete"})

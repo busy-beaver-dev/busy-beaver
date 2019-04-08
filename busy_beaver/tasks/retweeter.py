@@ -2,18 +2,45 @@ from datetime import timedelta
 import logging
 
 from busy_beaver import kv_store, slack, twitter
-from .toolbox import utc_now_minus
+from busy_beaver.config import TWITTER_USERNAME
+from busy_beaver.extensions import db, rq
+from busy_beaver.models import ApiUser, PostTweetTask
+from busy_beaver.tasks.toolbox import set_task_progress
+from busy_beaver.toolbox import utc_now_minus
 
 LAST_TWEET_KEY = "last_posted_tweet_id"
 logger = logging.getLogger(__name__)
 
 
-def post_tweets_to_slack(username, channel):
+def start_post_tweets_to_slack_task(task_owner: ApiUser, channel_name):
+    logger.info("[Busy-Beaver] Kick off retweeter task")
+
+    twitter_handle = TWITTER_USERNAME
+    job = fetch_tweets_post_to_slack.queue(channel_name, twitter_handle)
+
+    task = PostTweetTask(
+        job_id=job.id,
+        name="Poll Twitter",
+        description="Poll Twitter for new tweets",
+        user=task_owner,
+        data={"channel_name": channel_name, "twitter_handle": twitter_handle},
+    )
+    db.session.add(task)
+    db.session.commit()
+
+
+@rq.job
+def fetch_tweets_post_to_slack(channel_name, username):
     logger.info("[Busy-Beaver] Fetching tweets to post")
     tweets = get_tweets(username)
+    set_task_progress(33)
+
     tweets_to_post = _exclude_tweets_inside_window(tweets, window=timedelta(minutes=30))
+    set_task_progress(67)
+
     logger.info("[Busy-Beaver] Grabbed {0} tweets".format(len(tweets_to_post)))
-    _post_to_slack(channel, tweets_to_post[:1], username)  # post 1 tweet at a time
+    _post_to_slack(channel_name, tweets_to_post[:1], username)  # post 1 tweet at a time
+    set_task_progress(100)
 
 
 def get_tweets(username):
@@ -30,10 +57,10 @@ def _exclude_tweets_inside_window(tweets, *, window: timedelta):
     return [tweet for tweet in tweets if tweet.created_at <= boundary_dt]
 
 
-def _post_to_slack(channel, tweets, twitter_username):
+def _post_to_slack(channel_name, tweets, twitter_username):
     """Twitter Slack app unfurls URLs in Slack to show tweet details"""
     url = "https://twitter.com/{username}/statuses/{id}"
     for tweet in tweets:
         tweet_url = url.format(username=twitter_username, id=tweet.id)
-        slack.post_message(tweet_url, channel=channel)
+        slack.post_message(tweet_url, channel=channel_name)
         kv_store.put_int(LAST_TWEET_KEY, tweet.id)

@@ -43,7 +43,7 @@ def fetch_github_summary_post_to_slack(channel_name, boundary_dt):
         logger.info("[Busy-Beaver] Compiling stats for {0}".format(user))
         user_events = GitHubUserEvents(user, boundary_dt)
         message += user_events.generate_summary_text()
-        set_task_progress(idx / num_users * 100)
+        set_task_progress(idx / (num_users + 1) * 100)
 
     if not message:
         message = (
@@ -52,3 +52,4 @@ def fetch_github_summary_post_to_slack(channel_name, boundary_dt):
         )
 
     slack.post_message(message=message, channel_id=channel_info.id)
+    set_task_progress(100)
