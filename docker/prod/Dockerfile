@@ -11,11 +11,11 @@ RUN groupadd -g 901 -r sivdev \
     && useradd -g sivdev -r -u 901 sivdev_user \
     && pip install --no-cache-dir -r /tmp/requirements.txt
 
-EXPOSE 5100
+EXPOSE 5000
 
 # Switch from root user for security
 # USER sivdev_user
 # TODO: as we are writing logs, we need to be root. find a better solution
 COPY ./ /app
 
-CMD ["gunicorn", "busy_beaver:app", "-b", "0.0.0.0:5100"]
+ENTRYPOINT [ "scripts/entrypoint.sh" ]

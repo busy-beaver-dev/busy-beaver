@@ -46,7 +46,7 @@ services:
   # busy-beaver business logic
   app:
     image: alysivji/busy-beaver:latest
-    command: ["gunicorn", "busy_beaver:create_app()", "-b", "0.0.0.0:5000"]
+    command: webserver
     environment: &app_env_vars
       IN_PRODUCTION: 1
       PYTHONPATH: .
@@ -77,7 +77,7 @@ services:
       - traefik.port=5000
   worker:
     image: alysivji/busy-beaver:latest
-    command: ["python", "start_async_worker.py"]
+    command: worker
     environment: *app_env_vars
     volumes: *app_volumes
     networks:

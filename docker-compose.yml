@@ -36,7 +36,7 @@ services:
     build: &app_build
       context: .
       dockerfile: ./docker/dev/Dockerfile
-    command: ["gunicorn", "busy_beaver:create_app()", "-b", "0.0.0.0:5000", "--reload", "--timeout",  "100000"]
+    command: webserver
     env_file: .env
     depends_on: &app_depends_on
       - db
@@ -55,7 +55,7 @@ services:
     tty: true
   worker:
     build: *app_build
-    command: ["python", "start_async_worker.py"]
+    command: worker
     env_file: .env
     depends_on: *app_depends_on
     environment: *app_env_vars
