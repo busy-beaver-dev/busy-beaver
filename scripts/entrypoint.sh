@@ -1,4 +1,5 @@
 #!/bin/bash
+
 if [ "$1" = "webserver" ]; then
     echo "Starting Flask server"
     flask db upgrade
@@ -13,5 +14,3 @@ elif [ "$1" = "worker" ]; then
 else
     exit 1
 fi
-
-exec $CMD "$@"
