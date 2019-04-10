@@ -1,16 +1,29 @@
 #!/bin/bash
+# Set strict mode options
+set -euo pipefail
 
-if [ "$1" = "webserver" ]; then
+# Set default value for the server
+DEFAULT="webserver"
+SERVER=${1:-$DEFAULT}
+
+# Set a default value for production status
+PRODUCTION=${IN_PRODUCTION:-0}
+
+if [ "$SERVER" = "webserver" ]; then
     echo "Starting Flask server"
-    flask db upgrade
-    if [ "$IN_PRODUCTION" = 1 ]; then
+    # flask db upgrade
+    if [ "$PRODUCTION" = 1 ]; then
         gunicorn "busy_beaver:create_app()" -b 0.0.0.0:5000
-    else
+    elif [ "$PRODUCTION" = 0 ]; then
         gunicorn "busy_beaver:create_app()" -b 0.0.0.0:5000 --reload --timeout 100000
+    else
+        echo "Unrecognized option for variable IN_PRODUCTION: '$PRODUCTION'"
+        exit 1
     fi
-elif [ "$1" = "worker" ]; then
+elif [ "$SERVER" = "worker" ]; then
     echo "Starting RQ worker"
     python start_async_worker.py
 else
+    echo "Unrecognized option for server: '$SERVER'"
     exit 1
 fi
