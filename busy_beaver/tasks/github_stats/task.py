@@ -38,7 +38,7 @@ def fetch_github_summary_post_to_slack(channel_name, boundary_dt):
         and_(User.slack_id.in_(channel_info.members), User.github_username.isnot(None))
     ).all()
     random.shuffle(users)
-    
+
     message = ""
     num_users = len(users)
     for idx, user in enumerate(users):
