@@ -1,5 +1,6 @@
 from datetime import timedelta
 import logging
+import random
 from typing import List
 
 from sqlalchemy import and_
@@ -36,6 +37,7 @@ def fetch_github_summary_post_to_slack(channel_name, boundary_dt):
     users: List[User] = User.query.filter(
         and_(User.slack_id.in_(channel_info.members), User.github_username.isnot(None))
     ).all()
+    random.shuffle(users)
 
     message = ""
     num_users = len(users)
