@@ -36,11 +36,12 @@ services:
     build: &app_build
       context: .
       dockerfile: ./docker/dev/Dockerfile
-    command: ["gunicorn", "busy_beaver:create_app()", "-b", "0.0.0.0:5000", "--reload", "--timeout",  "100000"]
+    command: webserver
     env_file: .env
     depends_on: &app_depends_on
       - db
     environment: &app_env_vars
+      IN_PRODUCTION: 0
       PYTHONPATH: .
       FLASK_APP: /app/busy_beaver/__init__.py
       FLASK_ENV: development
@@ -55,7 +56,7 @@ services:
     tty: true
   worker:
     build: *app_build
-    command: ["python", "start_async_worker.py"]
+    command: worker
     env_file: .env
     depends_on: *app_depends_on
     environment: *app_env_vars
