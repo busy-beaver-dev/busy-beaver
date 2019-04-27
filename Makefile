@@ -89,6 +89,8 @@ shell-dev:
 
 dev-shell: shell-dev
 
+devshell: shell-dev
+
 ngrok:
 	ngrok http 5000
 

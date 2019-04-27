@@ -9,7 +9,6 @@ from busy_beaver.adapters import (
 )
 from busy_beaver.extensions import db, rq  # noqa
 from busy_beaver.models import *  # noqa
-from busy_beaver.retweeter import get_tweets, post_tweets_to_slack  # noqa
 
 # create flask application context
 app = create_app()
