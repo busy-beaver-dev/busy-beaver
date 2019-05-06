@@ -115,6 +115,7 @@ creds.txt
 docker-compose.override.yml
 *.retry
 tags
+.idea
 
 # Vim
 *.sw*
