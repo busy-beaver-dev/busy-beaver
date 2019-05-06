@@ -1,7 +1,7 @@
 alembic==1.0.3
 Flask-Migrate==2.4.0
 Flask-RQ2==18.3
-Flask-SQLAlchemy==2.3.2
+Flask-SQLAlchemy==2.4.0
 Flask==1.0.2
 gunicorn==19.9.0
 pre-commit==1.14.4
