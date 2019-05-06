@@ -28,6 +28,10 @@ Busy-Beaver retweets posts made to the [@ChicagoPython Twitter account](https://
 
 We are currently working on additional features to improve ChiPy community engagement. Please join the conversation in `#busy-beaver-meta` on the [ChiPy Slack](https://chipy.slack.com/).
 
+## Contributing
+
+Busy-Beaver is always looking for new contributors! Previous open source experience is not required! Please see [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Development Notes
 
 Busy-Beaver is an open source project where all artificats (code, Docker image, etc) are online. We use the [Twelve-Factor Application Methodology](https://12factor.net) for building services to design the CICD process and to keep information secure.
@@ -98,7 +102,3 @@ admin = ApiUser(username="admin", token="abc123!")
 db.session.add(admin)
 db.session.commit()
 ```
-
-## Contributing
-
-Busy-Beaver is always looking for new contributors! Previous open source experience is not required! Please see [CONTRIBUTING.md](CONTRIBUTING.md).
