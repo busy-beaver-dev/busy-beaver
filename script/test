@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+import os
+import subprocess
+import sys
+
+def docker_container_is_running(container_name):
+    stdout = subprocess.check_output(['docker', 'ps'])
+    return container_name in stdout.decode('utf-8')
+
+if not docker_container_is_running('app'):
+    project_root = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    subprocess.call([os.path.join(project_root, 'script', 'server')])
+
+args = ['docker-compose', 'exec', 'app', 'pytest']
+if len(sys.argv) > 1:
+    args += sys.argv[1:]
+
+print("Executing: {}".format(' '.join(args)))
+subprocess.call(args)

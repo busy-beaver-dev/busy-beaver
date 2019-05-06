@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+import os
+import shutil
+import subprocess
+
+project_root = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+
+subprocess.call([os.path.join(project_root, 'script', 'bootstrap')])
+
+env_filepath = os.path.join(project_root, '.env')
+if not os.path.exists(env_filepath):
+    print('Copying sample.env to .env; you MUST update with your values!')
+    shutil.copyfile(os.path.join(project_root, 'sample.env'), env_filepath)
+
+print('Building docker images')
+subprocess.call(['docker-compose', 'build'])
