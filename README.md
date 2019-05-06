@@ -2,7 +2,7 @@
 
 <p align="center"><img src="assets/logo.png" alt="Busy Beaver Logo" width=300 /></p>
 
-[![Build Status](https://travis-ci.org/alysivji/busy-beaver.svg?branch=master)](https://travis-ci.org/alysivji/busy-beaver) [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT) [![Code Style: Black](https://camo.githubusercontent.com/28a51fe3a2c05048d8ca8ecd039d6b1619037326/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d626c61636b2d3030303030302e737667)](https://github.com/ambv/black)
+[![Build Status](https://travis-ci.org/busy-beaver-dev/busy-beaver.svg?branch=master)](https://travis-ci.org/busy-beaver-dev/busy-beaver) [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT) [![Code Style: Black](https://camo.githubusercontent.com/28a51fe3a2c05048d8ca8ecd039d6b1619037326/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f636f64652532307374796c652d626c61636b2d3030303030302e737667)](https://github.com/ambv/black)
 
 Chicago Python's Community Engagement Slack bot.
 
@@ -27,6 +27,10 @@ Busy-Beaver retweets posts made to the [@ChicagoPython Twitter account](https://
 ## Roadmap
 
 We are currently working on additional features to improve ChiPy community engagement. Please join the conversation in `#busy-beaver-meta` on the [ChiPy Slack](https://chipy.slack.com/).
+
+## Contributing
+
+Busy-Beaver is always looking for new contributors! Previous open source experience is not required! Please see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Development Notes
 
@@ -98,7 +102,3 @@ admin = ApiUser(username="admin", token="abc123!")
 db.session.add(admin)
 db.session.commit()
 ```
-
-## Contributing
-
-Busy-Beaver is always looking for new contributors! Previous open source experience is not required! Please see [CONTRIBUTING.md](CONTRIBUTING.md).
