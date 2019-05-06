@@ -6,18 +6,23 @@ Busy-Beaver welcomes any, and all, contributions. Every little bit helps!
 
 <!-- TOC -->
 
-- [Architecture Overview](#architecture-overview)
-  - [GitHub Activity Workflow](#github-activity-workflow)
-- [Development Environment](#development-environment)
-  - [Slack Integration](#slack-integration)
-  - [Setting up Development Environment](#setting-up-development-environment)
-  - [Verify Installation](#verify-installation)
-- [Modifying Integration](#modifying-integration)
-- [Adding New Integration](#adding-new-integration)
-- [Miscellaneous](#miscellaneous)
-  - [Pre-commit](#pre-commit)
-  - [Task Queues](#task-queues)
-  - [PDB++ Configuration](#pdb-configuration)
+- [Contribution Guidelines](#contribution-guidelines)
+      - [Table of Contents](#table-of-contents)
+  - [Architecture Overview](#architecture-overview)
+    - [GitHub Activity Workflow](#github-activity-workflow)
+      - [GitHub Events](#github-events)
+  - [Development Environment](#development-environment)
+    - [Slack Integration](#slack-integration)
+    - [Setting up Development Environment](#setting-up-development-environment)
+    - [Verify Installation](#verify-installation)
+  - [Modifying Integration](#modifying-integration)
+  - [Adding New Integration](#adding-new-integration)
+  - [Miscellaneous](#miscellaneous)
+    - [Pre-commit](#pre-commit)
+    - [Task Queues](#task-queues)
+      - [Creating a New Task](#creating-a-new-task)
+      - [Notes](#notes)
+    - [PDB++ Configuration](#pdb-configuration)
 
 <!-- /TOC -->
 
@@ -60,9 +65,9 @@ An in-depth guide can be followed at <a href=docs/development-create-slack-bot/r
 </td></tr></table></br>
 
 1. [Create a Slack workspace](https://get.slack.help/hc/en-us/articles/206845317-Create-a-Slack-workspace)
-1. [Create a Slack App](https://api.slack.com/apps) and set the **Development Slack Workspace** to the workspace from the previous step - [Create a Slack Dev-Bot - Init a Slack App](doc/development-create-slack-bot/readme.md#init-a-slack-app)
-1. Configure the **Slack App** settings - [Create a Slack Dev-Bot - Slack App Settings](doc/development-create-slack-bot/readme.md#Slack-App-Settings)
-1. Install **Slack App** to **Slack Workspace** - [Create a Slack Dev-Bot - Install App to Workspace](doc/development-create-slack-bot/readme.md#Install-App-to-Workspace)
+2. [Create a Slack App](https://api.slack.com/apps) and set the **Development Slack Workspace** to the workspace from the previous step - [Create a Slack Dev-Bot - Init a Slack App](docs/development-create-slack-bot/readme.md#init-a-slack-app)
+3. Configure the **Slack App** settings - [Create a Slack Dev-Bot - Slack App Settings](docs/development-create-slack-bot/readme.md#Slack-App-Settings)
+4. Install **Slack App** to **Slack Workspace** - [Create a Slack Dev-Bot - Install App to Workspace](docs/development-create-slack-bot/readme.md#Install-App-to-Workspace)
 
 ### Setting up Development Environment
 
