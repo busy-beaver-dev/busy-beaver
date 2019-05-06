@@ -100,6 +100,27 @@ An in-depth guide can be followed at <a href=docs/development-create-slack-bot/r
 
 1. Check **#test** channel in your **Slack Workspace** to see if the message was posted
 
+### Running Tests
+
+To run the test suite,
+first,
+bring up the service.
+Busy Beaver tests depend on a running database
+and other pieces
+so the following Makefile target will start Docker Compose
+and get the required software going.
+
+```bash
+$ make up
+```
+
+Once Docker Compose is running,
+run pytest with:
+
+```bash
+$ make test
+```
+
 ## Modifying Integration
 
 As each integration requires API credentials, it is recommended that contributors create apps for integration connect to their personal accounts.
