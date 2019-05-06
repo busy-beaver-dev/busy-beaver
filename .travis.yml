@@ -27,7 +27,7 @@ script:
   - flask db upgrade
   - pytest --cov=./busy_beaver
   - flake8
-  - black --check
+  - black --check .
 
 before_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
