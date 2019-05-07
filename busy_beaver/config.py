@@ -7,6 +7,9 @@ IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
 
 class BaseConfig:
     """A configuration object with sensible defaults for development"""
+    # environment
+    DEBUG = True
+    TESTING = False
 
     # app urls
     APP_URI = os.getenv("NGROK_BASE_URI", None)
@@ -15,6 +18,7 @@ class BaseConfig:
     # infrastructure
     DATABASE_URI = os.getenv("DATABASE_URI")
     REDIS_URI = os.getenv("REDIS_URI")
+    TASK_QUEUE_MAX_RETRIES = 1
 
     # social media
     TWITTER_USERNAME = "ChicagoPython"
@@ -23,9 +27,10 @@ class BaseConfig:
     GITHUB_OAUTH_TOKEN = os.getenv("GITHUB_OAUTH_TOKEN", None)
     GITHUB_CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID", None)
     GITHUB_CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET", None)
-    GITHUB_REDIRECT_URI = f"{APP_URI}/github-integration"
+
     SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN", None)
     SLACK_SIGNING_SECRET = os.getenv("SLACK_SIGNING_SECRET", "TestSigningSecret")
+
     TWITTER_CONSUMER_KEY = os.getenv("TWITTER_CONSUMER_KEY", None)
     TWITTER_CONSUMER_SECRET = os.getenv("TWITTER_CONSUMER_SECRET", None)
     TWITTER_ACCESS_TOKEN = os.getenv("TWITTER_ACCESS_TOKEN", None)
@@ -65,7 +70,12 @@ class BaseConfig:
 
 
 class ProdConfig(BaseConfig):
+    """Configuration for production environments"""
+    DEBUG = False
+    TESTING = True
+
     APP_URI = "https://busybeaver.sivji.com"
+
     LOGGING_CONFIG = deepcopy(BaseConfig.LOGGING_CONFIG)
     LOGGING_CONFIG['loggers']['busy_beaver']['handlers'] = ['datadog_file']
     LOGGING_CONFIG['loggers']['busy_beaver']['level'] = 'INFO'
