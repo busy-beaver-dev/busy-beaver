@@ -21,7 +21,7 @@ class GitHubAdapter:
         self.nav = None
 
     def __repr__(self):
-        return "GitHubAdapter" # pragma: no cover
+        return "GitHubAdapter"  # pragma: no cover
 
     def all_user_repos(self, user: str, *, max_pages: int = 10) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/repos"
