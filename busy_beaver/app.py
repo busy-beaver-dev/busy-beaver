@@ -1,6 +1,6 @@
 from flask import Flask, request
 
-from .config import DATABASE_URI, REDIS_URI
+from .config import config
 from .extensions import db, migrate, rq
 from .exceptions import NotAuthorized
 from .toolbox import make_response
@@ -15,19 +15,19 @@ def handle_http_error(error):
 def create_app(*, testing=False):
     app = Flask(__name__)
 
+    app.config.from_object(config)
+
     if testing:
         app.config["TESTING"] = True
-        database_uri = "sqlite:///:memory:"
+        app.config["DATABASE_URI"] = "sqlite:///:memory:"
         app.config["RQ_ASYNC"] = False
-    else:
-        database_uri = DATABASE_URI
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = database_uri
+    app.config["SQLALCHEMY_DATABASE_URI"] = app.config["DATABASE_URI"]
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     db.init_app(app)
     migrate.init_app(app, db)
 
-    app.config["RQ_REDIS_URL"] = REDIS_URI
+    app.config["RQ_REDIS_URL"] = app.config["REDIS_URI"]
     app.config["RQ_QUEUES"] = ["default", "failed"]
     rq.init_app(app)
 
