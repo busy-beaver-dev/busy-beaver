@@ -21,11 +21,7 @@ class GitHubAdapter:
         self.nav = None
 
     def __repr__(self):
-        return "GitHubAdapter"
-
-    def sitemap(self):
-        url = BASE_URL + "/"
-        return self.__get(url)
+        return "GitHubAdapter"  # pragma: no cover
 
     def all_user_repos(self, user: str, *, max_pages: int = 10) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/repos"
@@ -109,23 +105,12 @@ def create_github_navigation_panel(links):
             cleaned_type = dirty_type.split('="')[1][:-1]
             yield GitHubLink(cleaned_type, cleaned_url)
 
-    first_link, last_link, next_link, prev_link = [None, None, None, None]
-    for link in all_links(links):
-        if link.type_ == "first":
-            first_link = link.url
-        elif link.type_ == "last":
-            last_link = link.url
-        elif link.type_ == "next":
-            next_link = link.url
-        elif link.type_ == "prev":
-            prev_link = link.url
-        else:
-            ValueError
+    links = {link.type_: link.url for link in all_links(links)}
     return APINav(
-        first_link=first_link,
-        last_link=last_link,
-        next_link=next_link,
-        prev_link=prev_link,
+        first_link=links.get("first"),
+        last_link=links.get("last"),
+        next_link=links.get("next"),
+        prev_link=links.get("prev"),
     )
 
 
