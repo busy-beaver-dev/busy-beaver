@@ -1,12 +1,12 @@
 import logging
 
-from busy_beaver.config import TASK_QUEUE_MAX_RETRIES
+from busy_beaver.config import config
 from busy_beaver.exceptions import AsyncException
 from busy_beaver.extensions import db
 from busy_beaver.models import Task
 
 logger = logging.getLogger(__name__)
-MAX_FAILURES = TASK_QUEUE_MAX_RETRIES + 1
+MAX_FAILURES = config.TASK_QUEUE_MAX_RETRIES + 1
 
 
 def retry_failed_job(job, *exc_info):

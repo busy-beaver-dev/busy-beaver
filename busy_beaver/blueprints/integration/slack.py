@@ -7,7 +7,7 @@ from flask.views import MethodView
 
 from busy_beaver import slack
 from busy_beaver.extensions import db
-from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI
+from busy_beaver.config import config
 from busy_beaver.models import User
 
 logger = logging.getLogger(__name__)
@@ -91,8 +91,8 @@ def reply_to_user_with_github_login_link(message):
         db.session.commit()
 
     data = {
-        "client_id": GITHUB_CLIENT_ID,
-        "redirect_uri": GITHUB_REDIRECT_URI,
+        "client_id": config.GITHUB_CLIENT_ID,
+        "redirect_uri": config.GITHUB_REDIRECT_URI,
         "state": state,
     }
     query_params = urlencode(data)

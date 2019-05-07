@@ -4,7 +4,7 @@ from typing import List, NamedTuple
 import tweepy
 import pytz
 
-from ..config import TWITTER_USERNAME
+from ..config import config
 
 
 class Tweet(NamedTuple):
@@ -18,7 +18,7 @@ class TwitterAdapter:
         auth.set_access_token(token, token_secret)
         self.client = tweepy.API(auth)
 
-    def get_user_timeline(self, username: str = TWITTER_USERNAME) -> List[Tweet]:
+    def get_user_timeline(self, username: str = config.TWITTER_USERNAME) -> List[Tweet]:
         tweets = self.client.user_timeline(screen_name=username, tweet_mode="extended")
         cleaned_tweets = []
         for tweet in tweets:
@@ -26,6 +26,6 @@ class TwitterAdapter:
             cleaned_tweets.append(Tweet(id=tweet.id, created_at=dt))
         return cleaned_tweets
 
-    def get_last_tweet_id(self, username: str = TWITTER_USERNAME) -> int:
+    def get_last_tweet_id(self, username: str = config.TWITTER_USERNAME) -> int:
         tweets = self.client.user_timeline(screen_name=username, tweet_mode="extended")
         return tweets[0].id

@@ -4,11 +4,7 @@ from flask import jsonify, request
 from flask.views import MethodView
 
 from busy_beaver.adapters import RequestsClient
-from busy_beaver.config import (
-    GITHUB_CLIENT_ID,
-    GITHUB_CLIENT_SECRET,
-    GITHUB_REDIRECT_URI,
-)
+from busy_beaver.config import config
 from busy_beaver.extensions import db
 from busy_beaver.models import User
 
@@ -42,10 +38,10 @@ class GitHubIdentityVerificationCallbackResource(MethodView):
 
 def exchange_code_for_access_token(code, state, user):
     data = {
-        "client_id": GITHUB_CLIENT_ID,
-        "client_secret": GITHUB_CLIENT_SECRET,
+        "client_id": config.GITHUB_CLIENT_ID,
+        "client_secret": config.GITHUB_CLIENT_SECRET,
         "code": code,
-        "redirect_uri": GITHUB_REDIRECT_URI,
+        "redirect_uri": config.GITHUB_REDIRECT_URI,
         "state": state,
     }
 

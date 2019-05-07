@@ -2,7 +2,7 @@ from datetime import timedelta
 import logging
 
 from busy_beaver import kv_store, slack, twitter
-from busy_beaver.config import TWITTER_USERNAME
+from busy_beaver.config import config
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import ApiUser, PostTweetTask
 from busy_beaver.tasks.toolbox import set_task_progress
@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 def start_post_tweets_to_slack_task(task_owner: ApiUser, channel_name):
     logger.info("[Busy-Beaver] Kick off retweeter task")
 
-    twitter_handle = TWITTER_USERNAME
+    twitter_handle = config.TWITTER_USERNAME
     job = fetch_tweets_post_to_slack.queue(channel_name, twitter_handle)
 
     task = PostTweetTask(
