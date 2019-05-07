@@ -13,7 +13,7 @@ class EventList:
         self.events = []
 
     def __repr__(self):
-        return repr(self.events)
+        return repr(self.events)  # pragma: no cover
 
     def append(self, item):
         self.events.append(item)

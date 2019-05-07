@@ -50,6 +50,15 @@ lists_with_event_criteria = {
 }
 
 
+def test_event_list_default_matches_all_events():
+    event_list = EventList()
+    assert event_list.matches_event("literally anything")
+
+
+def test_base_event_list_format_text_returns_not_implemented():
+    assert EventList()._format_text(None) == NotImplemented
+
+
 @pytest.mark.parametrize("list_class,event_params", lists_with_event_criteria.items())
 def test_list_detects_events_correctly(list_class, event_params):
     assert list_class.matches_event(event_params)
