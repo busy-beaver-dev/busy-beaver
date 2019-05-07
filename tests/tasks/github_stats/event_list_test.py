@@ -68,11 +68,11 @@ def test_base_event_list_format_text_has_default_values():
 def test_event_lists_can_override_nouns_and_emoji():
     class NewList(EventList):
         EMOJI = ":something-amazing:"
-        NOUN_LOOKUP = lambda n: "singular" if n <= 1 else "plural"
+        NOUN = "some complex thing"
 
     event_list = NewList()
-    assert ">:something-amazing: 1 singular" in event_list._format_text("a")
-    assert ">:something-amazing: 2 plural" in event_list._format_text("ab")
+    assert ">:something-amazing: 1 some complex thing" in event_list._format_text("a")
+    assert ">:something-amazing: 2 some complex things" in event_list._format_text("ab")
 
 
 @pytest.mark.parametrize("list_class,event_params", lists_with_event_criteria.items())

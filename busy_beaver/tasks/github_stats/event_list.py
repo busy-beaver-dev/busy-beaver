@@ -1,9 +1,11 @@
-import gettext
+import inflect
+
+inflector = inflect.engine()
 
 
 class EventList:
     EMOJI = ":heart:"
-    NOUN_LOOKUP = lambda n: gettext.ngettext("event", "events", n)
+    NOUN = "event"
 
     def __init__(self):
         self.events = []
@@ -26,7 +28,7 @@ class EventList:
 
     def _format_text(self, links):
         num = len(links)
-        noun = self.__class__.NOUN_LOOKUP(num)
+        noun = inflector.plural(self.NOUN, num)
         link_output = ", ".join(links)
         return f">{self.EMOJI} {num} {noun} {link_output}\n"
 
@@ -39,7 +41,7 @@ class EventList:
 
 
 class CommitsList(EventList):
-    EMOJI = ":arrow_up"
+    EMOJI = ":arrow_up:"
 
     @staticmethod
     def matches_event(event):
@@ -47,19 +49,19 @@ class CommitsList(EventList):
 
     def _format_text(self, links):
         num_repos = len(links)
-        repo_noun = gettext.ngettext("repo", "repos", num_repos)
+        repo_noun = inflector.plural(self.NOUN, num_repos)
 
         num_commits = sum([event["payload"]["distinct_size"] for event in self.events])
-        commit_noun = gettext.ngettext("commit to", "commits to", num_commits)
+        commit_noun = inflector.plural("commit", num_commits)
         return (
-            f">{self.EMOJI} {num_commits} {commit_noun} to "
+            f">{self.EMOJI} {num_commits} {commit_noun} "
             f"{num_repos} {repo_noun}: {', '.join(links)}\n"
         )
 
 
 class CreatedReposList(EventList):
-    EMOJI = ":sparkles"
-    NOUN_LOOKUP = lambda n: gettext.ngettext("new issue", "new issues", n)
+    EMOJI = ":sparkles:"
+    NOUN = "new issue"
 
     @staticmethod
     def matches_event(event):
@@ -71,7 +73,7 @@ class CreatedReposList(EventList):
 
 class ForkedReposList(EventList):
     EMOJI = ":fork_and_knife:"
-    NOUN_LOOKUP = lambda n: gettext.ngettext("forked repo", "forked repos", n)
+    NOUN = "forked repo"
 
     @staticmethod
     def matches_event(event):
@@ -80,7 +82,7 @@ class ForkedReposList(EventList):
 
 class IssuesOpenedList(EventList):
     EMOJI = ":interrobang:"
-    NOUN_LOOKUP = lambda n: gettext.ngettext("new issue", "new issues", n)
+    NOUN = "new issue"
 
     @staticmethod
     def matches_event(event):
@@ -99,9 +101,7 @@ class IssuesOpenedList(EventList):
 
 class PublicizedReposList(EventList):
     EMOJI = ":speaking_head_in_silhouette:"
-    NOUN_LOOKUP = lambda n: gettext.ngettext(
-        "repo open-sourced", "repos open-sourced", n
-    )
+    NOUN = "open-sourced repo"
 
     @staticmethod
     def matches_event(event):
@@ -110,7 +110,7 @@ class PublicizedReposList(EventList):
 
 class PullRequestsList(EventList):
     EMOJI = ":arrow_heading_up:"
-    NOUN_LOOKUP = lambda n: gettext.ngettext("PR", "PRs", n)  # noqa
+    NOUN = "PR"
 
     @staticmethod
     def matches_event(event):
@@ -129,7 +129,7 @@ class PullRequestsList(EventList):
 
 class ReleasesPublishedList(EventList):
     EMOJI = ":ship:"
-    NOUN_LOOKUP = lambda n: gettext.ngettext("new release", "new releases", n)  # noqa
+    NOUN = "new release"
 
     @staticmethod
     def matches_event(event):
@@ -138,7 +138,7 @@ class ReleasesPublishedList(EventList):
 
 class StarredReposList(EventList):
     EMOJI = ":star:"
-    NOUN_LOOKUP = lambda n: gettext.ngettext("repo", "repos", n)
+    NOUN = "repo"
 
     @staticmethod
     def matches_event(event):
