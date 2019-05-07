@@ -6,10 +6,10 @@ from flask import jsonify, request
 from flask.views import MethodView
 
 from busy_beaver import slack
+from busy_beaver.blueprints.tasks.slack import dispatch_slash_command
 from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI
 from busy_beaver.extensions import db
 from busy_beaver.models import User
-from busy_beaver.tasks.slack import dispatch_slash_command
 
 logger = logging.getLogger(__name__)
 
@@ -116,11 +116,12 @@ class SlackSlashCommandDispatcher(MethodView):
 
     def post(self):
         command_text = request.form.get("text")
+        channel_name = request.form.get("channel_name", "general")
         if self.validate_command(command_text):
-            dispatch_slash_command.queue(command_text)
+            dispatch_slash_command.queue(command_text, channel_name)
         return jsonify(None)
 
     def validate_command(self, command_text: str) -> bool:
         """Validate the command is a supported command."""
         command_parts = command_text.split()
-        return command_parts and command_parts[0] in SLASH_COMMANDS
+        return bool(command_parts and command_parts[0] in SLASH_COMMANDS)

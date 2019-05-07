@@ -18,7 +18,9 @@ class SlackAdapter:
         members = self._get_channel_members(channel_id)
         return Channel(channel_name, channel_id, members)
 
-    def post_message(self, message, *, attachments=None, channel=None, channel_id=None):
+    def post_message(
+        self, message="", *, attachments=None, channel=None, channel_id=None
+    ):
         if not channel and not channel_id:
             raise ValueError("Must specify channel or channel_id")
 

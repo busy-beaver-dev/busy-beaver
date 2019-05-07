@@ -204,10 +204,10 @@ def test_reply_existing_account_reconnect(
 @mock.patch("busy_beaver.blueprints.integration.slack.dispatch_slash_command")
 def test_slack_command_dispatch(dispatch_slash_command, client, create_slack_headers):
     """A valid slash command from Slack is queued."""
-    data = {"command": "bb", "text": "next with junk"}
+    data = {"command": "bb", "text": "next with junk", "channel_name": "beavers"}
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
 
     response = client.post("/slack-slash-commands", headers=headers, data=data)
 
     assert response.status_code == 200
-    dispatch_slash_command.queue.assert_called_once_with("next with junk")
+    dispatch_slash_command.queue.assert_called_once_with("next with junk", "beavers")
