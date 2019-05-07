@@ -1,7 +1,7 @@
 import pytest
 
 from busy_beaver.adapters.slack import SlackAdapter
-from busy_beaver.config import SLACK_TOKEN
+from busy_beaver.config import config
 
 
 MODULE_TO_TEST = "busy_beaver.adapters.slack"
@@ -9,7 +9,7 @@ MODULE_TO_TEST = "busy_beaver.adapters.slack"
 
 @pytest.fixture(scope="module")
 def slack():
-    return SlackAdapter(SLACK_TOKEN)
+    return SlackAdapter(config.SLACK_TOKEN)
 
 
 @pytest.mark.vcr()

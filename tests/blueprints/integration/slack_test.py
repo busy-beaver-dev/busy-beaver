@@ -8,7 +8,7 @@ from busy_beaver.blueprints.integration.slack import (
     VERIFY_ACCOUNT,
     reply_to_user_with_github_login_link,
 )
-from busy_beaver.config import SLACK_SIGNING_SECRET
+from busy_beaver.config import config
 from busy_beaver.models import User
 from busy_beaver.decorators.verification import calculate_signature
 
@@ -38,7 +38,7 @@ def create_slack_headers():
 
     def wrapper(timestamp, json_data):
         request_body = json.dumps(sort_dict(json_data)).encode("utf-8")
-        sig = calculate_signature(SLACK_SIGNING_SECRET, timestamp, request_body)
+        sig = calculate_signature(config.SLACK_SIGNING_SECRET, timestamp, request_body)
         return {"X-Slack-Request-Timestamp": timestamp, "X-Slack-Signature": sig}
 
     return wrapper

@@ -3,7 +3,7 @@ import uuid
 
 import pytest
 
-from busy_beaver.config import TASK_QUEUE_MAX_RETRIES
+from busy_beaver.config import config
 from busy_beaver.exceptions import AsyncException
 from busy_beaver.models import Task
 from busy_beaver.tasks.handlers import retry_failed_job
@@ -38,7 +38,7 @@ def test_retry_failed_job_handler_max_failures(app, rq, session, generate_exc_in
 
     # fail job max number of times - 1
     exc_info = generate_exc_info(ValueError)
-    for _ in range(TASK_QUEUE_MAX_RETRIES):
+    for _ in range(config.TASK_QUEUE_MAX_RETRIES):
         retry_failed_job(job, exc_info)
 
     with pytest.raises(AsyncException):
@@ -46,4 +46,4 @@ def test_retry_failed_job_handler_max_failures(app, rq, session, generate_exc_in
 
     task = Task.query.filter_by(job_id=job_id).first()
     assert task.failed is True
-    assert job.meta["failures"] == TASK_QUEUE_MAX_RETRIES + 1
+    assert job.meta["failures"] == config.TASK_QUEUE_MAX_RETRIES + 1

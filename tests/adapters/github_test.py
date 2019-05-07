@@ -9,12 +9,12 @@ from busy_beaver.adapters.github import (
     GitHubAdapter,
     page_from_url,
 )
-from busy_beaver.config import GITHUB_OAUTH_TOKEN
+from busy_beaver.config import config
 
 
 @pytest.fixture
 def client():
-    yield GitHubAdapter(oauth_token=GITHUB_OAUTH_TOKEN)
+    yield GitHubAdapter(oauth_token=config.GITHUB_OAUTH_TOKEN)
 
 
 @pytest.mark.vcr()
