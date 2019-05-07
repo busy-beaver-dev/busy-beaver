@@ -55,8 +55,24 @@ def test_event_list_default_matches_all_events():
     assert event_list.matches_event("literally anything")
 
 
-def test_base_event_list_format_text_returns_not_implemented():
-    assert EventList()._format_text(None) == NotImplemented
+def test_base_event_list_format_text_has_default_values():
+    links = ["http://example.com", "https://example.org"]
+
+    output = EventList()._format_text(links)
+
+    assert ">:heart: 2 events" in output
+    for link in links:
+        assert link in output
+
+
+def test_event_lists_can_override_nouns_and_emoji():
+    class NewList(EventList):
+        EMOJI = ":something-amazing:"
+        NOUN_LOOKUP = lambda n: "singular" if n <= 1 else "plural"
+
+    event_list = NewList()
+    assert ">:something-amazing: 1 singular" in event_list._format_text("a")
+    assert ">:something-amazing: 2 plural" in event_list._format_text("ab")
 
 
 @pytest.mark.parametrize("list_class,event_params", lists_with_event_criteria.items())
