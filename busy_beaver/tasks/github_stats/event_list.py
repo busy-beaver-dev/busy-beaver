@@ -24,6 +24,10 @@ class EventList:
         event_links = set([self._generate_link(event) for event in self.events])
         return self._format_text(event_links)
 
+    @staticmethod
+    def matches_event(event_params):
+        return True
+
     def _format_text(self, links):
         return NotImplemented
 
@@ -36,6 +40,10 @@ class EventList:
 
 
 class CommitsList(EventList):
+    @staticmethod
+    def matches_event(event):
+        return event.get("type") == "PushEvent"
+
     def _format_text(self, links):
         num = len(links)
         n_commits = sum([event["payload"]["distinct_size"] for event in self.events])
@@ -46,12 +54,23 @@ class CommitsList(EventList):
 
 
 class CreatedReposList(EventList):
+    @staticmethod
+    def matches_event(event):
+        return (
+            event.get("type") == "CreateEvent"
+            and event.get("payload").get("ref_type") == "repository"
+        )
+
     def _format_text(self, links):
         num = len(links)
         return f">:sparkles: {num} new {repo_form(num)}: {', '.join(links)}\n"
 
 
 class ForkedReposList(EventList):
+    @staticmethod
+    def matches_event(event):
+        return event.get("type") == "ForkEvent"
+
     def _format_text(self, links):
         emoji = ":fork_and_knife:"
         num = len(links)
@@ -59,6 +78,13 @@ class ForkedReposList(EventList):
 
 
 class IssuesOpenedList(EventList):
+    @staticmethod
+    def matches_event(event):
+        return (
+            event.get("type") == "IssuesEvent"
+            and event.get("payload", {}).get("action") == "opened"
+        )
+
     def _format_text(self, links):
         num = len(links)
         return f">:interrobang: {num} new {issue_form(num)}: {', '.join(links)}\n"
@@ -72,6 +98,10 @@ class IssuesOpenedList(EventList):
 
 
 class PublicizedReposList(EventList):
+    @staticmethod
+    def matches_event(event):
+        return event.get("type") == "PublicEvent"
+
     def _format_text(self, links):
         emoji = ":speaking_head_in_silhouette:"
         num = len(links)
@@ -79,6 +109,13 @@ class PublicizedReposList(EventList):
 
 
 class PullRequestsList(EventList):
+    @staticmethod
+    def matches_event(event):
+        return (
+            event.get("type") == "PullRequestEvent"
+            and event.get("payload", {}).get("action") == "opened"
+        )
+
     def _format_text(self, links):
         num = len(links)
         return f">:arrow_heading_up: {num} {pr_form(num)}: {', '.join(links)}\n"
@@ -92,12 +129,23 @@ class PullRequestsList(EventList):
 
 
 class ReleasesPublishedList(EventList):
+    @staticmethod
+    def matches_event(event):
+        return event.get("type") == "ReleaseEvent"
+
     def _format_text(self, links):
         num = len(links)
         return f">:ship: {num} new {release_form(num)}: {', '.join(links)}\n"
 
 
 class StarredReposList(EventList):
+    @staticmethod
+    def matches_event(event):
+        return (
+            event.get("type") == "WatchEvent"
+            and event.get("payload", {}).get("action") == "started"
+        )
+
     def _format_text(self, links):
         num = len(links)
         return f">:star: {num} {repo_form(num)}: {', '.join(links)}\n"
