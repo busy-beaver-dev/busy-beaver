@@ -9,3 +9,5 @@ pytest-freezegun==0.3.0.post1
 pytest-mock==1.10.0
 pytest-vcr==1.0.1
 vcrpy==2.0.1
+pre-commit==1.14.4
+pip-tools
