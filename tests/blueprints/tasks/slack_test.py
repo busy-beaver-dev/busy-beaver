@@ -1,7 +1,5 @@
 from unittest import mock
 
-from meetup.api import Client as MeetupClient
-
 from busy_beaver.blueprints.tasks.slack import (
     NextMeetupCommandHandler,
     dispatch_slash_command,
