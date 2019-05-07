@@ -1,5 +1,8 @@
 from collections import OrderedDict
 import json
+from unittest import mock
+from urllib.parse import urlencode
+
 import pytest
 
 from busy_beaver.blueprints.integration.slack import (
@@ -36,8 +39,11 @@ def create_slack_headers():
                 res[k] = v
         return dict(res)
 
-    def wrapper(timestamp, json_data):
-        request_body = json.dumps(sort_dict(json_data)).encode("utf-8")
+    def wrapper(timestamp, data, is_json_data=True):
+        if is_json_data:
+            request_body = json.dumps(sort_dict(data)).encode("utf-8")
+        else:
+            request_body = urlencode(data).encode("utf-8")
         sig = calculate_signature(SLACK_SIGNING_SECRET, timestamp, request_body)
         return {"X-Slack-Request-Timestamp": timestamp, "X-Slack-Signature": sig}
 
@@ -193,3 +199,15 @@ def test_reply_existing_account_reconnect(
     assert len(slack.mock_calls) == 1
     args, kwargs = slack.post_message.call_args
     assert VERIFY_ACCOUNT in args
+
+
+@mock.patch("busy_beaver.blueprints.integration.slack.dispatch_slash_command")
+def test_slack_command_dispatch(dispatch_slash_command, client, create_slack_headers):
+    """A valid slash command from Slack is queued."""
+    data = {"command": "bb", "text": "next with junk"}
+    headers = create_slack_headers(100_000_000, data, is_json_data=False)
+
+    response = client.post("/slack-slash-commands", headers=headers, data=data)
+
+    assert response.status_code == 200
+    dispatch_slash_command.queue.assert_called_once_with("next with junk")

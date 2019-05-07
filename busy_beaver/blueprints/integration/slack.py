@@ -6,15 +6,17 @@ from flask import jsonify, request
 from flask.views import MethodView
 
 from busy_beaver import slack
-from busy_beaver.extensions import db
 from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI
+from busy_beaver.extensions import db
 from busy_beaver.models import User
+from busy_beaver.tasks.slack import dispatch_slash_command
 
 logger = logging.getLogger(__name__)
 
 SEND_LINK_COMMANDS = ["connect"]
 RESEND_LINK_COMMANDS = ["reconnect"]
 ALL_LINK_COMMANDS = SEND_LINK_COMMANDS + RESEND_LINK_COMMANDS
+SLASH_COMMANDS = ("next",)
 
 UNKNOWN_COMMAND = (
     "I don't recognize your command. Type `connect` to link your GitHub account."
@@ -38,7 +40,7 @@ class SlackEventSubscriptionResource(MethodView):
 
     def post(self):
         data = request.json
-        logger.info("[Busy-Beaver] Recieved event from Slack", extra={"req_json": data})
+        logger.info("[Busy-Beaver] Received event from Slack", extra={"req_json": data})
 
         verification_request = data["type"] == "url_verification"
         if verification_request:
@@ -107,3 +109,18 @@ def reply_to_user_with_github_login_link(message):
         }
     ]
     slack.post_message(VERIFY_ACCOUNT, channel_id=channel_id, attachments=attachment)
+
+
+class SlackSlashCommandDispatcher(MethodView):
+    """Parse a slash command and queue it if valid."""
+
+    def post(self):
+        command_text = request.form.get("text")
+        if self.validate_command(command_text):
+            dispatch_slash_command.queue(command_text)
+        return jsonify(None)
+
+    def validate_command(self, command_text: str) -> bool:
+        """Validate the command is a supported command."""
+        command_parts = command_text.split()
+        return command_parts and command_parts[0] in SLASH_COMMANDS
