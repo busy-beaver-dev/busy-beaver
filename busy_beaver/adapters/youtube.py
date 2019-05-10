@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 from .requests_client import RequestsClient, Response
 
 
@@ -21,4 +23,15 @@ class YoutubeAdapter:
             "order": "date",
         }
         url = f"{self.base_url}/search"
-        return self.client.get(url, params=params)
+        response = self.client.get(url, params=params)
+
+        # Unpack and label items in response 
+        labels = namedtuple("YoutubeVideo", ["url", "name", "date"])
+
+        results = [labels(
+            *["https://www.youtube.com/watch?v=" + _["id"]["videoId"],
+            _["snippet"]["title"], 
+            _["snippet"]["publishedAt"]
+            ]) for _ in response.json['items'] if _["id"]["kind"] == "youtube#video"]
+
+        return results
