@@ -229,7 +229,6 @@ def patched_meetup(mocker, patcher):
 
 
 def test_slack_command_next_event(client, create_slack_headers, patched_meetup):
-    """A valid slash command from Slack is queued."""
     data = {"command": "busybeaver", "text": "next with junk"}
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
     patched_meetup(
@@ -252,7 +251,6 @@ def test_slack_command_next_event(client, create_slack_headers, patched_meetup):
 
 
 def test_slack_command_invalid_command(client, create_slack_headers, patched_meetup):
-    """A valid slash command from Slack is queued."""
     data = {"command": "busybeaver", "text": "non-existent"}
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
     patched_meetup(
