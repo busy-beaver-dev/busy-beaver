@@ -20,7 +20,10 @@ from busy_beaver.toolbox import utc_now_minus
 
 @pytest.fixture(scope="session")
 def vcr_config():
-    return {"filter_headers": [("authorization", "DUMMY")]}
+    return {
+        "filter_headers": [("authorization", "DUMMY")],
+        "filter_query_parameters": ["key"],
+    }
 
 
 @pytest.fixture(scope="module")
