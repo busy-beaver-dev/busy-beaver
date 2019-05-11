@@ -3,6 +3,7 @@
 <!-- TOC -->
 
 - [GitHub Integration](#github-integration)
+- [Meetup Integration](#meetup-integration)
 - [Youtube Adapter](#youtube-adapter)
   - [Where to get your channel id?](#where-to-get-your-channel-id)
   - [How to create an api key?](#how-to-create-an-api-key)
@@ -15,6 +16,11 @@
 Create a [GitHub OAuth App](https://github.com/settings/developers). The sole function of this app is to provide a means for the Slack user to validate their GitHub account.
 
 You will also need need to create a [Personal Access Token](https://github.com/settings/tokens) that can be used to access the GitHub API.
+
+## Meetup Integration
+
+Go to https://secure.meetup.com/meetup_api/key/
+to get an API key
 
 ## Youtube Adapter
 

@@ -18,6 +18,10 @@ class UnverifiedSlackRequest(NotAuthorized):
     pass
 
 
+class NoMeetupEventsFound(BusyBeaverException):
+    pass
+
+
 class NotFound(BusyBeaverException):
     status_code = 404
 
