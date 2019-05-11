@@ -14,7 +14,7 @@ DATABASE_URI = os.getenv("DATABASE_URI")
 REDIS_URI = os.getenv("REDIS_URI")
 
 # social media details
-MEETUP_GROUP_NAME = os.getenv("MEETUP_GROUP_NAME", None)
+MEETUP_GROUP_NAME = "_ChiPy_"
 TWITTER_USERNAME = "ChicagoPython"
 
 # credentials

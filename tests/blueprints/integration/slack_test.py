@@ -204,7 +204,7 @@ def test_reply_existing_account_reconnect(
 
 
 ###########################
-# Slack Slack Command Tests
+# Slack Slash Command Tests
 ###########################
 @pytest.fixture
 def patched_meetup(mocker, patcher):
