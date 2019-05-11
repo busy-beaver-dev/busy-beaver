@@ -1,6 +1,5 @@
 from collections import OrderedDict
 import json
-from unittest import mock
 from urllib.parse import urlencode
 
 import pytest
@@ -18,6 +17,9 @@ from busy_beaver.decorators.verification import calculate_signature
 MODULE_TO_TEST = "busy_beaver.blueprints.integration.slack"
 
 
+################################
+# Slack Event Subscription Tests
+################################
 @pytest.fixture
 def patched_slack(patcher):
     def _wrapper(replacement):
@@ -201,13 +203,70 @@ def test_reply_existing_account_reconnect(
     assert VERIFY_ACCOUNT in args
 
 
-@mock.patch("busy_beaver.blueprints.integration.slack.dispatch_slash_command")
-def test_slack_command_dispatch(dispatch_slash_command, client, create_slack_headers):
+###########################
+# Slack Slack Command Tests
+###########################
+@pytest.fixture
+def patched_meetup(mocker, patcher):
+    class FakeMeetupClient:
+        def __init__(self, *, events):
+            self.mock = mocker.MagicMock()
+            if events:
+                self.events = events
+
+        def get_events(self, *args, **kwargs):
+            self.mock(*args, **kwargs)
+            return self.events
+
+        def __repr__(self):
+            return "<FakeMeetupClient>"
+
+    def _wrapper(*, events=None):
+        obj = FakeMeetupClient(events=events)
+        return patcher(MODULE_TO_TEST, namespace="meetup", replacement=obj)
+
+    return _wrapper
+
+
+def test_slack_command_next_event(client, create_slack_headers, patched_meetup):
     """A valid slash command from Slack is queued."""
-    data = {"command": "bb", "text": "next with junk", "channel_name": "beavers"}
+    data = {"command": "busybeaver", "text": "next with junk"}
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
+    patched_meetup(
+        events=[
+            {
+                "venue": {"name": "Numerator"},
+                "name": "ChiPy",
+                "event_url": "http://meetup.com/_ChiPy_/event/blah",
+                "time": 1_557_959_400_000,
+            }
+        ]
+    )
 
     response = client.post("/slack-slash-commands", headers=headers, data=data)
 
     assert response.status_code == 200
-    dispatch_slash_command.queue.assert_called_once_with("next with junk", "beavers")
+    slack_response = response.json["attachments"][0]
+    assert "ChiPy" in slack_response["title"]
+    assert "http://meetup.com/_ChiPy_/event/blah" in slack_response["title_link"]
+
+
+def test_slack_command_invalid_command(client, create_slack_headers, patched_meetup):
+    """A valid slash command from Slack is queued."""
+    data = {"command": "busybeaver", "text": "non-existent"}
+    headers = create_slack_headers(100_000_000, data, is_json_data=False)
+    patched_meetup(
+        events=[
+            {
+                "venue": {"name": "Numerator"},
+                "name": "ChiPy",
+                "event_url": "http://meetup.com/_ChiPy_/event/blah",
+                "time": 1_557_959_400_000,
+            }
+        ]
+    )
+
+    response = client.post("/slack-slash-commands", headers=headers, data=data)
+
+    assert response.status_code == 200
+    assert "command not found" in response.json.lower()
