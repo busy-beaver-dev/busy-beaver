@@ -1,19 +1,17 @@
-import gettext
+import inflect
 
-# Singular or Plural Form in Summary
-commit_form = lambda n: gettext.ngettext("commit", "commits", n)  # noqa
-issue_form = lambda n: gettext.ngettext("issue", "issues", n)  # noqa
-pr_form = lambda n: gettext.ngettext("PR", "PRs", n)  # noqa
-release_form = lambda n: gettext.ngettext("release", "releases", n)  # noqa
-repo_form = lambda n: gettext.ngettext("repo", "repos", n)  # noqa
+inflector = inflect.engine()
 
 
 class EventList:
+    EMOJI = ":heart:"
+    NOUN = "event"
+
     def __init__(self):
         self.events = []
 
     def __repr__(self):
-        return repr(self.events)
+        return repr(self.events)  # pragma: no cover
 
     def append(self, item):
         self.events.append(item)
@@ -24,8 +22,15 @@ class EventList:
         event_links = set([self._generate_link(event) for event in self.events])
         return self._format_text(event_links)
 
+    @staticmethod
+    def matches_event(event_params):
+        return True
+
     def _format_text(self, links):
-        return NotImplemented
+        num = len(links)
+        noun = inflector.plural(self.NOUN, num)
+        link_output = ", ".join(links)
+        return f">{self.EMOJI} {num} {noun} {link_output}\n"
 
     @staticmethod
     def _generate_link(event):
@@ -36,32 +41,55 @@ class EventList:
 
 
 class CommitsList(EventList):
+    EMOJI = ":arrow_up:"
+
+    @staticmethod
+    def matches_event(event):
+        return event.get("type") == "PushEvent"
+
     def _format_text(self, links):
-        num = len(links)
-        n_commits = sum([event["payload"]["distinct_size"] for event in self.events])
+        num_repos = len(links)
+        repo_noun = inflector.plural(self.NOUN, num_repos)
+
+        num_commits = sum([event["payload"]["distinct_size"] for event in self.events])
+        commit_noun = inflector.plural("commit", num_commits)
         return (
-            f">:arrow_up: {n_commits} {commit_form(n_commits)} to "
-            f"{num} {repo_form(num)}: {', '.join(links)}\n"
+            f">{self.EMOJI} {num_commits} {commit_noun} "
+            f"{num_repos} {repo_noun}: {', '.join(links)}\n"
         )
 
 
 class CreatedReposList(EventList):
-    def _format_text(self, links):
-        num = len(links)
-        return f">:sparkles: {num} new {repo_form(num)}: {', '.join(links)}\n"
+    EMOJI = ":sparkles:"
+    NOUN = "new issue"
+
+    @staticmethod
+    def matches_event(event):
+        return (
+            event.get("type") == "CreateEvent"
+            and event.get("payload").get("ref_type") == "repository"
+        )
 
 
 class ForkedReposList(EventList):
-    def _format_text(self, links):
-        emoji = ":fork_and_knife:"
-        num = len(links)
-        return f">{emoji} {num} forked {repo_form(num)}: {', '.join(links)}\n"
+    EMOJI = ":fork_and_knife:"
+    NOUN = "forked repo"
+
+    @staticmethod
+    def matches_event(event):
+        return event.get("type") == "ForkEvent"
 
 
 class IssuesOpenedList(EventList):
-    def _format_text(self, links):
-        num = len(links)
-        return f">:interrobang: {num} new {issue_form(num)}: {', '.join(links)}\n"
+    EMOJI = ":interrobang:"
+    NOUN = "new issue"
+
+    @staticmethod
+    def matches_event(event):
+        return (
+            event.get("type") == "IssuesEvent"
+            and event.get("payload", {}).get("action") == "opened"
+        )
 
     @staticmethod
     def _generate_link(event):
@@ -72,16 +100,24 @@ class IssuesOpenedList(EventList):
 
 
 class PublicizedReposList(EventList):
-    def _format_text(self, links):
-        emoji = ":speaking_head_in_silhouette:"
-        num = len(links)
-        return f">{emoji} {num} {repo_form(num)} open-sourced: {', '.join(links)}\n"
+    EMOJI = ":speaking_head_in_silhouette:"
+    NOUN = "open-sourced repo"
+
+    @staticmethod
+    def matches_event(event):
+        return event.get("type") == "PublicEvent"
 
 
 class PullRequestsList(EventList):
-    def _format_text(self, links):
-        num = len(links)
-        return f">:arrow_heading_up: {num} {pr_form(num)}: {', '.join(links)}\n"
+    EMOJI = ":arrow_heading_up:"
+    NOUN = "PR"
+
+    @staticmethod
+    def matches_event(event):
+        return (
+            event.get("type") == "PullRequestEvent"
+            and event.get("payload", {}).get("action") == "opened"
+        )
 
     @staticmethod
     def _generate_link(event):
@@ -92,12 +128,21 @@ class PullRequestsList(EventList):
 
 
 class ReleasesPublishedList(EventList):
-    def _format_text(self, links):
-        num = len(links)
-        return f">:ship: {num} new {release_form(num)}: {', '.join(links)}\n"
+    EMOJI = ":ship:"
+    NOUN = "new release"
+
+    @staticmethod
+    def matches_event(event):
+        return event.get("type") == "ReleaseEvent"
 
 
 class StarredReposList(EventList):
-    def _format_text(self, links):
-        num = len(links)
-        return f">:star: {num} {repo_form(num)}: {', '.join(links)}\n"
+    EMOJI = ":star:"
+    NOUN = "repo"
+
+    @staticmethod
+    def matches_event(event):
+        return (
+            event.get("type") == "WatchEvent"
+            and event.get("payload", {}).get("action") == "started"
+        )
