@@ -14,6 +14,7 @@ DATABASE_URI = os.getenv("DATABASE_URI")
 REDIS_URI = os.getenv("REDIS_URI")
 
 # social media details
+MEETUP_GROUP_NAME = os.getenv("MEETUP_GROUP_NAME", None)
 TWITTER_USERNAME = "ChicagoPython"
 
 # credentials
@@ -21,6 +22,7 @@ GITHUB_OAUTH_TOKEN = os.getenv("GITHUB_OAUTH_TOKEN", None)
 GITHUB_CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID", None)
 GITHUB_CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET", None)
 GITHUB_REDIRECT_URI = f"{APP_URI}/github-integration"
+MEETUP_API_KEY = os.getenv("MEETUP_API_KEY", None)
 SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN", None)
 SLACK_SIGNING_SECRET = os.getenv("SLACK_SIGNING_SECRET", "TestSigningSecret")
 TWITTER_CONSUMER_KEY = os.getenv("TWITTER_CONSUMER_KEY", None)
