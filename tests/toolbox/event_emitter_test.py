@@ -48,6 +48,21 @@ def test_register_function_with_event_emitter_decorator(event_emitter, create_fu
     assert result == "decorator"
 
 
+def test_event_emitter_with_function_params(event_emitter, create_function):
+    # Arrange
+    ee = event_emitter
+
+    @ee.on("key1")
+    def adder(param1, param2):
+        return param1 + param2
+
+    # Act
+    result = ee.emit("key1", 2, param2=3)
+
+    # Assert
+    assert result == 2 + 3
+
+
 def test_register_same_event_twice_raises_exception(event_emitter, create_function):
     # Arrange
     ee = event_emitter

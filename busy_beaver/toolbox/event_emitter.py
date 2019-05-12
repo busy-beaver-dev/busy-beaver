@@ -19,8 +19,8 @@ class EventEmitter:
         else:
             return _on(func)
 
-    def emit(self, event):
+    def emit(self, event, *args, **kwargs):
         if event not in self.registered_events:
             raise EventEmitterException("event not registered")
         func = self.registered_events[event]
-        return func()
+        return func(*args, **kwargs)
