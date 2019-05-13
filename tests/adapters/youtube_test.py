@@ -1,8 +1,6 @@
 import pytest
 
-from busy_beaver.adapters.youtube import (
-    YoutubeAdapter,
-)
+from busy_beaver.adapters.youtube import YoutubeAdapter
 from busy_beaver.config import YOUTUBE_API_TOKEN, YOUTUBE_CHANNEL_ID
 
 
