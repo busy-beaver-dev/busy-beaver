@@ -1,0 +1,67 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - BusyBeaver
+    method: GET
+    uri: https://www.googleapis.com/youtube/v3/search?channelId=UCT372EAC1orBOSUd2fsA8WA&order=date&part=snippet%2Cid
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAAOWWXW/iOBSG7/kVVvZ2KCYkJOQOQktL6RA6MIXurFBITGxw7BA7tGHU/74JH51o
+        1BnttKho1SvE+XrPsf1w+F4CypIwX7GAkvJEJjP0l0Bu7OEeEfIWiYgzgZRPWRiSbpCHfVPGkdMZ
+        jB32OOjiXiDqiLWnzOzeaoNlhT3UJPlaF+U6n1zrNXnRX21w39E7ZPJN2dZh6FE6boCGfIlYXtBu
+        jgbN5tYXo4BwZnMf5Y5Oa2uMsuArNueZ6XsJAEVy6dKstYRKkdkM/VNujXcGB8V58cyul8BTnk4k
+        CvO4v7OoPP9XA+8q5orgvw4b6/QhWWmLz4NpW9V4FV6OtcUC80Yv2A2bVSL+vu8XhNfER3wXB5Tt
+        l6utv1sbTxi7jJPwRsmdT7tSgpEoQvJHvSiZUSIw8pu5UVFhtVGGWrlaH1Z1C+qWap5BCO8PCh52
+        GUN0pzGyhzVDPW/aVR63+l9GvjoXTfOueQiWRNLtLXiYRCngcQBEFBMmwfZN8Bj5YJaCVUK8JcqM
+        nCYyuztxyPeR8GIS5ba8ynNZnIQz5hIqnsfIY+dufvbPFqAkMc3TsJSRsCoVcpZKEgZnHg8ra1Ip
+        HFBln3y2iIK9SJb+QHyJswJVFT7bMCIBzkUacGd62ruUEPkkCV8nH65+20DtpQaq5s8d4MzzOn38
+        e33NfEG/Vj/olwpdHN7H8HDzNiZOCsog+/TcgAMnlZgzMBIoFqAT8yQ63Cola9SKuet7rpA2ZxKx
+        7YtknKHdCy7tZY5MoO7fbS719Xreg+5NI+Ay5c60x7x+9+FNBBp+6/zL7fTRuPb+nEC1DI0hNC1V
+        t2rGEQh0aQo8HBMBGAcZVSj73XwPygqHcArKivKnoKyo/7EpY5dscuEZbD1uXSTt7qarm/cbWy+f
+        I/4mynp3lH/W4MCG8M8pq2arbggNC6oW1I5AWej6iBKG3gWtwuSnQKsofwq0ivofGy3kUOjYSz8p
+        rzo3VzdddvdVnz82SKI334RW2Pb7pj06t5ej16JVtzTT0utHQGuJ1uR9VlZh7FNwVZQ/BVdF/Y/N
+        1XTSnrTG7euY9heDOqeoOzPm6bATbcy3rayhOqOzcHHfecUfwwNXNd2qHoMrzClN32df/Rj7JPuq
+        IH+SfVXQ/x9xVQL/lJ5K/wJumed35BEAAA==
+    headers:
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,44,43,39"
+      Cache-Control:
+      - private, max-age=120, must-revalidate, no-transform
+      Content-Encoding:
+      - gzip
+      Content-Type:
+      - application/json; charset=UTF-8
+      Date:
+      - Mon, 13 May 2019 03:23:41 GMT
+      ETag:
+      - '"XpPGQXPnxQJhLgs6enD_n8JR4Qk/nw3tiV6s-6oYK53tFOqzhOP5GiY"'
+      Expires:
+      - Mon, 13 May 2019 03:23:41 GMT
+      Server:
+      - GSE
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Origin
+      - X-Origin
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1
