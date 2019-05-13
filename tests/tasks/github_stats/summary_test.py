@@ -20,4 +20,14 @@ def test_generate_summary(create_user):
     assert "alysivji" in summary
 
 
-# TODO add a lot more tests
+@pytest.mark.vcr()
+@pytest.mark.freeze_time("2019-06-20")
+def test_generates_empty_summary_if_no_events_found(create_user):
+    # Arrange
+    user = create_user(slack_id="raymondberg", github_username="raymondberg")
+    user_events = GitHubUserEvents(user, utc_now_minus(timedelta(days=1)))
+
+    # Act
+    summary = user_events.generate_summary_text()
+
+    assert summary == ""

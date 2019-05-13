@@ -4,6 +4,8 @@ Flask-RQ2==18.3
 Flask-SQLAlchemy==2.4.0
 Flask==1.0.2
 gunicorn==19.9.0
+inflect==2.1.0
+meetup-api==0.1.1
 pre-commit==1.14.4
 psycopg2-binary==2.7.7
 python-dateutil==2.7.5

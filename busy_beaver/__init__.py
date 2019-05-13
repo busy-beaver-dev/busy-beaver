@@ -4,11 +4,18 @@ import pathlib
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 
-from .adapters import GitHubAdapter, KeyValueStoreAdapter, SlackAdapter, TwitterAdapter
+from .adapters import (
+    GitHubAdapter,
+    KeyValueStoreAdapter,
+    MeetupAdapter,
+    SlackAdapter,
+    TwitterAdapter,
+)
 from .config import (
     GITHUB_OAUTH_TOKEN,
     IN_PRODUCTION,
     LOGGING_CONFIG,
+    MEETUP_API_KEY,
     SENTRY_DSN,
     SLACK_TOKEN,
     TWITTER_ACCESS_TOKEN,
@@ -30,6 +37,7 @@ if IN_PRODUCTION and SENTRY_DSN:
 logger.info("[BusyBeaver] Configure Integrations")
 github = GitHubAdapter(GITHUB_OAUTH_TOKEN)
 kv_store = KeyValueStoreAdapter()
+meetup = MeetupAdapter(MEETUP_API_KEY)
 slack = SlackAdapter(SLACK_TOKEN)
 twitter = TwitterAdapter(
     TWITTER_CONSUMER_KEY,
