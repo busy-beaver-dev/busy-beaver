@@ -1,8 +1,8 @@
-"""Adding YoutubeVideo
+"""Adding youtube video
 
-Revision ID: 7e15e35ffe44
-Revises: 73b592804bfa
-Create Date: 2019-03-17 00:16:28.786987
+Revision ID: cf9e672a4c63
+Revises: b5db0d063898
+Create Date: 2019-05-12 22:47:44.886876
 
 """
 from alembic import op
@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7e15e35ffe44'
-down_revision = '73b592804bfa'
+revision = 'cf9e672a4c63'
+down_revision = 'b5db0d063898'
 branch_labels = None
 depends_on = None
 

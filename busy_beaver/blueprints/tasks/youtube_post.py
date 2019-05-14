@@ -1,4 +1,5 @@
 import logging
+import time
 
 from flask import request
 from flask.views import MethodView
@@ -45,6 +46,7 @@ class YoutubePollingResource(MethodView):
             published_dt = YoutubeVideo.date_str_to_datetime(published_str)
             if last_video.published_at < published_dt:
                 self.save_and_post_video(video)
+                time.sleep(int(config.YOUTUBE_SECONDS_BETWEEN_POST))
             else:
                 break
 
