@@ -267,4 +267,4 @@ def test_slack_command_invalid_command(client, create_slack_headers, patched_mee
     response = client.post("/slack-slash-commands", headers=headers, data=data)
 
     assert response.status_code == 200
-    assert "command not found" in response.json.lower()
+    assert "command not found" in response.json["text"].lower()

@@ -1,6 +1,9 @@
 import pytest
 
-from busy_beaver.exceptions import EventEmitterException
+from busy_beaver.exceptions import (
+    EventEmitterEventAlreadyRegistered,
+    EventEmitterEventNotRegistered,
+)
 from busy_beaver.toolbox import EventEmitter
 
 
@@ -69,11 +72,10 @@ def test_register_same_event_twice_raises_exception(event_emitter, create_functi
     ee.on("key1", create_function)
 
     # Act
-    with pytest.raises(EventEmitterException):
+    with pytest.raises(EventEmitterEventAlreadyRegistered):
         ee.on("key1", create_function)
 
 
 def test_emit_for_unregistered_event(event_emitter):
-    # with pytest.raises(EventEmitterException):
-    with pytest.raises(EventEmitterException):
+    with pytest.raises(EventEmitterEventNotRegistered):
         event_emitter.emit("key1")

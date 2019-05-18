@@ -1,4 +1,7 @@
-from busy_beaver.exceptions import EventEmitterException
+from busy_beaver.exceptions import (
+    EventEmitterEventAlreadyRegistered,
+    EventEmitterEventNotRegistered,
+)
 
 
 class EventEmitter:
@@ -8,7 +11,7 @@ class EventEmitter:
     def on(self, event, func=None):
         """Pass in a function or use as a decorator"""
         if event in self.registered_events:
-            raise EventEmitterException("event already registered")
+            raise EventEmitterEventAlreadyRegistered(f"{event} already registered")
 
         def _on(f):
             self.registered_events[event] = f
@@ -19,8 +22,11 @@ class EventEmitter:
         else:
             return _on(func)
 
-    def emit(self, event, *args, **kwargs):
+    def emit(self, event, *args, default=None, **kwargs):
         if event not in self.registered_events:
-            raise EventEmitterException("event not registered")
+            if not default:
+                raise EventEmitterEventNotRegistered(f"{event} has not been registered")
+            event = default
+
         func = self.registered_events[event]
         return func(*args, **kwargs)
