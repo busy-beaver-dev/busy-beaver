@@ -16,16 +16,16 @@ class PublishGitHubSummaryResource(MethodView):
     def post(self):
         user = request._internal["user"]
         logger.info(
-            "[Busy-Beaver] Post GitHub Summary Request -- login successful",
+            "[Busy Beaver] Post GitHub Summary Request -- login successful",
             extra={"user": user.username},
         )
 
         # TODO: replace this with marshmallow
         data = request.json
         if not data or "channel" not in data:
-            logger.error("[Busy-Beaver] Post GitHub Summary Task -- channel in body")
+            logger.error("[Busy Beaver] Post GitHub Summary Task -- channel in body")
             return make_response(422, error={"message": "JSON requires 'channel' key"})
         start_post_github_summary_task(user, data["channel"])
 
-        logger.info("[Busy-Beaver] Post GitHub Summary -- kicked-off")
+        logger.info("[Busy Beaver] Post GitHub Summary -- kicked-off")
         return make_response(200, json={"run": "complete"})

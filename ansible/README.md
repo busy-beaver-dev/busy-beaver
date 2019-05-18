@@ -1,6 +1,6 @@
 # Busy Beaver Ansible Playbooks
 
-This folder contains Ansible configuration settings to deploy Busy-Beaver on a VPS.
+This folder contains Ansible configuration settings to deploy Busy Beaver on a VPS.
 
 ## `~/.bash_profile`
 
@@ -26,6 +26,9 @@ export TWITTER_CONSUMER_KEY=[]
 export TWITTER_CONSUMER_SECRET=[]
 export TWITTER_ACCESS_TOKEN=[]
 export TWITTER_ACCESS_TOKEN_SECRET=[]
+
+export YOUTUBE_API_KEY=[]
+export YOUTUBE_CHANNEL=[]
 
 export SENTRY_DSN=[sentry-dsn]
 export DATADOG_API_KEY=[datadog-api-key]

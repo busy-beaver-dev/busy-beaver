@@ -20,7 +20,7 @@ def authentication_required(roles):
         @functools.wraps(func)
         def _token_auth(*args, **kwargs):
             if "authorization" not in request.headers:
-                logger.error("[Busy-Beaver] No auth header")
+                logger.error("[Busy Beaver] No auth header")
                 raise NotAuthorized("Missing header: Authorization: 'token {token}'")
 
             m = AUTH_STRING.match(request.headers["authorization"])
@@ -30,11 +30,11 @@ def authentication_required(roles):
             token = m.group("token")
             api_user: ApiUser = ApiUser.query.filter_by(token=token).first()
             if not api_user:
-                logger.error("[Busy-Beaver] Invalid token")
+                logger.error("[Busy Beaver] Invalid token")
                 raise NotAuthorized("Invalid token, contact admin")
 
             if api_user.role not in roles:
-                logger.error("[Busy-Beaver] Unauthorized access of endpoint")
+                logger.error("[Busy Beaver] Unauthorized access of endpoint")
                 raise NotAuthorized("Not authorized to access endpoint, contact admin")
 
             request._internal["user"] = api_user

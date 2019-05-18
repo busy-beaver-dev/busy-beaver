@@ -39,11 +39,11 @@ class SlackEventSubscriptionResource(MethodView):
 
     def post(self):
         data = request.json
-        logger.info("[Busy-Beaver] Received event from Slack", extra={"req_json": data})
+        logger.info("[Busy Beaver] Received event from Slack", extra={"req_json": data})
 
         verification_request = data["type"] == "url_verification"
         if verification_request:
-            logger.info("[Busy-Beaver] Slack -- API Verification")
+            logger.info("[Busy Beaver] Slack -- API Verification")
             return jsonify({"challenge": data["challenge"]})
 
         # bot can see its own DMs
@@ -66,25 +66,25 @@ def reply_to_user_with_github_login_link(message):
     channel_id = message["channel"]
 
     if chat_text not in ALL_LINK_COMMANDS:
-        logger.info("[Busy-Beaver] Unknown command")
+        logger.info("[Busy Beaver] Unknown command")
         slack.post_message(UNKNOWN_COMMAND, channel_id=channel_id)
         return
 
     user_record = User.query.filter_by(slack_id=slack_id).first()
     if user_record and chat_text in SEND_LINK_COMMANDS:
-        logger.info("[Busy-Beaver] Slack acount already linked to GitHub")
+        logger.info("[Busy Beaver] Slack acount already linked to GitHub")
         slack.post_message(ACCOUNT_ALREADY_ASSOCIATED, channel_id=channel_id)
         return
 
     # generate unique identifer to track user during authentication process
     state = str(uuid.uuid4())
     if user_record and chat_text in RESEND_LINK_COMMANDS:
-        logger.info("[Busy-Beaver] Relinking GitHub account.")
+        logger.info("[Busy Beaver] Relinking GitHub account.")
         user_record.github_state = state
         db.session.add(user_record)
         db.session.commit()
     if not user_record:
-        logger.info("[Busy-Beaver] New user. Linking GitHub account.")
+        logger.info("[Busy Beaver] New user. Linking GitHub account.")
         user = User()
         user.slack_id = slack_id
         user.github_state = state

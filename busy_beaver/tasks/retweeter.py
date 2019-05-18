@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 def start_post_tweets_to_slack_task(task_owner: ApiUser, channel_name):
-    logger.info("[Busy-Beaver] Kick off retweeter task")
+    logger.info("[Busy Beaver] Kick off retweeter task")
 
     twitter_handle = TWITTER_USERNAME
     job = fetch_tweets_post_to_slack.queue(channel_name, twitter_handle)
@@ -31,14 +31,14 @@ def start_post_tweets_to_slack_task(task_owner: ApiUser, channel_name):
 
 @rq.job
 def fetch_tweets_post_to_slack(channel_name, username):
-    logger.info("[Busy-Beaver] Fetching tweets to post")
+    logger.info("[Busy Beaver] Fetching tweets to post")
     tweets = get_tweets(username)
     set_task_progress(33)
 
     tweets_to_post = _exclude_tweets_inside_window(tweets, window=timedelta(minutes=30))
     set_task_progress(67)
 
-    logger.info("[Busy-Beaver] Grabbed {0} tweets".format(len(tweets_to_post)))
+    logger.info("[Busy Beaver] Grabbed {0} tweets".format(len(tweets_to_post)))
     _post_to_slack(channel_name, tweets_to_post[:1], username)  # post 1 tweet at a time
     set_task_progress(100)
 

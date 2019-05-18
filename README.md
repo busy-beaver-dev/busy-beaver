@@ -13,19 +13,25 @@ Chicago Python's Community Engagement Slack bot.
 
 With over four thousand members, the [Chicago Python Users Group](https://www.chipy.org/) (ChiPy) is one of the largest Python communities in the world. Slack has become the primary method of communication amongst our members in-between events. We developed an open-source Slack bot, codename: Busy Beaver, to increase community engagement.
 
-We released Busy-Beaver on January 10th at the ChiPy monthly meeting. [Slides](http://bit.ly/busy-beaver) and [video recording](https://www.youtube.com/watch?v=7dBESR_x7Kc) from the release announcement are available online.
+We released Busy Beaver on January 10th at the ChiPy monthly meeting. [Slides](http://bit.ly/busy-beaver) and [video recording](https://www.youtube.com/watch?v=7dBESR_x7Kc) from the release announcement are available online.
 
 ## Features
 
+### Upcoming Events
+
+Busy Beaver integrates with Meetup API to provide details about upcoming events. The interface for users is provided the `/busybeaver` [slash command](https://api.slack.com/slash-commands).
+
+- `/busybeaver next` shows details of the upcoming event
+
 ### GitHub Activity
 
-Busy-Beaver posts daily summaries of public GitHub activity for registered users in the `#busy-beaver` channel on the [ChiPy Slack](https://chipy.slack.com/). The goal of this feature is to increase engagement by sparking conversations around GitHub activity.
+Busy Beaver posts daily summaries of public GitHub activity for registered users in the `#busy-beaver` channel on the [ChiPy Slack](https://chipy.slack.com/). The goal of this feature is to increase engagement by sparking conversations around GitHub activity.
 
 Users sign up for an account by `DM`ing the bot with the phrase: `connect`. The bot requires users to sign into GitHub to ensure only authorized activity is posted in the channel.
 
 ### Retweeter
 
-Busy-Beaver retweets posts made to the [@ChicagoPython Twitter account](https://twitter.com/ChicagoPython) in the `#at-chicagopython` channel on the [ChiPy Slack](https://chipy.slack.com/).
+Busy Beaver retweets posts made to the [@ChicagoPython Twitter account](https://twitter.com/ChicagoPython) in the `#at-chicagopython` channel on the [ChiPy Slack](https://chipy.slack.com/).
 
 ## Roadmap
 
@@ -33,11 +39,11 @@ We are currently working on additional features to improve ChiPy community engag
 
 ## Contributing
 
-Busy-Beaver is always looking for new contributors! Previous open source experience is not required! Please see [CONTRIBUTING.md](CONTRIBUTING.md).
+Busy Beaver is always looking for new contributors! Previous open source experience is not required! Please see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Development Notes
 
-Busy-Beaver is an open source project where all artificats (code, Docker image, etc) are online. We use the [Twelve-Factor Application Methodology](https://12factor.net) for building services to design the CICD process and to keep information secure.
+Busy Beaver is an open source project where all artificats (code, Docker image, etc) are online. We use the [Twelve-Factor Application Methodology](https://12factor.net) for building services to design the CICD process and to keep information secure.
 
 ### Web Application Stack
 
