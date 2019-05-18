@@ -10,6 +10,7 @@ from busy_beaver.blueprints.integration.slack import (
     VERIFY_ACCOUNT,
     reply_to_user_with_github_login_link,
     link_github,
+    relink_github,
 )
 from busy_beaver.config import SLACK_SIGNING_SECRET
 from busy_beaver.models import User
@@ -295,3 +296,23 @@ def test_connect_command_existing_user(add_user):
     result = link_github(**data)
 
     assert "/busybeaver reconnect" in result.json["text"]
+
+
+def test_reconnect_command_new_user(session):
+    data = {"user_id": "new_user"}
+
+    result = relink_github(**data)
+
+    assert "/busybeaver connect" in result.json["text"]
+
+
+def test_reconnect_command_existing_user(add_user):
+    add_user(username="existing_user")
+    data = {"user_id": "existing_user"}
+
+    result = relink_github(**data)
+
+    assert (
+        "Associate GitHub Profile"
+        in result.json["attachments"][0]["actions"][0]["text"]
+    )

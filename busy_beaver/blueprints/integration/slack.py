@@ -24,7 +24,10 @@ UNKNOWN_COMMAND = (
 )
 ACCOUNT_ALREADY_ASSOCIATED = (
     "You have already associated a GitHub account with your Slack handle. "
-    "Please try `/busybeaver reconnect` to link to a different account."
+    "Please use `/busybeaver reconnect` to link to a different account."
+)
+NO_ASSOCIATED_ACCOUNT = (
+    "No associated account. Please use `/busybeaver connect` to link your account."
 )
 VERIFY_ACCOUNT = (
     "Follow the link below to validate your GitHub account. "
@@ -161,7 +164,7 @@ def relink_github(**data):
 
     if not user_record:
         logger.info("[Busy Beaver] Slack acount does not have associated GitHub")
-        return make_slack_response(text="No associated GitHub account")
+        return make_slack_response(text=NO_ASSOCIATED_ACCOUNT)
 
     user = add_tracking_identifer_and_save_record(user_record)
     attachment = create_github_account_attachment(user.github_state)
