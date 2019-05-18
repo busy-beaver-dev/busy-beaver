@@ -4,14 +4,7 @@ from urllib.parse import urlencode
 
 import pytest
 
-from busy_beaver.blueprints.integration.slack import (
-    ACCOUNT_ALREADY_ASSOCIATED,
-    UNKNOWN_COMMAND,
-    VERIFY_ACCOUNT,
-    reply_to_user_with_github_login_link,
-    link_github,
-    relink_github,
-)
+from busy_beaver.blueprints.integration.slack import link_github, relink_github
 from busy_beaver.config import SLACK_SIGNING_SECRET
 from busy_beaver.models import User
 from busy_beaver.decorators.verification import calculate_signature
@@ -105,7 +98,7 @@ def test_slack_callback_bot_message_is_ignored(
 def test_slack_callback_user_dms_bot_reply(
     mocker, client, session, patched_slack, create_slack_headers
 ):
-    """Bot get notified of its own DM replies to users... ignore"""
+    """When user messages bot, reply with help text"""
     # Arrange
     slack = patched_slack(mocker.MagicMock())
     channel_id = 5
@@ -130,83 +123,8 @@ def test_slack_callback_user_dms_bot_reply(
     assert resp.status_code == 200
     assert len(slack.mock_calls) == 1
     args, kwargs = slack.post_message.call_args
+    assert "/busybeaver help" in args[0]
     assert kwargs["channel_id"] == channel_id
-
-
-@pytest.fixture
-def create_slack_message():
-    def _create_slack_message_dict(*, text, user="test_user"):
-        return {
-            "type": "message",
-            "subtype": "not bot_message",  # TODO, what does it really look like
-            "channel_type": "im",
-            "text": text,
-            "user": user,
-            "channel": "test_channel",
-        }
-
-    return _create_slack_message_dict
-
-
-def test_reply_unknown_command(mocker, session, patched_slack, create_slack_message):
-    # Arrange
-    slack = patched_slack(mocker.MagicMock())
-    message = create_slack_message(text="hi")
-
-    # Act
-    reply_to_user_with_github_login_link(message)
-
-    # Assert
-    assert len(slack.mock_calls) == 1
-    args, kwargs = slack.post_message.call_args
-    assert UNKNOWN_COMMAND in args
-
-
-def test_reply_new_account(mocker, session, patched_slack, create_slack_message):
-    # Arrange
-    slack = patched_slack(mocker.MagicMock())
-    message = create_slack_message(text="connect")
-
-    # Act
-    reply_to_user_with_github_login_link(message)
-
-    # Assert
-    assert len(slack.mock_calls) == 1
-    args, kwargs = slack.post_message.call_args
-    assert VERIFY_ACCOUNT in args
-
-
-def test_reply_existing_account(mocker, add_user, patched_slack, create_slack_message):
-    # Arrange
-    add_user(username="test_user")
-    message = create_slack_message(text="connect", user="test_user")
-    slack = patched_slack(mocker.MagicMock())
-
-    # Act
-    reply_to_user_with_github_login_link(message)
-
-    # Assert
-    assert len(slack.mock_calls) == 1
-    args, kwargs = slack.post_message.call_args
-    assert ACCOUNT_ALREADY_ASSOCIATED in args
-
-
-def test_reply_existing_account_reconnect(
-    mocker, add_user, patched_slack, create_slack_message
-):
-    # Arrange
-    add_user(username="test_user")
-
-    message = create_slack_message(text="reconnect", user="test_user")
-    slack = patched_slack(mocker.MagicMock())
-
-    # Act
-    reply_to_user_with_github_login_link(message)
-
-    # Assert
-    assert len(slack.mock_calls) == 1
-    args, kwargs = slack.post_message.call_args
-    assert VERIFY_ACCOUNT in args
 
 
 ###########################
