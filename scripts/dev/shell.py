@@ -35,9 +35,7 @@ twitter = TwitterAdapter(
 )
 
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
-YOUTUBE_CHANNEL = os.getenv("YOUTUBE_CHANNEL")
 youtube = YouTubeAdapter(api_key=YOUTUBE_API_KEY)
-
 
 kv = KeyValueStoreAdapter()
 
