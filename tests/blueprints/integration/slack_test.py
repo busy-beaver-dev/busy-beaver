@@ -9,12 +9,24 @@ from busy_beaver.blueprints.integration.slack import (
     UNKNOWN_COMMAND,
     VERIFY_ACCOUNT,
     reply_to_user_with_github_login_link,
+    link_github,
 )
 from busy_beaver.config import SLACK_SIGNING_SECRET
 from busy_beaver.models import User
 from busy_beaver.decorators.verification import calculate_signature
 
 MODULE_TO_TEST = "busy_beaver.blueprints.integration.slack"
+
+
+@pytest.fixture
+def add_user(session):
+    def _add_user(username):
+        user = User(slack_id=username)
+        session.add(user)
+        session.commit()
+        return user
+
+    return _add_user
 
 
 ################################
@@ -163,14 +175,10 @@ def test_reply_new_account(mocker, session, patched_slack, create_slack_message)
     assert VERIFY_ACCOUNT in args
 
 
-def test_reply_existing_account(mocker, session, patched_slack, create_slack_message):
+def test_reply_existing_account(mocker, add_user, patched_slack, create_slack_message):
     # Arrange
-    username = "test_user"
-    user = User(slack_id=username)
-    session.add(user)
-    session.commit()
-
-    message = create_slack_message(text="connect", user=username)
+    add_user(username="test_user")
+    message = create_slack_message(text="connect", user="test_user")
     slack = patched_slack(mocker.MagicMock())
 
     # Act
@@ -183,15 +191,12 @@ def test_reply_existing_account(mocker, session, patched_slack, create_slack_mes
 
 
 def test_reply_existing_account_reconnect(
-    mocker, session, patched_slack, create_slack_message
+    mocker, add_user, patched_slack, create_slack_message
 ):
     # Arrange
-    username = "test_user"
-    user = User(slack_id=username)
-    session.add(user)
-    session.commit()
+    add_user(username="test_user")
 
-    message = create_slack_message(text="reconnect", user=username)
+    message = create_slack_message(text="reconnect", user="test_user")
     slack = patched_slack(mocker.MagicMock())
 
     # Act
@@ -268,3 +273,25 @@ def test_slack_command_invalid_command(client, create_slack_headers, patched_mee
 
     assert response.status_code == 200
     assert "command not found" in response.json["text"].lower()
+
+
+def test_connect_command_new_user(session):
+    data = {"user_id": "new_user"}
+
+    result = link_github(**data)
+
+    # TODO this is painful, think of a better way of testing these kinds of messages
+    # maybe a test helper?
+    assert (
+        "Associate GitHub Profile"
+        in result.json["attachments"][0]["actions"][0]["text"]
+    )
+
+
+def test_connect_command_existing_user(add_user):
+    add_user(username="existing_user")
+    data = {"user_id": "existing_user"}
+
+    result = link_github(**data)
+
+    assert "/busybeaver reconnect" in result.json["text"]

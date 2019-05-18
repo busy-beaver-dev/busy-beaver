@@ -24,7 +24,7 @@ UNKNOWN_COMMAND = (
 )
 ACCOUNT_ALREADY_ASSOCIATED = (
     "You have already associated a GitHub account with your Slack handle. "
-    "Please type `reconnect` to link to a different account."
+    "Please try `/busybeaver reconnect` to link to a different account."
 )
 VERIFY_ACCOUNT = (
     "Follow the link below to validate your GitHub account. "
@@ -150,7 +150,7 @@ def link_github(**data):
     user.slack_id = slack_id
     user = add_tracking_identifer_and_save_record(user)
     attachment = create_github_account_attachment(user.github_state)
-    return make_slack_response(attachment=attachment)
+    return make_slack_response(attachments=attachment)
 
 
 @slash_command_dispatcher.on("reconnect")
