@@ -15,13 +15,6 @@ from busy_beaver.toolbox import EventEmitter, make_slack_response
 logger = logging.getLogger(__name__)
 slash_command_dispatcher = EventEmitter()
 
-SEND_LINK_COMMANDS = ["connect"]
-RESEND_LINK_COMMANDS = ["reconnect"]
-ALL_LINK_COMMANDS = SEND_LINK_COMMANDS + RESEND_LINK_COMMANDS
-
-UNKNOWN_COMMAND = (
-    "I don't recognize your command. Type `connect` to link your GitHub account."
-)
 ACCOUNT_ALREADY_ASSOCIATED = (
     "You have already associated a GitHub account with your Slack handle. "
     "Please use `/busybeaver reconnect` to link to a different account."
@@ -33,7 +26,7 @@ VERIFY_ACCOUNT = (
     "Follow the link below to validate your GitHub account. "
     "I'll reference your GitHub username to track your public activity."
 )
-BOT_RESPONSE_TO_SLASH = "Find all available Busy Beaver Commands using /busybeaver help"
+BOT_RESPONDS_TO_SLASH = "Find all available Busy Beaver Commands using /busybeaver help"
 
 
 class SlackEventSubscriptionResource(MethodView):
@@ -56,7 +49,7 @@ class SlackEventSubscriptionResource(MethodView):
 
         dm_to_bot = event["channel_type"] == "im"
         if event["type"] == "message" and dm_to_bot:
-            slack.post_message(BOT_RESPONSE_TO_SLASH, channel_id=event["channel"])
+            slack.post_message(BOT_RESPONDS_TO_SLASH, channel_id=event["channel"])
         return jsonify(None)
 
 
