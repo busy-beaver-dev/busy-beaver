@@ -10,7 +10,7 @@ from busy_beaver import meetup, slack
 from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI
 from busy_beaver.extensions import db
 from busy_beaver.models import User
-from busy_beaver.toolbox import EventEmitter
+from busy_beaver.toolbox import EventEmitter, make_slack_response
 
 logger = logging.getLogger(__name__)
 slash_command_dispatcher = EventEmitter()
@@ -48,6 +48,8 @@ class SlackEventSubscriptionResource(MethodView):
             logger.info("[Busy Beaver] Slack -- API Verification")
             return jsonify({"challenge": data["challenge"]})
 
+        # TODO if bot gets DMed... send a message back with help text for slash commands
+
         # bot can see its own DMs
         event = data["event"]
         msg_from_bot = event.get("subtype") == "bot_message"
@@ -78,8 +80,7 @@ def reply_to_user_with_github_login_link(message):
         slack.post_message(ACCOUNT_ALREADY_ASSOCIATED, channel_id=channel_id)
         return
 
-    # generate unique identifer to track user during authentication process
-    state = str(uuid.uuid4())
+    state = str(uuid.uuid4())  # generate unique identifer to track user
     if user_record and chat_text in RESEND_LINK_COMMANDS:
         logger.info("[Busy Beaver] Relinking GitHub account.")
         user_record.github_state = state
@@ -121,9 +122,9 @@ class SlackSlashCommandDispatcher(MethodView):
     """Dealing with slash commands"""
 
     def post(self):
-        command_text = request.form.get("text")
-        command = self.parse_command_text(command_text)
-        return slash_command_dispatcher.emit(command.type, default="not_found")
+        data = dict(request.form)
+        command = self.parse_command_text(data["text"])
+        return slash_command_dispatcher.emit(command.type, default="not_found", **data)
 
     def parse_command_text(self, command_text: str) -> Command:
         command_parts = command_text.split()
@@ -132,29 +133,75 @@ class SlackSlashCommandDispatcher(MethodView):
         return Command(command_parts[0].lower(), args=command_parts[1:])
 
 
+##########################################
+# Associate GitHub account with Slack user
+##########################################
+@slash_command_dispatcher.on("connect")
+def link_github(**data):
+    logger.info("[Busy Beaver] New user. Linking GitHub account.")
+    slack_id = data["user_id"]
+    user_record = User.query.filter_by(slack_id=slack_id).first()
+
+    if user_record:
+        logger.info("[Busy Beaver] Slack acount already linked to GitHub")
+        return make_slack_response(text=ACCOUNT_ALREADY_ASSOCIATED)
+
+    user = User()
+    user.slack_id = slack_id
+    user = add_tracking_identifer_and_save_record(user)
+    attachment = create_github_account_attachment(user.github_state)
+    return make_slack_response(attachment=attachment)
+
+
+@slash_command_dispatcher.on("reconnect")
+def relink_github(**data):
+    logger.info("[Busy Beaver] Relinking GitHub account.")
+    slack_id = data["user_id"]
+    user_record = User.query.filter_by(slack_id=slack_id).first()
+
+    if not user_record:
+        logger.info("[Busy Beaver] Slack acount does not have associated GitHub")
+        return make_slack_response(text="No associated GitHub account")
+
+    user = add_tracking_identifer_and_save_record(user_record)
+    attachment = create_github_account_attachment(user.github_state)
+    return make_slack_response(attachments=attachment)
+
+
+def add_tracking_identifer_and_save_record(user: User) -> None:
+    user.github_state = str(uuid.uuid4())  # generate unique identifer to track user
+    db.session.add(user)
+    db.session.commit()
+    return user
+
+
+def create_github_account_attachment(state):
+
+    data = {
+        "client_id": GITHUB_CLIENT_ID,
+        "redirect_uri": GITHUB_REDIRECT_URI,
+        "state": state,
+    }
+    query_params = urlencode(data)
+    url = f"https://github.com/login/oauth/authorize?{query_params}"
+    return {
+        "fallback": url,
+        "attachment_type": "default",
+        "actions": [{"text": "Associate GitHub Profile", "type": "button", "url": url}],
+    }
+
+
+#########################
+# Upcoming Event Schedule
+#########################
 @slash_command_dispatcher.on("next")
-def next_event():
+def next_event(**data):
     event = meetup.get_events(count=1)[0]
-    attachment = create_slack_event_attachment(event)
-    return _create_response(attachments=attachment)
+    attachment = create_next_event_attachment(event)
+    return make_slack_response(attachments=attachment)
 
 
-@slash_command_dispatcher.on("not_found")
-def command_not_found():
-    return _create_response(text="Command not found")
-
-
-def _create_response(response_type="ephemeral", text="", attachments=None):
-    return jsonify(
-        {
-            "response_type": response_type,
-            "text": text,
-            "attachments": [attachments] if attachments else [],
-        }
-    )
-
-
-def create_slack_event_attachment(event: dict) -> dict:
+def create_next_event_attachment(event: dict) -> dict:
     """Make a Slack attachment for the event."""
     if "venue" in event:
         venue_name = event["venue"]["name"]
@@ -172,3 +219,19 @@ def create_slack_event_attachment(event: dict) -> dict:
         ),
         "color": "#008952",
     }
+
+
+########################
+# Miscellaneous Commands
+########################
+@slash_command_dispatcher.on("help")
+def display_help_text(**data):
+    return make_slack_response(
+        text="/busybeaver next to upcoming event /busybeaver help to see help text"
+    )
+
+
+@slash_command_dispatcher.on("not_found")
+def command_not_found(**data):
+    logger.info("[Busy Beaver] Unknown command")
+    return make_slack_response(text="Command not found")
