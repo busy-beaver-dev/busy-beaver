@@ -4,13 +4,13 @@ from busy_beaver.extensions import db
 from . import BaseModel
 
 
-class YoutubeVideo(BaseModel):
-    """YoutubeVide table"""
+class YouTubeVideo(BaseModel):
+    """Store all YouTube videos that have been posted"""
 
     __tablename__ = "youtube_video"
 
     def __repr__(self):
-        return f"<YoutubeVideo({self.youtube_id})>"
+        return f"<YouTubeVideo({self.youtube_id})>"
 
     # Attributes
     youtube_id = db.Column(db.String(300), nullable=False)

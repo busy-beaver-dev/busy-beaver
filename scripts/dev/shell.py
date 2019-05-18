@@ -6,7 +6,7 @@ from busy_beaver.adapters import (
     KeyValueStoreAdapter,
     SlackAdapter,
     TwitterAdapter,
-    YoutubeAdapter,
+    YouTubeAdapter,
 )
 from busy_beaver.extensions import db, rq  # noqa
 from busy_beaver.models import *  # noqa
@@ -36,7 +36,7 @@ twitter = TwitterAdapter(
 
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 YOUTUBE_CHANNEL = os.getenv("YOUTUBE_CHANNEL")
-youtube = YoutubeAdapter(api_key=YOUTUBE_API_KEY)
+youtube = YouTubeAdapter(api_key=YOUTUBE_API_KEY)
 
 
 kv = KeyValueStoreAdapter()
