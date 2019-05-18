@@ -1,4 +1,4 @@
-# Busy-Beaver Production Scripts
+# Busy Beaver Production Scripts
 
 ## Contents
 

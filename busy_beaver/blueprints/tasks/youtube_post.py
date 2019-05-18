@@ -18,13 +18,13 @@ class YouTubePollingResource(MethodView):
     def post(self):
         user = request._internal["user"]
         logger.info(
-            "[Busy-Beaver] YouTube Video Poll -- login successful",
+            "[Busy Beaver] YouTube Video Poll -- login successful",
             extra={"user": user.username},
         )
         data = request.json
         if not data or "channel" not in data:
             logger.error(
-                "[Busy-Beaver] YouTube Video Poll -- need channel in JSON body"
+                "[Busy Beaver] YouTube Video Poll -- need channel in JSON body"
             )
             return make_response(
                 400, json={"run": "incomplete"}, error="Missing Channel"
@@ -57,7 +57,7 @@ class YouTubePollingResource(MethodView):
         video_title = video["snippet"]["title"]
         video_id = video["id"]["videoId"]
         video_url = f"https://www.youtube.com/watch?v={video_id}"
-        msg = f"[Busy-Beaver] YouTube Video Poll -- posting {video_title}"
+        msg = f"[Busy Beaver] YouTube Video Poll -- posting {video_title}"
         logger.info(msg)
         youtube_video = YouTubeVideo(
             youtube_id=video_id,

@@ -1,38 +1,34 @@
 # Contribution Guidelines
 
-Busy-Beaver welcomes any, and all, contributions. Every little bit helps!
+Busy Beaver welcomes any, and all, contributions. Every little bit helps!
 
 #### Table of Contents
 
 <!-- TOC -->
 
-- [Contribution Guidelines](#contribution-guidelines)
-      - [Table of Contents](#table-of-contents)
-  - [Architecture Overview](#architecture-overview)
-    - [GitHub Activity Workflow](#github-activity-workflow)
-      - [GitHub Events](#github-events)
-  - [Development Environment](#development-environment)
-    - [Slack Integration](#slack-integration)
-    - [Setting up Development Environment](#setting-up-development-environment)
-    - [Verify Installation](#verify-installation)
-  - [Modifying Integration](#modifying-integration)
-  - [Adding New Integration](#adding-new-integration)
-  - [Miscellaneous](#miscellaneous)
-    - [Pre-commit](#pre-commit)
-    - [Task Queues](#task-queues)
-      - [Creating a New Task](#creating-a-new-task)
-      - [Notes](#notes)
-    - [PDB++ Configuration](#pdb-configuration)
+- [Architecture Overview](#architecture-overview)
+  - [GitHub Activity Workflow](#github-activity-workflow)
+- [Development Environment](#development-environment)
+  - [Slack Integration](#slack-integration)
+  - [Setting up Development Environment](#setting-up-development-environment)
+  - [Verify Installation](#verify-installation)
+  - [Running Tests](#running-tests)
+- [Modifying Integration](#modifying-integration)
+- [Adding New Integration](#adding-new-integration)
+- [Miscellaneous](#miscellaneous)
+  - [Pre-commit](#pre-commit)
+  - [Task Queues](#task-queues)
+  - [PDB++ Configuration](#pdb-configuration)
 
 <!-- /TOC -->
 
 ## Architecture Overview
 
-Busy-Beaver is a Python application with a Slack frontend. The application consists of a set of REST endpoints with integrations to various services (GitHub, Slack, YouTube, Trello, etc) using public APIs / 3rd party libraries.
+Busy Beaver is a Python application with a Slack frontend. The application consists of a set of REST endpoints with integrations to various services (GitHub, Slack, YouTube, Trello, etc) using public APIs / 3rd party libraries.
 
 While the application is currently a monolith, it is built with Service-Oriented Architecture (SOA) in mind. API endpoints are implemented using Flask blueprints and services are integrated using the Adapter / Facade pattern.
 
-Busy-Beaver tasks are kicked off through `curl` requests scheduled via CRON.
+Busy Beaver tasks are kicked off through `curl` requests scheduled via CRON.
 
 ### GitHub Activity Workflow
 
@@ -56,12 +52,12 @@ Busy Beaver currently supports the following GitHub public events:
 
 ## Development Environment
 
-It is recommended that users create a personal **Slack Workspace** to use for bot development. This will allow for independent development without having to wait for project maintainers to grant access to the Busy-Beaver development Slack.
+It is recommended that users create a personal **Slack Workspace** to use for bot development. This will allow for independent development without having to wait for project maintainers to grant access to the Busy Beaver development Slack.
 
 ### Slack Integration
 
 <table><tr><td>
-An in-depth guide can be followed at <a href=docs/development-create-slack-bot/readme.md> Create a Busy-Beaver Slack Dev-Bot</a>
+An in-depth guide can be followed at <a href=docs/development-create-slack-bot/readme.md> Create a Busy Beaver Slack Dev-Bot</a>
 </td></tr></table></br>
 
 1. [Create a Slack workspace](https://get.slack.help/hc/en-us/articles/206845317-Create-a-Slack-workspace)
@@ -86,7 +82,7 @@ An in-depth guide can be followed at <a href=docs/development-create-slack-bot/r
 
    Note: The **NGROK_BASE_URI** and **Slack Event Subscription > Request URL** values may need to be updated each time a new **ngrok** instance is created or if the address is expired.
 
-1. `make up` to refresh environment variables inside of Busy-Beaver
+1. `make up` to refresh environment variables inside of Busy Beaver
 
 ### Verify Installation
 
@@ -127,7 +123,7 @@ As each integration requires API credentials, it is recommended that contributor
 
 ## Adding New Integration
 
-Provide detailed instructions on how to set up the integration so we can roll the feature out to the production instance of Busy-Beaver with correct credentials.
+Provide detailed instructions on how to set up the integration so we can roll the feature out to the production instance of Busy Beaver with correct credentials.
 
 ## Miscellaneous
 
