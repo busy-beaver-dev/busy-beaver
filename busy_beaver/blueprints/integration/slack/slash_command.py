@@ -3,10 +3,10 @@ from typing import List, NamedTuple
 from urllib.parse import urlencode
 import uuid
 
-from flask import jsonify, request
+from flask import request
 from flask.views import MethodView
 
-from busy_beaver import meetup, slack
+from busy_beaver import meetup
 from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI
 from busy_beaver.extensions import db
 from busy_beaver.models import User
@@ -34,36 +34,12 @@ HELP_TEXT = (
 )
 
 
-class SlackEventSubscriptionResource(MethodView):
-    """Callback endpoint for Slack event subscriptions"""
-
-    def post(self):
-        data = request.json
-        logger.info("[Busy Beaver] Received event from Slack", extra={"req_json": data})
-
-        verification_request = data["type"] == "url_verification"
-        if verification_request:
-            logger.info("[Busy Beaver] Slack -- API Verification")
-            return jsonify({"challenge": data["challenge"]})
-
-        # bot can see its own DMs
-        event = data["event"]
-        msg_from_bot = event.get("subtype") == "bot_message"
-        if event["type"] == "message" and msg_from_bot:
-            return jsonify(None)
-
-        dm_to_bot = event["channel_type"] == "im"
-        if event["type"] == "message" and dm_to_bot:
-            slack.post_message(HELP_TEXT, channel_id=event["channel"])
-        return jsonify(None)
-
-
 class Command(NamedTuple):
     type: str
     args: List[str]
 
 
-class SlackSlashCommandDispatcher(MethodView):
+class SlackSlashCommandDispatchResource(MethodView):
     """Dealing with slash commands"""
 
     def post(self):
@@ -121,7 +97,6 @@ def add_tracking_identifer_and_save_record(user: User) -> None:
 
 
 def create_github_account_attachment(state):
-
     data = {
         "client_id": GITHUB_CLIENT_ID,
         "redirect_uri": GITHUB_REDIRECT_URI,
