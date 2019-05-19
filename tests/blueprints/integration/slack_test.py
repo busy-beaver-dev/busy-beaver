@@ -88,7 +88,6 @@ def test_slack_callback_bot_message_is_ignored(
     """Bot get notified of its own DM replies to users... ignore"""
     # Arrange
     slack = patched_slack(mocker.MagicMock())
-    # TODO find out how messages are really sent and make these tests a lot more robust
     data = {
         "type": "unknown todo",
         "event": {"type": "message", "subtype": "bot_message"},
@@ -111,7 +110,6 @@ def test_slack_callback_user_dms_bot_reply(
     # Arrange
     slack = patched_slack(mocker.MagicMock())
     channel_id = 5
-    # TODO find out how messages are really sent and make these tests a lot more robust
     data = {
         "type": "unknown todo",
         "event": {
@@ -161,6 +159,17 @@ def test_slack_command_invalid_command(client, create_slack_headers):
     assert "command not found" in response.json["text"].lower()
 
 
+@pytest.mark.integration
+def test_slack_command_empty_command(client, create_slack_headers):
+    data = {"command": "busybeaver", "text": ""}
+    headers = create_slack_headers(100_000_000, data, is_json_data=False)
+
+    response = client.post("/slack-slash-commands", headers=headers, data=data)
+
+    assert response.status_code == 200
+    assert "/busybeaver help" in response.json["text"].lower()
+
+
 #########################
 # Upcoming Event Schedule
 #########################
@@ -205,6 +214,28 @@ def test_command_next_event(patched_meetup):
     slack_response = result.json["attachments"][0]
     assert "ChiPy" in slack_response["title"]
     assert "http://meetup.com/_ChiPy_/event/blah" in slack_response["title_link"]
+    assert "Numerator" in slack_response["text"]
+
+
+@pytest.mark.unit
+def test_command_next_event_location_not_set(patched_meetup):
+    data = {}
+    patched_meetup(
+        events=[
+            {
+                "name": "ChiPy",
+                "event_url": "http://meetup.com/_ChiPy_/event/blah",
+                "time": 1_557_959_400_000,
+            }
+        ]
+    )
+
+    result = next_event(**data)
+
+    slack_response = result.json["attachments"][0]
+    assert "ChiPy" in slack_response["title"]
+    assert "http://meetup.com/_ChiPy_/event/blah" in slack_response["title_link"]
+    assert "TBD" in slack_response["text"]
 
 
 ##########################################
