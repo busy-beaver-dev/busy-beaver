@@ -8,6 +8,7 @@ from busy_beaver.blueprints.integration.slack import (
     command_not_found,
     display_help_text,
     link_github,
+    next_event,
     relink_github,
 )
 from busy_beaver.config import SLACK_SIGNING_SECRET
@@ -63,6 +64,7 @@ def create_slack_headers():
     return wrapper
 
 
+@pytest.mark.integration
 def test_slack_callback_url_verification(
     client, session, patched_slack, create_slack_headers
 ):
@@ -79,6 +81,7 @@ def test_slack_callback_url_verification(
     assert resp.json == {"challenge": challenge_code}
 
 
+@pytest.mark.integration
 def test_slack_callback_bot_message_is_ignored(
     mocker, client, session, patched_slack, create_slack_headers
 ):
@@ -100,6 +103,7 @@ def test_slack_callback_bot_message_is_ignored(
     assert len(slack.mock_calls) == 0
 
 
+@pytest.mark.integration
 def test_slack_callback_user_dms_bot_reply(
     mocker, client, session, patched_slack, create_slack_headers
 ):
@@ -180,9 +184,9 @@ def patched_meetup(mocker, patcher):
     return _wrapper
 
 
-def test_slack_command_next_event(client, create_slack_headers, patched_meetup):
-    data = {"command": "busybeaver", "text": "next with junk"}
-    headers = create_slack_headers(100_000_000, data, is_json_data=False)
+@pytest.mark.unit
+def test_command_next_event(patched_meetup):
+    data = {}
     patched_meetup(
         events=[
             {
@@ -194,10 +198,9 @@ def test_slack_command_next_event(client, create_slack_headers, patched_meetup):
         ]
     )
 
-    response = client.post("/slack-slash-commands", headers=headers, data=data)
+    result = next_event(**data)
 
-    assert response.status_code == 200
-    slack_response = response.json["attachments"][0]
+    slack_response = result.json["attachments"][0]
     assert "ChiPy" in slack_response["title"]
     assert "http://meetup.com/_ChiPy_/event/blah" in slack_response["title_link"]
 
