@@ -1,4 +1,5 @@
 import logging
+from typing import List, NamedTuple
 from urllib.parse import urlencode
 import uuid
 
@@ -9,13 +10,14 @@ from busy_beaver import meetup, slack
 from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI
 from busy_beaver.extensions import db
 from busy_beaver.models import User
+from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
+slash_command_dispatcher = EventEmitter()
 
 SEND_LINK_COMMANDS = ["connect"]
 RESEND_LINK_COMMANDS = ["reconnect"]
 ALL_LINK_COMMANDS = SEND_LINK_COMMANDS + RESEND_LINK_COMMANDS
-SLASH_COMMANDS = ("next",)
 
 UNKNOWN_COMMAND = (
     "I don't recognize your command. Type `connect` to link your GitHub account."
@@ -110,47 +112,63 @@ def reply_to_user_with_github_login_link(message):
     slack.post_message(VERIFY_ACCOUNT, channel_id=channel_id, attachments=attachment)
 
 
+class Command(NamedTuple):
+    type: str
+    args: List[str]
+
+
 class SlackSlashCommandDispatcher(MethodView):
-    """Parse a slash command and queue it if valid."""
+    """Dealing with slash commands"""
 
     def post(self):
         command_text = request.form.get("text")
-        if not self.validate_command(command_text):
-            return jsonify("Command not found")
-        event = meetup.get_events(count=1)[0]
-        attachment = self.create_slack_event_attachment(event)
-        return self._create_response(attachments=attachment)
+        command = self.parse_command_text(command_text)
+        return slash_command_dispatcher.emit(command.type, default="not_found")
 
-    def validate_command(self, command_text: str) -> bool:
-        """Validate the command is a supported command."""
+    def parse_command_text(self, command_text: str) -> Command:
         command_parts = command_text.split()
-        return bool(command_parts and command_parts[0] in SLASH_COMMANDS)
+        if not command_parts:
+            return Command(type="not_found", args=[])
+        return Command(command_parts[0].lower(), args=command_parts[1:])
 
-    def _create_response(self, response_type="ephemeral", text="", attachments=None):
-        return jsonify(
-            {
-                "response_type": response_type,
-                "text": text,
-                "attachments": [attachments] if attachments else [],
-            }
-        )
 
-    @staticmethod
-    def create_slack_event_attachment(event: dict) -> dict:
-        """Make a Slack attachment for the event."""
-        if "venue" in event:
-            venue_name = event["venue"]["name"]
-        else:
-            venue_name = "TBD"
+@slash_command_dispatcher.on("next")
+def next_event():
+    event = meetup.get_events(count=1)[0]
+    attachment = create_slack_event_attachment(event)
+    return _create_response(attachments=attachment)
 
-        return {
-            "mrkdwn_in": ["text", "pretext"],
-            "pretext": "*Next ChiPy Event:*",
-            "title": event["name"],
-            "title_link": event["event_url"],
-            "fallback": "{}: {}".format(event["name"], event["event_url"]),
-            "text": "*<!date^{}^{{time}} {{date_long}}|no date>* at {}".format(
-                int(event["time"] / 1000), venue_name
-            ),
-            "color": "#008952",
+
+@slash_command_dispatcher.on("not_found")
+def command_not_found():
+    return _create_response(text="Command not found")
+
+
+def _create_response(response_type="ephemeral", text="", attachments=None):
+    return jsonify(
+        {
+            "response_type": response_type,
+            "text": text,
+            "attachments": [attachments] if attachments else [],
         }
+    )
+
+
+def create_slack_event_attachment(event: dict) -> dict:
+    """Make a Slack attachment for the event."""
+    if "venue" in event:
+        venue_name = event["venue"]["name"]
+    else:
+        venue_name = "TBD"
+
+    return {
+        "mrkdwn_in": ["text", "pretext"],
+        "pretext": "*Next ChiPy Event:*",
+        "title": event["name"],
+        "title_link": event["event_url"],
+        "fallback": "{}: {}".format(event["name"], event["event_url"]),
+        "text": "*<!date^{}^{{time}} {{date_long}}|no date>* at {}".format(
+            int(event["time"] / 1000), venue_name
+        ),
+        "color": "#008952",
+    }

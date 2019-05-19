@@ -10,6 +10,14 @@ class EventEmitterException(BusyBeaverException):
     pass
 
 
+class EventEmitterEventAlreadyRegistered(EventEmitterException):
+    pass
+
+
+class EventEmitterEventNotRegistered(EventEmitterException):
+    pass
+
+
 class NoMeetupEventsFound(BusyBeaverException):
     pass
 
