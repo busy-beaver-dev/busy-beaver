@@ -20,7 +20,7 @@ ACCOUNT_ALREADY_ASSOCIATED = (
     "Please use `/busybeaver reconnect` to link to a different account."
 )
 NO_ASSOCIATED_ACCOUNT = (
-    "No associated account. Please use `/busybeaver connect` to link your account."
+    "No associated account. Use `/busybeaver connect` to link your account."
 )
 VERIFY_ACCOUNT = (
     "Follow the link below to validate your GitHub account. "
@@ -28,8 +28,9 @@ VERIFY_ACCOUNT = (
 )
 HELP_TEXT = (
     "`/busybeaver next`\t\t Retrieve next event\n "
-    "`/busybeaver connect`\t\t Associate GitHub Account\n "
-    "`/busybeaver reconnect`\t\t Reassociate GitHub Account\n "
+    "`/busybeaver connect`\t\t Connect GitHub Account\n "
+    "`/busybeaver reconnect`\t\t Connect to difference GitHub Account\n "
+    "`/busybeaver disconnect`\t\t Disconenct GitHub Account\n "
     "`/busybeaver help`\t\t Display help text"
 )
 
@@ -78,15 +79,32 @@ def link_github(**data):
 def relink_github(**data):
     logger.info("[Busy Beaver] Relinking GitHub account.")
     slack_id = data["user_id"]
-    user_record = User.query.filter_by(slack_id=slack_id).first()
+    user = User.query.filter_by(slack_id=slack_id).first()
 
-    if not user_record:
+    if not user:
         logger.info("[Busy Beaver] Slack acount does not have associated GitHub")
         return make_slack_response(text=NO_ASSOCIATED_ACCOUNT)
 
-    user = add_tracking_identifer_and_save_record(user_record)
+    user = add_tracking_identifer_and_save_record(user)
     attachment = create_github_account_attachment(user.github_state)
     return make_slack_response(text=VERIFY_ACCOUNT, attachments=attachment)
+
+
+@slash_command_dispatcher.on("disconnect")
+def disconnect_github(**data):
+    logger.info("[Busy Beaver] Disconnecting GitHub account.")
+    slack_id = data["user_id"]
+    user = User.query.filter_by(slack_id=slack_id).first()
+
+    if not user:
+        logger.info("[Busy Beaver] Slack acount does not have associated GitHub")
+        return make_slack_response(text="No GitHub account associated with profile")
+
+    db.session.delete(user)
+    db.session.commit()
+    return make_slack_response(
+        text="Account has been deleted. `/busybeaver connect` to reconnect"
+    )
 
 
 def add_tracking_identifer_and_save_record(user: User) -> None:

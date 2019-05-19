@@ -2,6 +2,7 @@ import pytest
 
 from busy_beaver.blueprints.integration.slack.slash_command import (
     command_not_found,
+    disconnect_github,
     display_help_text,
     link_github,
     next_event,
@@ -169,12 +170,8 @@ def test_connect_command_new_user(session, generate_slash_command_request):
 
     result = link_github(**data)
 
-    # TODO this is painful, think of a better way of testing these kinds of messages
-    # maybe a test helper?
-    assert (
-        "Associate GitHub Profile"
-        in result.json["attachments"][0]["actions"][0]["text"]
-    )
+    slack_response = result.json["attachments"][0]
+    assert "Associate GitHub Profile" in slack_response["actions"][0]["text"]
 
 
 @pytest.mark.unit
@@ -203,10 +200,30 @@ def test_reconnect_command_existing_user(generate_slash_command_request, add_use
 
     result = relink_github(**data)
 
-    assert (
-        "Associate GitHub Profile"
-        in result.json["attachments"][0]["actions"][0]["text"]
-    )
+    slack_response = result.json["attachments"][0]
+    assert "Associate GitHub Profile" in slack_response["actions"][0]["text"]
+
+
+@pytest.mark.unit
+def test_disconnect_command_unregistered_user(session, generate_slash_command_request):
+    data = generate_slash_command_request("disconnect")
+
+    result = disconnect_github(**data)
+
+    assert "No GitHub account associated with profile" in result.json["text"]
+
+
+@pytest.mark.unit
+def test_disconnect_command_registered_user(
+    session, generate_slash_command_request, add_user
+):
+    user = add_user("existing_user")
+    data = generate_slash_command_request("disconnect", user_id="existing_user")
+
+    result = disconnect_github(**data)
+
+    assert "Account has been deleted" in result.json["text"]
+    assert not User.query.get(user.id)
 
 
 ########################
