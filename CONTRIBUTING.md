@@ -17,8 +17,8 @@ Busy Beaver welcomes any, and all, contributions. Every little bit helps!
 - [Adding New Third-Party Integrations](#adding-new-third-party-integrations)
 - [Miscellaneous](#miscellaneous)
   - [Pre-commit](#pre-commit)
-  - [Task Queues](#task-queues)
   - [Slack Slash Commands](#slack-slash-commands)
+  - [Task Queues](#task-queues)
   - [PDB++ Configuration](#pdb-configuration)
 
 <!-- /TOC -->
@@ -137,12 +137,6 @@ to install the `flake8` and `black` environments locally.
 Pre-commit will run on files staged for change automatically. You can also check pre-commit hook compliance on staged
 files by running `pre-commit run` at any time. Note that pre-commit ignores files that are not staged for change.
 
-### Task Queues
-
-Busy Beaver uses [RQ](http://python-rq.org) to queue jobs and process them in the background with workers. [Redis](https://redis.io/) is used as the message broker in this asynchronous architecture.
-
-The Docker Compose development environment spins up a single worker along with a Redis instance. For testing purposes, we set `is_async=False` to force code to be executed synchronously. Need to find a way to simulate production environment with workers in Travis, or it might make sense to migrate to Jenkins.
-
 ### Slack Slash Commands
 
 Users are able to interact with Busy Beaver using the `/busybeaver [command]` interface provided through the Slack UI. All slash commands are routed to a Busy Beaver endpoint that was enabled earlier via the Slack Slash Command webhook.
@@ -158,6 +152,12 @@ def fetch_news(**data):
 ```
 
 - [Slack Docs: Slash Commands](https://api.slack.com/slash-commands)
+
+### Task Queues
+
+Busy Beaver uses [RQ](http://python-rq.org) to queue jobs and process them in the background with workers. [Redis](https://redis.io/) is used as the message broker in this asynchronous architecture.
+
+The Docker Compose development environment spins up a single worker along with a Redis instance. For testing purposes, we set `is_async=False` to force code to be executed synchronously. Need to find a way to simulate production environment with workers in Travis, or it might make sense to migrate to Jenkins.
 
 #### Creating a New Task
 
