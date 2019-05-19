@@ -107,6 +107,22 @@ This will be used for the **slack-event-subscription endpoint** by the local Bus
 :link: Update the <strong>.env</strong> config - <strong>NGROK_BASE_URI</strong> value to <strong>Slack Event Subscription - Request URL</strong> as defined in  <a href=../../CONTRIBUTING.md#Setting-up-Development-Environment>Setting up Development Environment</a>.
 </td></tr></table>
 
+### Enable Slash Commands
+
+1. Create new **Slash Command**.</br>
+   <a href="images/slash-commands-1.png">
+   <img src="images/slash-commands-1.png" width=400/>
+   </a>
+1. Update the **Request URL** to the **slack-slash-command endpoint** composed of the **forwarding address** defined by the **ngrok** instance i.e.
+
+   ```http
+   http://[ngrok_fowarding_address]/slack-slash-command
+   ```
+
+   <a href="images/slash-commands-2.png">
+   <img src="images/slash-commands-2.png" width=400/>
+   </a>
+
 ## Install App to Workspace
 
 Once a feature or permission has been installed,
