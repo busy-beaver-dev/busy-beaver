@@ -42,6 +42,7 @@ class EventList:
 
 class CommitsList(EventList):
     EMOJI = ":arrow_up:"
+    NOUN = "repo"
 
     @staticmethod
     def matches_event(event):
@@ -61,7 +62,7 @@ class CommitsList(EventList):
 
 class CreatedReposList(EventList):
     EMOJI = ":sparkles:"
-    NOUN = "new issue"
+    NOUN = "new repo"
 
     @staticmethod
     def matches_event(event):

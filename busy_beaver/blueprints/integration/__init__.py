@@ -1,7 +1,7 @@
 from flask import blueprints
 
 from .github import GitHubIdentityVerificationCallbackResource
-from .slack import SlackEventSubscriptionResource, SlackSlashCommandDispatcher
+from .slack import SlackEventSubscriptionResource, SlackSlashCommandDispatchResource
 from busy_beaver.config import SLACK_SIGNING_SECRET
 from busy_beaver.decorators import verify_slack_signature
 
@@ -13,7 +13,7 @@ integration_bp.add_url_rule(
     "/slack-event-subscription", view_func=slack_verification_required(view)
 )
 
-view = SlackSlashCommandDispatcher.as_view("slack_slash_command_dispatcher")
+view = SlackSlashCommandDispatchResource.as_view("slack_slash_command_dispatcher")
 integration_bp.add_url_rule(
     "/slack-slash-commands", view_func=slack_verification_required(view)
 )

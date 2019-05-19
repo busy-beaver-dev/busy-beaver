@@ -1,12 +1,8 @@
 from datetime import datetime, timedelta
 import json as _json
 
-from flask import Response
+from flask import jsonify, Response
 import pytz
-
-
-def utc_now_minus(period: timedelta):
-    return pytz.utc.localize(datetime.utcnow()) - period
 
 
 def make_response(
@@ -29,3 +25,17 @@ def make_response(
         content_type="application/json",
         response=_json.dumps(resp),
     )
+
+
+def make_slack_response(response_type="ephemeral", text="", attachments=None):
+    return jsonify(
+        {
+            "response_type": response_type,
+            "text": text,
+            "attachments": [attachments] if attachments else [],
+        }
+    )
+
+
+def utc_now_minus(period: timedelta):
+    return pytz.utc.localize(datetime.utcnow()) - period

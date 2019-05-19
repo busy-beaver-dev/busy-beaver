@@ -13,10 +13,11 @@ Busy Beaver welcomes any, and all, contributions. Every little bit helps!
   - [Setting up Development Environment](#setting-up-development-environment)
   - [Verify Installation](#verify-installation)
   - [Running Tests](#running-tests)
-- [Modifying Integration](#modifying-integration)
-- [Adding New Integration](#adding-new-integration)
+- [Modifying Third-Party Integrations](#modifying-third-party-integrations)
+- [Adding New Third-Party Integrations](#adding-new-third-party-integrations)
 - [Miscellaneous](#miscellaneous)
   - [Pre-commit](#pre-commit)
+  - [Slack Slash Commands](#slack-slash-commands)
   - [Task Queues](#task-queues)
   - [PDB++ Configuration](#pdb-configuration)
 
@@ -61,9 +62,9 @@ An in-depth guide can be followed at <a href=docs/development-create-slack-bot/r
 </td></tr></table></br>
 
 1. [Create a Slack workspace](https://get.slack.help/hc/en-us/articles/206845317-Create-a-Slack-workspace)
-2. [Create a Slack App](https://api.slack.com/apps) and set the **Development Slack Workspace** to the workspace from the previous step - [Create a Slack Dev-Bot - Init a Slack App](docs/development-create-slack-bot/readme.md#init-a-slack-app)
-3. Configure the **Slack App** settings - [Create a Slack Dev-Bot - Slack App Settings](docs/development-create-slack-bot/readme.md#Slack-App-Settings)
-4. Install **Slack App** to **Slack Workspace** - [Create a Slack Dev-Bot - Install App to Workspace](docs/development-create-slack-bot/readme.md#Install-App-to-Workspace)
+1. [Create a Slack App](https://api.slack.com/apps) and set the **Development Slack Workspace** to the workspace from the previous step - [Create a Slack Dev-Bot - Init a Slack App](docs/development-create-slack-bot/readme.md#init-a-slack-app)
+1. Configure the **Slack App** settings - [Create a Slack Dev-Bot - Slack App Settings](docs/development-create-slack-bot/readme.md#Slack-App-Settings)
+1. Install **Slack App** to **Slack Workspace** - [Create a Slack Dev-Bot - Install App to Workspace](docs/development-create-slack-bot/readme.md#Install-App-to-Workspace)
 
 ### Setting up Development Environment
 
@@ -117,11 +118,11 @@ run pytest with:
 $ make test
 ```
 
-## Modifying Integration
+## Modifying Third-Party Integrations
 
 As each integration requires API credentials, it is recommended that contributors create apps for integration connect to their personal accounts.
 
-## Adding New Integration
+## Adding New Third-Party Integrations
 
 Provide detailed instructions on how to set up the integration so we can roll the feature out to the production instance of Busy Beaver with correct credentials.
 
@@ -135,6 +136,22 @@ to install the `flake8` and `black` environments locally.
 
 Pre-commit will run on files staged for change automatically. You can also check pre-commit hook compliance on staged
 files by running `pre-commit run` at any time. Note that pre-commit ignores files that are not staged for change.
+
+### Slack Slash Commands
+
+Users are able to interact with Busy Beaver using the `/busybeaver [command]` interface provided through the Slack UI. All slash commands are routed to a Busy Beaver endpoint that was enabled earlier via the Slack Slash Command webhook.
+
+Busy Beaver uses the [dictionary dispatch pattern](https://alysivji.github.io/quick-hit-dictionary-dispatch.html) to run command-specific logic. We leverage a `EventEmitter` class, inspired by the [node.js EventEmitter](https://nodejs.org/api/events.html#events_class_eventemitter), to allow for the creation of new slash commands with a simple decorator interface.
+
+You can create a custom slash command, i.e. `/busybeaver news`, as follows:
+
+```python
+@slash_command_dispatcher.on("news")
+def fetch_news(**data):
+    # business logic to handle command goes here
+```
+
+- [Slack Docs: Slash Commands](https://api.slack.com/slash-commands)
 
 ### Task Queues
 
