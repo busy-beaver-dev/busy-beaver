@@ -137,9 +137,36 @@ def test_slack_callback_user_dms_bot_reply(
 ###########################
 # Slack Slash Command Tests
 ###########################
+@pytest.fixture
+def generate_slash_command_request():
+    def _generate_data(
+        command,
+        user_id="U5FRZAD323",
+        channel_id="CFLDRNBSDFD",
+        team_id="T5GCMNWAFSDFSDF",
+    ):
+        return {
+            "token": "deprecated",
+            "team_id": team_id,
+            "team_domain": "cant-depend-on-this",
+            "channel_id": channel_id,
+            "channel_name": "cant-depend-on-this",
+            "user_id": user_id,
+            "user_name": "cant-depend-on-this",
+            "command": "/busybeaver",
+            "text": command,
+            "response_url": "https://hooks.slack.com/commands/T5GCMNW/639192748/39",
+            "trigger_id": "639684516021.186015429778.0a18640db7b29f98749b62f6e824fe30",
+        }
+
+    return _generate_data
+
+
 @pytest.mark.integration
-def test_slack_command_valid_command(client, create_slack_headers):
-    data = {"command": "busybeaver", "text": "help"}
+def test_slack_command_valid_command(
+    client, create_slack_headers, generate_slash_command_request
+):
+    data = generate_slash_command_request("help")
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
 
     response = client.post("/slack-slash-commands", headers=headers, data=data)
@@ -149,8 +176,10 @@ def test_slack_command_valid_command(client, create_slack_headers):
 
 
 @pytest.mark.integration
-def test_slack_command_invalid_command(client, create_slack_headers):
-    data = {"command": "busybeaver", "text": "non-existent"}
+def test_slack_command_invalid_command(
+    client, create_slack_headers, generate_slash_command_request
+):
+    data = generate_slash_command_request("non-existent")
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
 
     response = client.post("/slack-slash-commands", headers=headers, data=data)
@@ -160,8 +189,10 @@ def test_slack_command_invalid_command(client, create_slack_headers):
 
 
 @pytest.mark.integration
-def test_slack_command_empty_command(client, create_slack_headers):
-    data = {"command": "busybeaver", "text": ""}
+def test_slack_command_empty_command(
+    client, create_slack_headers, generate_slash_command_request
+):
+    data = generate_slash_command_request(command="")
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
 
     response = client.post("/slack-slash-commands", headers=headers, data=data)
@@ -196,8 +227,8 @@ def patched_meetup(mocker, patcher):
 
 
 @pytest.mark.unit
-def test_command_next_event(patched_meetup):
-    data = {}
+def test_command_next_event(generate_slash_command_request, patched_meetup):
+    data = generate_slash_command_request("next")
     patched_meetup(
         events=[
             {
@@ -218,8 +249,10 @@ def test_command_next_event(patched_meetup):
 
 
 @pytest.mark.unit
-def test_command_next_event_location_not_set(patched_meetup):
-    data = {}
+def test_command_next_event_location_not_set(
+    generate_slash_command_request, patched_meetup
+):
+    data = generate_slash_command_request("next")
     patched_meetup(
         events=[
             {
@@ -242,8 +275,8 @@ def test_command_next_event_location_not_set(patched_meetup):
 # Associate GitHub account with Slack user
 ##########################################
 @pytest.mark.unit
-def test_connect_command_new_user(session):
-    data = {"user_id": "new_user"}
+def test_connect_command_new_user(session, generate_slash_command_request):
+    data = generate_slash_command_request("connect", user_id="new_user")
 
     result = link_github(**data)
 
@@ -256,9 +289,9 @@ def test_connect_command_new_user(session):
 
 
 @pytest.mark.unit
-def test_connect_command_existing_user(add_user):
+def test_connect_command_existing_user(add_user, generate_slash_command_request):
     add_user(username="existing_user")
-    data = {"user_id": "existing_user"}
+    data = generate_slash_command_request("connect", user_id="existing_user")
 
     result = link_github(**data)
 
@@ -266,8 +299,8 @@ def test_connect_command_existing_user(add_user):
 
 
 @pytest.mark.unit
-def test_reconnect_command_new_user(session):
-    data = {"user_id": "new_user"}
+def test_reconnect_command_new_user(session, generate_slash_command_request):
+    data = generate_slash_command_request("reconnect", user_id="new_user")
 
     result = relink_github(**data)
 
@@ -275,9 +308,9 @@ def test_reconnect_command_new_user(session):
 
 
 @pytest.mark.unit
-def test_reconnect_command_existing_user(add_user):
+def test_reconnect_command_existing_user(generate_slash_command_request, add_user):
     add_user(username="existing_user")
-    data = {"user_id": "existing_user"}
+    data = generate_slash_command_request("reconnect", user_id="existing_user")
 
     result = relink_github(**data)
 
@@ -291,14 +324,18 @@ def test_reconnect_command_existing_user(add_user):
 # Miscellaneous Commands
 ########################
 @pytest.mark.unit
-def test_command_help():
-    result = display_help_text()
+def test_command_help(generate_slash_command_request):
+    data = generate_slash_command_request("help")
+
+    result = display_help_text(**data)
 
     assert "/busybeaver help" in result.json["text"]
 
 
 @pytest.mark.unit
-def test_command_not_found():
-    result = command_not_found()
+def test_command_not_found(generate_slash_command_request):
+    data = generate_slash_command_request(command="blah")
+
+    result = command_not_found(**data)
 
     assert "/busybeaver help" in result.json["text"]
