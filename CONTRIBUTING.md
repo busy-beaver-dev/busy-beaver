@@ -210,7 +210,7 @@ class Config(pdb.DefaultConfig):
 
     - Expose daemon on tcp://localhost without TLS 
     
-        <img src="docs/windows-dev/docker-windows-shared.png" alt="Docker" width=300 />
+        <img src="docs/windows-dev/docker-windows-expose.png" alt="Docker" width=300 />
 
     - Add Shared Drive
     
