@@ -26,7 +26,12 @@ VERIFY_ACCOUNT = (
     "Follow the link below to validate your GitHub account. "
     "I'll reference your GitHub username to track your public activity."
 )
-BOT_RESPONDS_TO_SLASH = "Find all available Busy Beaver Commands using /busybeaver help"
+HELP_TEXT = (
+    "`/busybeaver next`\t\t Retrieve next event\n "
+    "`/busybeaver connect`\t\t Associate GitHub Account\n "
+    "`/busybeaver reconnect`\t\t Reassociate GitHub Account\n "
+    "`/busybeaver help`\t\t Display help text"
+)
 
 
 class SlackEventSubscriptionResource(MethodView):
@@ -49,7 +54,7 @@ class SlackEventSubscriptionResource(MethodView):
 
         dm_to_bot = event["channel_type"] == "im"
         if event["type"] == "message" and dm_to_bot:
-            slack.post_message(BOT_RESPONDS_TO_SLASH, channel_id=event["channel"])
+            slack.post_message(HELP_TEXT, channel_id=event["channel"])
         return jsonify(None)
 
 
@@ -166,12 +171,10 @@ def create_next_event_attachment(event: dict) -> dict:
 ########################
 @slash_command_dispatcher.on("help")
 def display_help_text(**data):
-    return make_slack_response(
-        text="/busybeaver next to upcoming event /busybeaver help to see help text"
-    )
+    return make_slack_response(text=HELP_TEXT)
 
 
 @slash_command_dispatcher.on("not_found")
 def command_not_found(**data):
     logger.info("[Busy Beaver] Unknown command")
-    return make_slack_response(text="Command not found")
+    return make_slack_response(text="Command not found. Try `/busybeaver help`")

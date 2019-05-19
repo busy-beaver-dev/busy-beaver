@@ -4,7 +4,12 @@ from urllib.parse import urlencode
 
 import pytest
 
-from busy_beaver.blueprints.integration.slack import link_github, relink_github
+from busy_beaver.blueprints.integration.slack import (
+    command_not_found,
+    display_help_text,
+    link_github,
+    relink_github,
+)
 from busy_beaver.config import SLACK_SIGNING_SECRET
 from busy_beaver.models import User
 from busy_beaver.decorators.verification import calculate_signature
@@ -234,3 +239,15 @@ def test_reconnect_command_existing_user(add_user):
         "Associate GitHub Profile"
         in result.json["attachments"][0]["actions"][0]["text"]
     )
+
+
+def test_command_help():
+    result = display_help_text()
+
+    assert "/busybeaver help" in result.json["text"]
+
+
+def test_command_not_found():
+    result = command_not_found()
+
+    assert "/busybeaver help" in result.json["text"]
