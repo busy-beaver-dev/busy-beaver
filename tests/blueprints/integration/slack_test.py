@@ -135,6 +135,29 @@ def test_slack_callback_user_dms_bot_reply(
 ###########################
 # Slack Slash Command Tests
 ###########################
+@pytest.mark.integration
+def test_slack_command_valid_command(client, create_slack_headers):
+    data = {"command": "busybeaver", "text": "help"}
+    headers = create_slack_headers(100_000_000, data, is_json_data=False)
+
+    response = client.post("/slack-slash-commands", headers=headers, data=data)
+
+    assert response.status_code == 200
+    assert "/busybeaver help" in response.json["text"].lower()
+
+
+@pytest.mark.integration
+def test_slack_command_invalid_command(client, create_slack_headers):
+    data = {"command": "busybeaver", "text": "non-existent"}
+    headers = create_slack_headers(100_000_000, data, is_json_data=False)
+
+    response = client.post("/slack-slash-commands", headers=headers, data=data)
+
+    assert response.status_code == 200
+    assert "command not found" in response.json["text"].lower()
+
+
+# Next Event Slash Commands
 @pytest.fixture
 def patched_meetup(mocker, patcher):
     class FakeMeetupClient:
@@ -179,26 +202,7 @@ def test_slack_command_next_event(client, create_slack_headers, patched_meetup):
     assert "http://meetup.com/_ChiPy_/event/blah" in slack_response["title_link"]
 
 
-def test_slack_command_invalid_command(client, create_slack_headers, patched_meetup):
-    data = {"command": "busybeaver", "text": "non-existent"}
-    headers = create_slack_headers(100_000_000, data, is_json_data=False)
-    patched_meetup(
-        events=[
-            {
-                "venue": {"name": "Numerator"},
-                "name": "ChiPy",
-                "event_url": "http://meetup.com/_ChiPy_/event/blah",
-                "time": 1_557_959_400_000,
-            }
-        ]
-    )
-
-    response = client.post("/slack-slash-commands", headers=headers, data=data)
-
-    assert response.status_code == 200
-    assert "command not found" in response.json["text"].lower()
-
-
+@pytest.mark.unit
 def test_connect_command_new_user(session):
     data = {"user_id": "new_user"}
 
@@ -212,6 +216,7 @@ def test_connect_command_new_user(session):
     )
 
 
+@pytest.mark.unit
 def test_connect_command_existing_user(add_user):
     add_user(username="existing_user")
     data = {"user_id": "existing_user"}
@@ -221,6 +226,7 @@ def test_connect_command_existing_user(add_user):
     assert "/busybeaver reconnect" in result.json["text"]
 
 
+@pytest.mark.unit
 def test_reconnect_command_new_user(session):
     data = {"user_id": "new_user"}
 
@@ -229,6 +235,7 @@ def test_reconnect_command_new_user(session):
     assert "/busybeaver connect" in result.json["text"]
 
 
+@pytest.mark.unit
 def test_reconnect_command_existing_user(add_user):
     add_user(username="existing_user")
     data = {"user_id": "existing_user"}
@@ -241,12 +248,14 @@ def test_reconnect_command_existing_user(add_user):
     )
 
 
+@pytest.mark.unit
 def test_command_help():
     result = display_help_text()
 
     assert "/busybeaver help" in result.json["text"]
 
 
+@pytest.mark.unit
 def test_command_not_found():
     result = command_not_found()
 
