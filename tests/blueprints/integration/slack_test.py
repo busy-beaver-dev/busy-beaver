@@ -161,7 +161,9 @@ def test_slack_command_invalid_command(client, create_slack_headers):
     assert "command not found" in response.json["text"].lower()
 
 
-# Next Event Slash Commands
+#########################
+# Upcoming Event Schedule
+#########################
 @pytest.fixture
 def patched_meetup(mocker, patcher):
     class FakeMeetupClient:
@@ -205,6 +207,9 @@ def test_command_next_event(patched_meetup):
     assert "http://meetup.com/_ChiPy_/event/blah" in slack_response["title_link"]
 
 
+##########################################
+# Associate GitHub account with Slack user
+##########################################
 @pytest.mark.unit
 def test_connect_command_new_user(session):
     data = {"user_id": "new_user"}
@@ -251,6 +256,9 @@ def test_reconnect_command_existing_user(add_user):
     )
 
 
+########################
+# Miscellaneous Commands
+########################
 @pytest.mark.unit
 def test_command_help():
     result = display_help_text()
