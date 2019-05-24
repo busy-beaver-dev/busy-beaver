@@ -1,6 +1,13 @@
+from typing import NamedTuple
 from meetup.api import Client as MeetupClient
-
 from busy_beaver.exceptions import NoMeetupEventsFound
+
+
+class EventDetails(NamedTuple):
+    name: str
+    url: str
+    dt: int
+    venue: str
 
 
 class MeetupAdapter:
@@ -13,4 +20,21 @@ class MeetupAdapter:
         events = self.meetup_client.GetEvents(group_urlname=group_name)
         if not events.results:
             raise NoMeetupEventsFound
-        return events.results[:count]
+
+        upcoming_events = []
+        for event in events.results[:count]:
+            if "venue" in event:
+                venue_name = event["venue"]["name"]
+            else:
+                venue_name = "TBD"
+
+            upcoming_events.append(
+                EventDetails(
+                    name=event["name"],
+                    url=event["event_url"],
+                    dt=int(event["time"] / 1000),
+                    venue=venue_name,
+                )
+            )
+
+        return upcoming_events

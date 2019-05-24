@@ -6,7 +6,9 @@ import uuid
 from flask import request
 from flask.views import MethodView
 
+from .cards import UpcomingEventList
 from busy_beaver import meetup
+from busy_beaver.adapters.meetup import EventDetails
 from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI, MEETUP_GROUP_NAME
 from busy_beaver.extensions import db
 from busy_beaver.models import User
@@ -139,24 +141,24 @@ def next_event(**data):
     return make_slack_response(attachments=attachment)
 
 
-def create_next_event_attachment(event: dict) -> dict:
+def create_next_event_attachment(event: EventDetails) -> dict:
     """Make a Slack attachment for the event."""
-    if "venue" in event:
-        venue_name = event["venue"]["name"]
-    else:
-        venue_name = "TBD"
-
     return {
         "mrkdwn_in": ["text", "pretext"],
         "pretext": "*Next ChiPy Event:*",
-        "title": event["name"],
-        "title_link": event["event_url"],
-        "fallback": "{}: {}".format(event["name"], event["event_url"]),
-        "text": "*<!date^{}^{{time}} {{date_long}}|no date>* at {}".format(
-            int(event["time"] / 1000), venue_name
-        ),
+        "title": event.name,
+        "title_link": event.url,
+        "fallback": f"{event.name}: {event.url}",
+        "text": f"*<!date^{event.dt}^{{time}} {{date_long}}|no date>* at {event.venue}",
         "color": "#008952",
     }
+
+
+@slash_command_dispatcher.on("events")
+def upcoming_events(**data):
+    events = meetup.get_events(MEETUP_GROUP_NAME, count=4)
+    output = UpcomingEventList("Upcoming ChiPy Events", events)
+    return make_slack_response(blocks=output.to_dict())
 
 
 ########################

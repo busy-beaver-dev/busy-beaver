@@ -1,5 +1,6 @@
 import pytest
 
+from busy_beaver.adapters.meetup import EventDetails
 from busy_beaver.blueprints.integration.slack.slash_command import (
     command_not_found,
     disconnect_github,
@@ -121,12 +122,12 @@ def test_command_next_event(generate_slash_command_request, patched_meetup):
     data = generate_slash_command_request("next")
     patched_meetup(
         events=[
-            {
-                "venue": {"name": "Numerator"},
-                "name": "ChiPy",
-                "event_url": "http://meetup.com/_ChiPy_/event/blah",
-                "time": 1_557_959_400_000,
-            }
+            EventDetails(
+                name="ChiPy",
+                url="http://meetup.com/_ChiPy_/event/blah",
+                dt=1_557_959_400_000,
+                venue="Numerator",
+            )
         ]
     )
 
@@ -138,6 +139,7 @@ def test_command_next_event(generate_slash_command_request, patched_meetup):
     assert "Numerator" in slack_response["text"]
 
 
+# TODO with the way we changed this, it makes sense to do this the meetup adapter test
 @pytest.mark.unit
 def test_command_next_event_location_not_set(
     generate_slash_command_request, patched_meetup
@@ -145,11 +147,12 @@ def test_command_next_event_location_not_set(
     data = generate_slash_command_request("next")
     patched_meetup(
         events=[
-            {
-                "name": "ChiPy",
-                "event_url": "http://meetup.com/_ChiPy_/event/blah",
-                "time": 1_557_959_400_000,
-            }
+            EventDetails(
+                name="ChiPy",
+                url="http://meetup.com/_ChiPy_/event/blah",
+                dt=1_557_959_400_000,
+                venue="TBD",
+            )
         ]
     )
 
