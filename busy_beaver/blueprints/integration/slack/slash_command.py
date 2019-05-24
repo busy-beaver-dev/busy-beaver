@@ -7,7 +7,7 @@ from flask import request
 from flask.views import MethodView
 
 from busy_beaver import meetup
-from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI
+from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI, MEETUP_GROUP_NAME
 from busy_beaver.extensions import db
 from busy_beaver.models import User
 from busy_beaver.toolbox import EventEmitter, make_slack_response
@@ -134,7 +134,7 @@ def create_github_account_attachment(state):
 #########################
 @slash_command_dispatcher.on("next")
 def next_event(**data):
-    event = meetup.get_events(count=1)[0]
+    event = meetup.get_events(MEETUP_GROUP_NAME, count=1)[0]
     attachment = create_next_event_attachment(event)
     return make_slack_response(attachments=attachment)
 
