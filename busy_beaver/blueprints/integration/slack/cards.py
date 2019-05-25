@@ -21,7 +21,7 @@ class UpcomingEvent:
     def __init__(self, event: EventDetails):
         event_information_string = (
             f"*<{event.url}|{event.name}>*\n"
-            f"<!date^{event.dt}^{{time}} {{date_long}}|no date>"
+            f"<!date^{event.dt}^{{date_long}} @ {{time}}|no date>"
         )
         event_location_string = f":round_pushpin: Location: {event.venue}"
         self.output = [

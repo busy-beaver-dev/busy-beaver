@@ -7,12 +7,13 @@ from flask import request
 from flask.views import MethodView
 
 from .cards import UpcomingEventList
+from .toolbox import make_slack_response
 from busy_beaver import meetup
 from busy_beaver.adapters.meetup import EventDetails
 from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI, MEETUP_GROUP_NAME
 from busy_beaver.extensions import db
 from busy_beaver.models import User
-from busy_beaver.toolbox import EventEmitter, make_slack_response
+from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
 slash_command_dispatcher = EventEmitter()
