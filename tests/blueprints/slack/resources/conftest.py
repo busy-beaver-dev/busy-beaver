@@ -5,7 +5,7 @@ from urllib.parse import urlencode
 import pytest
 
 from busy_beaver.config import SLACK_SIGNING_SECRET
-from busy_beaver.decorators.verification import calculate_signature
+from busy_beaver.blueprints.slack.resources.verification import calculate_signature
 
 
 @pytest.fixture

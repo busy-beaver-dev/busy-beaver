@@ -1,7 +1,7 @@
 import pytest
 
 from busy_beaver.adapters.meetup import EventDetails
-from busy_beaver.blueprints.integration.slack.slash_command import (
+from busy_beaver.blueprints.slack.resources.slash_command import (
     command_not_found,
     disconnect_github,
     display_help_text,
@@ -11,7 +11,7 @@ from busy_beaver.blueprints.integration.slack.slash_command import (
 )
 from busy_beaver.models import User
 
-MODULE_TO_TEST = "busy_beaver.blueprints.integration.slack.slash_command"
+MODULE_TO_TEST = "busy_beaver.blueprints.slack.resources.slash_command"
 
 
 @pytest.fixture
@@ -60,7 +60,7 @@ def test_slack_command_valid_command(
     data = generate_slash_command_request("help")
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
 
-    response = client.post("/slack-slash-commands", headers=headers, data=data)
+    response = client.post("/slack/slash-command", headers=headers, data=data)
 
     assert response.status_code == 200
     assert "/busybeaver help" in response.json["text"].lower()
@@ -73,7 +73,7 @@ def test_slack_command_invalid_command(
     data = generate_slash_command_request("non-existent")
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
 
-    response = client.post("/slack-slash-commands", headers=headers, data=data)
+    response = client.post("/slack/slash-command", headers=headers, data=data)
 
     assert response.status_code == 200
     assert "command not found" in response.json["text"].lower()
@@ -86,7 +86,7 @@ def test_slack_command_empty_command(
     data = generate_slash_command_request(command="")
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
 
-    response = client.post("/slack-slash-commands", headers=headers, data=data)
+    response = client.post("/slack/slash-command", headers=headers, data=data)
 
     assert response.status_code == 200
     assert "/busybeaver help" in response.json["text"].lower()

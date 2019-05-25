@@ -1,6 +1,6 @@
 import pytest
 
-MODULE_TO_TEST = "busy_beaver.blueprints.integration.slack.event_subscription"
+MODULE_TO_TEST = "busy_beaver.blueprints.slack.resources.event_subscription"
 
 
 @pytest.fixture
@@ -21,7 +21,7 @@ def test_slack_callback_url_verification(
     headers = create_slack_headers(100_000_000, data)
 
     # Act
-    resp = client.post("/slack-event-subscription", headers=headers, json=data)
+    resp = client.post("/slack/event-subscription", headers=headers, json=data)
 
     # Assert
     assert resp.status_code == 200
@@ -42,7 +42,7 @@ def test_slack_callback_bot_message_is_ignored(
     headers = create_slack_headers(100_000_000, data)
 
     # Act
-    resp = client.post("/slack-event-subscription", headers=headers, json=data)
+    resp = client.post("/slack/event-subscription", headers=headers, json=data)
 
     # Assert
     assert resp.status_code == 200
@@ -71,7 +71,7 @@ def test_slack_callback_user_dms_bot_reply(
     headers = create_slack_headers(100_000_000, data)
 
     # Act
-    resp = client.post("/slack-event-subscription", headers=headers, json=data)
+    resp = client.post("/slack/event-subscription", headers=headers, json=data)
 
     # Assert
     assert resp.status_code == 200
