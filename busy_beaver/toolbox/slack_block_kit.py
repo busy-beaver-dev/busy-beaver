@@ -1,3 +1,14 @@
+"""Tools to make it easier to work with Slack Block Kit
+
+Block Kit is a new UI framework that offers you more control and flexibility
+when building messages for Slack. Comprised of "blocks," stackable bits of message UI,
+you can customize the order and appearance of information delivered by your app in Slack
+
+- https://api.slack.com/block-kit
+- https://api.slack.com/tools/block-kit-builder
+"""
+
+
 class Block:
     """Generic block object, serves as a base class for Slack Block Components
 

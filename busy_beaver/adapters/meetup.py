@@ -1,4 +1,4 @@
-from typing import NamedTuple
+from typing import List, NamedTuple
 from meetup.api import Client as MeetupClient
 from busy_beaver.exceptions import NoMeetupEventsFound
 
@@ -16,7 +16,7 @@ class MeetupAdapter:
     def __init__(self, api_key):
         self.meetup_client = MeetupClient(api_key)
 
-    def get_events(self, group_name, count=1):
+    def get_events(self, group_name: str, count: int = 1) -> List[EventDetails]:
         events = self.meetup_client.GetEvents(group_urlname=group_name)
         if not events.results:
             raise NoMeetupEventsFound

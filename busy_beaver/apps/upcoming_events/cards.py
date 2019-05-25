@@ -1,7 +1,7 @@
 from typing import List
 
-from .block_kit import Context, Divider, Section
 from busy_beaver.adapters.meetup import EventDetails
+from busy_beaver.toolbox.slack_block_kit import Context, Divider, Section
 
 
 class UpcomingEventList:
