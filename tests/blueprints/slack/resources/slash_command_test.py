@@ -5,7 +5,9 @@ from busy_beaver.blueprints.slack.resources.slash_command import (
     disconnect_github,
     display_help_text,
     link_github,
+    next_event,
     relink_github,
+    upcoming_events,
 )
 from busy_beaver.models import User
 
@@ -91,10 +93,31 @@ def test_slack_command_empty_command(
 #########################
 # Upcoming Event Schedule
 #########################
-# TODO add a bunch of vcr end to end tests here
-# write some helpers to pull data out of slack api output
-# what we really care about is how we are sending data back
-# this is an important test to have
+@pytest.mark.vcr()
+@pytest.mark.end2end
+def test_command_next(generate_slash_command_request):
+    data = generate_slash_command_request("next")
+
+    result = next_event(**data)
+
+    assert result.json["response_type"] == "ephemeral"
+    assert result.json["attachments"]
+    assert not result.json["blocks"]
+    assert not result.json["text"]
+
+
+@pytest.mark.vcr()
+@pytest.mark.end2end
+def test_command_events(generate_slash_command_request):
+    data = generate_slash_command_request("events")
+
+    result = upcoming_events(**data)
+
+    assert result.json["response_type"] == "ephemeral"
+    assert result.json["blocks"]
+    assert not result.json["attachments"]
+    assert not result.json["text"]
+
 
 ########################
 # Miscellaneous Commands
