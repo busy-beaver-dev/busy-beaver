@@ -24,6 +24,10 @@ class Block:
         if block_id:
             self.output["block_id"] = block_id
 
+    def __repr__(self):  # pragma: no cover
+        cls_name = self.__class__.__name__
+        return f"<{cls_name}>"
+
     def to_dict(self) -> dict:
         return self.output
 

@@ -31,7 +31,7 @@ def patched_meetup(mocker, patcher):
 
 
 @pytest.mark.unit
-def test_command_next_event(patched_meetup):
+def test_generate_next_event(patched_meetup):
     patched_meetup(
         events=[
             EventDetails(
@@ -50,8 +50,7 @@ def test_command_next_event(patched_meetup):
     assert "Numerator" in result["text"]
 
 
-# TODO this test casts a wide net, we need to test blockit pieces individually
-@pytest.mark.integration
+@pytest.mark.unit
 def test_generate_upcoming_events_message(patched_meetup):
     patched_meetup(
         events=[
@@ -66,4 +65,4 @@ def test_generate_upcoming_events_message(patched_meetup):
 
     result = generate_upcoming_events_message("ChiPy", count=1)
 
-    assert result
+    assert len(result) == 5
