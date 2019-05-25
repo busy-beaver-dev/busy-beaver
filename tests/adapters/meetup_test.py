@@ -1,6 +1,8 @@
 from collections import namedtuple
 import pytest
+
 from busy_beaver.adapters import MeetupAdapter
+from busy_beaver.exceptions import NoMeetupEventsFound
 from busy_beaver.config import MEETUP_API_KEY
 
 MODULE_TO_TEST = "busy_beaver.adapters.meetup"
@@ -26,10 +28,9 @@ def test_meetup_get_events(meetup_client):
 @pytest.fixture
 def patched_meetup_client(mocker, patcher):
     class FakeMeetupClient:
-        def __init__(self, *, events):
+        def __init__(self, *, events=None):
             self.mock = mocker.MagicMock()
-            if events:
-                self.events = events
+            self.events = events if events else []
 
         def __call__(self, *args, **kwargs):
             # We are replacing with a class that is initialized
@@ -49,7 +50,7 @@ def patched_meetup_client(mocker, patcher):
     return _wrapper
 
 
-@pytest.mark.integration
+@pytest.mark.unit
 def test_venue_not_specified_returns_tbd(patched_meetup_client):
     # Arrange
     patched_meetup_client(
@@ -63,10 +64,18 @@ def test_venue_not_specified_returns_tbd(patched_meetup_client):
     )
 
     # Act
-    events = MeetupAdapter("1232").get_events("ChiPy", count=1)
+    events = MeetupAdapter("API_KEY").get_events("ChiPy", count=1)
 
     # Assert
     event = events[0]
     assert "ChiPy" in event.name
     assert "http://meetup.com/_ChiPy_/event/blah" in event.url
     assert "TBD" in event.venue
+
+
+@pytest.mark.unit
+def test_no_events_found_raises_exception(patched_meetup_client):
+    patched_meetup_client(events=[])
+
+    with pytest.raises(NoMeetupEventsFound):
+        MeetupAdapter("API_KEY").get_events("ChiPy", count=10)

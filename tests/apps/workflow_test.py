@@ -1,6 +1,9 @@
 import pytest
 from busy_beaver.adapters.meetup import EventDetails
-from busy_beaver.apps.upcoming_events.workflow import generate_next_event_message
+from busy_beaver.apps.upcoming_events.workflow import (
+    generate_next_event_message,
+    generate_upcoming_events_message,
+)
 
 MODULE_TO_TEST = "busy_beaver.apps.upcoming_events.workflow"
 
@@ -45,3 +48,22 @@ def test_command_next_event(patched_meetup):
     assert "ChiPy" in result["title"]
     assert "http://meetup.com/_ChiPy_/event/blah" in result["title_link"]
     assert "Numerator" in result["text"]
+
+
+# TODO this test casts a wide net, we need to test blockit pieces individually
+@pytest.mark.integration
+def test_generate_upcoming_events_message(patched_meetup):
+    patched_meetup(
+        events=[
+            EventDetails(
+                name="ChiPy",
+                url="http://meetup.com/_ChiPy_/event/blah",
+                dt=1_557_959_400_000,
+                venue="Numerator",
+            )
+        ]
+    )
+
+    result = generate_upcoming_events_message("ChiPy", count=1)
+
+    assert result

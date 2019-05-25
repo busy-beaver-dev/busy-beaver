@@ -31,7 +31,7 @@ class RequestsClient:
         self.session = s
 
     def __repr__(self):
-        return "RequestsClient"
+        return "RequestsClient"  # pragma: no cover
 
     def get(self, url: str, **kwargs) -> Response:
         return self._request("get", url, **kwargs)
