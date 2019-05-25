@@ -82,7 +82,7 @@ Before the **Slack App** can be installed to the **Slack Workspace** a feature o
 1. Run `cd <directory of the Busy Beaver git repo>`.
 2. Run `make up` to spin up a Busy Beaver service locally.
 3. Run `make ngrok` to open port forwarding to the internet.
-This will be used for the **slack-event-subscription endpoint** by the local Busy Beaver instance.</br>
+This will be used for the **slack/event-subscription endpoint** by the local Busy Beaver instance.</br>
    <a href="images/event-subscriptions-1.png">
    <img src="images/event-subscriptions-1.png" width=400/>
    </a></br>
@@ -91,10 +91,10 @@ This will be used for the **slack-event-subscription endpoint** by the local Bus
    <a href="images/event-subscriptions-2.png">
    <img src="images/event-subscriptions-2.png" width=400/>
    </a>
-5. Update the **Request URL** to the **slack-event-subscription endpoint** composed of the **forwarding address** defined by the **ngrok** instance i.e.
+5. Update the **Request URL** to the **slack/event-subscription endpoint** composed of the **forwarding address** defined by the **ngrok** instance i.e.
 
    ```http
-   http://[ngrok_fowarding_address]/slack-event-subscription
+   http://[ngrok_fowarding_address]/slack/event-subscription
    ```
 
    <a href="images/event-subscriptions-3.png">
@@ -113,10 +113,10 @@ This will be used for the **slack-event-subscription endpoint** by the local Bus
    <a href="images/slash-commands-1.png">
    <img src="images/slash-commands-1.png" width=400/>
    </a>
-1. Update the **Request URL** to the **slack-slash-command endpoint** composed of the **forwarding address** defined by the **ngrok** instance i.e.
+1. Update the **Request URL** to the **slack/slash-command endpoint** composed of the **forwarding address** defined by the **ngrok** instance i.e.
 
    ```http
-   http://[ngrok_fowarding_address]/slack-slash-command
+   http://[ngrok_fowarding_address]/slack/slash-command
    ```
 
    <a href="images/slash-commands-2.png">
