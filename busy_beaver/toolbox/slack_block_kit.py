@@ -32,24 +32,6 @@ class Block:
         return self.output
 
 
-class Section(Block):
-    """Opinionated Section block wrapper
-
-    A section is one of the most flexible blocks available - it can be used as a simple
-    text block, in combination with text fields, or side-by-side with any of the
-    available block elements.
-
-    https://api.slack.com/reference/messaging/blocks#section
-    """
-
-    type = "section"
-
-    def __init__(self, text: str, block_id: str = ""):
-        super().__init__(block_id)
-        self.output["type"] = self.type
-        self.output["text"] = {"type": "mrkdwn", "text": text}
-
-
 class Context(Block):
     """Opinionated Context block wrapper
 
@@ -80,3 +62,21 @@ class Divider(Block):
     def __init__(self, block_id: str = ""):
         super().__init__(block_id)
         self.output["type"] = self.type
+
+
+class Section(Block):
+    """Opinionated Section block wrapper
+
+    A section is one of the most flexible blocks available - it can be used as a simple
+    text block, in combination with text fields, or side-by-side with any of the
+    available block elements.
+
+    https://api.slack.com/reference/messaging/blocks#section
+    """
+
+    type = "section"
+
+    def __init__(self, text: str, block_id: str = ""):
+        super().__init__(block_id)
+        self.output["type"] = self.type
+        self.output["text"] = {"type": "mrkdwn", "text": text}
