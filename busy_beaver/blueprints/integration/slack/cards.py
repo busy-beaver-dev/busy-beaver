@@ -4,6 +4,19 @@ from .block_kit import Context, Divider, Section
 from busy_beaver.adapters.meetup import EventDetails
 
 
+class UpcomingEventList:
+    def __init__(self, title, events: List[EventDetails]):
+        output = [Section(title).to_dict(), Divider().to_dict()]
+
+        for event_details in events:
+            output.extend(UpcomingEvent(event_details).to_dict())
+
+        self.output = output
+
+    def to_dict(self) -> dict:
+        return self.output
+
+
 class UpcomingEvent:
     def __init__(self, event: EventDetails):
         event_information_string = (
@@ -16,19 +29,6 @@ class UpcomingEvent:
             Context(text=event_location_string).to_dict(),
             Divider(event_location_string).to_dict(),
         ]
-
-    def to_dict(self) -> dict:
-        return self.output
-
-
-class UpcomingEventList:
-    def __init__(self, title, events: List[EventDetails]):
-        output = [Section(title).to_dict(), Divider().to_dict()]
-
-        for event_details in events:
-            output.extend(UpcomingEvent(event_details).to_dict())
-
-        self.output = output
 
     def to_dict(self) -> dict:
         return self.output

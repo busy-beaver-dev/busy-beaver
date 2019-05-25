@@ -2,7 +2,10 @@ from typing import Optional
 
 
 class Block:
-    """
+    """Generic block object, serves as a base class for Slack Block Components
+
+    Can use `block_id` to track user integration asynchronously.
+
     https://api.slack.com/reference/messaging/blocks
     """
 
@@ -18,7 +21,12 @@ class Block:
 
 
 class Section(Block):
-    """
+    """Opinionated Section block wrapper
+
+    A section is one of the most flexible blocks available - it can be used as a simple
+    text block, in combination with text fields, or side-by-side with any of the
+    available block elements.
+
     https://api.slack.com/reference/messaging/blocks#section
     """
 
@@ -31,7 +39,8 @@ class Section(Block):
 
 
 class Context(Block):
-    """
+    """Opinionated Context block wrapper
+
     Displays message context, which can include both images and text.
 
     https://api.slack.com/reference/messaging/blocks#context
@@ -46,7 +55,11 @@ class Context(Block):
 
 
 class Divider(Block):
-    """
+    """Opinionated Divider block wrapper
+
+    A content divider, like an <hr>, to split up different blocks inside of a message.
+    The divider block is nice and neat, requiring only a type.
+
     https://api.slack.com/reference/messaging/blocks#divider
     """
 
