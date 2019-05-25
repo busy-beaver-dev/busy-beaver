@@ -1,6 +1,6 @@
 import pytest
 
-MODULE_TO_TEST = "busy_beaver.blueprints.slack.resources.event_subscription"
+MODULE_TO_TEST = "busy_beaver.blueprints.slack.event_subscription"
 
 
 @pytest.fixture

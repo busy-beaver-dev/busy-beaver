@@ -1,6 +1,6 @@
 import pytest
 
-from busy_beaver.blueprints.slack.resources.slash_command import (
+from busy_beaver.blueprints.slack.slash_command import (
     command_not_found,
     disconnect_github,
     display_help_text,
