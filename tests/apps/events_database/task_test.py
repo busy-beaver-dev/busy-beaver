@@ -85,7 +85,9 @@ def test_add_new_events_to_database(session, patched_meetup):
     THEN: add additional event that is not already in database to database
     """
     # Arrange
-    event_in_db = EventFactory()
+    event_in_db = EventFactory(name="Old ChiPy Event")
+    session.add(event_in_db)
+    session.commit()
 
     num_new_events = 5
     events = EventDetailsFactory.create_batch(size=num_new_events)

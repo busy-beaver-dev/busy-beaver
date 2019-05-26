@@ -21,6 +21,18 @@ class EventDetails(NamedTuple):
             utc_epoch=self.dt,
         )
 
+    @classmethod
+    def from_event_model(cls, model):
+        if not isinstance(model, Event):
+            raise ValueError("Can only convert Event type")
+        return cls(
+            id=model.remote_id,
+            name=model.name,
+            url=model.url,
+            venue=model.venue,
+            dt=model.utc_epoch,
+        )
+
 
 class MeetupAdapter:
     """Pull the upcoming events from Meetup and send the message to Slack."""

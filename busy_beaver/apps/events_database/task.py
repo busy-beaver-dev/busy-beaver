@@ -33,7 +33,7 @@ def add_new_events_to_database(group_name):
     fetched_events = meetup.get_events(group_name, count=20)
     fetched_remote_id = [event.id for event in fetched_events]
 
-    remote_ids_in_database = _fetch_events_from_database()
+    remote_ids_in_database = _fetch_future_event_ids_from_database()
     ids_to_add = set(fetched_remote_id) - set(remote_ids_in_database)
     events_to_add: List[Event] = [
         event for event in fetched_events if event.id in ids_to_add
@@ -42,7 +42,7 @@ def add_new_events_to_database(group_name):
     _insert_events_into_database(events_to_add)
 
 
-def _fetch_events_from_database():
+def _fetch_future_event_ids_from_database():
     current_epoch_time = int(time.time())
     upcoming_events_in_db = Event.query.filter(
         Event.utc_epoch > current_epoch_time
