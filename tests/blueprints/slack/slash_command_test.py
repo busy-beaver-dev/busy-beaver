@@ -9,6 +9,7 @@ from busy_beaver.blueprints.slack.slash_command import (
     relink_github,
     upcoming_events,
 )
+from busy_beaver.factories.event import EventFactory
 from busy_beaver.models import User
 
 
@@ -93,9 +94,11 @@ def test_slack_command_empty_command(
 #########################
 # Upcoming Event Schedule
 #########################
-@pytest.mark.vcr()
 @pytest.mark.end2end
-def test_command_next(generate_slash_command_request):
+def test_command_next(session, generate_slash_command_request):
+    events = EventFactory.create_batch(size=10)
+    [session.add(event) for event in events]
+    session.commit()
     data = generate_slash_command_request("next")
 
     result = next_event(**data)
@@ -106,9 +109,11 @@ def test_command_next(generate_slash_command_request):
     assert not result.json["text"]
 
 
-@pytest.mark.vcr()
 @pytest.mark.end2end
-def test_command_events(generate_slash_command_request):
+def test_command_events(session, generate_slash_command_request):
+    events = EventFactory.create_batch(size=10)
+    [session.add(event) for event in events]
+    session.commit()
     data = generate_slash_command_request("events")
 
     result = upcoming_events(**data)

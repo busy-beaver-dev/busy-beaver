@@ -64,6 +64,23 @@ class Divider(Block):
         self.output["type"] = self.type
 
 
+class Image(Block):
+    """Opinionated Image block wrapper
+
+    A simple image block, designed to make those cat photos really pop.
+
+    https://api.slack.com/reference/messaging/blocks#image
+    """
+
+    type = "image"
+
+    def __init__(self, image_url: str, alt_text: str, block_id: str = ""):
+        super().__init__(block_id)
+        self.output["type"] = self.type
+        self.output["image_url"] = image_url
+        self.output["alt_text"] = alt_text
+
+
 class Section(Block):
     """Opinionated Section block wrapper
 

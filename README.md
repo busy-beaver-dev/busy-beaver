@@ -19,9 +19,14 @@ We released Busy Beaver on January 10th at the ChiPy monthly meeting. [Slides](h
 
 ### Upcoming Events
 
-Busy Beaver integrates with Meetup API to provide details about upcoming events. The interface for users is provided the `/busybeaver` [slash command](https://api.slack.com/slash-commands).
+Busy Beaver integrates with Meetup API to provide details about upcoming events. Events are downloaded to the Busy Beaver database periodically.
+
+Users are able to query using the `/busybeaver` [slash command](https://api.slack.com/slash-commands).
 
 - `/busybeaver next` shows details of the upcoming event
+- `/busybeaver events` shows details of upcoming events
+
+A periodic CRON job has been set to post the contents of `/busybeaver events` in a designed Slack channel.
 
 ### GitHub Activity
 

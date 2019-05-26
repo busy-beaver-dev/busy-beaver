@@ -19,7 +19,13 @@ class SlackAdapter:
         return Channel(channel_name, channel_id, members)
 
     def post_message(
-        self, message="", *, attachments=None, channel=None, channel_id=None
+        self,
+        message="",
+        *,
+        blocks=None,
+        attachments=None,
+        channel=None,
+        channel_id=None,
     ):
         if not channel and not channel_id:
             raise ValueError("Must specify channel or channel_id")
@@ -30,6 +36,7 @@ class SlackAdapter:
             "chat.postMessage",
             channel=channel_id,
             text=message,
+            blocks=blocks,
             attachments=attachments,
         )
 

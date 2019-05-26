@@ -1,12 +1,20 @@
 from typing import List
 
 from busy_beaver.adapters.meetup import EventDetails
-from busy_beaver.toolbox.slack_block_kit import Context, Divider, Section
+from busy_beaver.toolbox.slack_block_kit import Context, Divider, Image, Section
 
 
 class UpcomingEventList:
     def __init__(self, title, events: List[EventDetails]):
-        output = [Section(title), Divider()]
+        # TODO when we go multitenant, the image box will need to change
+        output = [
+            Image(
+                image_url="https://www.chipy.org/static/img/chipmunk.1927e65c68a7.png",
+                alt_text="ChiPy",
+            ),
+            Section(title),
+            Divider(),
+        ]
 
         for event_details in events:
             output.extend(UpcomingEvent(event_details))

@@ -3,19 +3,21 @@ import logging
 from flask import request
 from flask.views import MethodView
 
-from busy_beaver.apps.retweeter.task import start_post_tweets_to_slack_task
+from busy_beaver.apps.upcoming_events.workflow import (
+    post_upcoming_events_message_to_slack,
+)
 from busy_beaver.toolbox import make_response
 
 logger = logging.getLogger(__name__)
 
 
-class TwitterPollingResource(MethodView):
-    """Endpoint to trigger polling of Twitter for new tweets to post to channel"""
+class PublishUpcomingEventsResource(MethodView):
+    """Endpoint to trigger posting of Upcoming Events to Slack"""
 
     def post(self):
         user = request._internal["user"]
         logger.info(
-            "[Busy Beaver] Twitter Summary Poll -- login successful",
+            "[Busy Beaver] Post Upcoming Events -- login successful",
             extra={"user": user.username},
         )
 
@@ -23,10 +25,12 @@ class TwitterPollingResource(MethodView):
         data = request.json
         if not data or "channel" not in data:
             logger.error(
-                "[Busy Beaver] Twitter Summary Poll -- need channel in JSON body"
+                "[Busy Beaver] Post Upcoming Events -- need channel in JSON body"
             )
             return make_response(422, error={"message": "JSON requires 'channel' key"})
-        start_post_tweets_to_slack_task(user, channel_name=data["channel"])
+        post_upcoming_events_message_to_slack(
+            channel=data["channel"], group_name="ChiPy", count=5
+        )
 
-        logger.info("[Busy Beaver] Twitter Summary Poll -- kicked-off")
+        logger.info("[Busy Beaver] Post Upcoming Events -- complete")
         return make_response(200, json={"run": "complete"})
