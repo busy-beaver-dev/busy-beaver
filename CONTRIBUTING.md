@@ -15,14 +15,13 @@ Busy Beaver welcomes any, and all, contributions. Every little bit helps!
   - [Running Tests](#running-tests)
 - [Modifying Third-Party Integrations](#modifying-third-party-integrations)
 - [Adding New Third-Party Integrations](#adding-new-third-party-integrations)
+- [Slack Slash Commands](#slack-slash-commands)
+- [Task Queues](#task-queues)
 - [Miscellaneous](#miscellaneous)
   - [Pre-commit](#pre-commit)
-  - [Slack Slash Commands](#slack-slash-commands)
-  - [Task Queues](#task-queues)
   - [PDB++ Configuration](#pdb-configuration)
-- [Windows Development](#windows-development)
-  - [Prerequisites for developing on Windows](#windows-prerequisites)
-  - [Windows & Docker Troubleshooting](#windows-troubleshooting)
+  - [Windows Development](#windows-development)
+  - [Pushing Commits to PR](#pushing-commits-to-pr)
 
 <!-- /TOC -->
 
@@ -131,18 +130,7 @@ As each integration requires API credentials, it is recommended that contributor
 
 Provide detailed instructions on how to set up the integration so we can roll the feature out to the production instance of Busy Beaver with correct credentials.
 
-## Miscellaneous
-
-### Pre-commit
-
-[Pre-commit](https://pre-commit.com/) is a tool used to enforce linting with `flake8` and code formatting with `black`. To get started using
-pre-commit, `pip install pre-commit==1.14.4` (this is in the `requirements.txt` file). Then run `pre-commit install`
-to install the `flake8` and `black` environments locally.
-
-Pre-commit will run on files staged for change automatically. You can also check pre-commit hook compliance on staged
-files by running `pre-commit run` at any time. Note that pre-commit ignores files that are not staged for change.
-
-### Slack Slash Commands
+## Slack Slash Commands
 
 Users are able to interact with Busy Beaver using the `/busybeaver [command]` interface provided through the Slack UI. All slash commands are routed to a Busy Beaver endpoint that was enabled earlier via the Slack Slash Command webhook.
 
@@ -158,7 +146,7 @@ def fetch_news(**data):
 
 - [Slack Docs: Slash Commands](https://api.slack.com/slash-commands)
 
-### Task Queues
+## Task Queues
 
 Busy Beaver uses [RQ](http://python-rq.org) to queue jobs and process them in the background with workers. [Redis](https://redis.io/) is used as the message broker in this asynchronous architecture.
 
@@ -178,6 +166,17 @@ The Docker Compose development environment spins up a single worker along with a
 - Both the trigger function and background task are unit tested to ensure things occur as expected. A high-level integration test can help codify the requirements of the workflow.
 - Currently the workers listen on the `default` and `failed` queues. No particular reason, but haven't had the needed to use other queues.
 
+## Miscellaneous
+
+### Pre-commit
+
+[Pre-commit](https://pre-commit.com/) is a tool used to enforce linting with `flake8` and code formatting with `black`. To get started using
+pre-commit, `pip install pre-commit==1.14.4` (this is in the `requirements.txt` file). Then run `pre-commit install`
+to install the `flake8` and `black` environments locally.
+
+Pre-commit will run on files staged for change automatically. You can also check pre-commit hook compliance on staged
+files by running `pre-commit run` at any time. Note that pre-commit ignores files that are not staged for change.
+
 ### PDB++ Configuration
 
 [PDB++](https://pypi.org/project/pdbpp/) improves the debugging experience inside the shell. Create a `.pdbrc.py` file inside of the root project folder.
@@ -192,51 +191,67 @@ class Config(pdb.DefaultConfig):
     sticky_by_default = True  # start in sticky mode
     current_line_color = 40  # black
 ```
+
 ### Windows Development
 
 #### Windows Prerequisites
 
 1. Configure Git on Windows to properly handle line endings
 
-    ```bash
-    git config --global core.autocrlf input
-    git config --global core.eol lf
-    ```
+```bash
+git config --global core.autocrlf input
+git config --global core.eol lf
+```
+
 1. Install [Windows Sub-System for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
-
 1. Install [Docker on WSL](https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly)
-
 1. Configure Docker for Windows:
-
-    - Expose daemon on tcp://localhost without TLS 
-    
-        <img src="docs/windows-dev/docker-windows-expose.png" alt="Docker" width=300 />
-
-    - Add Shared Drive
-    
-        <img src="docs/windows-dev/docker-windows-shared.png" alt="Docker" width=300 />
-
+    - Expose daemon on tcp://localhost without TLS
+    - Add Shared Drive<br />
+    <img src="docs/windows-dev/docker-windows-expose.png" alt="Docker" width=300 /><br />
+    <img src="docs/windows-dev/docker-windows-shared.png" alt="Docker" width=300 />
 1. [Proceed with Setting up Development Environment](#setting-up-development-environment)
 
 #### Windows Troubleshooting
 
-If run into issues with `make up`, it's most likely Windows and Docker. Try the following:  
+If run into issues with `make up`, it's most likely Windows and Docker. Try the following:
 
-1.  Restart Computer
-1.  Set File Permissions & Fix Line Endings
-    1.  Launch WSL
-    1.  Navigate to busy-beaver root directory and run following:
+1. Restart Computer
+1. Set File Permissions & Fix Line Endings
+1. Launch WSL
+1. Navigate to busy-beaver root directory and run following:
     ```bash
-        sudo apt-get install dos2unix
-        sudo dos2unix scripts/entrypoint.sh
-        sudo chmod +x scripts/entrypoint.sh
-        docker-compose build --no-cache
-        make up
+    sudo apt-get install dos2unix
+    sudo dos2unix scripts/entrypoint.sh
+    sudo chmod +x scripts/entrypoint.sh
+    docker-compose build --no-cache
+    make up
     ```
-1.  Docker >>> Settings >> Shared Drives: 
-      - Uncheck any Shared drive, Click Apply 
-      - Check Shared Drives, Click Apply
+1. Docker >>> Settings >> Shared Drives:
+    - Uncheck any Shared drive, Click Apply
+    - Check Shared Drives, Click Apply
 1. Docker >>> Settings >> Reset
-      - Reset to factory defaults...
+    - Reset to factory defaults...
 1. Uninstall Windows, Install Linux
 
+### Pushing Commits to PR
+
+GitHub allows upstream maintainers, with permission,
+to push to downstream forks.
+
+We are using [Git-LFS](https://git-lfs.github.com/) to keep binary files
+out of our Git tree.
+Unfortunately LFS makes it a bit tricky to
+push to downstream forks out of the box,
+see [issue](https://github.com/git-lfs/git-lfs/issues/2291).
+
+To push to downstream forks,
+you will need to `rm .git/hooks/pre-push`.
+It is recommended that you move the file somewhere else
+before making the change.
+Replace the file once you are done.
+
+#### Additional Resources
+
+- [Pushing to someone else's pull request on GitHub](https://jonathanchang.org/blog/pushing-to-a-pull-request-on-github/)
+- [Git-LFS Issue -- Authentication required : You must have push access to verify locks error](https://github.com/git-lfs/git-lfs/issues/2291)
