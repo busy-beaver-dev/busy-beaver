@@ -20,6 +20,9 @@ Busy Beaver welcomes any, and all, contributions. Every little bit helps!
   - [Slack Slash Commands](#slack-slash-commands)
   - [Task Queues](#task-queues)
   - [PDB++ Configuration](#pdb-configuration)
+- [Windows Development](#windows-development)
+  - [Prerequisites for developing on Windows](#windows-prerequisites)
+  - [Windows & Docker Troubleshooting](#windows-troubleshooting)
 
 <!-- /TOC -->
 
@@ -67,6 +70,8 @@ An in-depth guide can be followed at <a href=docs/development-create-slack-bot/r
 1. Install **Slack App** to **Slack Workspace** - [Create a Slack Dev-Bot - Install App to Workspace](docs/development-create-slack-bot/readme.md#Install-App-to-Workspace)
 
 ### Setting up Development Environment
+
+[Prerequisites for developing on Windows](#windows-development)
 
 1. `pip install pre-commit`
 1. Install [Git-LFS](https://git-lfs.github.com/)
@@ -187,3 +192,51 @@ class Config(pdb.DefaultConfig):
     sticky_by_default = True  # start in sticky mode
     current_line_color = 40  # black
 ```
+### Windows Development
+
+#### Windows Prerequisites
+
+1. Configure Git on Windows to properly handle line endings
+
+    ```bash
+    git config --global core.autocrlf input
+    git config --global core.eol lf
+    ```
+1. Install [Windows Sub-System for Linux (WSL)](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
+
+1. Install [Docker on WSL](https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly)
+
+1. Configure Docker for Windows:
+
+    - Expose daemon on tcp://localhost without TLS 
+    
+        <img src="docs/windows-dev/docker-windows-expose.png" alt="Docker" width=300 />
+
+    - Add Shared Drive
+    
+        <img src="docs/windows-dev/docker-windows-shared.png" alt="Docker" width=300 />
+
+1. [Proceed with Setting up Development Environment](#setting-up-development-environment)
+
+#### Windows Troubleshooting
+
+If run into issues with `make up`, it's most likely Windows and Docker. Try the following:  
+
+1.  Restart Computer
+1.  Set File Permissions & Fix Line Endings
+    1.  Launch WSL
+    1.  Navigate to busy-beaver root directory and run following:
+    ```bash
+        sudo apt-get install dos2unix
+        sudo dos2unix scripts/entrypoint.sh
+        sudo chmod +x scripts/entrypoint.sh
+        docker-compose build --no-cache
+        make up
+    ```
+1.  Docker >>> Settings >> Shared Drives: 
+      - Uncheck any Shared drive, Click Apply 
+      - Check Shared Drives, Click Apply
+1. Docker >>> Settings >> Reset
+      - Reset to factory defaults...
+1. Uninstall Windows, Install Linux
+
