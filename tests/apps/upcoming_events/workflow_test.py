@@ -1,5 +1,5 @@
 import pytest
-from busy_beaver.apps.upcoming_events.factories import EventDetailsFactory
+from busy_beaver.factories.event_details import EventDetailsFactory
 from busy_beaver.apps.upcoming_events.workflow import (
     generate_next_event_message,
     generate_upcoming_events_message,

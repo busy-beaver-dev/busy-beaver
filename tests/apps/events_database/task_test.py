@@ -5,7 +5,7 @@ from busy_beaver.apps.events_database.task import (
     add_new_events_to_database,
     start_add_new_events_to_database_task,
 )
-from busy_beaver.apps.upcoming_events.factories import EventDetailsFactory
+from busy_beaver.factories.event_details import EventDetailsFactory
 from busy_beaver.models import Event
 
 MODULE_TO_TEST = "busy_beaver.apps.events_database.task"
