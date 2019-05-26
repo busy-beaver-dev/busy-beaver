@@ -100,3 +100,9 @@ def test_event_details_creating_event_objects():
     assert event.name == created_event.name
     assert event.utc_epoch == created_event.utc_epoch
     assert event.venue == created_event.venue
+
+
+@pytest.mark.unit
+def test_event_details_creating_event_object_from_unallowable_type():
+    with pytest.raises(ValueError):
+        EventDetails.from_event_model({})
