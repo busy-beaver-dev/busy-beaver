@@ -10,8 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class PublishGitHubSummaryResource(MethodView):
-    """Endpoint to trigger process of creating and publishing GitHub Summary to Slack
-    """
+    """Endpoint to trigger process of creating and publishing GitHub Summary to Slack"""
 
     def post(self):
         user = request._internal["user"]
