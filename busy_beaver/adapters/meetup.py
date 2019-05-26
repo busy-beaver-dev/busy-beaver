@@ -4,10 +4,11 @@ from busy_beaver.exceptions import NoMeetupEventsFound
 
 
 class EventDetails(NamedTuple):
+    id: str
     name: str
     url: str
-    dt: int
     venue: str
+    dt: int  # utc epoch
 
 
 class MeetupAdapter:
@@ -30,10 +31,11 @@ class MeetupAdapter:
 
             upcoming_events.append(
                 EventDetails(
+                    id=event["id"],
                     name=event["name"],
                     url=event["event_url"],
-                    dt=int(event["time"] / 1000),
                     venue=venue_name,
+                    dt=int(event["time"] / 1000),
                 )
             )
 
