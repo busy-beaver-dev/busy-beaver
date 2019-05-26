@@ -8,7 +8,7 @@ class Event(BaseModel):
     __tablename__ = "event"
 
     def __repr__(self):
-        return f"<Meetup>"
+        return f"<Event: {self.name}>"
 
     # Attributes
     remote_id = db.Column(db.String(255), nullable=False, index=True)

@@ -1,4 +1,6 @@
 from collections import namedtuple
+import uuid
+
 import pytest
 
 from busy_beaver.adapters import MeetupAdapter
@@ -53,9 +55,11 @@ def patched_meetup_client(mocker, patcher):
 @pytest.mark.unit
 def test_venue_not_specified_returns_tbd(patched_meetup_client):
     # Arrange
+    remote_id = str(uuid.uuid4())
     patched_meetup_client(
         events=[
             {
+                "id": remote_id,
                 "name": "ChiPy",
                 "event_url": "http://meetup.com/_ChiPy_/event/blah",
                 "time": 1_557_959_400_000,
@@ -71,6 +75,7 @@ def test_venue_not_specified_returns_tbd(patched_meetup_client):
     assert "ChiPy" in event.name
     assert "http://meetup.com/_ChiPy_/event/blah" in event.url
     assert "TBD" in event.venue
+    assert event.id == remote_id
 
 
 @pytest.mark.unit

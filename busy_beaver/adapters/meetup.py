@@ -1,6 +1,8 @@
 from typing import List, NamedTuple
 from meetup.api import Client as MeetupClient
+
 from busy_beaver.exceptions import NoMeetupEventsFound
+from busy_beaver.models import Event
 
 
 class EventDetails(NamedTuple):
@@ -9,6 +11,15 @@ class EventDetails(NamedTuple):
     url: str
     venue: str
     dt: int  # utc epoch
+
+    def create_event_record(self) -> Event:
+        return Event(
+            remote_id=self.id,
+            name=self.name,
+            url=self.url,
+            venue=self.venue,
+            utc_epoch=self.dt,
+        )
 
 
 class MeetupAdapter:

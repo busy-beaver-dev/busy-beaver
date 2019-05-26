@@ -1,3 +1,4 @@
+import uuid
 import pytest
 from busy_beaver.adapters.meetup import EventDetails
 from busy_beaver.apps.upcoming_events.workflow import (
@@ -35,6 +36,7 @@ def test_generate_next_event(patched_meetup):
     patched_meetup(
         events=[
             EventDetails(
+                id=str(uuid.uuid4()),
                 name="ChiPy",
                 url="http://meetup.com/_ChiPy_/event/blah",
                 dt=1_557_959_400_000,
@@ -55,6 +57,7 @@ def test_generate_upcoming_events_message(patched_meetup):
     patched_meetup(
         events=[
             EventDetails(
+                id=str(uuid.uuid4()),
                 name="ChiPy",
                 url="http://meetup.com/_ChiPy_/event/blah",
                 dt=1_557_959_400_000,
