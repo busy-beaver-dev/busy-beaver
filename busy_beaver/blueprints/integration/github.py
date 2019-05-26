@@ -25,18 +25,18 @@ class GitHubIdentityVerificationCallbackResource(MethodView):
     """
 
     def get(self):
-        logger.info("[Busy-Beaver] GitHub Redirect")
+        logger.info("[Busy Beaver] GitHub Redirect")
         params = request.args
         code = params.get("code")
         state = params.get("state")
 
         user = User.query.filter_by(github_state=state).first()
         if not user:
-            logger.error("[Busy-Beaver] GitHub state does not match")
+            logger.error("[Busy Beaver] GitHub state does not match")
             return jsonify({"Error": "Unknown"})
 
         exchange_code_for_access_token(code, state, user)
-        logger.info("[Busy-Beaver] Account is linked to GitHub")
+        logger.info("[Busy Beaver] Account is linked to GitHub")
         return jsonify({"Login": "successful"})
 
 
@@ -49,7 +49,7 @@ def exchange_code_for_access_token(code, state, user):
         "state": state,
     }
 
-    logger.info("[Busy-Beaver] Changing code for OAuth token")
+    logger.info("[Busy Beaver] Changing code for OAuth token")
     resp = client.post("https://github.com/login/oauth/access_token", json=data)
     access_token = resp.json["access_token"]
 

@@ -4,9 +4,9 @@
 
 - [GitHub Integration](#github-integration)
 - [Meetup Integration](#meetup-integration)
-- [Youtube Adapter](#youtube-adapter)
-  - [Where to get your channel id?](#where-to-get-your-channel-id)
-  - [How to create an api key?](#how-to-create-an-api-key)
+- [YouTube Adapter](#youtube-adapter)
+  - [Where to get your channel id](#where-to-get-your-channel-id)
+  - [How to create an api key](#how-to-create-an-api-key)
   - [Example](#example)
 
 <!-- /TOC -->
@@ -22,26 +22,24 @@ You will also need need to create a [Personal Access Token](https://github.com/s
 Go to https://secure.meetup.com/meetup_api/key/
 to get an API key
 
-## Youtube Adapter
+## YouTube Adapter
 
-### Where to get your channel id?
+### Where to get your channel id
 
 Login to youtube and go to https://www.youtube.com/account_advanced, your
 channel id will be displayed.
 
-### How to create an api key?
+### How to create an api key
 
-Go to https://console.developers.google.com and create a project. After you can
-visit https://developers.google.com/youtube/registering_an_application#Create_API_Keys
-for instructions to generate the api key. After you have both, you can move to
-the examples.
+1. Go to https://console.developers.google.com and create a project.
+2. Visit https://developers.google.com/youtube/registering_an_application#Create_API_Keys
+for instructions to generate the api key
 
 ### Example
 
 ```python
 api_key = "..."
 channel_id = "..."
-youtube = YoutubeAdapter(api_key=api_key)
+youtube = YouTubeAdapter(api_key=api_key)
 data = youtube.get_latest_videos_from_channel(channel_id)
-videos = data["items"]
 ```

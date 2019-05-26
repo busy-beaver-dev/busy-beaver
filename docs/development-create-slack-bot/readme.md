@@ -79,10 +79,10 @@ Before the **Slack App** can be installed to the **Slack Workspace** a feature o
 - <a href=https://api.slack.com/tutorials/tunneling-with-ngrok>Using ngrok to develop locally for Slack</a></br>
 </td></tr></table></br>
 
-1. Run `cd <directory of the Busy-Beaver git repo>`.
-2. Run `make up` to spin up a Busy-Beaver service locally.
+1. Run `cd <directory of the Busy Beaver git repo>`.
+2. Run `make up` to spin up a Busy Beaver service locally.
 3. Run `make ngrok` to open port forwarding to the internet.
-This will be used for the **slack-event-subscription endpoint** by the local Busy-Beaver instance.</br>
+This will be used for the **slack/event-subscription endpoint** by the local Busy Beaver instance.</br>
    <a href="images/event-subscriptions-1.png">
    <img src="images/event-subscriptions-1.png" width=400/>
    </a></br>
@@ -91,10 +91,10 @@ This will be used for the **slack-event-subscription endpoint** by the local Bus
    <a href="images/event-subscriptions-2.png">
    <img src="images/event-subscriptions-2.png" width=400/>
    </a>
-5. Update the **Request URL** to the **slack-event-subscription endpoint** composed of the **forwarding address** defined by the **ngrok** instance i.e.
+5. Update the **Request URL** to the **slack/event-subscription endpoint** composed of the **forwarding address** defined by the **ngrok** instance i.e.
 
    ```http
-   http://[ngrok_fowarding_address]/slack-event-subscription
+   http://[ngrok_fowarding_address]/slack/event-subscription
    ```
 
    <a href="images/event-subscriptions-3.png">
@@ -106,6 +106,22 @@ This will be used for the **slack-event-subscription endpoint** by the local Bus
 <table><tr><td>
 :link: Update the <strong>.env</strong> config - <strong>NGROK_BASE_URI</strong> value to <strong>Slack Event Subscription - Request URL</strong> as defined in  <a href=../../CONTRIBUTING.md#Setting-up-Development-Environment>Setting up Development Environment</a>.
 </td></tr></table>
+
+### Enable Slash Commands
+
+1. Create new **Slash Command**.</br>
+   <a href="images/slash-commands-1.png">
+   <img src="images/slash-commands-1.png" width=400/>
+   </a>
+1. Update the **Request URL** to the **slack/slash-command endpoint** composed of the **forwarding address** defined by the **ngrok** instance i.e.
+
+   ```http
+   http://[ngrok_fowarding_address]/slack/slash-command
+   ```
+
+   <a href="images/slash-commands-2.png">
+   <img src="images/slash-commands-2.png" width=400/>
+   </a>
 
 ## Install App to Workspace
 
@@ -124,7 +140,7 @@ the **Slack App** can now be installed to the **Workspace** for development.
 
 ### OAuth Access Token
 
-Once the Busy-Beaver **Slack App** has been installed to the development **Workspace**,
+Once the Busy Beaver **Slack App** has been installed to the development **Workspace**,
 the `OAuth Access Token` should now be available.
 
 <a href="images/oauth-tokens-1.png">

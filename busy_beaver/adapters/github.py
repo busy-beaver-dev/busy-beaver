@@ -4,8 +4,8 @@ import urllib
 
 from dateutil.parser import parse as date_parse
 
-from ..exceptions import UnexpectedStatusCode
 from .requests_client import RequestsClient, Response
+from busy_beaver.exceptions import UnexpectedStatusCode
 
 BASE_URL = "https://api.github.com"
 
@@ -20,8 +20,8 @@ class GitHubAdapter:
         self.params = {"per_page": 30}
         self.nav = None
 
-    def __repr__(self):
-        return "GitHubAdapter"  # pragma: no cover
+    def __repr__(self):  # pragma: no cover
+        return "GitHubAdapter"
 
     def all_user_repos(self, user: str, *, max_pages: int = 10) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/repos"

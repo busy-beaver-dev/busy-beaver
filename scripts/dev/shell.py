@@ -4,8 +4,10 @@ from busy_beaver import create_app
 from busy_beaver.adapters import (
     GitHubAdapter,
     KeyValueStoreAdapter,
+    MeetupAdapter,
     SlackAdapter,
     TwitterAdapter,
+    YouTubeAdapter,
 )
 from busy_beaver.extensions import db, rq  # noqa
 from busy_beaver.models import *  # noqa
@@ -32,7 +34,13 @@ twitter = TwitterAdapter(
     TWITTER_ACCESS_TOKEN,
     TWITTER_ACCESS_TOKEN_SECRET,
 )
-# YOUTUBE_API_TOKEN = os.getenv("YOUTUBE_API_TOKEN", None)
+
+YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
+youtube = YouTubeAdapter(api_key=YOUTUBE_API_KEY)
+
+MEETUP_API_KEY = os.getenv("MEETUP_API_KEY")
+MEETUP_GROUP_NAME = "_ChiPy_"
+meetup = MeetupAdapter(MEETUP_API_KEY)
 
 kv = KeyValueStoreAdapter()
 

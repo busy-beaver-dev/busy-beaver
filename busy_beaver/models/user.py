@@ -7,12 +7,11 @@ class User(BaseModel):
 
     __tablename__ = "user"
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"<User slack: {self.slack_id} github: {self.github_username}>"
 
     # Attributes
     slack_id = db.Column(db.String(300), nullable=False)
-
     github_id = db.Column(db.String(300), nullable=True)
     github_username = db.Column(db.String(300), nullable=True)
     github_state = db.Column(db.String(36), nullable=True)

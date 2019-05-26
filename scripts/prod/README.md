@@ -1,4 +1,4 @@
-# Busy-Beaver Production Scripts
+# Busy Beaver Production Scripts
 
 ## Contents
 
@@ -13,3 +13,7 @@ Script that polls `@ChicagoPython` on Twitter to find tweets to publish to Slack
 ### `backup-db`
 
 Script that runs `pg_dump` and uploads resulting `.sql` file to S3.
+
+### `events_poller.sh`
+
+Script that polls `_ChiPy_` on Meetup to find new events that can be added to the database. Runs once a day.

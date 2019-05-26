@@ -4,7 +4,7 @@ from .config import DATABASE_URI, REDIS_URI
 from .extensions import db, migrate, rq
 from .exceptions import NotAuthorized
 from .toolbox import make_response
-from .blueprints import healthcheck_bp, integration_bp, tasks_bp
+from .blueprints import healthcheck_bp, integration_bp, poller_bp, slack_bp
 
 
 def handle_http_error(error):
@@ -35,7 +35,8 @@ def create_app(*, testing=False):
 
     app.register_blueprint(healthcheck_bp)
     app.register_blueprint(integration_bp)
-    app.register_blueprint(tasks_bp)
+    app.register_blueprint(poller_bp, url_prefix="/poll")
+    app.register_blueprint(slack_bp, url_prefix="/slack")
 
     @app.before_request
     def add_internal_dictionary():

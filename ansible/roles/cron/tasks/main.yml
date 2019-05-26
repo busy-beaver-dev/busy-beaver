@@ -21,3 +21,20 @@
     minute: 30
     hour: "*/6"
     job: "/bin/bash {{ db_backup }}"
+
+- cron:
+    name: Run Update Events poller to add new events to database
+    user: "{{ user }}"
+    state: present
+    minute: 0
+    hour: 0
+    job: "/bin/bash {{ events_poller }}"
+
+- cron:
+    name: Post Upcoming Events in announcements channel
+    user: "{{ user }}"
+    state: present
+    minute: 0
+    hour: 14
+    weekday: 1
+    job: "/bin/bash {{ upcoming_events }}"
