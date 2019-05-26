@@ -100,3 +100,29 @@ def test_add_new_events_to_database(session, patched_meetup):
     # Assert
     all_events_in_database = Event.query.all()
     assert len(all_events_in_database) == num_new_events + 1
+
+
+@pytest.mark.integration
+def test_no_events_added_to_database(session, patched_meetup):
+    """
+    GIVEN: table containing event
+    WHEN: add_new_events_to_database is called
+    THEN: add additional event that is not already in database to database
+    """
+    # Arrange
+    events_in_db = EventFactory.create_batch(size=20)
+    [session.add(event) for event in events_in_db]
+    session.commit()
+
+    events = []
+    for event in events_in_db:
+        events.append(EventDetailsFactory(id=event.remote_id))
+    patched_meetup(events=events)
+
+    # Act
+    add_new_events_to_database("test_group")
+
+    # Assert
+    all_events_in_database = Event.query.all()
+    assert len(all_events_in_database) == len(events_in_db)
+    assert all_events_in_database == events_in_db
