@@ -1,10 +1,10 @@
 from flask import blueprints
 
-from ..toolbox import authentication_required
 from .github_summary import PublishGitHubSummaryResource
 from .retweeter import TwitterPollingResource
 from .update_events import AddNewEventPollingResource
 from .youtube_post import YouTubePollingResource
+from busy_beaver.blueprints.toolbox import authentication_required
 
 poller_bp = blueprints.Blueprint("poller", __name__)
 admin_role_required = authentication_required(roles=["admin"])
