@@ -30,7 +30,7 @@ def test_generate_upcoming_events_message(session):
 
     result = generate_upcoming_events_message("ChiPy", count=1)
 
-    assert len(result) == 2 + 1 * 3  # sections: 2 in the header, each block is 3
+    assert len(result) == 3 + 1 * 3  # sections: 3 in the header, each block is 3
 
 
 @pytest.fixture
@@ -55,4 +55,4 @@ def test_post_upcoming_events_message_to_slack(mocker, session, patched_slack):
     # Assert
     post_message_args = slack.post_message.call_args_list[-1]
     args, kwargs = post_message_args
-    assert len(kwargs["blocks"]) == 14  # sections: 2 in the header, each block is 3
+    assert len(kwargs["blocks"]) == 15  # sections: 3 in the header, each block is 3

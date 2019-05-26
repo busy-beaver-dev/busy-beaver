@@ -8,7 +8,7 @@ from busy_beaver.models import Event
 
 def generate_upcoming_events_message(group_name: str, count: int):
     events = _fetch_future_events_from_database(group_name, count)
-    return UpcomingEventList("*Upcoming ChiPy Events*", events).to_dict()
+    return UpcomingEventList("*Upcoming Events*", events).to_dict()
 
 
 def generate_next_event_message(group_name: str):
@@ -18,7 +18,7 @@ def generate_next_event_message(group_name: str):
 
 def post_upcoming_events_message_to_slack(channel: str, group_name: str, count: int):
     events = _fetch_future_events_from_database(group_name, count)
-    blocks = UpcomingEventList("*Upcoming ChiPy Events*", events).to_dict()
+    blocks = UpcomingEventList("*Upcoming Events*", events).to_dict()
     slack.post_message(blocks=blocks, channel=channel)
 
 
