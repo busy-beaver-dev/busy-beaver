@@ -51,10 +51,3 @@ class YouTubeAdapter:
         ]
 
         return results
-
-        # TODO
-        # THIS WAS THE ORIGINAL, figure out how this works with tests
-        # merging a stale branch where two folks worked on the same feature
-        # resp = self.client.get(url, params=params)
-        # videos_json = resp.json["items"]
-        # return sorted(videos_json, reverse=True, key=sort_by_published)
