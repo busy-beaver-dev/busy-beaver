@@ -10,7 +10,7 @@ MODULE_TO_TEST = "busy_beaver.blueprints.poller.update_events"
 
 
 @pytest.fixture
-def patched_retweeter_trigger(mocker, patcher):
+def patched_update_events_trigger(mocker, patcher):
     return patcher(
         MODULE_TO_TEST,
         namespace=start_add_new_events_to_database_task.__name__,
@@ -73,7 +73,9 @@ def test_poll_events_endpoint_incorrect_token(client, session, create_api_user):
 
 
 @pytest.mark.unit
-def test_poll_events_endpoint_success(client, session, create_api_user):
+def test_poll_events_endpoint_success(
+    client, session, create_api_user, patched_update_events_trigger
+):
     # Arrange
     create_api_user(username="test_user", token="abcd", role="admin")
 
