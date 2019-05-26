@@ -1,9 +1,3 @@
-"""Creates factories to produce test data
-
-As we are using the adapter pattern to wrap APIs, we can simplify our testing process
-by creating factories to produce fixtures.
-"""
-
 import uuid
 import factory
 from busy_beaver.adapters.meetup import EventDetails

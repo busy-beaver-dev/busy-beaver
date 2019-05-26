@@ -5,6 +5,7 @@ from busy_beaver.apps.events_database.task import (
     add_new_events_to_database,
     start_add_new_events_to_database_task,
 )
+from busy_beaver.factories.event import EventFactory
 from busy_beaver.factories.event_details import EventDetailsFactory
 from busy_beaver.models import Event
 
@@ -74,3 +75,26 @@ def test_add_all_events_to_database(session, patched_meetup):
     # Assert
     all_events_in_database = Event.query.all()
     assert len(all_events_in_database) == len(events)
+
+
+@pytest.mark.integration
+def test_add_new_events_to_database(session, patched_meetup):
+    """
+    GIVEN: table containing event
+    WHEN: add_new_events_to_database is called
+    THEN: add additional event that is not already in database to database
+    """
+    # Arrange
+    event_in_db = EventFactory()
+
+    num_new_events = 5
+    events = EventDetailsFactory.create_batch(size=num_new_events)
+    events.append(EventDetailsFactory(id=event_in_db.remote_id))
+    patched_meetup(events=events)
+
+    # Act
+    add_new_events_to_database("test_group")
+
+    # Assert
+    all_events_in_database = Event.query.all()
+    assert len(all_events_in_database) == num_new_events + 1
