@@ -1,12 +1,12 @@
 import pytest
 
-from busy_beaver.adapters.youtube import YoutubeAdapter
+from busy_beaver.adapters.youtube import YouTubeAdapter
 from busy_beaver.config import YOUTUBE_API_KEY, YOUTUBE_CHANNEL
 
 
 @pytest.fixture
 def client():
-    yield YoutubeAdapter(api_key=YOUTUBE_API_KEY)
+    yield YouTubeAdapter(api_key=YOUTUBE_API_KEY)
 
 
 @pytest.mark.vcr()
