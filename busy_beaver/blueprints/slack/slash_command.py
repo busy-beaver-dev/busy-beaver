@@ -70,7 +70,7 @@ def next_event(**data):
 
 @slash_command_dispatcher.on("events")
 def upcoming_events(**data):
-    blocks = generate_upcoming_events_message(MEETUP_GROUP_NAME, count=4)
+    blocks = generate_upcoming_events_message(MEETUP_GROUP_NAME, count=5)
     return make_slack_response(blocks=blocks)
 
 
