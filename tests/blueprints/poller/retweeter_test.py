@@ -1,10 +1,10 @@
 import pytest
 
-from busy_beaver.blueprints.tasks.retweeter import start_post_tweets_to_slack_task
+from busy_beaver.blueprints.poller.retweeter import start_post_tweets_to_slack_task
 from busy_beaver.models import PostTweetTask
 from busy_beaver.tasks.retweeter import fetch_tweets_post_to_slack
 
-MODULE_TO_TEST = "busy_beaver.blueprints.tasks.retweeter"
+MODULE_TO_TEST = "busy_beaver.blueprints.poller.retweeter"
 
 
 @pytest.fixture
