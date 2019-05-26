@@ -2,6 +2,7 @@ from flask import blueprints
 
 from .github_summary import PublishGitHubSummaryResource
 from .retweeter import TwitterPollingResource
+from .update_events import AddNewEventPollingResource
 from .youtube_post import YouTubePollingResource
 from busy_beaver.decorators import authentication_required
 
@@ -16,6 +17,11 @@ poller_bp.add_url_rule(
 view = TwitterPollingResource.as_view("twitter_poller")
 poller_bp.add_url_rule(
     "/poll-twitter", view_func=admin_role_required(view), methods=["POST"]
+)
+
+view = AddNewEventPollingResource.as_view("meetup_poller")
+poller_bp.add_url_rule(
+    "/poll-events", view_func=admin_role_required(view), methods=["POST"]
 )
 
 view = YouTubePollingResource.as_view("youtube_poller")
