@@ -16,15 +16,13 @@ poller_bp.add_url_rule(
 
 view = TwitterPollingResource.as_view("twitter_poller")
 poller_bp.add_url_rule(
-    "/poll-twitter", view_func=admin_role_required(view), methods=["POST"]
+    "/twitter", view_func=admin_role_required(view), methods=["POST"]
 )
 
 view = AddNewEventPollingResource.as_view("meetup_poller")
-poller_bp.add_url_rule(
-    "/poll-events", view_func=admin_role_required(view), methods=["POST"]
-)
+poller_bp.add_url_rule("/events", view_func=admin_role_required(view), methods=["POST"])
 
 view = YouTubePollingResource.as_view("youtube_poller")
 poller_bp.add_url_rule(
-    "/poll-youtube", view_func=admin_role_required(view), methods=["POST"]
+    "/youtube", view_func=admin_role_required(view), methods=["POST"]
 )

@@ -38,7 +38,7 @@ def test_poll_twitter_smoke_test(
     create_api_user(username="test_user", token="abcd", role="admin")
 
     #  Act
-    client.post("/poll-events", headers={"Authorization": "token abcd"})
+    client.post("/poll/events", headers={"Authorization": "token abcd"})
 
     # Assert
     tasks = AddNewEventsToDatabaseTask.query.all()
@@ -54,7 +54,7 @@ def test_poll_events_endpoint_no_token(client, session, create_api_user):
     create_api_user(username="test_user", token="abcd", role="user")
 
     #  Act
-    result = client.post("/poll-events")
+    result = client.post("/poll/events")
 
     # Assert
     assert result.status_code == 401
@@ -66,7 +66,7 @@ def test_poll_events_endpoint_incorrect_token(client, session, create_api_user):
     create_api_user(username="test_user", token="abcd", role="user")
 
     #  Act
-    result = client.post("/poll-events")
+    result = client.post("/poll/events")
 
     # Assert
     assert result.status_code == 401
@@ -78,7 +78,7 @@ def test_poll_twitter_endpoint_success(client, session, create_api_user):
     create_api_user(username="test_user", token="abcd", role="admin")
 
     #  Act
-    result = client.post("/poll-events", headers={"Authorization": "token abcd"})
+    result = client.post("/poll/events", headers={"Authorization": "token abcd"})
 
     # Assert
     assert result.status_code == 200

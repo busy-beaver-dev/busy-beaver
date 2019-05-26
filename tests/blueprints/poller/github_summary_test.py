@@ -21,7 +21,7 @@ def test_github_summary_endpoint_no_token(
     create_api_user(username="test_user", token="abcd", role="user")
 
     #  Act
-    result = client.post("/github-summary")
+    result = client.post("/poll/github-summary")
 
     # Assert
     assert result.status_code == 401
@@ -35,7 +35,7 @@ def test_github_summary_endpoint_incorrect_token(
     create_api_user(username="test_user", token="abcd", role="user")
 
     #  Act
-    result = client.post("/github-summary")
+    result = client.post("/poll/github-summary")
 
     # Assert
     assert result.status_code == 401
@@ -49,7 +49,9 @@ def test_github_summary_endpoint_empty_body(
     create_api_user(username="test_user", token="abcd", role="admin")
 
     #  Act
-    result = client.post("/github-summary", headers={"Authorization": "token abcd"})
+    result = client.post(
+        "/poll/github-summary", headers={"Authorization": "token abcd"}
+    )
 
     # Assert
     assert result.status_code == 422
@@ -65,7 +67,7 @@ def test_github_summary_endpoint_success(
 
     #  Act
     result = client.post(
-        "/github-summary",
+        "/poll/github-summary",
         headers={"Authorization": "token abcd"},
         json={"channel": "general"},
     )

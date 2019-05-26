@@ -37,7 +37,7 @@ def test_poll_twitter_smoke_test(
 
     #  Act
     client.post(
-        "/poll-twitter",
+        "/poll/twitter",
         headers={"Authorization": "token abcd"},
         json={"channel": "general"},
     )
@@ -58,7 +58,7 @@ def test_poll_twitter_endpoint_no_token(
     create_api_user(username="test_user", token="abcd", role="user")
 
     #  Act
-    result = client.post("/poll-twitter")
+    result = client.post("/poll/twitter")
 
     # Assert
     assert result.status_code == 401
@@ -72,7 +72,7 @@ def test_poll_twitter_endpoint_incorrect_token(
     create_api_user(username="test_user", token="abcd", role="user")
 
     #  Act
-    result = client.post("/poll-twitter")
+    result = client.post("/poll/twitter")
 
     # Assert
     assert result.status_code == 401
@@ -86,7 +86,7 @@ def test_poll_twitter_endpoint_empty_body(
     create_api_user(username="test_user", token="abcd", role="admin")
 
     #  Act
-    result = client.post("/poll-twitter", headers={"Authorization": "token abcd"})
+    result = client.post("/poll/twitter", headers={"Authorization": "token abcd"})
 
     # Assert
     assert result.status_code == 422
@@ -102,7 +102,7 @@ def test_poll_twitter_endpoint_success(
 
     #  Act
     result = client.post(
-        "/poll-twitter",
+        "/poll/twitter",
         headers={"Authorization": "token abcd"},
         json={"channel": "general"},
     )
