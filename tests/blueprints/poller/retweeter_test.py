@@ -35,7 +35,7 @@ def test_poll_twitter_smoke_test(
     # Arrange
     create_api_user(username="test_user", token="abcd", role="admin")
 
-    #  Act
+    # Act
     client.post(
         "/poll/twitter",
         headers={"Authorization": "token abcd"},
@@ -57,7 +57,7 @@ def test_poll_twitter_endpoint_no_token(
     # Arrange
     create_api_user(username="test_user", token="abcd", role="user")
 
-    #  Act
+    # Act
     result = client.post("/poll/twitter")
 
     # Assert
@@ -71,7 +71,7 @@ def test_poll_twitter_endpoint_incorrect_token(
     # Arrange
     create_api_user(username="test_user", token="abcd", role="user")
 
-    #  Act
+    # Act
     result = client.post("/poll/twitter")
 
     # Assert
@@ -85,7 +85,7 @@ def test_poll_twitter_endpoint_empty_body(
     # Arrange
     create_api_user(username="test_user", token="abcd", role="admin")
 
-    #  Act
+    # Act
     result = client.post("/poll/twitter", headers={"Authorization": "token abcd"})
 
     # Assert
@@ -100,7 +100,7 @@ def test_poll_twitter_endpoint_success(
     create_api_user(username="test_user", token="abcd", role="admin")
     mock = patched_retweeter_trigger
 
-    #  Act
+    # Act
     result = client.post(
         "/poll/twitter",
         headers={"Authorization": "token abcd"},

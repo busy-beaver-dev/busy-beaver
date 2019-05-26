@@ -37,7 +37,7 @@ def test_poll_twitter_smoke_test(
     # Arrange
     create_api_user(username="test_user", token="abcd", role="admin")
 
-    #  Act
+    # Act
     client.post("/poll/events", headers={"Authorization": "token abcd"})
 
     # Assert
@@ -53,7 +53,7 @@ def test_poll_events_endpoint_no_token(client, session, create_api_user):
     # Arrange
     create_api_user(username="test_user", token="abcd", role="user")
 
-    #  Act
+    # Act
     result = client.post("/poll/events")
 
     # Assert
@@ -65,7 +65,7 @@ def test_poll_events_endpoint_incorrect_token(client, session, create_api_user):
     # Arrange
     create_api_user(username="test_user", token="abcd", role="user")
 
-    #  Act
+    # Act
     result = client.post("/poll/events")
 
     # Assert
@@ -79,7 +79,7 @@ def test_poll_events_endpoint_success(
     # Arrange
     create_api_user(username="test_user", token="abcd", role="admin")
 
-    #  Act
+    # Act
     result = client.post("/poll/events", headers={"Authorization": "token abcd"})
 
     # Assert
