@@ -6,7 +6,7 @@ import pytest
 from busy_beaver.config import TASK_QUEUE_MAX_RETRIES
 from busy_beaver.exceptions import AsyncException
 from busy_beaver.models import Task
-from busy_beaver.tasks.handlers import retry_failed_job
+from busy_beaver.toolbox.rq import retry_failed_job
 
 
 @pytest.fixture
