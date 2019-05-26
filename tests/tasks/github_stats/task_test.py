@@ -3,12 +3,12 @@ import pytest
 
 from busy_beaver.adapters.slack import Channel
 from busy_beaver.models import ApiUser
-from busy_beaver.tasks.github_stats.task import (
+from busy_beaver.apps.github_summary.task import (
     start_post_github_summary_task,
     fetch_github_summary_post_to_slack,
 )
 
-MODULE_TO_TEST = "busy_beaver.tasks.github_stats.task"
+MODULE_TO_TEST = "busy_beaver.apps.github_summary.task"
 
 
 #######################

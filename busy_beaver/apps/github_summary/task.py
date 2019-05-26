@@ -5,12 +5,12 @@ from typing import List
 
 from sqlalchemy import and_
 
-from ..toolbox import set_task_progress
 from .summary import GitHubUserEvents
 from busy_beaver import slack
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import ApiUser, User, PostGitHubSummaryTask
 from busy_beaver.toolbox import utc_now_minus
+from busy_beaver.tasks.toolbox import set_task_progress
 
 logger = logging.getLogger(__name__)
 
