@@ -1,12 +1,12 @@
 from datetime import timedelta
 import pytest
 
-from busy_beaver.adapters.twitter import Tweet
 from busy_beaver.apps.retweeter.task import (
     fetch_tweets_post_to_slack,
     LAST_TWEET_KEY,
     start_post_tweets_to_slack_task,
 )
+from busy_beaver.factories.tweet import TweetFactory
 from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
 
@@ -82,9 +82,9 @@ def test_post_tweets_to_slack(mocker, kv_store, patched_twitter, patched_slack):
     # Arrange
     kv_store.put_int(LAST_TWEET_KEY, 0)
     tweets = [
-        Tweet(3, utc_now_minus(timedelta())),
-        Tweet(2, utc_now_minus(timedelta(days=1))),
-        Tweet(1, utc_now_minus(timedelta(days=1))),
+        TweetFactory(id=3, created_at=utc_now_minus(timedelta())),
+        TweetFactory(id=2, created_at=utc_now_minus(timedelta(days=1))),
+        TweetFactory(id=1, created_at=utc_now_minus(timedelta(days=1))),
     ]
     patched_twitter(tweets)
     slack = patched_slack(mocker.MagicMock())
