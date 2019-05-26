@@ -6,7 +6,7 @@ from sentry_sdk.integrations.rq import RqIntegration
 from busy_beaver.app import create_app
 from busy_beaver.config import IN_PRODUCTION, LOGGING_CONFIG, SENTRY_DSN
 from busy_beaver.extensions import rq
-from busy_beaver.tasks.handlers import retry_failed_job
+from busy_beaver.toolbox.rq import retry_failed_job
 
 # observability
 LOGGING_CONFIG["handlers"]["datadog_file"]["filename"] = "logs/busy_beaver_worker.json"

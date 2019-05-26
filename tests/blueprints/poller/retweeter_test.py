@@ -2,7 +2,7 @@ import pytest
 
 from busy_beaver.blueprints.poller.retweeter import start_post_tweets_to_slack_task
 from busy_beaver.models import PostTweetTask
-from busy_beaver.tasks.retweeter import fetch_tweets_post_to_slack
+from busy_beaver.apps.retweeter.task import fetch_tweets_post_to_slack
 
 MODULE_TO_TEST = "busy_beaver.blueprints.poller.retweeter"
 
@@ -22,7 +22,7 @@ def patched_retweeter_trigger(mocker, patcher):
 @pytest.fixture
 def patched_background_task(patcher, create_fake_background_task):
     return patcher(
-        "busy_beaver.tasks.retweeter",
+        "busy_beaver.apps.retweeter.task",
         namespace=fetch_tweets_post_to_slack.__name__,
         replacement=create_fake_background_task(),
     )

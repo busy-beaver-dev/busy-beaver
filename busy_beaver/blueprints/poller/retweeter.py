@@ -3,7 +3,7 @@ import logging
 from flask import request
 from flask.views import MethodView
 
-from busy_beaver.tasks.retweeter import start_post_tweets_to_slack_task
+from busy_beaver.apps.retweeter.task import start_post_tweets_to_slack_task
 from busy_beaver.toolbox import make_response
 
 logger = logging.getLogger(__name__)

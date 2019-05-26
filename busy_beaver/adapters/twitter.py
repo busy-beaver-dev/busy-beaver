@@ -4,7 +4,7 @@ from typing import List, NamedTuple
 import tweepy
 import pytz
 
-from ..config import TWITTER_USERNAME
+from busy_beaver.config import TWITTER_USERNAME
 
 
 class Tweet(NamedTuple):

@@ -12,7 +12,10 @@ AUTH_STRING = re.compile(r"token (?P<token>.*)")
 
 
 def authentication_required(roles):
-    """Requires request to Authentication header set to 'token {token goes here}'"""
+    """Authentication Required decorator
+
+    Requires request to Authentication header set to 'token {token goes here}'
+    """
     if not isinstance(roles, list):
         raise ValueError
 

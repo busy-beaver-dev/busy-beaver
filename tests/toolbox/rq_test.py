@@ -3,7 +3,7 @@ from rq import get_current_job
 
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import Task
-from busy_beaver.tasks.toolbox import set_task_progress
+from busy_beaver.toolbox import set_task_progress
 
 
 @rq.job

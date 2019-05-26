@@ -4,8 +4,8 @@ import urllib
 
 from dateutil.parser import parse as date_parse
 
-from ..exceptions import UnexpectedStatusCode
 from .requests_client import RequestsClient, Response
+from busy_beaver.exceptions import UnexpectedStatusCode
 
 BASE_URL = "https://api.github.com"
 
