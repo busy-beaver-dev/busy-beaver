@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from busy_beaver.tasks.github_stats.summary import GitHubUserEvents
+from busy_beaver.apps.github_summary.summary import GitHubUserEvents
 from busy_beaver.toolbox import utc_now_minus
 
 import pytest

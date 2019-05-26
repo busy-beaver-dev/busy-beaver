@@ -3,7 +3,7 @@ import logging
 from flask import request
 from flask.views import MethodView
 
-from busy_beaver.tasks import start_post_github_summary_task
+from busy_beaver.apps.github_summary.task import start_post_github_summary_task
 from busy_beaver.toolbox import make_response
 
 logger = logging.getLogger(__name__)
