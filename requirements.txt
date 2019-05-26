@@ -1,4 +1,5 @@
 alembic==1.0.3
+factory_boy==2.12.0
 Flask-Migrate==2.4.0
 Flask-RQ2==18.3
 Flask-SQLAlchemy==2.4.0

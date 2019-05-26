@@ -4,6 +4,7 @@ from busy_beaver import create_app
 from busy_beaver.adapters import (
     GitHubAdapter,
     KeyValueStoreAdapter,
+    MeetupAdapter,
     SlackAdapter,
     TwitterAdapter,
     YouTubeAdapter,
@@ -36,6 +37,10 @@ twitter = TwitterAdapter(
 
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 youtube = YouTubeAdapter(api_key=YOUTUBE_API_KEY)
+
+MEETUP_API_KEY = os.getenv("MEETUP_API_KEY")
+MEETUP_GROUP_NAME = "_ChiPy_"
+meetup = MeetupAdapter(MEETUP_API_KEY)
 
 kv = KeyValueStoreAdapter()
 

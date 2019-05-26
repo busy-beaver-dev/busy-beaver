@@ -10,8 +10,8 @@ class EventList:
     def __init__(self):
         self.events = []
 
-    def __repr__(self):
-        return repr(self.events)  # pragma: no cover
+    def __repr__(self):  # pragma: no cover
+        return repr(self.events)
 
     def append(self, item):
         self.events.append(item)

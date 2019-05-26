@@ -1,16 +1,15 @@
 import pytest
 
-from busy_beaver.blueprints.integration.slack.slash_command import (
+from busy_beaver.blueprints.slack.slash_command import (
     command_not_found,
     disconnect_github,
     display_help_text,
     link_github,
     next_event,
     relink_github,
+    upcoming_events,
 )
 from busy_beaver.models import User
-
-MODULE_TO_TEST = "busy_beaver.blueprints.integration.slack.slash_command"
 
 
 @pytest.fixture
@@ -59,7 +58,7 @@ def test_slack_command_valid_command(
     data = generate_slash_command_request("help")
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
 
-    response = client.post("/slack-slash-commands", headers=headers, data=data)
+    response = client.post("/slack/slash-command", headers=headers, data=data)
 
     assert response.status_code == 200
     assert "/busybeaver help" in response.json["text"].lower()
@@ -72,7 +71,7 @@ def test_slack_command_invalid_command(
     data = generate_slash_command_request("non-existent")
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
 
-    response = client.post("/slack-slash-commands", headers=headers, data=data)
+    response = client.post("/slack/slash-command", headers=headers, data=data)
 
     assert response.status_code == 200
     assert "command not found" in response.json["text"].lower()
@@ -85,7 +84,7 @@ def test_slack_command_empty_command(
     data = generate_slash_command_request(command="")
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
 
-    response = client.post("/slack-slash-commands", headers=headers, data=data)
+    response = client.post("/slack/slash-command", headers=headers, data=data)
 
     assert response.status_code == 200
     assert "/busybeaver help" in response.json["text"].lower()
@@ -94,71 +93,51 @@ def test_slack_command_empty_command(
 #########################
 # Upcoming Event Schedule
 #########################
-@pytest.fixture
-def patched_meetup(mocker, patcher):
-    class FakeMeetupClient:
-        def __init__(self, *, events):
-            self.mock = mocker.MagicMock()
-            if events:
-                self.events = events
-
-        def get_events(self, *args, **kwargs):
-            self.mock(*args, **kwargs)
-            return self.events
-
-        def __repr__(self):
-            return "<FakeMeetupClient>"
-
-    def _wrapper(*, events=None):
-        obj = FakeMeetupClient(events=events)
-        return patcher(MODULE_TO_TEST, namespace="meetup", replacement=obj)
-
-    return _wrapper
-
-
-@pytest.mark.unit
-def test_command_next_event(generate_slash_command_request, patched_meetup):
+@pytest.mark.vcr()
+@pytest.mark.end2end
+def test_command_next(generate_slash_command_request):
     data = generate_slash_command_request("next")
-    patched_meetup(
-        events=[
-            {
-                "venue": {"name": "Numerator"},
-                "name": "ChiPy",
-                "event_url": "http://meetup.com/_ChiPy_/event/blah",
-                "time": 1_557_959_400_000,
-            }
-        ]
-    )
 
     result = next_event(**data)
 
-    slack_response = result.json["attachments"][0]
-    assert "ChiPy" in slack_response["title"]
-    assert "http://meetup.com/_ChiPy_/event/blah" in slack_response["title_link"]
-    assert "Numerator" in slack_response["text"]
+    assert result.json["response_type"] == "ephemeral"
+    assert result.json["attachments"]
+    assert not result.json["blocks"]
+    assert not result.json["text"]
+
+
+@pytest.mark.vcr()
+@pytest.mark.end2end
+def test_command_events(generate_slash_command_request):
+    data = generate_slash_command_request("events")
+
+    result = upcoming_events(**data)
+
+    assert result.json["response_type"] == "ephemeral"
+    assert result.json["blocks"]
+    assert not result.json["attachments"]
+    assert not result.json["text"]
+
+
+########################
+# Miscellaneous Commands
+########################
+@pytest.mark.unit
+def test_command_help(generate_slash_command_request):
+    data = generate_slash_command_request("help")
+
+    result = display_help_text(**data)
+
+    assert "/busybeaver help" in result.json["text"]
 
 
 @pytest.mark.unit
-def test_command_next_event_location_not_set(
-    generate_slash_command_request, patched_meetup
-):
-    data = generate_slash_command_request("next")
-    patched_meetup(
-        events=[
-            {
-                "name": "ChiPy",
-                "event_url": "http://meetup.com/_ChiPy_/event/blah",
-                "time": 1_557_959_400_000,
-            }
-        ]
-    )
+def test_command_not_found(generate_slash_command_request):
+    data = generate_slash_command_request(command="blah")
 
-    result = next_event(**data)
+    result = command_not_found(**data)
 
-    slack_response = result.json["attachments"][0]
-    assert "ChiPy" in slack_response["title"]
-    assert "http://meetup.com/_ChiPy_/event/blah" in slack_response["title_link"]
-    assert "TBD" in slack_response["text"]
+    assert "/busybeaver help" in result.json["text"]
 
 
 ##########################################
@@ -224,24 +203,3 @@ def test_disconnect_command_registered_user(
 
     assert "Account has been deleted" in result.json["text"]
     assert not User.query.get(user.id)
-
-
-########################
-# Miscellaneous Commands
-########################
-@pytest.mark.unit
-def test_command_help(generate_slash_command_request):
-    data = generate_slash_command_request("help")
-
-    result = display_help_text(**data)
-
-    assert "/busybeaver help" in result.json["text"]
-
-
-@pytest.mark.unit
-def test_command_not_found(generate_slash_command_request):
-    data = generate_slash_command_request(command="blah")
-
-    result = command_not_found(**data)
-
-    assert "/busybeaver help" in result.json["text"]

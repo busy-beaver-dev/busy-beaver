@@ -6,11 +6,15 @@ import uuid
 from flask import request
 from flask.views import MethodView
 
-from busy_beaver import meetup
-from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI
+from .toolbox import make_slack_response
+from busy_beaver.apps.upcoming_events.workflow import (
+    generate_next_event_message,
+    generate_upcoming_events_message,
+)
+from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI, MEETUP_GROUP_NAME
 from busy_beaver.extensions import db
 from busy_beaver.models import User
-from busy_beaver.toolbox import EventEmitter, make_slack_response
+from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
 slash_command_dispatcher = EventEmitter()
@@ -55,8 +59,38 @@ class SlackSlashCommandDispatchResource(MethodView):
         return Command(command_parts[0].lower(), args=command_parts[1:])
 
 
+#########################
+# Upcoming Event Schedule
+#########################
+@slash_command_dispatcher.on("next")
+def next_event(**data):
+    attachment = generate_next_event_message(MEETUP_GROUP_NAME)
+    return make_slack_response(attachments=attachment)
+
+
+@slash_command_dispatcher.on("events")
+def upcoming_events(**data):
+    blocks = generate_upcoming_events_message(MEETUP_GROUP_NAME, count=4)
+    return make_slack_response(blocks=blocks)
+
+
+########################
+# Miscellaneous Commands
+########################
+@slash_command_dispatcher.on("help")
+def display_help_text(**data):
+    return make_slack_response(text=HELP_TEXT)
+
+
+@slash_command_dispatcher.on("not_found")
+def command_not_found(**data):
+    logger.info("[Busy Beaver] Unknown command")
+    return make_slack_response(text="Command not found. Try `/busybeaver help`")
+
+
 ##########################################
 # Associate GitHub account with Slack user
+# TODO refactor this
 ##########################################
 @slash_command_dispatcher.on("connect")
 def link_github(**data):
@@ -127,47 +161,3 @@ def create_github_account_attachment(state):
         "attachment_type": "default",
         "actions": [{"text": "Associate GitHub Profile", "type": "button", "url": url}],
     }
-
-
-#########################
-# Upcoming Event Schedule
-#########################
-@slash_command_dispatcher.on("next")
-def next_event(**data):
-    event = meetup.get_events(count=1)[0]
-    attachment = create_next_event_attachment(event)
-    return make_slack_response(attachments=attachment)
-
-
-def create_next_event_attachment(event: dict) -> dict:
-    """Make a Slack attachment for the event."""
-    if "venue" in event:
-        venue_name = event["venue"]["name"]
-    else:
-        venue_name = "TBD"
-
-    return {
-        "mrkdwn_in": ["text", "pretext"],
-        "pretext": "*Next ChiPy Event:*",
-        "title": event["name"],
-        "title_link": event["event_url"],
-        "fallback": "{}: {}".format(event["name"], event["event_url"]),
-        "text": "*<!date^{}^{{time}} {{date_long}}|no date>* at {}".format(
-            int(event["time"] / 1000), venue_name
-        ),
-        "color": "#008952",
-    }
-
-
-########################
-# Miscellaneous Commands
-########################
-@slash_command_dispatcher.on("help")
-def display_help_text(**data):
-    return make_slack_response(text=HELP_TEXT)
-
-
-@slash_command_dispatcher.on("not_found")
-def command_not_found(**data):
-    logger.info("[Busy Beaver] Unknown command")
-    return make_slack_response(text="Command not found. Try `/busybeaver help`")

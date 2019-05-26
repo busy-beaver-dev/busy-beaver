@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import json as _json
 
-from flask import jsonify, Response
+from flask import Response
 import pytz
 
 
@@ -24,16 +24,6 @@ def make_response(
         headers=headers if headers else {},
         content_type="application/json",
         response=_json.dumps(resp),
-    )
-
-
-def make_slack_response(response_type="ephemeral", text="", attachments=None):
-    return jsonify(
-        {
-            "response_type": response_type,
-            "text": text,
-            "attachments": [attachments] if attachments else [],
-        }
     )
 
 
