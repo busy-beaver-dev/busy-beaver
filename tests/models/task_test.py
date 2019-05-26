@@ -2,7 +2,12 @@ import pytest
 from redis.exceptions import RedisError
 from rq.exceptions import NoSuchJobError
 
-from busy_beaver.models import Task, PostGitHubSummaryTask, PostTweetTask
+from busy_beaver.models import (
+    AddNewEventsToDatabaseTask,
+    PostGitHubSummaryTask,
+    PostTweetTask,
+    Task,
+)
 
 MODULE_TO_TEST = "busy_beaver.models.task"
 
@@ -144,3 +149,26 @@ def test_post_tweet_task(session):
     assert task.complete is False
     assert task.failed is False
     assert task.data["channel_name"] == channel_name
+
+
+#############################
+# Update Events Database Task
+#############################
+def test_update_events_database_task(session):
+    # Arrange
+    task = AddNewEventsToDatabaseTask(
+        job_id="abcd",
+        name="task_created_for_test",
+        description="Task created for testing purposes",
+        data={"group_name": "_ChiPy_"},
+    )
+
+    # Act
+    session.add(task)
+    session.commit()
+
+    # Assert
+    assert task.job_id == "abcd"
+    assert task.complete is False
+    assert task.failed is False
+    assert task.data["group_name"] == "_ChiPy_"
