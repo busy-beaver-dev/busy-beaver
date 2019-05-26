@@ -7,7 +7,7 @@ class User(BaseModel):
 
     __tablename__ = "user"
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"<User slack: {self.slack_id} github: {self.github_username}>"
 
     # Attributes

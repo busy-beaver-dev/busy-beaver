@@ -7,7 +7,7 @@ class Event(BaseModel):
 
     __tablename__ = "event"
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"<Event: {self.name}>"
 
     # Attributes
