@@ -1,7 +1,7 @@
 import pytest
-from busy_beaver.blueprints.tasks.github_summary import start_post_github_summary_task
+from busy_beaver.blueprints.poller.github_summary import start_post_github_summary_task
 
-MODULE_TO_TEST = "busy_beaver.blueprints.tasks.github_summary"
+MODULE_TO_TEST = "busy_beaver.blueprints.poller.github_summary"
 
 
 @pytest.fixture
@@ -20,8 +20,8 @@ def test_github_summary_endpoint_no_token(
     # Arrange
     create_api_user(username="test_user", token="abcd", role="user")
 
-    #  Act
-    result = client.post("/github-summary")
+    # Act
+    result = client.post("/poll/github-summary")
 
     # Assert
     assert result.status_code == 401
@@ -34,8 +34,8 @@ def test_github_summary_endpoint_incorrect_token(
     # Arrange
     create_api_user(username="test_user", token="abcd", role="user")
 
-    #  Act
-    result = client.post("/github-summary")
+    # Act
+    result = client.post("/poll/github-summary")
 
     # Assert
     assert result.status_code == 401
@@ -48,8 +48,10 @@ def test_github_summary_endpoint_empty_body(
     # Arrange
     create_api_user(username="test_user", token="abcd", role="admin")
 
-    #  Act
-    result = client.post("/github-summary", headers={"Authorization": "token abcd"})
+    # Act
+    result = client.post(
+        "/poll/github-summary", headers={"Authorization": "token abcd"}
+    )
 
     # Assert
     assert result.status_code == 422
@@ -63,9 +65,9 @@ def test_github_summary_endpoint_success(
     create_api_user(username="test_user", token="abcd", role="admin")
     mock = patched_post_github_summary_trigger
 
-    #  Act
+    # Act
     result = client.post(
-        "/github-summary",
+        "/poll/github-summary",
         headers={"Authorization": "token abcd"},
         json={"channel": "general"},
     )

@@ -7,7 +7,7 @@ class ApiUser(BaseModel):
 
     __tablename__ = "api_user"
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"<API: {self.username}>"
 
     # Attributes

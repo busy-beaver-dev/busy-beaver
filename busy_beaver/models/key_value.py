@@ -9,7 +9,7 @@ class KeyValueStore(BaseModel):
 
     __tablename__ = "key_value_store"
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"<KeyValueStore: {self.key} {self.value}>"
 
     # Attributes

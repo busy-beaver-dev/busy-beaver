@@ -9,7 +9,7 @@ class YouTubeVideo(BaseModel):
 
     __tablename__ = "youtube_video"
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"<YouTubeVideo({self.youtube_id})>"
 
     # Attributes

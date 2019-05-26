@@ -56,7 +56,7 @@ debug: ## attach to app container for debugging
 shell: ## log into into app container -- bash-shell
 	docker-compose exec app bash
 
-shell-db:
+shell-db:  ## log into database container -- psql
 	docker-compose exec db psql -w --username "bbdev_user" --dbname "busy-beaver"
 
 shell-dev: ## open ipython shell with application context

@@ -86,7 +86,7 @@ Can make requests to REST endpoints to kick off processes. Currently we are usin
 
 #### GitHub Summary Endpoint
 
-- Start the process to run a summary by making a `POST` request to `/poll-twitter` with `Authentication` header set to `token {token}` and JSON body:
+- Start the process to run a summary by making a `POST` request to `/poll/twitter` with `Authentication` header set to `token {token}` and JSON body:
 
 ```json
 {
@@ -96,7 +96,7 @@ Can make requests to REST endpoints to kick off processes. Currently we are usin
 
 #### Retweeter Endpoint
 
-- Check Twitter feed for new posts to share on Slack by making a `POST` request to `/github-summary` with `Authentication` header set to `token {token}` and JSON body:
+- Check Twitter feed for new posts to share on Slack by making a `POST` request to `/poll/github-summary` with `Authentication` header set to `token {token}` and JSON body:
 
 ```json
 {

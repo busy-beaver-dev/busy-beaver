@@ -1,10 +1,10 @@
 import pytest
 
-from busy_beaver.blueprints.tasks.retweeter import start_post_tweets_to_slack_task
+from busy_beaver.blueprints.poller.retweeter import start_post_tweets_to_slack_task
 from busy_beaver.models import PostTweetTask
 from busy_beaver.tasks.retweeter import fetch_tweets_post_to_slack
 
-MODULE_TO_TEST = "busy_beaver.blueprints.tasks.retweeter"
+MODULE_TO_TEST = "busy_beaver.blueprints.poller.retweeter"
 
 
 @pytest.fixture
@@ -35,9 +35,9 @@ def test_poll_twitter_smoke_test(
     # Arrange
     create_api_user(username="test_user", token="abcd", role="admin")
 
-    #  Act
+    # Act
     client.post(
-        "/poll-twitter",
+        "/poll/twitter",
         headers={"Authorization": "token abcd"},
         json={"channel": "general"},
     )
@@ -57,8 +57,8 @@ def test_poll_twitter_endpoint_no_token(
     # Arrange
     create_api_user(username="test_user", token="abcd", role="user")
 
-    #  Act
-    result = client.post("/poll-twitter")
+    # Act
+    result = client.post("/poll/twitter")
 
     # Assert
     assert result.status_code == 401
@@ -71,8 +71,8 @@ def test_poll_twitter_endpoint_incorrect_token(
     # Arrange
     create_api_user(username="test_user", token="abcd", role="user")
 
-    #  Act
-    result = client.post("/poll-twitter")
+    # Act
+    result = client.post("/poll/twitter")
 
     # Assert
     assert result.status_code == 401
@@ -85,8 +85,8 @@ def test_poll_twitter_endpoint_empty_body(
     # Arrange
     create_api_user(username="test_user", token="abcd", role="admin")
 
-    #  Act
-    result = client.post("/poll-twitter", headers={"Authorization": "token abcd"})
+    # Act
+    result = client.post("/poll/twitter", headers={"Authorization": "token abcd"})
 
     # Assert
     assert result.status_code == 422
@@ -100,9 +100,9 @@ def test_poll_twitter_endpoint_success(
     create_api_user(username="test_user", token="abcd", role="admin")
     mock = patched_retweeter_trigger
 
-    #  Act
+    # Act
     result = client.post(
-        "/poll-twitter",
+        "/poll/twitter",
         headers={"Authorization": "token abcd"},
         json={"channel": "general"},
     )

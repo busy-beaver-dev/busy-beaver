@@ -38,7 +38,7 @@ class Task(BaseModel):
         job = self.get_rq_job()
         return job.meta.get("progress", 0) if job is not None else 100
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"<Task: {self.job_id}-{self.name}>"
 
 
@@ -52,7 +52,7 @@ class PostGitHubSummaryTask(Task):
 
     __mapper_args__ = {"polymorphic_identity": "post_github_summary"}
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"<PostGitHubSummaryTask: {self.data}>"
 
 
@@ -66,5 +66,19 @@ class PostTweetTask(Task):
 
     __mapper_args__ = {"polymorphic_identity": "post_tweet"}
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return f"<PostTweetTask: {self.data}>"
+
+
+class AddNewEventsToDatabaseTask(Task):
+
+    __tablename__ = "fetch_new_events_task"
+
+    # Attributes
+    id = db.Column(db.Integer, db.ForeignKey("task.id"), primary_key=True)
+    data = db.Column("data", db.JSON)
+
+    __mapper_args__ = {"polymorphic_identity": "fetch_new_events"}
+
+    def __repr__(self):  # pragma: no cover
+        return f"<AddNewEventsToDatabaseTask: {self.data}>"
