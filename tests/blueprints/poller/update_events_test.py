@@ -73,7 +73,7 @@ def test_poll_events_endpoint_incorrect_token(client, session, create_api_user):
 
 
 @pytest.mark.unit
-def test_poll_twitter_endpoint_success(client, session, create_api_user):
+def test_poll_events_endpoint_success(client, session, create_api_user):
     # Arrange
     create_api_user(username="test_user", token="abcd", role="admin")
 
