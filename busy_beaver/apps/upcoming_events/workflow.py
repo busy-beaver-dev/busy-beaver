@@ -16,12 +16,10 @@ def generate_next_event_message(group_name: str):
     return _next_event_attachment(event)
 
 
-def post_upcoming_events_message_to_slack(
-    channel_name: str, group_name: str, count: int
-):
+def post_upcoming_events_message_to_slack(channel: str, group_name: str, count: int):
     events = _fetch_future_events_from_database(group_name, count)
     blocks = UpcomingEventList("*Upcoming ChiPy Events*", events).to_dict()
-    slack.post_message(blocks=blocks, channel=channel_name)
+    slack.post_message(blocks=blocks, channel=channel)
 
 
 def _fetch_future_events_from_database(group_name, count):

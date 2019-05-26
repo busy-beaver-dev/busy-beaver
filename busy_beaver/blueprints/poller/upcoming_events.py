@@ -29,7 +29,7 @@ class PublishUpcomingEventsResource(MethodView):
             )
             return make_response(422, error={"message": "JSON requires 'channel' key"})
         post_upcoming_events_message_to_slack(
-            channel_name=data["channel"], group_name="ChiPy", count=4
+            channel=data["channel"], group_name="ChiPy", count=4
         )
 
         logger.info("[Busy Beaver] Post Upcoming Events -- complete")
