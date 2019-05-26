@@ -1,4 +1,6 @@
 import time
+
+from busy_beaver import slack
 from busy_beaver.apps.upcoming_events.cards import UpcomingEventList
 from busy_beaver.adapters.meetup import EventDetails
 from busy_beaver.models import Event
@@ -6,12 +8,18 @@ from busy_beaver.models import Event
 
 def generate_upcoming_events_message(group_name: str, count: int):
     events = _fetch_future_events_from_database(group_name, count)
-    return UpcomingEventList("Upcoming ChiPy Events", events).to_dict()
+    return UpcomingEventList("*Upcoming ChiPy Events*", events).to_dict()
 
 
 def generate_next_event_message(group_name: str):
     event = _fetch_future_events_from_database(group_name, count=1)[0]
     return _next_event_attachment(event)
+
+
+def post_upcoming_events_message_to_slack(channel: str, group_name: str, count: int):
+    events = _fetch_future_events_from_database(group_name, count)
+    blocks = UpcomingEventList("*Upcoming ChiPy Events*", events).to_dict()
+    slack.post_message(blocks=blocks, channel="general")
 
 
 def _fetch_future_events_from_database(group_name, count):

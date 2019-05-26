@@ -11,10 +11,12 @@ adds new events to the application's database.
 
 Public GitHub activity of registered users is shared
 on a Slack channel once a day.
+
 Users can use the following commands:
-`/busybeaver connect` to create a new account,
-`/busybeaver reconnect` to link Slack ID to different GitHub account,
-and `/busybeaver disconnect` to delete user account.
+
+- `/busybeaver connect` to create a new account,
+- `/busybeaver reconnect` to link Slack ID to different GitHub account
+- `/busybeaver disconnect` to delete user account.
 
 ## Retweeter
 
@@ -23,5 +25,9 @@ in a Slack workspace after a configurable length of time has passed.
 
 ## Upcoming Events
 
-Users can use the Slash commands `/busybeaver next` and `/busybeaver events`
-to query the Meetup API for coming events.
+- Users can query the database using the [Slack slash commands](https://api.slack.com/slash-commands)
+  - `/busybeaver next`
+  - `/busybeaver events`
+- The contents of `/busybeaver events` will be posted a specified channel
+when an endpoint gets hit with a POST request;
+this is currently triggered with a CRON job
