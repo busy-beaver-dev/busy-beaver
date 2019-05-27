@@ -1,3 +1,4 @@
+from collections import namedtuple
 from datetime import datetime
 from typing import Dict
 
@@ -32,6 +33,21 @@ class YouTubeAdapter:
             "type": "video",
         }
         url = f"{self.base_url}/search"
-        resp = self.client.get(url, params=params)
-        videos_json = resp.json["items"]
-        return sorted(videos_json, reverse=True, key=sort_by_published)
+        response = self.client.get(url, params=params)
+
+        # Unpack and label items in response
+        labels = namedtuple("YoutubeVideo", ["url", "name", "date"])
+
+        results = [
+            labels(
+                *[
+                    "https://www.youtube.com/watch?v=" + _["id"]["videoId"],
+                    _["snippet"]["title"],
+                    _["snippet"]["publishedAt"],
+                ]
+            )
+            for _ in response.json["items"]
+            if _["id"]["kind"] == "youtube#video"
+        ]
+
+        return results
