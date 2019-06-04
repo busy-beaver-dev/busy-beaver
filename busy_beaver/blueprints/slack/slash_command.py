@@ -1,16 +1,21 @@
 import logging
 from typing import List, NamedTuple
-from urllib.parse import urlencode
+
 import uuid
+from urllib.parse import urlencode
 
 from flask import request
 from flask.views import MethodView
 
 from .toolbox import make_slack_response
+
 from busy_beaver.apps.upcoming_events.workflow import (
     generate_next_event_message,
     generate_upcoming_events_message,
 )
+
+from busy_beaver.apps.github_summary.workflow import (generate_account_attachment)
+
 from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI, MEETUP_GROUP_NAME
 from busy_beaver.extensions import db
 from busy_beaver.models import User
@@ -94,19 +99,9 @@ def command_not_found(**data):
 ##########################################
 @slash_command_dispatcher.on("connect")
 def link_github(**data):
-    logger.info("[Busy Beaver] New user. Linking GitHub account.")
-    slack_id = data["user_id"]
-    user_record = User.query.filter_by(slack_id=slack_id).first()
-
-    if user_record:
-        logger.info("[Busy Beaver] Slack acount already linked to GitHub")
-        return make_slack_response(text=ACCOUNT_ALREADY_ASSOCIATED)
-
-    user = User()
-    user.slack_id = slack_id
-    user = add_tracking_identifer_and_save_record(user)
-    attachment = create_github_account_attachment(user.github_state)
-    return make_slack_response(text=VERIFY_ACCOUNT, attachments=attachment)
+    logger.info("[Busy Beaver] Slash command to associate with Github account.")
+    message, attachment = generate_account_attachment(**data)
+    return make_slack_response(text=message, attachments=attachment)
 
 
 @slash_command_dispatcher.on("reconnect")
