@@ -8,7 +8,9 @@ from busy_beaver.models import Event
 
 def generate_upcoming_events_message(group_name: str, count: int):
     events = _fetch_future_events_from_database(group_name, count)
-    return UpcomingEventList("*Upcoming Events*", events).to_dict()
+    # TODO: for multi-tenant we will need to use group_name to look up url
+    image_url = "https://www.chipy.org/static/img/chipmunk.1927e65c68a7.png"
+    return UpcomingEventList(events, group_name, image_url).to_dict()
 
 
 def generate_next_event_message(group_name: str):
@@ -17,8 +19,7 @@ def generate_next_event_message(group_name: str):
 
 
 def post_upcoming_events_message_to_slack(channel: str, group_name: str, count: int):
-    events = _fetch_future_events_from_database(group_name, count)
-    blocks = UpcomingEventList("*Upcoming Events*", events).to_dict()
+    blocks = generate_upcoming_events_message(group_name, count)
     slack.post_message(blocks=blocks, channel=channel)
 
 
