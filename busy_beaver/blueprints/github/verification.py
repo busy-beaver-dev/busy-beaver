@@ -19,12 +19,8 @@ def verify_github_signature(signing_secret: str):
             if not github_signature:
                 raise UnverifiedWebhookRequest("Missing header")
 
-            sig_parts = github_signature.split("=", maxsplit=1)
-            if len(sig_parts) < 2 or sig_parts[0] != "sha1":
-                raise UnverifiedWebhookRequest("Invalid signature")
-
             sig = calculate_signature(signing_secret, request.data)
-            if signatures_unequal(sig, sig_parts[1]):
+            if signatures_unequal(sig, github_signature):
                 raise UnverifiedWebhookRequest("Invalid")
 
             return func(*args, **kwargs)
@@ -35,8 +31,11 @@ def verify_github_signature(signing_secret: str):
 
 
 def calculate_signature(signing_secret, request_data):
-    return hmac.new(str.encode(signing_secret), request_data, hashlib.sha1).hexdigest()
+    return (
+        "sha1="
+        + hmac.new(str.encode(signing_secret), request_data, hashlib.sha1).hexdigest()
+    )
 
 
-def signatures_unequal(request_hash, slack_signature):
-    return not hmac.compare_digest(request_hash, slack_signature)
+def signatures_unequal(request_hash, github_signature):
+    return not hmac.compare_digest(request_hash, github_signature)
