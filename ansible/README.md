@@ -16,6 +16,7 @@ export BUSY_BEAVER_API_TOKEN=[bb-api-token]
 export GITHUB_APP_CLIENT_ID=[client-id]
 export GITHUB_APP_CLIENT_SECRET=[client-secret]
 export GITHUB_OAUTH_TOKEN=[token-here]
+export GITHUB_SIGNING_SECRET=[signing-secret]
 
 export MEETUP_API_KEY=[meetup-api-key]
 

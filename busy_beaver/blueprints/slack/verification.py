@@ -4,7 +4,7 @@ import hmac
 
 from flask import request
 
-from busy_beaver.exceptions import UnverifiedSlackRequest
+from busy_beaver.exceptions import UnverifiedWebhookRequest
 
 
 def verify_slack_signature(signing_secret: str):
@@ -18,11 +18,11 @@ def verify_slack_signature(signing_secret: str):
             timestamp = request.headers.get("X-Slack-Request-Timestamp", None)
             slack_signature = request.headers.get("X-Slack-Signature", None)
             if not timestamp or not slack_signature:
-                raise UnverifiedSlackRequest("Invalid")
+                raise UnverifiedWebhookRequest("Invalid")
 
             sig = calculate_signature(signing_secret, timestamp, request.get_data())
             if signatures_unequal(sig, slack_signature):
-                raise UnverifiedSlackRequest("Invalid")
+                raise UnverifiedWebhookRequest("Invalid")
 
             return func(*args, **kwargs)
 

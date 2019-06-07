@@ -38,7 +38,7 @@ class NotAuthorized(BusyBeaverException):
         self.message = error
 
 
-class UnverifiedSlackRequest(NotAuthorized):
+class UnverifiedWebhookRequest(NotAuthorized):
     pass
 
 
