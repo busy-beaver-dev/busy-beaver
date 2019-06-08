@@ -48,7 +48,7 @@ services:
     image: alysivji/busy-beaver:latest
     command: webserver
     environment: &app_env_vars
-      IN_PRODUCTION: True
+      IN_PRODUCTION: 1
       PYTHONPATH: .
       FLASK_APP: /app/busy_beaver/__init__.py
       DATABASE_URI: ${DATABASE_URI}
