@@ -1,5 +1,6 @@
 from collections import OrderedDict
 import json
+from unittest import mock
 from urllib.parse import urlencode
 
 import pytest
@@ -32,14 +33,7 @@ def create_github_headers():
     return wrapper
 
 
-@pytest.fixture
-def generate_event_subscription_request():
-    def _generate_data():
-        return {}
-
-    return _generate_data
-
-
+@pytest.mark.integration
 def test_missing_event_type_header(
     client, create_github_headers, generate_event_subscription_request
 ):
@@ -52,11 +46,45 @@ def test_missing_event_type_header(
     assert response.status_code == 401
 
 
-def test_ping_event_subscription(
-    client, create_github_headers, generate_event_subscription_request
-):
+@pytest.mark.integration
+def test_ping_event(client, create_github_headers, generate_event_subscription_request):
     data = generate_event_subscription_request()
     headers = create_github_headers(data, event="ping", is_json_data=True)
+
+    response = client.post("/github/event-subscription", headers=headers, json=data)
+
+    assert response.status_code == 200
+
+
+# Thinking out loud...
+# I really don't like writing these types of tests.
+# They just confirm my API works, but don't really do anything
+# Can we automate the end-to-end API test with a better test helper?
+# just hit a bunch of endpoints and confirm it's a 200
+
+
+@pytest.mark.integration
+@mock.patch("busy_beaver.apps.github_webhook.workflow.slack.post_message")
+def test_new_issue_event(
+    slack_mock, client, create_github_headers, generate_event_subscription_request
+):
+    url = "https://github.com/busy-beaver-dev/busy-beaver/issues/155"
+    data = generate_event_subscription_request(action="opened", issue_html_url=url)
+    headers = create_github_headers(data, event="issues", is_json_data=True)
+
+    response = client.post("/github/event-subscription", headers=headers, json=data)
+
+    assert response.status_code == 200
+
+
+@pytest.mark.integration
+@mock.patch("busy_beaver.apps.github_webhook.workflow.slack.post_message")
+def test_pull_request_event(
+    slack_mock, client, create_github_headers, generate_event_subscription_request
+):
+    url = "https://github.com/busy-beaver-dev/busy-beaver/pull/138"
+    data = generate_event_subscription_request(action="opened", pr_html_url=url)
+    headers = create_github_headers(data, event="pull_request", is_json_data=True)
 
     response = client.post("/github/event-subscription", headers=headers, json=data)
 

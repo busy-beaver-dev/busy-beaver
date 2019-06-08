@@ -3,7 +3,7 @@ import logging
 from flask import jsonify, request
 from flask.views import MethodView
 
-from busy_beaver.apps.github_webhook.worfklow import (
+from busy_beaver.apps.github_webhook.workflow import (
     post_new_issue_to_slack,
     post_new_pull_request_to_slack,
 )
