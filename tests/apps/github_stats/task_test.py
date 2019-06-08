@@ -7,6 +7,7 @@ from busy_beaver.apps.github_summary.task import (
     start_post_github_summary_task,
     fetch_github_summary_post_to_slack,
 )
+from tests.utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.apps.github_summary.task"
 
@@ -48,23 +49,6 @@ def test_start_post_github_summary_task(
 #####################
 @pytest.fixture
 def patched_slack(mocker, patcher):
-    class FakeSlackClient:
-        def __init__(self, *, channel_info):
-            self.mock = mocker.MagicMock()
-            if channel_info:
-                self.channel_info = channel_info
-
-        def get_channel_info(self, *args, **kwargs):
-            self.mock(*args, **kwargs)
-            return self.channel_info
-
-        def post_message(self, *args, **kwargs):
-            self.mock(*args, **kwargs)
-            return
-
-        def __repr__(self):
-            return "<FakeSlackClient>"
-
     def _wrapper(*, channel_info=None):
         obj = FakeSlackClient(channel_info=channel_info)
         return patcher(MODULE_TO_TEST, namespace="slack", replacement=obj)

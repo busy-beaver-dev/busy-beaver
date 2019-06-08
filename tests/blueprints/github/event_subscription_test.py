@@ -6,6 +6,7 @@ import pytest
 
 from busy_beaver.blueprints.github.verification import calculate_signature
 from busy_beaver.config import GITHUB_SIGNING_SECRET
+from tests.utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.blueprints.github.event_subscription"
 pytest_plugins = ("tests.fixtures.github",)
@@ -65,23 +66,6 @@ def test_ping_event(client, create_github_headers, generate_event_subscription_r
 # just hit a bunch of endpoints and confirm it's a 200
 @pytest.fixture
 def patched_slack(mocker, patcher):
-    class FakeSlackClient:
-        def __init__(self, *, channel_info):
-            self.mock = mocker.MagicMock()
-            if channel_info:
-                self.channel_info = channel_info
-
-        def get_channel_info(self, *args, **kwargs):
-            self.mock(*args, **kwargs)
-            return self.channel_info
-
-        def post_message(self, *args, **kwargs):
-            self.mock(*args, **kwargs)
-            return
-
-        def __repr__(self):
-            return "<FakeSlackClient>"
-
     def _wrapper(*, channel_info=None):
         obj = FakeSlackClient(channel_info=channel_info)
         return patcher(MODULE_TO_TEST, namespace="slack", replacement=obj)
