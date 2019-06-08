@@ -5,6 +5,7 @@ from busy_beaver.apps.upcoming_events.workflow import (
     generate_upcoming_events_message,
     post_upcoming_events_message_to_slack,
 )
+from tests.utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.apps.upcoming_events.workflow"
 
@@ -35,10 +36,8 @@ def test_generate_upcoming_events_message(session):
 
 @pytest.fixture
 def patched_slack(patcher):
-    def _wrapper(replacement):
-        return patcher(MODULE_TO_TEST, namespace="slack", replacement=replacement)
-
-    return _wrapper
+    obj = FakeSlackClient()
+    return patcher(MODULE_TO_TEST, namespace="slack", replacement=obj)
 
 
 @pytest.mark.unit
@@ -47,12 +46,11 @@ def test_post_upcoming_events_message_to_slack(mocker, session, patched_slack):
     events = EventFactory.create_batch(size=10)
     [session.add(event) for event in events]
     session.commit()
-    slack = patched_slack(mocker.MagicMock())
 
     # Act
     post_upcoming_events_message_to_slack("announcements", "ChiPy", count=4)
 
     # Assert
-    post_message_args = slack.post_message.call_args_list[-1]
+    post_message_args = patched_slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
     assert len(kwargs["blocks"]) == 15  # sections: 3 in the header, each block is 3

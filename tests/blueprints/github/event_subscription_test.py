@@ -65,12 +65,9 @@ def test_ping_event(client, create_github_headers, generate_event_subscription_r
 # Can we automate the end-to-end API test with a better test helper?
 # just hit a bunch of endpoints and confirm it's a 200
 @pytest.fixture
-def patched_slack(mocker, patcher):
-    def _wrapper(*, channel_info=None):
-        obj = FakeSlackClient(channel_info=channel_info)
-        return patcher(MODULE_TO_TEST, namespace="slack", replacement=obj)
-
-    return _wrapper
+def patched_slack(patcher):
+    obj = FakeSlackClient()
+    return patcher(MODULE_TO_TEST, namespace="slack", replacement=obj)
 
 
 @pytest.mark.integration
@@ -81,12 +78,11 @@ def test_new_issue_event(
     url = "https://github.com/busy-beaver-dev/busy-beaver/issues/155"
     data = generate_event_subscription_request(action="opened", issue_html_url=url)
     headers = create_github_headers(data, event="issues", is_json_data=True)
-    slack = patched_slack()
 
     response = client.post("/github/event-subscription", headers=headers, json=data)
 
     assert response.status_code == 200
-    args, kwargs = slack.mock.call_args
+    args, kwargs = patched_slack.mock.call_args
     assert "New Issue" in kwargs["message"]
 
 
@@ -98,10 +94,9 @@ def test_pull_request_event(
     url = "https://github.com/busy-beaver-dev/busy-beaver/pull/138"
     data = generate_event_subscription_request(action="opened", pr_html_url=url)
     headers = create_github_headers(data, event="pull_request", is_json_data=True)
-    slack = patched_slack()
 
     response = client.post("/github/event-subscription", headers=headers, json=data)
 
     assert response.status_code == 200
-    args, kwargs = slack.mock.call_args
+    args, kwargs = patched_slack.mock.call_args
     assert "New Pull Request" in kwargs["message"]

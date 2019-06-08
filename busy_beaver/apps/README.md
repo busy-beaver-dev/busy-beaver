@@ -32,12 +32,17 @@ Currently we post messages when:
 - an issue is created
 - a Pull Request is opened
 
-There are many other integrations which
+There are many other Slack integrations which
 post messages when triggered by GithHub events.
 We do not supporting webhooks for repositories that
 are not part of `busy-beaver-dev`.
 This might change in the future,
 but for now there are other things to work on.
+
+Note: In order to work on this feature,
+you will need to set up a
+[secret token](https://developer.github.com/webhooks/securing/#setting-your-secret-token)
+on a GitHub repository.
 
 ### Retweeter
 

@@ -48,8 +48,8 @@ def test_start_post_github_summary_task(
 # Test Background Job
 #####################
 @pytest.fixture
-def patched_slack(mocker, patcher):
-    def _wrapper(*, channel_info=None):
+def patched_slack(patcher):
+    def _wrapper(channel_info):
         obj = FakeSlackClient(channel_info=channel_info)
         return patcher(MODULE_TO_TEST, namespace="slack", replacement=obj)
 

@@ -44,7 +44,7 @@ class UpcomingEvent:
         self.output = [
             Section(text=event_information_string),
             Context(text=event_location_string),
-            Divider(event_location_string),
+            Divider(),
         ]
 
     def __repr__(self):  # pragma: no cover

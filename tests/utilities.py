@@ -2,7 +2,7 @@ from unittest import mock
 
 
 class FakeSlackClient:
-    def __init__(self, *, channel_info):
+    def __init__(self, *, channel_info=None):
         self.mock = mock.MagicMock()
         if channel_info:
             self.channel_info = channel_info
