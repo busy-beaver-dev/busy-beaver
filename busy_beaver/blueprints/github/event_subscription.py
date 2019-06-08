@@ -3,9 +3,10 @@ import logging
 from flask import jsonify, request
 from flask.views import MethodView
 
+from busy_beaver import slack
 from busy_beaver.apps.github_webhook.workflow import (
-    post_new_issue_to_slack,
-    post_new_pull_request_to_slack,
+    generate_new_issue_message,
+    generate_new_pull_request_message,
 )
 from busy_beaver.exceptions import UnverifiedWebhookRequest
 from busy_beaver.toolbox import EventEmitter
@@ -37,9 +38,15 @@ def do_nothing(data):
 
 @github_event_dispatcher.on("issues")
 def handle_issue(data):
-    post_new_issue_to_slack(data)
+    message = generate_new_issue_message(data)
+    _post_to_slack(message)
 
 
 @github_event_dispatcher.on("pull_request")
 def handle_pr(data):
-    post_new_pull_request_to_slack(data)
+    message = generate_new_pull_request_message(data)
+    _post_to_slack(message)
+
+
+def _post_to_slack(message):
+    slack.post_message(message=message, channel="busy-beaver-meta")

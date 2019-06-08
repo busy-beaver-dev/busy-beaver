@@ -8,6 +8,8 @@ import pytest
 from busy_beaver.blueprints.github.verification import calculate_signature
 from busy_beaver.config import GITHUB_SIGNING_SECRET
 
+pytest_plugins = ("tests.fixtures.github",)
+
 
 @pytest.fixture
 def create_github_headers():
@@ -61,10 +63,8 @@ def test_ping_event(client, create_github_headers, generate_event_subscription_r
 # They just confirm my API works, but don't really do anything
 # Can we automate the end-to-end API test with a better test helper?
 # just hit a bunch of endpoints and confirm it's a 200
-
-
 @pytest.mark.integration
-@mock.patch("busy_beaver.apps.github_webhook.workflow.slack.post_message")
+@mock.patch("busy_beaver.blueprints.github.event_subscription.slack.post_message")
 def test_new_issue_event(
     slack_mock, client, create_github_headers, generate_event_subscription_request
 ):
@@ -78,7 +78,7 @@ def test_new_issue_event(
 
 
 @pytest.mark.integration
-@mock.patch("busy_beaver.apps.github_webhook.workflow.slack.post_message")
+@mock.patch("busy_beaver.blueprints.github.event_subscription.slack.post_message")
 def test_pull_request_event(
     slack_mock, client, create_github_headers, generate_event_subscription_request
 ):
