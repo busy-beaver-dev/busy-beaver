@@ -22,7 +22,7 @@ Users can use the following commands:
 
 ### GitHub Webhook
 
-Events from the [busy-beaver-dev](https://github.com/busy-beaver-dev/busy-beaver)
+Events from the [busy-beaver-dev](https://github.com/busy-beaver-dev)
 organization are shared in the `#busy-beaver-meta` channel on
 the Chicago Python slack.
 This room is the hub of all Busy Beaver activities.
@@ -34,8 +34,8 @@ Currently we post messages when:
 
 There are many other Slack integrations which
 post messages when triggered by GithHub events.
-We do not supporting webhooks for repositories that
-are not part of `busy-beaver-dev`.
+We do not support GitHub webhooks for repositories that
+are not part of `busy-beaver-dev` organization.
 This might change in the future,
 but for now there are other things to work on.
 
