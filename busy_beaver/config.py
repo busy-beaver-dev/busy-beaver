@@ -7,7 +7,7 @@ TASK_QUEUE_MAX_RETRIES = 1
 PROD_BASE_URI = "https://busybeaver.sivji.com"
 DEV_BASE_URI = os.getenv("NGROK_BASE_URI", None)
 APP_URI = PROD_BASE_URI if IN_PRODUCTION else DEV_BASE_URI
-GITHUB_REDIRECT_URI = f"{APP_URI}/github-integration"
+GITHUB_REDIRECT_URI = f"{APP_URI}/github/oauth"
 
 # infrastructure
 DATABASE_URI = os.getenv("DATABASE_URI")
@@ -22,7 +22,6 @@ YOUTUBE_CHANNEL = "UCT372EAC1orBOSUd2fsA8WA"
 GITHUB_OAUTH_TOKEN = os.getenv("GITHUB_OAUTH_TOKEN", None)
 GITHUB_CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID", None)
 GITHUB_CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET", None)
-GITHUB_REDIRECT_URI = f"{APP_URI}/github-integration"
 GITHUB_SIGNING_SECRET = os.getenv("GITHUB_SIGNING_SECRET", "TestSigningSecretGitHUB")
 MEETUP_API_KEY = os.getenv("MEETUP_API_KEY", "abcdef")
 SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN", None)
