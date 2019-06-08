@@ -3,7 +3,7 @@ import pytest
 
 from busy_beaver.app import handle_http_error
 from busy_beaver.blueprints.slack.verification import verify_slack_signature
-from busy_beaver.exceptions import UnverifiedSlackRequest
+from busy_beaver.exceptions import UnverifiedWebhookRequest
 
 SLACK_SIGNING_SECRET = "8f742231b10e8888abcd99yyyzzz85a5"
 SLACK_SIGNATURE = "v0=a2114d57b48eac39b9ad189dd8316235a7b4a8d21a10bd27519666489c69b503"
@@ -20,7 +20,7 @@ def slack_verification_app(app):
     def unlocked_endpoint():
         return jsonify({"authorization": "all_users"})
 
-    app.register_error_handler(UnverifiedSlackRequest, handle_http_error)
+    app.register_error_handler(UnverifiedWebhookRequest, handle_http_error)
     yield app
 
 

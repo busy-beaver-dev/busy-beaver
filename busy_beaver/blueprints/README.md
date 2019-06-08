@@ -4,11 +4,13 @@ All web framework specific code is located in this directory.
 Levarege [Flask Blueprints pattern](http://flask.pocoo.org/docs/1.0/blueprints/)
 quite extensively.
 
-## Integration
+## GitHub
 
-This folder contains logic for the GitHub OAuth workflow.
-It is named Integration for legacy reasons,
-will change this once I write tests around the OAuth flow.
+Contains logic to integrate
+[GitHub Webhooks](https://developer.github.com/webhooks/).
+Also contains
+[GitHub OAuth](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/)
+logic.
 
 ## Poller
 

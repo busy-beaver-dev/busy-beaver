@@ -1,14 +1,13 @@
 import pytest
+from tests.utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.blueprints.slack.event_subscription"
 
 
 @pytest.fixture
 def patched_slack(patcher):
-    def _wrapper(replacement):
-        return patcher(MODULE_TO_TEST, namespace="slack", replacement=replacement)
-
-    return _wrapper
+    obj = FakeSlackClient()
+    return patcher(MODULE_TO_TEST, namespace="slack", replacement=obj)
 
 
 @pytest.mark.integration
@@ -34,7 +33,6 @@ def test_slack_callback_bot_message_is_ignored(
 ):
     """Bot get notified of its own DM replies to users... ignore"""
     # Arrange
-    slack = patched_slack(mocker.MagicMock())
     data = {
         "type": "unknown todo",
         "event": {"type": "message", "subtype": "bot_message"},
@@ -46,7 +44,7 @@ def test_slack_callback_bot_message_is_ignored(
 
     # Assert
     assert resp.status_code == 200
-    assert len(slack.mock_calls) == 0
+    assert len(patched_slack.mock.mock_calls) == 0
 
 
 @pytest.mark.integration
@@ -55,7 +53,6 @@ def test_slack_callback_user_dms_bot_reply(
 ):
     """When user messages bot, reply with help text"""
     # Arrange
-    slack = patched_slack(mocker.MagicMock())
     channel_id = 5
     data = {
         "type": "unknown todo",
@@ -75,7 +72,7 @@ def test_slack_callback_user_dms_bot_reply(
 
     # Assert
     assert resp.status_code == 200
-    assert len(slack.mock_calls) == 1
-    args, kwargs = slack.post_message.call_args
+    assert len(patched_slack.mock.mock_calls) == 1
+    args, kwargs = patched_slack.mock.call_args
     assert "/busybeaver help" in args[0]
     assert kwargs["channel_id"] == channel_id

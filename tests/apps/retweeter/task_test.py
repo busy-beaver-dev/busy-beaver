@@ -9,6 +9,7 @@ from busy_beaver.apps.retweeter.task import (
 from busy_beaver.factories.tweet import TweetFactory
 from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
+from tests.utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.apps.retweeter.task"
 
@@ -63,10 +64,8 @@ def patched_twitter(patcher):
 
 @pytest.fixture
 def patched_slack(patcher):
-    def _wrapper(replacement):
-        return patcher(MODULE_TO_TEST, namespace="slack", replacement=replacement)
-
-    return _wrapper
+    obj = FakeSlackClient()
+    return patcher(MODULE_TO_TEST, namespace="slack", replacement=obj)
 
 
 # Technically it's an integration test (tests more than one function)
@@ -87,13 +86,12 @@ def test_post_tweets_to_slack(mocker, kv_store, patched_twitter, patched_slack):
         TweetFactory(id=1, created_at=utc_now_minus(timedelta(days=1))),
     ]
     patched_twitter(tweets)
-    slack = patched_slack(mocker.MagicMock())
 
     # Act
     fetch_tweets_post_to_slack("test_channel", "test_username")
 
     # Assert
-    assert len(slack.mock_calls) == 1
-    args, kwargs = slack.post_message.call_args
+    assert len(patched_slack.mock.mock_calls) == 1
+    args, kwargs = patched_slack.mock.call_args
     assert "test_username/statuses/1" in args[0]
     assert "test_channel" in kwargs["channel"]

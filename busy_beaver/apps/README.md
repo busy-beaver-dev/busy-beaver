@@ -20,6 +20,30 @@ Users can use the following commands:
 - `/busybeaver reconnect` to link Slack ID to different GitHub account
 - `/busybeaver disconnect` to delete user account.
 
+### GitHub Webhook
+
+Events from the [busy-beaver-dev](https://github.com/busy-beaver-dev)
+organization are shared in the `#busy-beaver-meta` channel on
+the Chicago Python slack.
+This room is the hub of all Busy Beaver activities.
+
+Currently we post messages when:
+
+- an issue is created
+- a Pull Request is opened
+
+There are many other Slack integrations which
+post messages when triggered by GithHub events.
+We do not support GitHub webhooks for repositories that
+are not part of `busy-beaver-dev` organization.
+This might change in the future,
+but for now there are other things to work on.
+
+Note: In order to work on this feature,
+you will need to set up a
+[secret token](https://developer.github.com/webhooks/securing/#setting-your-secret-token)
+in a GitHub repository.
+
 ### Retweeter
 
 This feature shares tweets made by a given Twitter account
