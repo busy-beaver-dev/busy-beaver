@@ -17,10 +17,7 @@ class YouTubeAdapter:
         self.api_key = api_key
         self.client = RequestsClient()
 
-    def __repr__(self) -> str:
-        return "YouTubeAdapter()"
-
-    def __str__(self) -> str:
+    def __repr__(self) -> str:  # pragma: no cover
         return "YouTubeAdapter"
 
     def get_latest_videos_from_channel(self, channel_id: str) -> Response:

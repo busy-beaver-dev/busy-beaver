@@ -19,7 +19,7 @@ class GitHubEventSubscriptionResource(MethodView):
 
         event_type = request.headers.get("X-GitHub-Event", None)
         if not event_type:
-            return UnverifiedWebhookRequest("Missing GitHub event type")
+            raise UnverifiedWebhookRequest("Missing GitHub event type")
 
         github_event_dispatcher.emit(event_type, default="ping", data=data)
         return jsonify(True)

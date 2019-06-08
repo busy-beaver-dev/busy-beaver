@@ -40,6 +40,18 @@ def generate_event_subscription_request():
     return _generate_data
 
 
+def test_missing_event_type_header(
+    client, create_github_headers, generate_event_subscription_request
+):
+    data = generate_event_subscription_request()
+    headers = create_github_headers(data, event="ping", is_json_data=True)
+    headers.pop("X-GitHub-Event")
+
+    response = client.post("/github/event-subscription", headers=headers, json=data)
+
+    assert response.status_code == 401
+
+
 def test_ping_event_subscription(
     client, create_github_headers, generate_event_subscription_request
 ):
