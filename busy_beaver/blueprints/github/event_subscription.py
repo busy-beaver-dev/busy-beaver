@@ -3,6 +3,10 @@ import logging
 from flask import jsonify, request
 from flask.views import MethodView
 
+from busy_beaver.apps.github_webhook.worfklow import (
+    post_new_issue_to_slack,
+    post_new_pull_request_to_slack,
+)
 from busy_beaver.exceptions import UnverifiedWebhookRequest
 from busy_beaver.toolbox import EventEmitter
 
@@ -21,20 +25,21 @@ class GitHubEventSubscriptionResource(MethodView):
         if not event_type:
             raise UnverifiedWebhookRequest("Missing GitHub event type")
 
-        github_event_dispatcher.emit(event_type, default="ping", data=data)
+        github_event_dispatcher.emit(event_type, default="not_found", data=data)
         return jsonify(True)
 
 
+@github_event_dispatcher.on("not_found")
 @github_event_dispatcher.on("ping")
-def handle_ping(data):
+def do_nothing(data):
     pass
 
 
-@github_event_dispatcher.on("pr")  # TODO
-def handle_pr(data):
-    pass
-
-
-@github_event_dispatcher.on("issue")  # TODO
+@github_event_dispatcher.on("issues")
 def handle_issue(data):
-    pass
+    post_new_issue_to_slack(data)
+
+
+@github_event_dispatcher.on("pull_request")
+def handle_pr(data):
+    post_new_pull_request_to_slack(data)
