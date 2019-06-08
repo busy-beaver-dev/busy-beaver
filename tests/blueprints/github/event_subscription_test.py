@@ -1,6 +1,5 @@
 from collections import OrderedDict
 import json
-from unittest import mock
 from urllib.parse import urlencode
 
 import pytest
@@ -8,6 +7,7 @@ import pytest
 from busy_beaver.blueprints.github.verification import calculate_signature
 from busy_beaver.config import GITHUB_SIGNING_SECRET
 
+MODULE_TO_TEST = "busy_beaver.blueprints.github.event_subscription"
 pytest_plugins = ("tests.fixtures.github",)
 
 
@@ -63,29 +63,61 @@ def test_ping_event(client, create_github_headers, generate_event_subscription_r
 # They just confirm my API works, but don't really do anything
 # Can we automate the end-to-end API test with a better test helper?
 # just hit a bunch of endpoints and confirm it's a 200
+@pytest.fixture
+def patched_slack(mocker, patcher):
+    class FakeSlackClient:
+        def __init__(self, *, channel_info):
+            self.mock = mocker.MagicMock()
+            if channel_info:
+                self.channel_info = channel_info
+
+        def get_channel_info(self, *args, **kwargs):
+            self.mock(*args, **kwargs)
+            return self.channel_info
+
+        def post_message(self, *args, **kwargs):
+            self.mock(*args, **kwargs)
+            return
+
+        def __repr__(self):
+            return "<FakeSlackClient>"
+
+    def _wrapper(*, channel_info=None):
+        obj = FakeSlackClient(channel_info=channel_info)
+        return patcher(MODULE_TO_TEST, namespace="slack", replacement=obj)
+
+    return _wrapper
+
+
 @pytest.mark.integration
-@mock.patch("busy_beaver.blueprints.github.event_subscription.slack.post_message")
 def test_new_issue_event(
-    slack_mock, client, create_github_headers, generate_event_subscription_request
+    client, generate_event_subscription_request, patched_slack, create_github_headers
 ):
+    # Arrange
     url = "https://github.com/busy-beaver-dev/busy-beaver/issues/155"
     data = generate_event_subscription_request(action="opened", issue_html_url=url)
     headers = create_github_headers(data, event="issues", is_json_data=True)
+    slack = patched_slack()
 
     response = client.post("/github/event-subscription", headers=headers, json=data)
 
     assert response.status_code == 200
+    args, kwargs = slack.mock.call_args
+    assert "New Issue" in kwargs["message"]
 
 
 @pytest.mark.integration
-@mock.patch("busy_beaver.blueprints.github.event_subscription.slack.post_message")
 def test_pull_request_event(
-    slack_mock, client, create_github_headers, generate_event_subscription_request
+    client, generate_event_subscription_request, patched_slack, create_github_headers
 ):
+    # Arrange
     url = "https://github.com/busy-beaver-dev/busy-beaver/pull/138"
     data = generate_event_subscription_request(action="opened", pr_html_url=url)
     headers = create_github_headers(data, event="pull_request", is_json_data=True)
+    slack = patched_slack()
 
     response = client.post("/github/event-subscription", headers=headers, json=data)
 
     assert response.status_code == 200
+    args, kwargs = slack.mock.call_args
+    assert "New Pull Request" in kwargs["message"]
