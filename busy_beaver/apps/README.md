@@ -42,7 +42,7 @@ but for now there are other things to work on.
 Note: In order to work on this feature,
 you will need to set up a
 [secret token](https://developer.github.com/webhooks/securing/#setting-your-secret-token)
-on a GitHub repository.
+in a GitHub repository.
 
 ### Retweeter
 
