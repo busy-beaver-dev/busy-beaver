@@ -51,7 +51,6 @@ def test_github_verified_endpoint_failure_without_body(client):
     assert result.status_code == 401
 
 
-@pytest.mark.current
 def test_github_verified_endpoint_success(client):
     # Arrange
     # TODO reading from file should be a fixture
