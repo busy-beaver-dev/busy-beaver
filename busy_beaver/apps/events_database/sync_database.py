@@ -19,7 +19,7 @@ class UpdateRecord(NamedTuple):
     new: EventDetails
 
 
-class SyncDatabaseWithEvents:
+class SyncEventDatabase:
     def __init__(
         self, fetched_events: List[EventDetails], database_events: List[Event]
     ):

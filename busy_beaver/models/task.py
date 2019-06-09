@@ -70,9 +70,9 @@ class PostTweetTask(Task):
         return f"<PostTweetTask: {self.data}>"
 
 
-class AddEventsToDatabaseTask(Task):
+class SyncEventDatabaseTask(Task):
 
-    __tablename__ = "fetch_events_task"
+    __tablename__ = "fetch_new_events_task"
 
     # Attributes
     id = db.Column(db.Integer, db.ForeignKey("task.id"), primary_key=True)

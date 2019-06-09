@@ -36,15 +36,9 @@ def upgrade():
     # end_epoch column can't be empty
     op.alter_column("event", "end_epoch", nullable=False)
 
-    # Step 4: Schema migration
-    # rename table
-    op.rename_table("fetch_new_events_task", "fetch_events_task")
-
 
 def downgrade():
     op.alter_column(
         "event", "start_epoch", new_column_name="utc_epoch", server_default=None
     )
     op.drop_column("event", "end_epoch")
-
-    op.rename_table("fetch_events_task", "fetch_new_events_task")

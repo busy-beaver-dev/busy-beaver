@@ -1,6 +1,6 @@
 import pytest
 
-from busy_beaver.models import AddEventsToDatabaseTask
+from busy_beaver.models import SyncEventDatabaseTask
 from busy_beaver.apps.events_database.task import (
     sync_database_with_fetched_events,
     start_add_events_to_database_task,
@@ -41,7 +41,7 @@ def test_poll_twitter_smoke_test(
     client.post("/poll/events", headers={"Authorization": "token abcd"})
 
     # Assert
-    tasks = AddEventsToDatabaseTask.query.all()
+    tasks = SyncEventDatabaseTask.query.all()
     assert len(tasks) == 1
 
 

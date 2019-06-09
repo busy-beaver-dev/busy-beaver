@@ -10,11 +10,11 @@ the set of future events in the database:
 import logging
 import time
 
-from .sync_database import SyncDatabaseWithEvents
+from .sync_database import SyncEventDatabase
 from busy_beaver import meetup
 from busy_beaver.config import MEETUP_GROUP_NAME
 from busy_beaver.extensions import db, rq
-from busy_beaver.models import ApiUser, AddEventsToDatabaseTask, Event
+from busy_beaver.models import ApiUser, SyncEventDatabaseTask, Event
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ def start_add_events_to_database_task(task_owner: ApiUser):
     group_name = MEETUP_GROUP_NAME
     job = sync_database_with_fetched_events.queue(group_name)
 
-    task = AddEventsToDatabaseTask(
+    task = SyncEventDatabaseTask(
         job_id=job.id,
         name="Poll Meetup",
         description="Poll Meetup for events",
@@ -43,5 +43,5 @@ def sync_database_with_fetched_events(group_name):
     current_epoch_time = int(time.time())
     database_events = Event.query.filter(Event.start_epoch > current_epoch_time).all()
 
-    sync_database = SyncDatabaseWithEvents(fetched_events, database_events)
+    sync_database = SyncEventDatabase(fetched_events, database_events)
     sync_database.perform()
