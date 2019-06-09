@@ -8,7 +8,7 @@ from .event import Event  # noqa
 from .key_value import KeyValueStore  # noqa
 from .task import (  # noqa
     Task,
-    AddNewEventsToDatabaseTask,
+    NewEventsToDatabaseTask,
     PostGitHubSummaryTask,
     PostTweetTask,
 )

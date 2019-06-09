@@ -70,9 +70,9 @@ class PostTweetTask(Task):
         return f"<PostTweetTask: {self.data}>"
 
 
-class AddNewEventsToDatabaseTask(Task):
+class NewEventsToDatabaseTask(Task):
 
-    __tablename__ = "fetch_new_events_task"
+    __tablename__ = "fetch_events_task"
 
     # Attributes
     id = db.Column(db.Integer, db.ForeignKey("task.id"), primary_key=True)
@@ -81,4 +81,4 @@ class AddNewEventsToDatabaseTask(Task):
     __mapper_args__ = {"polymorphic_identity": "fetch_new_events"}
 
     def __repr__(self):  # pragma: no cover
-        return f"<AddNewEventsToDatabaseTask: {self.data}>"
+        return f"<NewEventsToDatabaseTask: {self.data}>"

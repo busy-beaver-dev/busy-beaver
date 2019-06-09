@@ -5,19 +5,19 @@ from typing import List
 from busy_beaver import meetup
 from busy_beaver.config import MEETUP_GROUP_NAME
 from busy_beaver.extensions import db, rq
-from busy_beaver.models import ApiUser, AddNewEventsToDatabaseTask
+from busy_beaver.models import ApiUser, NewEventsToDatabaseTask
 from busy_beaver.models import Event
 
 logger = logging.getLogger(__name__)
 
 
-def start_add_new_events_to_database_task(task_owner: ApiUser):
+def start_add_events_to_database_task(task_owner: ApiUser):
     logger.info("[Busy Beaver] Kick off fetch new meetup events task")
 
     group_name = MEETUP_GROUP_NAME
-    job = add_new_events_to_database.queue(group_name)
+    job = add_events_to_database.queue(group_name)
 
-    task = AddNewEventsToDatabaseTask(
+    task = NewEventsToDatabaseTask(
         job_id=job.id,
         name="Poll Meetup",
         description="Poll Meetup for new events",
@@ -29,7 +29,7 @@ def start_add_new_events_to_database_task(task_owner: ApiUser):
 
 
 @rq.job
-def add_new_events_to_database(group_name):
+def add_events_to_database(group_name):
     fetched_events = meetup.get_events(group_name, count=20)
     fetched_remote_id = [event.id for event in fetched_events]
 

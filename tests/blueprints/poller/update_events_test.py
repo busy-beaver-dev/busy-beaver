@@ -1,9 +1,9 @@
 import pytest
 
-from busy_beaver.models import AddNewEventsToDatabaseTask
+from busy_beaver.models import NewEventsToDatabaseTask
 from busy_beaver.apps.events_database.task import (
-    add_new_events_to_database,
-    start_add_new_events_to_database_task,
+    add_events_to_database,
+    start_add_events_to_database_task,
 )
 
 MODULE_TO_TEST = "busy_beaver.blueprints.poller.update_events"
@@ -13,7 +13,7 @@ MODULE_TO_TEST = "busy_beaver.blueprints.poller.update_events"
 def patched_update_events_trigger(mocker, patcher):
     return patcher(
         MODULE_TO_TEST,
-        namespace=start_add_new_events_to_database_task.__name__,
+        namespace=start_add_events_to_database_task.__name__,
         replacement=mocker.Mock(),
     )
 
@@ -25,7 +25,7 @@ def patched_update_events_trigger(mocker, patcher):
 def patched_background_task(patcher, create_fake_background_task):
     return patcher(
         "busy_beaver.apps.events_database.task",
-        namespace=add_new_events_to_database.__name__,
+        namespace=add_events_to_database.__name__,
         replacement=create_fake_background_task(),
     )
 
@@ -41,7 +41,7 @@ def test_poll_twitter_smoke_test(
     client.post("/poll/events", headers={"Authorization": "token abcd"})
 
     # Assert
-    tasks = AddNewEventsToDatabaseTask.query.all()
+    tasks = NewEventsToDatabaseTask.query.all()
     assert len(tasks) == 1
 
 
