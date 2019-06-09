@@ -72,13 +72,13 @@ class PostTweetTask(Task):
 
 class SyncEventDatabaseTask(Task):
 
-    __tablename__ = "fetch_new_events_task"
+    __tablename__ = "sync_event_database_task"
 
     # Attributes
     id = db.Column(db.Integer, db.ForeignKey("task.id"), primary_key=True)
     data = db.Column("data", db.JSON)
 
-    __mapper_args__ = {"polymorphic_identity": "fetch_new_events"}
+    __mapper_args__ = {"polymorphic_identity": "sync_event_database"}
 
     def __repr__(self):  # pragma: no cover
         return f"<NewEventsToDatabaseTask: {self.data}>"
