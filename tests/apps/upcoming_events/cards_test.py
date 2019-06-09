@@ -25,7 +25,7 @@ def test_upcoming_event_to_dict():
 def test_upcoming_event_list():
     events = EventDetailsFactory.create_batch(size=5)
 
-    result = UpcomingEventList("*Upcoming Events*", events)
+    result = UpcomingEventList(events, group_name="ChiPy", image_url="url")
 
     assert len(result) == 3 + 3 * 5  # sections: 3 in the header, each block is 3
     assert isinstance(result[0], Image)

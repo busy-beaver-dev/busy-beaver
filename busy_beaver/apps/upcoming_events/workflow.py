@@ -27,8 +27,8 @@ def _fetch_future_events_from_database(group_name, count):
     # TODO: for multi-tenant we will need use group_name in query
     current_epoch_time = int(time.time())
     upcoming_events_in_db = (
-        Event.query.filter(Event.utc_epoch > current_epoch_time)
-        .order_by(Event.utc_epoch)
+        Event.query.filter(Event.start_epoch > current_epoch_time)
+        .order_by(Event.start_epoch)
         .limit(count)
     )
     return [EventDetails.from_event_model(model) for model in upcoming_events_in_db]
@@ -42,6 +42,6 @@ def _next_event_attachment(event: EventDetails) -> dict:
         "title": event.name,
         "title_link": event.url,
         "fallback": f"{event.name}: {event.url}",
-        "text": f"*<!date^{event.dt}^{{time}} {{date_long}}|no date>* at {event.venue}",
+        "text": f"*<!date^{event.start_epoch}^{{time}} {{date_long}}|no date>* at {event.venue}",
         "color": "#008952",
     }

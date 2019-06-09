@@ -13,5 +13,6 @@ class EventFactory(factory.Factory):
     remote_id = str(uuid.uuid4())
     name = "ChiPy"
     url = "http://meetup.com/_ChiPy_/event/blah"
-    utc_epoch = int((datetime.now() + timedelta(days=1)).timestamp())
+    start_epoch = int((datetime.now() + timedelta(days=1)).timestamp())
+    end_epoch = start_epoch + 60 * 60 * 2
     venue = "Numerator"

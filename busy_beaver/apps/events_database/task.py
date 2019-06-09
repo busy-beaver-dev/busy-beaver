@@ -45,7 +45,7 @@ def add_new_events_to_database(group_name):
 def _fetch_future_event_ids_from_database():
     current_epoch_time = int(time.time())
     upcoming_events_in_db = Event.query.filter(
-        Event.utc_epoch > current_epoch_time
+        Event.start_epoch > current_epoch_time
     ).all()
     return [event.remote_id for event in upcoming_events_in_db]
 
