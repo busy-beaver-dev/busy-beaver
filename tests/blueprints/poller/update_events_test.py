@@ -3,7 +3,7 @@ import pytest
 from busy_beaver.models import SyncEventDatabaseTask
 from busy_beaver.apps.events_database.task import (
     sync_database_with_fetched_events,
-    start_sync_events_database_task,
+    start_sync_event_database_task,
 )
 
 MODULE_TO_TEST = "busy_beaver.blueprints.poller.update_events"
@@ -13,7 +13,7 @@ MODULE_TO_TEST = "busy_beaver.blueprints.poller.update_events"
 def patched_update_events_trigger(mocker, patcher):
     return patcher(
         MODULE_TO_TEST,
-        namespace=start_sync_events_database_task.__name__,
+        namespace=start_sync_event_database_task.__name__,
         replacement=mocker.Mock(),
     )
 

@@ -3,7 +3,7 @@ import pytest
 from busy_beaver.models import ApiUser
 from busy_beaver.apps.events_database.task import (
     sync_database_with_fetched_events,
-    start_sync_events_database_task,
+    start_sync_event_database_task,
 )
 from busy_beaver.factories.event import EventFactory
 from busy_beaver.factories.event_details import EventDetailsFactory
@@ -32,7 +32,7 @@ def test_start_add_events_task(session, create_api_user, patched_background_task
     api_user = create_api_user("admin")
 
     # Act
-    start_sync_events_database_task(api_user)
+    start_sync_event_database_task(api_user)
 
     # Assert
     api_user = ApiUser.query.get(api_user.id)
