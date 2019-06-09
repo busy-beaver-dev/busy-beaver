@@ -81,4 +81,4 @@ class SyncEventDatabaseTask(Task):
     __mapper_args__ = {"polymorphic_identity": "sync_event_database"}
 
     def __repr__(self):  # pragma: no cover
-        return f"<NewEventsToDatabaseTask: {self.data}>"
+        return f"<SyncEventDatabaseTask: {self.data}>"

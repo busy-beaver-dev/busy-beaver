@@ -5,8 +5,8 @@ the set of future events in the database:
     - if event is new => create
     - if event is in the database, but not in the fetched events => delete
     - if event is in the database => update
-
 """
+
 import logging
 import time
 
