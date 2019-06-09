@@ -70,7 +70,7 @@ class PostTweetTask(Task):
         return f"<PostTweetTask: {self.data}>"
 
 
-class NewEventsToDatabaseTask(Task):
+class AddEventsToDatabaseTask(Task):
 
     __tablename__ = "fetch_events_task"
 

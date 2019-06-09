@@ -2,7 +2,7 @@ import pytest
 
 from busy_beaver.models import ApiUser
 from busy_beaver.apps.events_database.task import (
-    add_events_to_database,
+    sync_database_with_fetched_events,
     start_add_events_to_database_task,
 )
 from busy_beaver.factories.event import EventFactory
@@ -19,7 +19,7 @@ MODULE_TO_TEST = "busy_beaver.apps.events_database.task"
 def patched_background_task(patcher, create_fake_background_task):
     return patcher(
         MODULE_TO_TEST,
-        namespace=add_events_to_database.__name__,
+        namespace=sync_database_with_fetched_events.__name__,
         replacement=create_fake_background_task(),
     )
 
@@ -70,7 +70,7 @@ def test_add_all_events_to_database(session, patched_meetup):
     patched_meetup(events=events)
 
     # Act
-    add_events_to_database("test_group")
+    sync_database_with_fetched_events("test_group")
 
     # Assert
     all_events_in_database = Event.query.all()
@@ -95,7 +95,7 @@ def test_add_new_events_to_database(session, patched_meetup):
     patched_meetup(events=events)
 
     # Act
-    add_events_to_database("test_group")
+    sync_database_with_fetched_events("test_group")
 
     # Assert
     all_events_in_database = Event.query.all()
@@ -120,7 +120,7 @@ def test_no_events_added_to_database(session, patched_meetup):
     patched_meetup(events=events)
 
     # Act
-    add_events_to_database("test_group")
+    sync_database_with_fetched_events("test_group")
 
     # Assert
     all_events_in_database = Event.query.all()

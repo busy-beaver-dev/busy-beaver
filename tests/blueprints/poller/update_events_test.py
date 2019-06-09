@@ -1,8 +1,8 @@
 import pytest
 
-from busy_beaver.models import NewEventsToDatabaseTask
+from busy_beaver.models import AddEventsToDatabaseTask
 from busy_beaver.apps.events_database.task import (
-    add_events_to_database,
+    sync_database_with_fetched_events,
     start_add_events_to_database_task,
 )
 
@@ -25,7 +25,7 @@ def patched_update_events_trigger(mocker, patcher):
 def patched_background_task(patcher, create_fake_background_task):
     return patcher(
         "busy_beaver.apps.events_database.task",
-        namespace=add_events_to_database.__name__,
+        namespace=sync_database_with_fetched_events.__name__,
         replacement=create_fake_background_task(),
     )
 
@@ -41,7 +41,7 @@ def test_poll_twitter_smoke_test(
     client.post("/poll/events", headers={"Authorization": "token abcd"})
 
     # Assert
-    tasks = NewEventsToDatabaseTask.query.all()
+    tasks = AddEventsToDatabaseTask.query.all()
     assert len(tasks) == 1
 
 
