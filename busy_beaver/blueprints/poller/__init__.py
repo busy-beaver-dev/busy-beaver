@@ -26,8 +26,9 @@ poller_bp.add_url_rule(
 )
 
 view = AddEventPollingResource.as_view("meetup_poller")
-# TODO make this /add-events
-poller_bp.add_url_rule("/events", view_func=admin_role_required(view), methods=["POST"])
+poller_bp.add_url_rule(
+    "/sync-event-database", view_func=admin_role_required(view), methods=["POST"]
+)
 
 view = YouTubePollingResource.as_view("youtube_poller")
 poller_bp.add_url_rule(

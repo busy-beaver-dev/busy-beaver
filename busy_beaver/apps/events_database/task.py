@@ -19,7 +19,7 @@ from busy_beaver.models import ApiUser, SyncEventDatabaseTask, Event
 logger = logging.getLogger(__name__)
 
 
-def start_add_events_to_database_task(task_owner: ApiUser):
+def start_sync_events_database_task(task_owner: ApiUser):
     logger.info("[Busy Beaver] Kick off fetch meetup events task")
 
     group_name = MEETUP_GROUP_NAME
