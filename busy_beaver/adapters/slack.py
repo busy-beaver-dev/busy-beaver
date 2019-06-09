@@ -26,6 +26,8 @@ class SlackAdapter:
         attachments=None,
         channel=None,
         channel_id=None,
+        unfurl_links=True,
+        unfurl_media=True,
     ):
         if not channel and not channel_id:
             raise ValueError("Must specify channel or channel_id")
@@ -38,6 +40,8 @@ class SlackAdapter:
             text=message,
             blocks=blocks,
             attachments=attachments,
+            unfurl_links=unfurl_links,
+            unfurl_media=unfurl_media,
         )
 
     def _get_channel_id(self, channel_name: str) -> str:
