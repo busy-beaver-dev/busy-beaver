@@ -10,7 +10,7 @@ the set of future events in the database:
 import logging
 import time
 
-from .myclass import SyncDatabaseWithEvents
+from .sync_database import SyncDatabaseWithEvents
 from busy_beaver import meetup
 from busy_beaver.config import MEETUP_GROUP_NAME
 from busy_beaver.extensions import db, rq

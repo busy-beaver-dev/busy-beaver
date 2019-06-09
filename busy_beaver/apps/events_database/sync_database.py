@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, List, NamedTuple
+from typing import List, NamedTuple
 
 from busy_beaver.adapters.meetup import EventDetails
 from busy_beaver.extensions import db
@@ -8,7 +8,7 @@ from busy_beaver.models import Event
 logger = logging.getLogger(__name__)
 
 
-class TransactionType(NamedTuple):
+class PendingTransactions(NamedTuple):
     create: list
     update: list
     delete: list
@@ -23,12 +23,8 @@ class SyncDatabaseWithEvents:
     def __init__(
         self, fetched_events: List[EventDetails], database_events: List[Event]
     ):
-        self.fetched_events_map: Dict[str, EventDetails] = {
-            event.id: event for event in fetched_events
-        }
-        self.database_events_map: Dict[str, Event] = {
-            event.remote_id: event for event in database_events
-        }
+        self.fetched_events_map = {event.id: event for event in fetched_events}
+        self.database_events_map = {event.remote_id: event for event in database_events}
         self.transactions = classify_transaction_type(
             fetched_ids=self.fetched_events_map.keys(),
             database_ids=self.database_events_map.keys(),
@@ -90,4 +86,4 @@ def classify_transaction_type(fetched_ids: list, database_ids: list):
     delete_ids = list(database_event_ids - fetched_event_ids)
     update_ids = list(database_event_ids.intersection(fetched_event_ids))
 
-    return TransactionType(create=add_ids, update=update_ids, delete=delete_ids)
+    return PendingTransactions(create=add_ids, update=update_ids, delete=delete_ids)
