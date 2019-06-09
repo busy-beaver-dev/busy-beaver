@@ -5,14 +5,11 @@ from busy_beaver.toolbox.slack_block_kit import Context, Divider, Image, Section
 
 
 class UpcomingEventList:
-    def __init__(self, title, events: List[EventDetails]):
+    def __init__(self, events: List[EventDetails], group_name: str, image_url: str):
         # TODO when we go multitenant, the image box will need to change
         output = [
-            Image(
-                image_url="https://www.chipy.org/static/img/chipmunk.1927e65c68a7.png",
-                alt_text="ChiPy",
-            ),
-            Section(title),
+            Image(image_url=image_url, alt_text=group_name),
+            Section("*Upcoming Events*"),
             Divider(),
         ]
 
@@ -38,7 +35,7 @@ class UpcomingEvent:
     def __init__(self, event: EventDetails):
         event_information_string = (
             f"*<{event.url}|{event.name}>*\n"
-            f"<!date^{event.dt}^{{date_long}} @ {{time}}|no date>"
+            f"<!date^{event.start_epoch}^{{date_long}} @ {{time}}|no date>"
         )
         event_location_string = f":round_pushpin: Location: {event.venue}"
         self.output = [

@@ -15,4 +15,5 @@ class Event(BaseModel):
     name = db.Column(db.String(255), nullable=False)
     url = db.Column(db.String(500), nullable=False)
     venue = db.Column(db.String(255), nullable=False)
-    utc_epoch = db.Column(db.Integer, nullable=False)
+    start_epoch = db.Column(db.Integer, nullable=False)
+    end_epoch = db.Column(db.Integer, nullable=False)

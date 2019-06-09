@@ -3,7 +3,7 @@ from redis.exceptions import RedisError
 from rq.exceptions import NoSuchJobError
 
 from busy_beaver.models import (
-    AddNewEventsToDatabaseTask,
+    SyncEventDatabaseTask,
     PostGitHubSummaryTask,
     PostTweetTask,
     Task,
@@ -156,7 +156,7 @@ def test_post_tweet_task(session):
 #############################
 def test_update_events_database_task(session):
     # Arrange
-    task = AddNewEventsToDatabaseTask(
+    task = SyncEventDatabaseTask(
         job_id="abcd",
         name="task_created_for_test",
         description="Task created for testing purposes",

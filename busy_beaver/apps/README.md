@@ -7,7 +7,11 @@ Each package inside of this folder contains Busy Beaver features.
 ### Events Database
 
 This feature polls Meetup once a day and
-adds new events to the application's database.
+adds syncs database with fetched events.
+
+- new event get created
+- removed events get deleted
+- existing events get updated
 
 ### GitHub Summary
 

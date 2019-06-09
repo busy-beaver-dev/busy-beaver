@@ -64,6 +64,7 @@ def test_venue_not_specified_returns_tbd(patched_meetup_client):
                 "name": "ChiPy",
                 "event_url": "http://meetup.com/_ChiPy_/event/blah",
                 "time": 1_557_959_400_000,
+                "duration": 1_557_959_400_000 + 60 * 60 * 2,
             }
         ]
     )
@@ -98,7 +99,7 @@ def test_event_details_creating_event_objects():
 
     # Assert
     assert event.name == created_event.name
-    assert event.utc_epoch == created_event.utc_epoch
+    assert event.start_epoch == created_event.start_epoch
     assert event.venue == created_event.venue
 
 

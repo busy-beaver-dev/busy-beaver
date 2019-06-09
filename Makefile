@@ -23,6 +23,9 @@ attach: ## attach to process for debugging purposes
 migration: ## create migration m="message"
 	docker-compose exec app flask db migrate -m "$(m)"
 
+migration-empty: ## create empty migration m="message
+	docker-compose exec app flask db revision -m "$(m)"
+
 migrate-up: ## run all migration
 	docker-compose exec app flask db upgrade
 
