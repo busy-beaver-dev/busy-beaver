@@ -44,27 +44,32 @@ def create_github_account_attachment(state):
         "attachment_type": "default",
         "actions": [{"text": "Associate GitHub Profile", "type": "button", "url": url}],
     }
+
 ##########################################
 # Associate GitHub account with Slack user
 # TODO refactor this
 ##########################################
+
 def check_account_existing(slack_id):
     user_record = User.query.filter_by(slack_id=slack_id).first()
+
     if user_record:
         logger.info("[Busy Beaver] Slack account already linked to Github")
-        return ACCOUNT_ALREADY_ASSOCIATED
+        return True
+
     logger.info("[Busy Beaver] New user. Linking GitHub account.")
-    return NO_ASSOCIATED_ACCOUNT
+    return False
 
 
 def generate_account_attachment(**data):
     slack_id = data["user_id"]
     account_exists = check_account_existing(slack_id)
-    if(account_exists == NO_ASSOCIATED_ACCOUNT):
-        user = User()
-        user.slack_id = slack_id
-        user = add_tracking_identifer_and_save_record(user)
-        attachment = create_github_account_attachment(user.github_state)
-        return VERIFY_ACCOUNT, attachment
-    return ACCOUNT_ALREADY_ASSOCIATED
 
+    if(account_exists):
+        return ACCOUNT_ALREADY_ASSOCIATED
+
+    user = User()
+    user.slack_id = slack_id
+    user = add_tracking_identifer_and_save_record(user)
+    attachment = create_github_account_attachment(user.github_state)
+    return VERIFY_ACCOUNT, attachment
