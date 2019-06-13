@@ -78,16 +78,6 @@ prod-build-image:
 prod-build: ## build production images
 	docker-compose -f docker-compose.prod.yml build
 
-prod-backup-db:
-	docker-compose -f docker-compose.prod.yml exec db pg_dump -U ${POSTGRES_USER} busy-beaver > /tmp/data_dump.sql
-
-prod-upload-backup-to-s3:
-	docker run --rm -t \
-		-v ${HOME}/.aws:/home/worker/.aws:ro \
-		-v `pwd`/scripts/prod:/work \
-		-v /tmp/data_dump.sql:/tmp/data_dump.sql \
-		shinofara/docker-boto3 python /work/upload_db_backup_to_s3.py
-
 prod-migrate-up:
 	docker-compose -f docker-compose.prod.yml exec app flask db upgrade
 
@@ -105,5 +95,5 @@ prod-deploy: prod-pull-image ## redeploy application
 	make prod-down
 	make prod-up
 
-prod-shell-db:
-	docker-compose -f docker-compose.prod.yml exec db psql -w --username "${POSTGRES_USER}" --dbname "busy-beaver"
+prod-shell-db:  ## shell into postgres instance
+	psql -d "${DATABASE_URI}"

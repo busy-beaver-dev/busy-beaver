@@ -12,26 +12,6 @@ volumes:
 
 services:
   # infrastructure
-  db:
-    image: postgres:10.3-alpine
-    environment:
-      POSTGRES_DB: busy-beaver
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 3s
-      retries: 3
-      start_period: 10s
-    volumes:
-      - pgdata:/var/lib/postgresql/data/
-    ports:
-      - "9432:5432"
-    networks:
-      - local
-    labels:
-      - traefik.enable=false
   redis:
     image: redis:4.0-alpine
     healthcheck:
@@ -130,9 +110,9 @@ services:
     environment:
       DB_TYPE: postgres
       DB_DRIVER: psycopg2
-      DB_HOST: db
-      DB_PORT: 5432
-      DATABASE: busy-beaver
+      DB_HOST: ${POSTGRES_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DATABASE: ${POSTGRES_DATABASE}
       USERNAME: ${POSTGRES_USER}
       PASSWORD: ${POSTGRES_PASSWORD}
     ports:
