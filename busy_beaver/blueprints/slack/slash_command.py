@@ -106,17 +106,9 @@ def link_github(**data):
 
 @slash_command_dispatcher.on("reconnect")
 def relink_github(**data):
-    logger.info("[Busy Beaver] Relinking GitHub account.")
-    slack_id = data["user_id"]
-    user = User.query.filter_by(slack_id=slack_id).first()
-
-    if not user:
-        logger.info("[Busy Beaver] Slack acount does not have associated GitHub")
-        return make_slack_response(text=NO_ASSOCIATED_ACCOUNT)
-
-    user = add_tracking_identifer_and_save_record(user)
-    attachment = create_github_account_attachment(user.github_state)
-    return make_slack_response(text=VERIFY_ACCOUNT, attachments=attachment)
+    logger.info("[Busy Beaver] Slash command to relink GitHub account.")
+    message, attachment = generate_account_attachment(**data)
+    return make_slack_response(text=message, attachments=attachment)
 
 
 @slash_command_dispatcher.on("disconnect")
