@@ -17,10 +17,17 @@ class SlackInstallation(BaseModel):
 
     # Attributes
     # TODO find limits of each field in slack
-    access_token = db.Column(EncryptedType(db.String, secret, AesEngine, "pkcs5"))
-    authorizing_user_id = db.Column(db.String(300), nullable=False)
-    bot_access_token = db.Column(EncryptedType(db.String, secret, AesEngine, "pkcs5"))
-    bot_user_id = db.Column(EncryptedType(db.String, secret, AesEngine, "pkcs5"))
-    scope = db.Column(db.String(300), nullable=False)
-    workspace_id = db.Column(db.String(300), nullable=False)
-    workspace_name = db.Column(db.String(300), nullable=False)
+    access_token = db.Column(
+        EncryptedType(db.String, secret, AesEngine, "pkcs5"), nullable=True
+    )
+    authorizing_user_id = db.Column(db.String(300), nullable=True)
+    bot_access_token = db.Column(
+        EncryptedType(db.String, secret, AesEngine, "pkcs5"), nullable=True
+    )
+    bot_user_id = db.Column(
+        EncryptedType(db.String, secret, AesEngine, "pkcs5"), nullable=True
+    )
+    scope = db.Column(db.String(300), nullable=True)
+    state = db.Column(db.String(36), nullable=False, index=True)
+    workspace_id = db.Column(db.String(20), nullable=True, index=True)
+    workspace_name = db.Column(db.String(255), nullable=True)

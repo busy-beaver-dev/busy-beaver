@@ -32,6 +32,9 @@ migrate-up: ## run all migration
 migrate-down: ## roll back last migration
 	docker-compose exec app flask db downgrade
 
+requirements: ## generate requirements.txt using piptools
+	pip-compile --output-file=requirements.txt requirements.in
+
 test: ## run tests
 	docker-compose exec app pytest $(args)
 

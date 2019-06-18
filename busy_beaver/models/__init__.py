@@ -6,6 +6,7 @@ from .user import User  # noqa
 from .api_user import ApiUser  # noqa
 from .event import Event  # noqa
 from .key_value import KeyValueStore  # noqa
+from .slack import SlackInstallation  # noqa
 from .task import (  # noqa
     Task,
     SyncEventDatabaseTask,
