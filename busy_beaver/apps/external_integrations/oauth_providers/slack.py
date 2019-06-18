@@ -8,12 +8,12 @@ from .base import ExternalOAuthDetails, OAuthError
 
 class SlackOAuthInfo(NamedTuple):
     access_token: str
-    scope: str
     authorizing_user_id: str
+    bot_access_token: str
+    bot_user_id: str
+    scope: str
     workspace_id: str
     workspace_name: str
-    bot_user_id: str
-    bot_access_token: str
 
 
 class StateToOAuthResponse:
