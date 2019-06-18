@@ -57,7 +57,7 @@ def check_account_existing(slack_id):
         logger.info("[Busy Beaver] Slack account already linked to Github")
         return True
 
-    logger.info("[Busy Beaver] New user. Linking GitHub account.")
+    logger.info("[Busy Beaver] New user. No Github account associated with profile.")
     return False
 
 
@@ -73,3 +73,8 @@ def generate_account_attachment(**data):
     user = add_tracking_identifer_and_save_record(user)
     attachment = create_github_account_attachment(user.github_state)
     return VERIFY_ACCOUNT, attachment
+
+def delete_account_attachment(**data):
+
+    slack_id = data["user_id"]
+    user = User.query.filter_by(slack_id=slack_id).first()
