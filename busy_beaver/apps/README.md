@@ -13,6 +13,12 @@ adds syncs database with fetched events.
 - removed events get deleted
 - existing events get updated
 
+### External Integrations
+
+Contains logic for integration with third-party libraries.
+We provide a nice wrapper around `requests-oauthlib`
+to simplify the process for the user.
+
 ### GitHub Summary
 
 Public GitHub activity of registered users is shared

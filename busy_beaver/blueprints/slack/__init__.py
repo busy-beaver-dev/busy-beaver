@@ -1,6 +1,7 @@
 from flask import blueprints
 
 from .event_subscription import SlackEventSubscriptionResource
+from .oauth import SlackWorkspaceInstallationResource
 from .slash_command import SlackSlashCommandDispatchResource
 from .verification import verify_slack_signature
 from busy_beaver.config import SLACK_SIGNING_SECRET
@@ -15,3 +16,6 @@ slack_bp.add_url_rule(
 
 view = SlackSlashCommandDispatchResource.as_view("slack_slash_command_dispatcher")
 slack_bp.add_url_rule("/slash-command", view_func=slack_verification_required(view))
+
+view = SlackWorkspaceInstallationResource.as_view("slack_workspace_installation")
+slack_bp.add_url_rule("/oauth", view_func=view)

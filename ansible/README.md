@@ -23,6 +23,8 @@ export GITHUB_SIGNING_SECRET=[signing-secret]
 
 export MEETUP_API_KEY=[meetup-api-key]
 
+export SLACK_CLIENT_ID=[client-id]
+export SLACK_CLIENT_SECRET=[client-secret]
 export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
 export SLACK_SIGNING_SECRET=[signing-secret]
 

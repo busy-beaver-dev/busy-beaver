@@ -18,6 +18,10 @@ MEETUP_GROUP_NAME = "_ChiPy_"
 TWITTER_USERNAME = "ChicagoPython"
 YOUTUBE_CHANNEL = "UCT372EAC1orBOSUd2fsA8WA"
 
+# oauth credentials
+SLACK_CLIENT_ID = os.getenv("SLACK_CLIENT_ID", None)
+SLACK_CLIENT_SECRET = os.getenv("SLACK_CLIENT_SECRET", None)
+
 # credentials
 GITHUB_OAUTH_TOKEN = os.getenv("GITHUB_OAUTH_TOKEN", None)
 GITHUB_CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID", None)
