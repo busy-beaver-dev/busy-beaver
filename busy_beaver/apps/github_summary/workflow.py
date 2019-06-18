@@ -23,6 +23,9 @@ VERIFY_ACCOUNT = (
     "I'll reference your GitHub username to track your public activity."
 )
 
+DELETE_ACCOUNT = (
+    "Account has been deleted. Run '/busybeaver connect' to reconnect"
+)
 
 def add_tracking_identifer_and_save_record(user: User) -> None:
     user.github_state = str(uuid.uuid4())  # generate unique identifer to track user
@@ -77,4 +80,15 @@ def generate_account_attachment(**data):
 def delete_account_attachment(**data):
 
     slack_id = data["user_id"]
+    account_exists = check_account_existing(slack_id)
+
+    if(account_exists):
+        return ACCOUNT_ALREADY_ASSOCIATED
+
     user = User.query.filter_by(slack_id=slack_id).first()
+    db.session.delete(user)
+    db.session.commit()
+
+    return DELETE_ACCOUNT
+
+

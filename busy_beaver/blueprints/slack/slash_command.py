@@ -14,7 +14,7 @@ from busy_beaver.apps.upcoming_events.workflow import (
     generate_upcoming_events_message,
 )
 
-from busy_beaver.apps.github_summary.workflow import (generate_account_attachment)
+from busy_beaver.apps.github_summary.workflow import (generate_account_attachment, delete_account_attachment)
 
 from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI, MEETUP_GROUP_NAME
 from busy_beaver.extensions import db
@@ -114,18 +114,9 @@ def relink_github(**data):
 @slash_command_dispatcher.on("disconnect")
 def disconnect_github(**data):
     logger.info("[Busy Beaver] Disconnecting GitHub account.")
-    slack_id = data["user_id"]
-    user = User.query.filter_by(slack_id=slack_id).first()
 
-    if not user:
-        logger.info("[Busy Beaver] Slack acount does not have associated GitHub")
-        return make_slack_response(text="No GitHub account associated with profile")
-
-    db.session.delete(user)
-    db.session.commit()
-    return make_slack_response(
-        text="Account has been deleted. `/busybeaver connect` to reconnect"
-    )
+    message = delete_account_attachment(**data)
+    return make_slack_response(text=message)
 
 
 def add_tracking_identifer_and_save_record(user: User) -> None:
