@@ -48,11 +48,6 @@ def create_github_account_attachment(state):
         "actions": [{"text": "Associate GitHub Profile", "type": "button", "url": url}],
     }
 
-##########################################
-# Associate GitHub account with Slack user
-# TODO refactor this
-##########################################
-
 def check_account_existing(slack_id):
     user_record = User.query.filter_by(slack_id=slack_id).first()
 
