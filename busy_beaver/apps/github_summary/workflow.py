@@ -69,7 +69,7 @@ def generate_account_attachment(**data):
     account_exists = check_account_existing(slack_id)
 
     if(account_exists):
-        return ACCOUNT_ALREADY_ASSOCIATED
+        return ACCOUNT_ALREADY_ASSOCIATED, None
 
     user = User()
     user.slack_id = slack_id

@@ -114,7 +114,6 @@ def relink_github(**data):
 @slash_command_dispatcher.on("disconnect")
 def disconnect_github(**data):
     logger.info("[Busy Beaver] Disconnecting GitHub account.")
-
     message = delete_account_attachment(**data)
     return make_slack_response(text=message)
 
