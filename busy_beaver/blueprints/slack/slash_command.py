@@ -92,11 +92,6 @@ def command_not_found(**data):
     logger.info("[Busy Beaver] Unknown command")
     return make_slack_response(text="Command not found. Try `/busybeaver help`")
 
-
-##########################################
-# Associate GitHub account with Slack user
-# TODO refactor this
-##########################################
 @slash_command_dispatcher.on("connect")
 def link_github(**data):
     logger.info("[Busy Beaver] Slash command to associate with Github account.")
