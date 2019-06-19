@@ -1,5 +1,6 @@
 from flask import Flask, request
 
+from .apps.external_integrations.oauth_providers.base import OAuthError
 from .config import DATABASE_URI, REDIS_URI
 from .extensions import db, migrate, rq
 from .exceptions import NotAuthorized
@@ -8,6 +9,11 @@ from .blueprints import healthcheck_bp, github_bp, poller_bp, slack_bp
 
 
 def handle_http_error(error):
+    data = {"message": error.message}
+    return make_response(error.status_code, error=data)
+
+
+def handle_oauth_error(error):
     data = {"message": error.message}
     return make_response(error.status_code, error=data)
 
@@ -32,6 +38,7 @@ def create_app(*, testing=False):
     rq.init_app(app)
 
     app.register_error_handler(NotAuthorized, handle_http_error)
+    app.register_error_handler(OAuthError, handle_oauth_error)
 
     app.register_blueprint(healthcheck_bp)
     app.register_blueprint(github_bp, url_prefix="/github")

@@ -81,6 +81,8 @@ class SlackOAuthFlow:
         return workspace_credentials["access_token"]
 
     def _parse_json_response(self, state):
+        # TODO once we start using marshammlow, this will be abstacted somewhere else
+        # have an error handler that returns a useful message
         try:
             oauth_json = self.state_to_auth_response.mapping.pop(state)
         except KeyError:

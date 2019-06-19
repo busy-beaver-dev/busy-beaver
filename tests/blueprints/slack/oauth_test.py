@@ -61,3 +61,12 @@ def test_slack_oauth_flow_happy_path(client, session):
     assert installation.authorizing_user_id == "test_user"
     assert installation.bot_user_id == "UTTTTTTTTTTR"
     assert installation.bot_access_token == "xoxb-XXXXXXXXXXXX-TTTTTTTTTTTTTT"
+
+
+@pytest.mark.end2end
+@responses.activate
+@pytest.mark.wip
+def test_slack_oauth_flow_state_does_not_match(client, session):
+    """Somebody makes a call to our endpoint without any context; should return 403"""
+    resp = client.get("/slack/oauth?state=123&code=456")
+    assert resp.status_code == 403
