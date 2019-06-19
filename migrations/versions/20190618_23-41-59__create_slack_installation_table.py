@@ -41,7 +41,7 @@ def upgrade():
             nullable=True,
         ),
         sa.Column("scope", sa.String(length=300), nullable=True),
-        sa.Column("state", sa.String(length=36), nullable=False),
+        sa.Column("state", sa.String(length=36), nullable=True),
         sa.Column("workspace_id", sa.String(length=20), nullable=True),
         sa.Column("workspace_name", sa.String(length=255), nullable=True),
         sa.PrimaryKeyConstraint("id"),

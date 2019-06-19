@@ -28,6 +28,6 @@ class SlackInstallation(BaseModel):
         EncryptedType(db.String, secret, AesEngine, "pkcs5"), nullable=True
     )
     scope = db.Column(db.String(300), nullable=True)
-    state = db.Column(db.String(36), nullable=False, index=True)
+    state = db.Column(db.String(36), nullable=True, index=True)
     workspace_id = db.Column(db.String(20), nullable=True, index=True)
     workspace_name = db.Column(db.String(255), nullable=True)
