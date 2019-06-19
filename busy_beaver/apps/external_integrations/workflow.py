@@ -26,6 +26,8 @@ def slack_verify_callback_and_save_access_tokens_in_database(callback_url, state
     if workspace_installation:
         installation = workspace_installation
 
-    installation.patch(oauth_details._asdict().update({"state": ""}))
+    oauth_dict = oauth_details._asdict()
+    oauth_dict["state"] = ""
+    installation.patch(oauth_dict)
     db.session.add(installation)
     db.session.commit()
