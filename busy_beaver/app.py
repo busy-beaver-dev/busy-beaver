@@ -1,7 +1,7 @@
 from flask import Flask, request
 
 from .apps.external_integrations.oauth_providers.base import OAuthError
-from .config import DATABASE_URI, REDIS_URI
+from .config import DATABASE_URI, REDIS_URI, SECRET_KEY
 from .extensions import db, migrate, rq
 from .exceptions import NotAuthorized
 from .toolbox import make_response
@@ -20,6 +20,7 @@ def handle_oauth_error(error):
 
 def create_app(*, testing=False):
     app = Flask(__name__)
+    app.config["SECRET_KEY"] = SECRET_KEY
 
     if testing:
         app.config["TESTING"] = True

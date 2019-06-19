@@ -13,6 +13,8 @@ export POSTGRES_DATABASE=[do-console]
 export DATABASE_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}?sslmode=require
 export REDIS_URI=redis://redis:6379
 
+export SECRET_KEY=[secret-key]
+
 # clients
 export BUSY_BEAVER_API_TOKEN=[bb-api-token]
 

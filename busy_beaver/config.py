@@ -3,6 +3,8 @@ import os
 IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
 TASK_QUEUE_MAX_RETRIES = 1
 
+SECRET_KEY = os.getenv("SECRET_KEY", "abcdef").encode("utf-8")
+
 # app urls
 PROD_BASE_URI = "https://busybeaver.sivji.com"
 DEV_BASE_URI = os.getenv("NGROK_BASE_URI", None)
