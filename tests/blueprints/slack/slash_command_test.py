@@ -9,6 +9,7 @@ from busy_beaver.blueprints.slack.slash_command import (
     relink_github,
     upcoming_events,
 )
+from busy_beaver.config import FULL_INSTALLATION_WORKSPACE_IDS
 from busy_beaver.factories.event import EventFactory
 from busy_beaver.models import User
 
@@ -95,11 +96,24 @@ def test_slack_command_empty_command(
 # Upcoming Event Schedule
 #########################
 @pytest.mark.end2end
-def test_command_next(session, generate_slash_command_request):
+def test_command_next_workspace_not_allowed(session, generate_slash_command_request):
     events = EventFactory.create_batch(size=10)
     [session.add(event) for event in events]
     session.commit()
-    data = generate_slash_command_request("next")
+    data = generate_slash_command_request("next", team_id="not allowed")
+
+    result = next_event(**data)
+
+    assert "command not supported" in result.json["text"].lower()
+
+
+@pytest.mark.end2end
+def test_command_next_workspace_allowed(session, generate_slash_command_request):
+    events = EventFactory.create_batch(size=10)
+    [session.add(event) for event in events]
+    session.commit()
+    workspace_id = FULL_INSTALLATION_WORKSPACE_IDS[0]
+    data = generate_slash_command_request("next", team_id=workspace_id)
 
     result = next_event(**data)
 
@@ -110,11 +124,24 @@ def test_command_next(session, generate_slash_command_request):
 
 
 @pytest.mark.end2end
-def test_command_events(session, generate_slash_command_request):
+def test_command_events_workspace_not_allowed(session, generate_slash_command_request):
     events = EventFactory.create_batch(size=10)
     [session.add(event) for event in events]
     session.commit()
-    data = generate_slash_command_request("events")
+    data = generate_slash_command_request("events", team_id="not_allowed")
+
+    result = upcoming_events(**data)
+
+    assert "command not supported" in result.json["text"].lower()
+
+
+@pytest.mark.end2end
+def test_command_events_workspace_allowed(session, generate_slash_command_request):
+    events = EventFactory.create_batch(size=10)
+    [session.add(event) for event in events]
+    session.commit()
+    workspace_id = FULL_INSTALLATION_WORKSPACE_IDS[0]
+    data = generate_slash_command_request("events", team_id=workspace_id)
 
     result = upcoming_events(**data)
 

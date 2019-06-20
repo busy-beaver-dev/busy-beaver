@@ -11,6 +11,12 @@ DEV_BASE_URI = os.getenv("NGROK_BASE_URI", None)
 APP_URI = PROD_BASE_URI if IN_PRODUCTION else DEV_BASE_URI
 GITHUB_REDIRECT_URI = f"{APP_URI}/github/oauth"
 
+# app constraints
+FULL_INSTALLATION_WORKSPACE_IDS = [
+    "T093FC1RC",  # ChiPy Workspace -- https://chipy.slack.com -- prod env
+    "T5G0FCMNW",  # SivBots -- https://sivbots.slack.com -- dev env
+]
+
 # infrastructure
 DATABASE_URI = os.getenv("DATABASE_URI")
 REDIS_URI = os.getenv("REDIS_URI")

@@ -1,3 +1,4 @@
+import functools
 import logging
 from typing import List, NamedTuple
 from urllib.parse import urlencode
@@ -11,7 +12,12 @@ from busy_beaver.apps.upcoming_events.workflow import (
     generate_next_event_message,
     generate_upcoming_events_message,
 )
-from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI, MEETUP_GROUP_NAME
+from busy_beaver.config import (
+    FULL_INSTALLATION_WORKSPACE_IDS,
+    GITHUB_CLIENT_ID,
+    GITHUB_REDIRECT_URI,
+    MEETUP_GROUP_NAME,
+)
 from busy_beaver.extensions import db
 from busy_beaver.models import User
 from busy_beaver.toolbox import EventEmitter
@@ -31,10 +37,11 @@ VERIFY_ACCOUNT = (
     "I'll reference your GitHub username to track your public activity."
 )
 HELP_TEXT = (
-    "`/busybeaver next`\t\t Retrieve next event\n "
-    "`/busybeaver connect`\t\t Connect GitHub Account\n "
-    "`/busybeaver reconnect`\t\t Connect to difference GitHub Account\n "
-    "`/busybeaver disconnect`\t\t Disconenct GitHub Account\n "
+    "`/busybeaver next`\t\t Retrieve next event\n"
+    "`/busybeaver events`\t\t Retrieve list of upcoming event\n"
+    "`/busybeaver connect`\t\t Connect GitHub Account\n"
+    "`/busybeaver reconnect`\t\t Connect to difference GitHub Account\n"
+    "`/busybeaver disconnect`\t\t Disconenct GitHub Account\n"
     "`/busybeaver help`\t\t Display help text"
 )
 
@@ -59,15 +66,39 @@ class SlackSlashCommandDispatchResource(MethodView):
         return Command(command_parts[0].lower(), args=command_parts[1:])
 
 
+############
+# Decorators
+############
+def limit_to(workspace_ids: List[str]):
+
+    if not isinstance(workspace_ids, list):
+        raise ValueError
+
+    def limit_to_decorator(func):
+        @functools.wraps(func)
+        def _wrapper(*args, **kwargs):
+            team_id = kwargs["team_id"]
+            if team_id not in workspace_ids:
+                return make_slack_response(text="Command not supported at this time.")
+
+            return func(*args, **kwargs)
+
+        return _wrapper
+
+    return limit_to_decorator
+
+
 #########################
 # Upcoming Event Schedule
 #########################
+@limit_to(workspace_ids=FULL_INSTALLATION_WORKSPACE_IDS)
 @slash_command_dispatcher.on("next")
 def next_event(**data):
     attachment = generate_next_event_message(MEETUP_GROUP_NAME)
     return make_slack_response(attachments=attachment)
 
 
+@limit_to(workspace_ids=FULL_INSTALLATION_WORKSPACE_IDS)
 @slash_command_dispatcher.on("events")
 def upcoming_events(**data):
     blocks = generate_upcoming_events_message(MEETUP_GROUP_NAME, count=5)
@@ -79,6 +110,7 @@ def upcoming_events(**data):
 ########################
 @slash_command_dispatcher.on("help")
 def display_help_text(**data):
+    # have 2 different help text phrases
     return make_slack_response(text=HELP_TEXT)
 
 
