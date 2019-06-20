@@ -20,6 +20,8 @@ class TwitterPollingResource(MethodView):
         )
 
         # TODO: replace this with marshmallow
+        # Get workspace_id and pass it into task
+        # for now we can hack it so we only use chipy_slack for this
         data = request.json
         if not data or "channel" not in data:
             logger.error(

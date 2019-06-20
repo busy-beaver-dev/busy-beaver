@@ -3,6 +3,9 @@ from busy_beaver.extensions import db
 
 
 class User(BaseModel):
+    # TODO rename this table to github user or something
+    # add a field for workspace_id
+    # add a relationship for the ORM
     """User table"""
 
     __tablename__ = "user"

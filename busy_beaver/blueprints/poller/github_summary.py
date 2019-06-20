@@ -20,6 +20,7 @@ class PublishGitHubSummaryResource(MethodView):
         )
 
         # TODO: replace this with marshmallow
+        # Get workspace_id and pass it into github_summary task
         data = request.json
         if not data or "channel" not in data:
             logger.error("[Busy Beaver] Post GitHub Summary Task -- channel in body")
