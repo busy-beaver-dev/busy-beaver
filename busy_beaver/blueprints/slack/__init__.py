@@ -1,12 +1,12 @@
 from flask import blueprints
 
+from .decorators import verify_slack_signature
 from .event_subscription import SlackEventSubscriptionResource
 from .oauth import (
     SlackWorkspaceInstallationCallbackResource,
     SlackWorkspaceInstallationRedirectResource,
 )
 from .slash_command import SlackSlashCommandDispatchResource
-from .verification import verify_slack_signature
 from busy_beaver.config import SLACK_SIGNING_SECRET
 
 slack_bp = blueprints.Blueprint("slack", __name__)

@@ -2,7 +2,7 @@ from flask import Flask, jsonify
 import pytest
 
 from busy_beaver.app import handle_http_error
-from busy_beaver.blueprints.slack.verification import verify_slack_signature
+from busy_beaver.blueprints.slack.decorators import verify_slack_signature
 from busy_beaver.exceptions import UnverifiedWebhookRequest
 
 SLACK_SIGNING_SECRET = "8f742231b10e8888abcd99yyyzzz85a5"
