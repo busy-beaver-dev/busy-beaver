@@ -109,6 +109,10 @@ def test_slack_oauth_flow_reinstallation(session):
     # Step 6
     # oauth callback and token exchange
     code = "1234"
+    installation.state = state
+    session.add(installation)
+    session.commit()
+
     qs = f"state={state}&code={code}"
     callback_url = f"https://busybeaver.sivji.com/slack/oauth?{qs}"
     slack_verify_callback_and_save_access_tokens_in_database(callback_url, state)
