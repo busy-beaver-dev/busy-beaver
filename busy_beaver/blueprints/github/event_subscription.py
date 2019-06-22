@@ -3,7 +3,7 @@ import logging
 from flask import jsonify, request
 from flask.views import MethodView
 
-from busy_beaver import slack
+from busy_beaver import chipy_slack
 from busy_beaver.apps.github_webhook.workflow import (
     generate_new_issue_message,
     generate_new_pull_request_message,
@@ -49,4 +49,4 @@ def handle_pr(data):
 
 
 def _post_to_slack(message):
-    slack.post_message(message=message, channel="busy-beaver-meta")
+    chipy_slack.post_message(message=message, channel="busy-beaver-meta")

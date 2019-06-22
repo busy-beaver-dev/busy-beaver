@@ -6,7 +6,7 @@ from typing import List
 from sqlalchemy import and_
 
 from .summary import GitHubUserEvents
-from busy_beaver import slack
+from busy_beaver import chipy_slack
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import ApiUser, User, PostGitHubSummaryTask
 from busy_beaver.toolbox import utc_now_minus, set_task_progress
@@ -32,7 +32,7 @@ def start_post_github_summary_task(task_owner: ApiUser, channel_name: str):
 
 @rq.job
 def fetch_github_summary_post_to_slack(channel_name, boundary_dt):
-    channel_info = slack.get_channel_info(channel_name)
+    channel_info = chipy_slack.get_channel_info(channel_name)
     users: List[User] = User.query.filter(
         and_(User.slack_id.in_(channel_info.members), User.github_username.isnot(None))
     ).all()
@@ -52,5 +52,5 @@ def fetch_github_summary_post_to_slack(channel_name, boundary_dt):
             'does it make a sound?" - Zax Rosenberg'
         )
 
-    slack.post_message(message=message, channel_id=channel_info.id)
+    chipy_slack.post_message(message=message, channel_id=channel_info.id)
     set_task_progress(100)
