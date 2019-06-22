@@ -9,6 +9,11 @@ from busy_beaver import slack
 logger = logging.getLogger(__name__)
 
 
+# TODO use EventEmitter on data["type"] to split this up
+# handler function for "url_verification"
+# handler function for "message"
+# handler function for "app_uninstalled"
+# https://api.slack.com/events/app_uninstalled
 class SlackEventSubscriptionResource(MethodView):
     """Callback endpoint for Slack event subscriptions"""
 
