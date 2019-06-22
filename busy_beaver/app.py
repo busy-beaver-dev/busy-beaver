@@ -2,7 +2,7 @@ from flask import Flask, request
 
 from .apps.external_integrations.oauth_providers.base import OAuthError
 from .config import DATABASE_URI, REDIS_URI, SECRET_KEY
-from .extensions import db, migrate, rq
+from .extensions import db, migrate, rq, talisman
 from .exceptions import NotAuthorized
 from .toolbox import make_response
 from .blueprints import healthcheck_bp, github_bp, poller_bp, slack_bp
@@ -37,6 +37,8 @@ def create_app(*, testing=False):
     app.config["RQ_REDIS_URL"] = REDIS_URI
     app.config["RQ_QUEUES"] = ["default", "failed"]
     rq.init_app(app)
+
+    talisman.init_app(app)
 
     app.register_error_handler(NotAuthorized, handle_http_error)
     app.register_error_handler(OAuthError, handle_oauth_error)
