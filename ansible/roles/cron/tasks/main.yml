@@ -17,7 +17,7 @@
 - cron:
     name: Backup database and upload to S3
     user: "{{ user }}"
-    state: present
+    state: absent
     minute: 30
     hour: "*/6"
     job: "/bin/bash {{ db_backup }}"

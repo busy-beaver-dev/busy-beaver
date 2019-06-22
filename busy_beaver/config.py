@@ -3,11 +3,19 @@ import os
 IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
 TASK_QUEUE_MAX_RETRIES = 1
 
+SECRET_KEY = os.getenv("SECRET_KEY", "abcdef").encode("utf-8")
+
 # app urls
 PROD_BASE_URI = "https://busybeaver.sivji.com"
 DEV_BASE_URI = os.getenv("NGROK_BASE_URI", None)
 APP_URI = PROD_BASE_URI if IN_PRODUCTION else DEV_BASE_URI
 GITHUB_REDIRECT_URI = f"{APP_URI}/github/oauth"
+
+# app constraints
+FULL_INSTALLATION_WORKSPACE_IDS = [
+    "T093FC1RC",  # ChiPy Workspace -- https://chipy.slack.com -- prod env
+    "T5G0FCMNW",  # SivBots -- https://sivbots.slack.com -- dev env
+]
 
 # infrastructure
 DATABASE_URI = os.getenv("DATABASE_URI")
@@ -17,6 +25,10 @@ REDIS_URI = os.getenv("REDIS_URI")
 MEETUP_GROUP_NAME = "_ChiPy_"
 TWITTER_USERNAME = "ChicagoPython"
 YOUTUBE_CHANNEL = "UCT372EAC1orBOSUd2fsA8WA"
+
+# oauth credentials
+SLACK_CLIENT_ID = os.getenv("SLACK_CLIENT_ID", None)
+SLACK_CLIENT_SECRET = os.getenv("SLACK_CLIENT_SECRET", None)
 
 # credentials
 GITHUB_OAUTH_TOKEN = os.getenv("GITHUB_OAUTH_TOKEN", None)

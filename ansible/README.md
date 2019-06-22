@@ -13,6 +13,8 @@ export POSTGRES_DATABASE=[do-console]
 export DATABASE_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}?sslmode=require
 export REDIS_URI=redis://redis:6379
 
+export SECRET_KEY=[secret-key]
+
 # clients
 export BUSY_BEAVER_API_TOKEN=[bb-api-token]
 
@@ -23,6 +25,8 @@ export GITHUB_SIGNING_SECRET=[signing-secret]
 
 export MEETUP_API_KEY=[meetup-api-key]
 
+export SLACK_CLIENT_ID=[client-id]
+export SLACK_CLIENT_SECRET=[client-secret]
 export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
 export SLACK_SIGNING_SECRET=[signing-secret]
 

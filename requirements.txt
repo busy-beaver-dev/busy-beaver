@@ -5,11 +5,14 @@
 #    pip-compile --output-file=requirements.txt requirements.in
 #
 alembic==1.0.3
+asn1crypto==0.24.0        # via cryptography
 blinker==1.4              # via sentry-sdk
 certifi==2019.3.9         # via requests, sentry-sdk
+cffi==1.12.3              # via cryptography
 chardet==3.0.4            # via requests
 click==7.0                # via flask, rq
 croniter==0.3.30          # via rq-scheduler
+cryptography==2.7
 factory_boy==2.12.0
 faker==1.0.7              # via factory-boy
 flask-migrate==2.4.0
@@ -26,19 +29,21 @@ markupsafe==1.1.1         # via jinja2, mako
 meetup-api==0.1.1
 oauthlib==3.0.1           # via requests-oauthlib
 psycopg2-binary==2.7.7
+pycparser==2.19           # via cffi
 pysocks==1.7.0            # via tweepy
 python-dateutil==2.7.5
 python-editor==1.0.4      # via alembic
 python-json-logger==0.1.10
 pytz==2018.7
 redis==3.1.0
-requests-oauthlib==1.2.0  # via tweepy
+requests-oauthlib==1.2.0
 requests==2.20.1
 rq-scheduler==0.9         # via flask-rq2
 rq==1.0                   # via flask-rq2, rq-scheduler
 sentry-sdk[flask]==0.7.8
-six==1.12.0               # via faker, meetup-api, python-dateutil, slackclient, tweepy, websocket-client
+six==1.12.0               # via cryptography, faker, meetup-api, python-dateutil, slackclient, sqlalchemy-utils, tweepy, websocket-client
 slackclient==1.3.0
+sqlalchemy-utils==0.34.0
 sqlalchemy==1.3.1
 text-unidecode==1.2       # via faker
 tweepy==3.7.0

@@ -1,5 +1,6 @@
 ---
 run_summary: "{{ app_dir }}/scripts/prod/run_github_summary_report.sh"
 twitter_poller: "{{ app_dir }}/scripts/prod/twitter_poller.sh"
+db_backup: "{{ app_dir }}/scripts/database/backup_db_to_s3.sh"
 events_poller: "{{ app_dir }}/scripts/prod/events_poller.sh"
 upcoming_events: "{{ app_dir }}/scripts/prod/post_upcoming_events.sh"

@@ -1,8 +1,8 @@
 from flask import blueprints
 
+from .decorators import verify_github_signature
 from .event_subscription import GitHubEventSubscriptionResource
 from .oauth import GitHubIdentityVerificationCallbackResource
-from .verification import verify_github_signature
 from busy_beaver.config import GITHUB_SIGNING_SECRET
 
 github_bp = blueprints.Blueprint("github", __name__)

@@ -13,6 +13,12 @@ adds syncs database with fetched events.
 - removed events get deleted
 - existing events get updated
 
+### External Integrations
+
+Contains logic for integration with third-party APIs.
+We provide a nice wrapper around `requests-oauthlib`
+to simplify the OAuth process for the user.
+
 ### GitHub Summary
 
 Public GitHub activity of registered users is shared
@@ -55,7 +61,8 @@ in a Slack workspace after a configurable length of time has passed.
 
 ### Upcoming Events
 
-- Users can query the database using the [Slack slash commands](https://api.slack.com/slash-commands)
+- Users can query the database using the
+[Slack slash commands](https://api.slack.com/slash-commands)
   - `/busybeaver next`
   - `/busybeaver events`
 - The contents of `/busybeaver events` will be posted a specified channel
