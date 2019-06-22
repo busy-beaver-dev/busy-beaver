@@ -98,6 +98,9 @@ prod-deploy: prod-pull-image ## redeploy application
 	make prod-down
 	make prod-up
 
+prod-shell:  ## shell into container
+	docker-compose -f docker-compose.prod.yml exec app bash
+
 prod-shell-db:  ## shell into postgres instance
 	psql -d "${DATABASE_URI}"
 
