@@ -23,7 +23,9 @@ class StateToOAuthResponse:
     When the code is exchanged for a token in the OAuth2 workflow,
     Slack also sends bot tokens and information about the workspace.
 
-    Use a hook to capture items in a stateful dictionary.
+    Use a hook to capture items in a stateful dictionary;
+    the code parameter is the key for this dictionary;
+    used as a state param.
 
     https://requests-oauthlib.readthedocs.io/en/latest/api.html
     """
