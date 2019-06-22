@@ -103,6 +103,3 @@ prod-shell:  ## shell into container
 
 prod-shell-db:  ## shell into postgres instance
 	psql -d "${DATABASE_URI}"
-
-prod-shell:
-	docker-compose -f docker-compose.prod.ymldocker-compose exec app bash
