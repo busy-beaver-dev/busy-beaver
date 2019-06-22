@@ -4,6 +4,7 @@ factory_boy==2.12.0
 Flask-Migrate==2.4.0
 Flask-RQ2==18.3
 Flask-SQLAlchemy==2.4.0
+flask-talisman==0.7.0
 Flask==1.0.2
 gunicorn==19.9.0
 inflect==2.1.0
