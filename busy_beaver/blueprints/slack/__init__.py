@@ -2,10 +2,7 @@ from flask import blueprints
 
 from .decorators import verify_slack_signature
 from .event_subscription import SlackEventSubscriptionResource
-from .oauth import (
-    SlackWorkspaceInstallationCallbackResource,
-    SlackWorkspaceInstallationRedirectResource,
-)
+from .oauth import SlackWorkspaceInstallationCallbackResource
 from .slash_command import SlackSlashCommandDispatchResource
 from busy_beaver.config import SLACK_SIGNING_SECRET
 
@@ -24,8 +21,3 @@ view = SlackWorkspaceInstallationCallbackResource.as_view(
     "slack_workspace_installation_callback"
 )
 slack_bp.add_url_rule("/oauth", view_func=view)
-
-view = SlackWorkspaceInstallationRedirectResource.as_view(
-    "slack_workspace_installation_redirect"
-)
-slack_bp.add_url_rule("/install", view_func=view)

@@ -100,3 +100,6 @@ prod-deploy: prod-pull-image ## redeploy application
 
 prod-shell-db:  ## shell into postgres instance
 	psql -d "${DATABASE_URI}"
+
+prod-shell:
+	docker-compose -f docker-compose.prod.ymldocker-compose exec app bash
