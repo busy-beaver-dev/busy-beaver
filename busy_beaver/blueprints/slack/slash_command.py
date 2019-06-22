@@ -88,7 +88,6 @@ def upcoming_events(**data):
 ########################
 @slash_command_dispatcher.on("help")
 def display_help_text(**data):
-    # have 2 different help text phrases
     return make_slack_response(text=HELP_TEXT)
 
 
