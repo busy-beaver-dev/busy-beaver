@@ -15,7 +15,7 @@ python:
   - "3.7"
 
 env:
-  - PYTHONPATH=. FLASK_APP=busy_beaver/__init__.py DATABASE_URI="postgresql://postgres@127.0.0.1:5432/busy_beaver_test" REDIS_URI="redis://127.0.0.1:6379" IMAGE_NAME="alysivji/busy-beaver" OAUTHLIB_INSECURE_TRANSPORT=1 OAUTHLIB_RELAX_TOKEN_SCOPE=1
+  - PYTHONPATH=. FLASK_APP=busy_beaver/__init__.py FLASK_ENV=development DATABASE_URI="postgresql://postgres@127.0.0.1:5432/busy_beaver_test" REDIS_URI="redis://127.0.0.1:6379" IMAGE_NAME="alysivji/busy-beaver" OAUTHLIB_INSECURE_TRANSPORT=1 OAUTHLIB_RELAX_TOKEN_SCOPE=1
 
 install:
   - pip install -r requirements_dev.txt
