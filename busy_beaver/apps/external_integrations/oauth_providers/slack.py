@@ -1,9 +1,10 @@
 from typing import NamedTuple
+from urllib.parse import parse_qs, urlparse
 
 from oauthlib.common import urldecode
 from requests_oauthlib import OAuth2Session
 
-from .base import ExternalOAuthDetails, OAuthError
+from .base import ExternalOAuthDetails
 
 
 class SlackOAuthInfo(NamedTuple):
@@ -22,7 +23,9 @@ class StateToOAuthResponse:
     When the code is exchanged for a token in the OAuth2 workflow,
     Slack also sends bot tokens and information about the workspace.
 
-    Use a hook to capture items in a stateful dictionary.
+    Use a hook to capture items in a stateful dictionary;
+    the code parameter is the key for this dictionary;
+    used as a state param.
 
     https://requests-oauthlib.readthedocs.io/en/latest/api.html
     """
@@ -34,8 +37,8 @@ class StateToOAuthResponse:
         """Hook is required to be callable"""
 
         req_params = {k: v for k, v in urldecode(response.request.body)}
-        state = req_params["state"]
-        self.mapping[state] = response.json()
+        code = req_params["code"]  # this is the unique param
+        self.mapping[code] = response.json()
         return response
 
 
@@ -63,11 +66,15 @@ class SlackOAuthFlow:
     def process_callback(self, authorization_response_url, state) -> SlackOAuthInfo:
         """Slack OAuth for workspace installation adds params to response
 
+        Code is a unique identifer; use it as a unique identifer
+        when we are loading additional items whenhooking into the response
+
         Additional Resources
             - https://api.slack.com/methods/oauth.access
         """
         self._fetch_token(authorization_response_url, state)
-        oauth_response = self._parse_json_response(state)
+        code = parse_qs(urlparse(authorization_response_url).query)["code"][0]
+        oauth_response = self._parse_json_response(code)
         return SlackOAuthInfo(**oauth_response)
 
     def _fetch_token(self, authorization_response_url, state):
@@ -80,13 +87,8 @@ class SlackOAuthFlow:
         )
         return workspace_credentials["access_token"]
 
-    def _parse_json_response(self, state):
-        # TODO once we start using marshammlow, this will be abstacted somewhere else
-        # have an error handler that returns a useful message
-        try:
-            oauth_json = self.state_to_auth_response.mapping.pop(state)
-        except KeyError:
-            raise OAuthError("state error") from None
+    def _parse_json_response(self, code):
+        oauth_json = self.state_to_auth_response.mapping.pop(code)
 
         # TODO do this with marshmallow
         output = {}

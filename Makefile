@@ -84,6 +84,9 @@ prod-build: ## build production images
 prod-migrate-up:
 	docker-compose -f docker-compose.prod.yml exec app flask db upgrade
 
+prod-migrate-down:
+	docker-compose -f docker-compose.prod.yml exec app flask db downgrade
+
 prod-up: ## start prod environment
 	docker-compose -f docker-compose.prod.yml up -d
 	make prod-migrate-up
@@ -98,5 +101,8 @@ prod-deploy: prod-pull-image ## redeploy application
 	make prod-down
 	make prod-up
 
-prod-shell-db:  ## shell into postgres instance
+prod-shell:  ## shell into production container
+	docker-compose -f docker-compose.prod.yml exec app bash
+
+prod-shell-db:  ## shell into prodution postgres instance
 	psql -d "${DATABASE_URI}"
