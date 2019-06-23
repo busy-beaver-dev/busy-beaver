@@ -18,9 +18,7 @@ ctx.push()
 # create or update record
 installation = SlackInstallation.query.filter_by(workspace_id=workspace_id).first()
 if installation:
-    installation.patch(
-        data={"bot_access_token": bot_token, "workspace_id": workspace_id}
-    )
+    installation.patch(data={"bot_access_token": bot_token})
 else:
     installation = SlackInstallation(
         access_token="access_token",
