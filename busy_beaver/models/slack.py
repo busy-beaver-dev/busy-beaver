@@ -15,15 +15,19 @@ class SlackInstallation(BaseModel):
         return f"<SlackInstallation: {self.workspace_name}>"
 
     # Attributes
-    access_token = db.Column(EncryptedType(db.String, SECRET_KEY, AesEngine, "pkcs5"))
-    authorizing_user_id = db.Column(db.String(300))
-    bot_access_token = db.Column(
-        EncryptedType(db.String, SECRET_KEY, AesEngine, "pkcs5")
+    access_token = db.Column(
+        EncryptedType(db.String, SECRET_KEY, AesEngine, "pkcs5"), nullable=False
     )
-    bot_user_id = db.Column(EncryptedType(db.String, SECRET_KEY, AesEngine, "pkcs5"))
-    scope = db.Column(db.String(300))
-    workspace_id = db.Column(db.String(20), index=True)
-    workspace_name = db.Column(db.String(255))
+    authorizing_user_id = db.Column(db.String(300), nullable=False)
+    bot_access_token = db.Column(
+        EncryptedType(db.String, SECRET_KEY, AesEngine, "pkcs5"), nullable=False
+    )
+    bot_user_id = db.Column(
+        EncryptedType(db.String, SECRET_KEY, AesEngine, "pkcs5"), nullable=False
+    )
+    scope = db.Column(db.String(300), nullable=False)
+    workspace_id = db.Column(db.String(20), index=True, nullable=False)
+    workspace_name = db.Column(db.String(255), nullable=False)
 
     # Relationships
     github_summary_users = db.relationship(

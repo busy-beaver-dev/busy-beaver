@@ -15,7 +15,9 @@ class GitHubSummaryUser(BaseModel):
 
     # Attributes
     installation_id = db.Column(
-        db.Integer, db.ForeignKey("slack_installation.id", name="fk_installation_id")
+        db.Integer,
+        db.ForeignKey("slack_installation.id", name="fk_installation_id"),
+        nullable=False,
     )
     slack_id = db.Column(db.String(300), nullable=False)
     github_id = db.Column(db.String(300), nullable=True)
