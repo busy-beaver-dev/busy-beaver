@@ -32,6 +32,9 @@ migrate-up: ## run all migration
 migrate-down: ## roll back last migration
 	docker-compose exec app flask db downgrade
 
+dropdb:  ## drop all tables in development database
+	psql -d postgresql://bbdev_user:bbdev_password@localhost:9432/busy-beaver -f ./scripts/database/drop_all_tables.sql
+
 requirements: ## generate requirements.txt using piptools
 	pip-compile --output-file=requirements.txt requirements.in
 
