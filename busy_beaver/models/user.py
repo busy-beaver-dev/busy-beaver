@@ -3,12 +3,12 @@ from busy_beaver.extensions import db
 
 
 class GitHubSummaryUser(BaseModel):
-    # TODO rename this table to github user or something
+    # TODO
     # add a field for workspace_id
     # add a relationship for the ORM
-    """User table"""
+    """GitHub Summary User table"""
 
-    __tablename__ = "user"
+    __tablename__ = "github_summary_user"
 
     def __repr__(self):  # pragma: no cover
         return f"<User slack: {self.slack_id} github: {self.github_username}>"
