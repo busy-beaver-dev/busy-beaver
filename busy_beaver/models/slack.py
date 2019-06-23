@@ -31,5 +31,5 @@ class SlackInstallation(BaseModel):
 
     # Relationships
     github_summary_users = db.relationship(
-        "GitHubSummaryUsers", back_populates="installation"
+        "GitHubSummaryUser", back_populates="installation"
     )
