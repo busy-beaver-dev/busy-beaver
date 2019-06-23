@@ -8,7 +8,7 @@ from sqlalchemy import and_
 from .summary import GitHubUserEvents
 from busy_beaver import chipy_slack
 from busy_beaver.extensions import db, rq
-from busy_beaver.models import ApiUser, User, PostGitHubSummaryTask
+from busy_beaver.models import ApiUser, GitHubSummaryUser, PostGitHubSummaryTask
 from busy_beaver.toolbox import utc_now_minus, set_task_progress
 
 logger = logging.getLogger(__name__)
@@ -33,8 +33,11 @@ def start_post_github_summary_task(task_owner: ApiUser, channel_name: str):
 @rq.job
 def fetch_github_summary_post_to_slack(channel_name, boundary_dt):
     channel_info = chipy_slack.get_channel_info(channel_name)
-    users: List[User] = User.query.filter(
-        and_(User.slack_id.in_(channel_info.members), User.github_username.isnot(None))
+    users: List[GitHubSummaryUser] = GitHubSummaryUser.query.filter(
+        and_(
+            GitHubSummaryUser.slack_id.in_(channel_info.members),
+            GitHubSummaryUser.github_username.isnot(None),
+        )
     ).all()
     random.shuffle(users)
 

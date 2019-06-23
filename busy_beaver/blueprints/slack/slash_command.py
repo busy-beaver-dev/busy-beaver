@@ -19,7 +19,7 @@ from busy_beaver.config import (
     MEETUP_GROUP_NAME,
 )
 from busy_beaver.extensions import db
-from busy_beaver.models import User
+from busy_beaver.models import GitHubSummaryUser
 from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
@@ -105,13 +105,13 @@ def command_not_found(**data):
 def link_github(**data):
     logger.info("[Busy Beaver] New user. Linking GitHub account.")
     slack_id = data["user_id"]
-    user_record = User.query.filter_by(slack_id=slack_id).first()
+    user_record = GitHubSummaryUser.query.filter_by(slack_id=slack_id).first()
 
     if user_record:
         logger.info("[Busy Beaver] Slack acount already linked to GitHub")
         return make_slack_response(text=ACCOUNT_ALREADY_ASSOCIATED)
 
-    user = User()
+    user = GitHubSummaryUser()
     user.slack_id = slack_id
     user = add_tracking_identifer_and_save_record(user)
     attachment = create_github_account_attachment(user.github_state)
@@ -122,7 +122,7 @@ def link_github(**data):
 def relink_github(**data):
     logger.info("[Busy Beaver] Relinking GitHub account.")
     slack_id = data["user_id"]
-    user = User.query.filter_by(slack_id=slack_id).first()
+    user = GitHubSummaryUser.query.filter_by(slack_id=slack_id).first()
 
     if not user:
         logger.info("[Busy Beaver] Slack acount does not have associated GitHub")
@@ -137,7 +137,7 @@ def relink_github(**data):
 def disconnect_github(**data):
     logger.info("[Busy Beaver] Disconnecting GitHub account.")
     slack_id = data["user_id"]
-    user = User.query.filter_by(slack_id=slack_id).first()
+    user = GitHubSummaryUser.query.filter_by(slack_id=slack_id).first()
 
     if not user:
         logger.info("[Busy Beaver] Slack acount does not have associated GitHub")
@@ -150,7 +150,7 @@ def disconnect_github(**data):
     )
 
 
-def add_tracking_identifer_and_save_record(user: User) -> None:
+def add_tracking_identifer_and_save_record(user: GitHubSummaryUser) -> None:
     user.github_state = str(uuid.uuid4())  # generate unique identifer to track user
     db.session.add(user)
     db.session.commit()

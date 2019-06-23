@@ -11,13 +11,13 @@ from busy_beaver.blueprints.slack.slash_command import (
 )
 from busy_beaver.config import FULL_INSTALLATION_WORKSPACE_IDS
 from busy_beaver.factories.event import EventFactory
-from busy_beaver.models import User
+from busy_beaver.models import GitHubSummaryUser
 
 
 @pytest.fixture
 def add_user(session):
     def _add_user(username):
-        user = User(slack_id=username)
+        user = GitHubSummaryUser(slack_id=username)
         session.add(user)
         session.commit()
         return user
@@ -234,4 +234,4 @@ def test_disconnect_command_registered_user(
     result = disconnect_github(**data)
 
     assert "Account has been deleted" in result.json["text"]
-    assert not User.query.get(user.id)
+    assert not GitHubSummaryUser.query.get(user.id)

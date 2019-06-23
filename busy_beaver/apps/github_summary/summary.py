@@ -11,11 +11,11 @@ from .event_list import (
     StarredReposList,
 )
 from busy_beaver import github
-from busy_beaver.models import User
+from busy_beaver.models import GitHubSummaryUser
 
 
 class GitHubUserEvents:
-    def __init__(self, user: User, boundary_dt: datetime):
+    def __init__(self, user: GitHubSummaryUser, boundary_dt: datetime):
         self.user = user
         self.event_lists = [  # this is the order of summary output
             ReleasesPublishedList(),

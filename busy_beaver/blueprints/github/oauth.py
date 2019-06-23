@@ -10,7 +10,7 @@ from busy_beaver.config import (
     GITHUB_REDIRECT_URI,
 )
 from busy_beaver.extensions import db
-from busy_beaver.models import User
+from busy_beaver.models import GitHubSummaryUser
 
 logger = logging.getLogger(__name__)
 client = RequestsClient()
@@ -30,7 +30,7 @@ class GitHubIdentityVerificationCallbackResource(MethodView):
         code = params.get("code")
         state = params.get("state")
 
-        user = User.query.filter_by(github_state=state).first()
+        user = GitHubSummaryUser.query.filter_by(github_state=state).first()
         if not user:
             logger.error("[Busy Beaver] GitHub state does not match")
             return jsonify({"Error": "Unknown"})

@@ -2,7 +2,7 @@ from . import BaseModel
 from busy_beaver.extensions import db
 
 
-class User(BaseModel):
+class GitHubSummaryUser(BaseModel):
     # TODO rename this table to github user or something
     # add a field for workspace_id
     # add a relationship for the ORM
