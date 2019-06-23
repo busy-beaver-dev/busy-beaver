@@ -67,7 +67,7 @@ def test_ping_event(client, create_github_headers, generate_event_subscription_r
 @pytest.fixture
 def patched_slack(patcher):
     obj = FakeSlackClient()
-    return patcher(MODULE_TO_TEST, namespace="slack", replacement=obj)
+    return patcher(MODULE_TO_TEST, namespace="chipy_slack", replacement=obj)
 
 
 @pytest.mark.integration
