@@ -59,17 +59,23 @@ def test_github_summary_endpoint_empty_body(
 
 @pytest.mark.unit
 def test_github_summary_endpoint_success(
-    caplog, client, session, create_api_user, patched_post_github_summary_trigger
+    caplog,
+    client,
+    session,
+    create_api_user,
+    create_slack_installation,
+    patched_post_github_summary_trigger,
 ):
     # Arrange
     create_api_user(username="test_user", token="abcd", role="admin")
+    create_slack_installation(workspace_id="test_id")
     mock = patched_post_github_summary_trigger
 
     # Act
     result = client.post(
         "/poll/github-summary",
         headers={"Authorization": "token abcd"},
-        json={"channel": "general"},
+        json={"channel": "general", "workspace_id": "test_id"},
     )
 
     # Assert

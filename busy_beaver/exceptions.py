@@ -44,3 +44,11 @@ class UnverifiedWebhookRequest(NotAuthorized):
 
 class UnexpectedStatusCode(BusyBeaverException):
     pass
+
+
+class ValidationError(BusyBeaverException):
+    status_code = 422
+
+    def __init__(self, error):
+        super().__init__()
+        self.message = error
