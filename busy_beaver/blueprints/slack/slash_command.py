@@ -19,7 +19,7 @@ from busy_beaver.config import (
     MEETUP_GROUP_NAME,
 )
 from busy_beaver.extensions import db
-from busy_beaver.models import GitHubSummaryUser
+from busy_beaver.models import GitHubSummaryUser, SlackInstallation
 from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
@@ -105,8 +105,14 @@ def command_not_found(**data):
 def link_github(**data):
     logger.info("[Busy Beaver] New user. Linking GitHub account.")
     slack_id = data["user_id"]
-    user_record = GitHubSummaryUser.query.filter_by(slack_id=slack_id).first()
+    workspace_id = data["team_id"]
+    slack_installation = SlackInstallation.query.filter_by(
+        workspace_id=workspace_id
+    ).first()
 
+    user_record = GitHubSummaryUser.query.filter_by(
+        slack_id=slack_id, installation_id=slack_installation.id
+    ).first()
     if user_record:
         logger.info("[Busy Beaver] Slack acount already linked to GitHub")
         return make_slack_response(text=ACCOUNT_ALREADY_ASSOCIATED)
@@ -122,8 +128,14 @@ def link_github(**data):
 def relink_github(**data):
     logger.info("[Busy Beaver] Relinking GitHub account.")
     slack_id = data["user_id"]
-    user = GitHubSummaryUser.query.filter_by(slack_id=slack_id).first()
+    workspace_id = data["team_id"]
+    slack_installation = SlackInstallation.query.filter_by(
+        workspace_id=workspace_id
+    ).first()
 
+    user = GitHubSummaryUser.query.filter_by(
+        slack_id=slack_id, installation_id=slack_installation.id
+    ).first()
     if not user:
         logger.info("[Busy Beaver] Slack acount does not have associated GitHub")
         return make_slack_response(text=NO_ASSOCIATED_ACCOUNT)
@@ -137,8 +149,14 @@ def relink_github(**data):
 def disconnect_github(**data):
     logger.info("[Busy Beaver] Disconnecting GitHub account.")
     slack_id = data["user_id"]
-    user = GitHubSummaryUser.query.filter_by(slack_id=slack_id).first()
+    workspace_id = data["team_id"]
+    slack_installation = SlackInstallation.query.filter_by(
+        workspace_id=workspace_id
+    ).first()
 
+    user = GitHubSummaryUser.query.filter_by(
+        slack_id=slack_id, installation_id=slack_installation.id
+    ).first()
     if not user:
         logger.info("[Busy Beaver] Slack acount does not have associated GitHub")
         return make_slack_response(text="No GitHub account associated with profile")

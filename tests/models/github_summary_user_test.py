@@ -3,7 +3,7 @@ import pytest
 from busy_beaver.models import GitHubSummaryUser, SlackInstallation
 
 
-@pytest.mark.wip
+@pytest.mark.unit
 def test_github_summary_user_to_slack_relationship(session):
     installation = SlackInstallation(
         access_token="abc",
