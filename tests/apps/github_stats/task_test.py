@@ -55,7 +55,7 @@ def test_start_post_github_summary_task(
 def patched_slack(patcher):
     def _wrapper(channel_info):
         obj = FakeSlackClient(channel_info=channel_info)
-        return patcher(MODULE_TO_TEST, namespace="chipy_slack", replacement=obj)
+        return patcher(MODULE_TO_TEST, namespace="SlackAdapter", replacement=obj)
 
     return _wrapper
 
@@ -105,6 +105,10 @@ def test_fetch_github_summary_post_to_slack_with_no_users(
     )
 
     # Assert
+    slack_adapter_initalize_args = slack.mock.call_args_list[0]
+    args, kwargs = slack_adapter_initalize_args
+    assert slack_installation.bot_access_token in args
+
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
     assert "does it make a sound" in kwargs["message"]
@@ -140,6 +144,10 @@ def test_fetch_github_summary_post_to_slack_with_no_activity(
     )
 
     # Assert
+    slack_adapter_initalize_args = slack.mock.call_args_list[0]
+    args, kwargs = slack_adapter_initalize_args
+    assert slack_installation.bot_access_token in args
+
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
     assert "does it make a sound" in kwargs["message"]
@@ -179,6 +187,10 @@ def test_fetch_github_summary_post_to_slack_with_activity(
     )
 
     # Assert
+    slack_adapter_initalize_args = slack.mock.call_args_list[0]
+    args, kwargs = slack_adapter_initalize_args
+    assert slack_installation.bot_access_token in args
+
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
     assert "ab" in kwargs["message"]
@@ -208,6 +220,10 @@ def test_post_github_summary_task__integration(
     )
 
     # Assert
+    slack_adapter_initalize_args = slack.mock.call_args_list[0]
+    args, kwargs = slack_adapter_initalize_args
+    assert slack_installation.bot_access_token in args
+
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
     assert "<@user1>" in kwargs["message"]

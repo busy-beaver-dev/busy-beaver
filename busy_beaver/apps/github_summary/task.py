@@ -6,7 +6,7 @@ from typing import List
 from sqlalchemy import and_
 
 from .summary import GitHubUserEvents
-from busy_beaver import chipy_slack
+from busy_beaver.adapters import SlackAdapter
 from busy_beaver.exceptions import ValidationError
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import (
@@ -52,7 +52,10 @@ def start_post_github_summary_task(
 
 @rq.job
 def fetch_github_summary_post_to_slack(installation_id, channel_name, boundary_dt):
-    channel_info = chipy_slack.get_channel_info(channel_name)
+    slack_installation = SlackInstallation.query.get(installation_id)
+    slack = SlackAdapter(slack_installation.bot_access_token)
+
+    channel_info = slack.get_channel_info(channel_name)
     users: List[GitHubSummaryUser] = GitHubSummaryUser.query.filter(
         and_(
             GitHubSummaryUser.installation_id == installation_id,
@@ -76,7 +79,7 @@ def fetch_github_summary_post_to_slack(installation_id, channel_name, boundary_d
             'does it make a sound?" - Zax Rosenberg'
         )
 
-    chipy_slack.post_message(
+    slack.post_message(
         message=message,
         channel_id=channel_info.id,
         unfurl_links=False,

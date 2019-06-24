@@ -19,6 +19,10 @@ class FakeSlackClient:
         if channel_info:
             self.channel_info = channel_info
 
+    def __call__(self, *args, **kwargs):
+        self.mock(*args, **kwargs)
+        return self
+
     def get_channel_info(self, *args, **kwargs):
         self.mock(*args, **kwargs)
         return self.channel_info
