@@ -41,7 +41,7 @@ logger.info("[BusyBeaver] Configure Integrations")
 github = GitHubAdapter(GITHUB_OAUTH_TOKEN)
 kv_store = KeyValueStoreAdapter()
 meetup = MeetupAdapter(MEETUP_API_KEY)
-slack = SlackAdapter(SLACK_TOKEN)
+chipy_slack = SlackAdapter(SLACK_TOKEN)  # Default Workspace -- this is being phased out
 twitter = TwitterAdapter(
     TWITTER_CONSUMER_KEY,
     TWITTER_CONSUMER_SECRET,

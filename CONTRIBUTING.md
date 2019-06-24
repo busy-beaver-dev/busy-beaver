@@ -86,6 +86,7 @@ An in-depth guide can be followed at <a href=docs/development-create-slack-bot/r
    |---|---|---|
    |**SLACK_BOTUSER_OAUTH_TOKEN**|From the Dev-Bot Slack App API page under `Install App > OAuth Tokens for Your Team > Bot User OAuth Access Token`| Value obtained after - [Create a Slack Dev-Bot - Define App OAuth and Permissions](docs/development-create-slack-bot/readme.md#Define-App-OAuth-and-Permissions)|
    |**SLACK_SIGNING_SECRET**|From the Dev-Bot Slack App API page under `Basic Information > App Credentials > Signing Secret`| Value obtained after - [Create a Slack Dev-Bot - Define App OAuth and Permissions](docs/development-create-slack-bot/readme.md#Define-App-OAuth-and-Permissions)|
+   |**SLACK_DEV_WORKSPACE_ID**|From Browser Console; follow [instructions from StackOverflow](https://stackoverflow.com/a/44883343/4326704)
    |**NGROK_BASE_URI**|From the **ngrok** instance forwarding address|Value obtained after - [Create a Slack Dev-Bot - Enable Event Subscription](docs/development-create-slack-bot/readme.md#Enable-Event-Subscription)|
 
    Note: The **NGROK_BASE_URI** and **Slack Event Subscription > Request URL** values may need to be updated each time a new **ngrok** instance is created or if the address is expired.

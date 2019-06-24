@@ -7,7 +7,7 @@ MODULE_TO_TEST = "busy_beaver.blueprints.slack.event_subscription"
 @pytest.fixture
 def patched_slack(patcher):
     obj = FakeSlackClient()
-    return patcher(MODULE_TO_TEST, namespace="slack", replacement=obj)
+    return patcher(MODULE_TO_TEST, namespace="chipy_slack", replacement=obj)
 
 
 @pytest.mark.integration

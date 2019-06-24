@@ -4,7 +4,7 @@ from flask import jsonify, request
 from flask.views import MethodView
 
 from .slash_command import HELP_TEXT
-from busy_beaver import slack
+from busy_beaver import chipy_slack
 
 logger = logging.getLogger(__name__)
 
@@ -34,5 +34,5 @@ class SlackEventSubscriptionResource(MethodView):
 
         dm_to_bot = event["channel_type"] == "im"
         if event["type"] == "message" and dm_to_bot:
-            slack.post_message(HELP_TEXT, channel_id=event["channel"])
+            chipy_slack.post_message(HELP_TEXT, channel_id=event["channel"])
         return jsonify(None)

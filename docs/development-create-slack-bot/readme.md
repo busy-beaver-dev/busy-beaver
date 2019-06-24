@@ -165,5 +165,6 @@ Currently we are moving from a single-tenant application to a multi-tenant app t
 
 We have a whitelist of Slack Workspace IDs (`team_id`, in Slack speak) that can use all features of Busy Beaver. We recommend adding your development workspace to the whitelist in `config.py`
 
-1. Find your Workspace ID using this helpful [StackOverlfow post]https://stackoverflow.com/a/44883343/4326704)
+1. Find your Slack Workspace ID; follow the instruction in this helpful [StackOverlfow post]https://stackoverflow.com/a/44883343/4326704)
 1. Add the identifer to the `FULL_INSTALLATION_WORKSPACE_IDS` list defined in `config.py`
+1. Add this variable to the .env file, `SLACK_DEV_WORKSPACE_ID`

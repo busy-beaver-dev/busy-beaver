@@ -37,7 +37,7 @@ def test_generate_upcoming_events_message(session):
 @pytest.fixture
 def patched_slack(patcher):
     obj = FakeSlackClient()
-    return patcher(MODULE_TO_TEST, namespace="slack", replacement=obj)
+    return patcher(MODULE_TO_TEST, namespace="chipy_slack", replacement=obj)
 
 
 @pytest.mark.unit

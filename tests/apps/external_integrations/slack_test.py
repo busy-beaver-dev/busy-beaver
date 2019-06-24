@@ -5,6 +5,7 @@ from busy_beaver.apps.external_integrations.oauth_providers.slack import SlackOA
 from busy_beaver.apps.external_integrations.workflow import (
     slack_verify_callback_and_save_access_tokens_in_database,
 )
+from busy_beaver.factories.slack import SlackInstallationFactory
 from busy_beaver.models import SlackInstallation
 
 
@@ -54,7 +55,9 @@ def test_slack_oauth_flow_reinstallation(session):
     # Arrange
     # Create installation in database
     workspace_id = "TXXXXXXXXX"
-    installation = SlackInstallation(workspace_id=workspace_id, workspace_name="Test")
+    installation = SlackInstallationFactory(
+        workspace_id=workspace_id, workspace_name="Test"
+    )
     session.add(installation)
     session.commit()
 

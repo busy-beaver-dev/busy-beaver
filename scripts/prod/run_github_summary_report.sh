@@ -6,4 +6,4 @@ curl https://busybeaver.sivji.com/poll/github-summary \
     -X POST \
     -H "Content-Type: application/json" \
     -H "Authorization: token ${BUSY_BEAVER_API_TOKEN}" \
-    -d '{"channel": "busy-beaver"}'
+    -d '{"workspace_id": "T093FC1RC", "channel": "busy-beaver"}'

@@ -7,9 +7,10 @@ help: ## This help
 build: ## rebuild containers
 	docker-compose build
 
-up: ## start local dev environment
+up: ## start local dev environment; run migrations; populate database
 	docker-compose up -d
 	make migrate-up
+	make populate-db
 
 down: ## stop local dev environment
 	docker-compose down
@@ -31,6 +32,12 @@ migrate-up: ## run all migration
 
 migrate-down: ## roll back last migration
 	docker-compose exec app flask db downgrade
+
+dropdb:  ## drop all tables in development database
+	psql -d postgresql://bbdev_user:bbdev_password@localhost:9432/busy-beaver -f ./scripts/database/drop_all_tables.sql
+
+populate-db:  ## populate database
+	docker-compose exec app python scripts/dev/populate_database.py
 
 requirements: ## generate requirements.txt using piptools
 	pip-compile --output-file=requirements.txt requirements.in

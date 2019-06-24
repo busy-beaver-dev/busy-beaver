@@ -65,7 +65,7 @@ def patched_twitter(patcher):
 @pytest.fixture
 def patched_slack(patcher):
     obj = FakeSlackClient()
-    return patcher(MODULE_TO_TEST, namespace="slack", replacement=obj)
+    return patcher(MODULE_TO_TEST, namespace="chipy_slack", replacement=obj)
 
 
 # Technically it's an integration test (tests more than one function)

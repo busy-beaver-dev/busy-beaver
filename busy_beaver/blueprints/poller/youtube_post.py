@@ -4,7 +4,7 @@ from flask import request
 from flask.views import MethodView
 from sqlalchemy import desc
 
-from busy_beaver import config, slack
+from busy_beaver import config, chipy_slack
 from busy_beaver.adapters.youtube import YouTubeAdapter
 from busy_beaver.toolbox import make_response
 from busy_beaver.extensions import db
@@ -68,4 +68,4 @@ class YouTubePollingResource(MethodView):
         db.session.add(youtube_video)
         db.session.commit()
         slack_msg = f"A new video has been released: {video_url}"
-        slack.post_message(slack_msg, channel=self.channel)
+        chipy_slack.post_message(slack_msg, channel=self.channel)
