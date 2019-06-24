@@ -69,15 +69,15 @@ class SlackSlashCommandDispatchResource(MethodView):
 #########################
 # Upcoming Event Schedule
 #########################
-@limit_to(workspace_ids=FULL_INSTALLATION_WORKSPACE_IDS)
 @slash_command_dispatcher.on("next")
+@limit_to(workspace_ids=FULL_INSTALLATION_WORKSPACE_IDS)
 def next_event(**data):
     attachment = generate_next_event_message(MEETUP_GROUP_NAME)
     return make_slack_response(attachments=attachment)
 
 
-@limit_to(workspace_ids=FULL_INSTALLATION_WORKSPACE_IDS)
 @slash_command_dispatcher.on("events")
+@limit_to(workspace_ids=FULL_INSTALLATION_WORKSPACE_IDS)
 def upcoming_events(**data):
     blocks = generate_upcoming_events_message(MEETUP_GROUP_NAME, count=5)
     return make_slack_response(blocks=blocks)
