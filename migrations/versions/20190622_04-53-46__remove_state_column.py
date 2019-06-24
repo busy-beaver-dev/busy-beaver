@@ -1,4 +1,4 @@
-"""remove state column and make other columns required
+"""remove state column
 
 Revision ID: 05fd1af68aa4
 Revises: a6df75102d6e
