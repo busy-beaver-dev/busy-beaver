@@ -119,6 +119,7 @@ def link_github(**data):
 
     user = GitHubSummaryUser()
     user.slack_id = slack_id
+    user.installation_id = slack_installation.id
     user = add_tracking_identifer_and_save_record(user)
     attachment = create_github_account_attachment(user.github_state)
     return make_slack_response(text=VERIFY_ACCOUNT, attachments=attachment)
