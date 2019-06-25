@@ -144,15 +144,6 @@ def create_fake_background_task():
     yield _create_fake_background_task
 
 
-@pytest.fixture
-def create_slack_installation(fm):
-    def _new_installation(workspace_id):
-        slack_installation = fm.SlackInstallationFactory(workspace_id=workspace_id)
-        return slack_installation
-
-    return _new_installation
-
-
 @pytest.fixture(name="fm")
 def factory_manager(session):
     yield FactoryManager(session)
