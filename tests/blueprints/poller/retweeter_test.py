@@ -33,7 +33,7 @@ def test_poll_twitter_smoke_test(
     caplog, client, session, factory, patched_background_task
 ):
     # Arrange
-    factory.ApiUserFactory(username="test_user", token="abcd", role="admin")
+    factory.ApiUser(username="test_user", token="abcd", role="admin")
 
     # Act
     client.post(
@@ -55,7 +55,7 @@ def test_poll_twitter_endpoint_no_token(
     client, session, factory, patched_retweeter_trigger
 ):
     # Arrange
-    factory.ApiUserFactory(username="test_user", token="abcd", role="user")
+    factory.ApiUser(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/twitter")
@@ -69,7 +69,7 @@ def test_poll_twitter_endpoint_incorrect_token(
     client, session, factory, patched_retweeter_trigger
 ):
     # Arrange
-    factory.ApiUserFactory(username="test_user", token="abcd", role="user")
+    factory.ApiUser(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/twitter")
@@ -83,7 +83,7 @@ def test_poll_twitter_endpoint_empty_body(
     caplog, client, session, factory, patched_retweeter_trigger
 ):
     # Arrange
-    factory.ApiUserFactory(username="test_user", token="abcd", role="admin")
+    factory.ApiUser(username="test_user", token="abcd", role="admin")
 
     # Act
     result = client.post("/poll/twitter", headers={"Authorization": "token abcd"})
@@ -97,7 +97,7 @@ def test_poll_twitter_endpoint_success(
     caplog, client, session, factory, patched_retweeter_trigger
 ):
     # Arrange
-    factory.ApiUserFactory(username="test_user", token="abcd", role="admin")
+    factory.ApiUser(username="test_user", token="abcd", role="admin")
     mock = patched_retweeter_trigger
 
     # Act

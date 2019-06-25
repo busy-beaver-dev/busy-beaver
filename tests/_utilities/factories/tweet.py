@@ -1,11 +1,11 @@
 import factory
-from busy_beaver.adapters.twitter import Tweet
+from busy_beaver.adapters.twitter import Tweet as model
 
 
-def TweetFactory(session):
+def Tweet(session):
     class _TweetFactory(factory.Factory):
         class Meta:
-            model = Tweet
+            model = model
 
         id = factory.Sequence(lambda n: n)
 

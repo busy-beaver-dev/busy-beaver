@@ -99,7 +99,7 @@ def test_slack_command_empty_command(
 def test_command_next_workspace_not_allowed(
     session, factory, generate_slash_command_request
 ):
-    factory.EventFactory.create_batch(size=10)
+    factory.Event.create_batch(size=10)
     data = generate_slash_command_request("next", team_id="not allowed")
 
     result = next_event(**data)
@@ -111,7 +111,7 @@ def test_command_next_workspace_not_allowed(
 def test_command_next_workspace_allowed(
     session, factory, generate_slash_command_request
 ):
-    factory.EventFactory.create_batch(size=10)
+    factory.Event.create_batch(size=10)
     workspace_id = FULL_INSTALLATION_WORKSPACE_IDS[0]
     data = generate_slash_command_request("next", team_id=workspace_id)
 
@@ -127,7 +127,7 @@ def test_command_next_workspace_allowed(
 def test_command_events_workspace_not_allowed(
     session, factory, generate_slash_command_request
 ):
-    factory.EventFactory.create_batch(size=10)
+    factory.Event.create_batch(size=10)
     data = generate_slash_command_request("events", team_id="not_allowed")
 
     result = upcoming_events(**data)
@@ -139,7 +139,7 @@ def test_command_events_workspace_not_allowed(
 def test_command_events_workspace_allowed(
     session, factory, generate_slash_command_request
 ):
-    factory.EventFactory.create_batch(size=10)
+    factory.Event.create_batch(size=10)
     workspace_id = FULL_INSTALLATION_WORKSPACE_IDS[0]
     data = generate_slash_command_request("events", team_id=workspace_id)
 
@@ -178,7 +178,7 @@ def test_command_not_found(generate_slash_command_request):
 @pytest.mark.unit
 def test_connect_command_new_user(session, factory, generate_slash_command_request):
     workspace_id = "test_id"
-    factory.SlackInstallationFactory(workspace_id=workspace_id)
+    factory.SlackInstallation(workspace_id=workspace_id)
     data = generate_slash_command_request(
         "connect", user_id="new_user", team_id=workspace_id
     )
@@ -194,7 +194,7 @@ def test_connect_command_existing_user(
     session, factory, add_user, generate_slash_command_request
 ):
     workspace_id = "test_id"
-    slack_installation = factory.SlackInstallationFactory(workspace_id=workspace_id)
+    slack_installation = factory.SlackInstallation(workspace_id=workspace_id)
     add_user(username="existing_user", installation=slack_installation)
     data = generate_slash_command_request(
         "connect", user_id="existing_user", team_id=workspace_id
@@ -208,7 +208,7 @@ def test_connect_command_existing_user(
 @pytest.mark.unit
 def test_reconnect_command_new_user(session, factory, generate_slash_command_request):
     workspace_id = "test_id"
-    factory.SlackInstallationFactory(workspace_id=workspace_id)
+    factory.SlackInstallation(workspace_id=workspace_id)
     data = generate_slash_command_request(
         "reconnect", user_id="new_user", team_id=workspace_id
     )
@@ -223,7 +223,7 @@ def test_reconnect_command_existing_user(
     session, factory, generate_slash_command_request, add_user
 ):
     workspace_id = "test_id"
-    slack_installation = factory.SlackInstallationFactory(workspace_id=workspace_id)
+    slack_installation = factory.SlackInstallation(workspace_id=workspace_id)
     add_user(username="existing_user", installation=slack_installation)
     data = generate_slash_command_request(
         "reconnect", user_id="existing_user", team_id=workspace_id
@@ -240,7 +240,7 @@ def test_disconnect_command_unregistered_user(
     session, factory, generate_slash_command_request
 ):
     workspace_id = "test_id"
-    factory.SlackInstallationFactory(workspace_id=workspace_id)
+    factory.SlackInstallation(workspace_id=workspace_id)
     data = generate_slash_command_request("disconnect", team_id=workspace_id)
 
     result = disconnect_github(**data)
@@ -253,7 +253,7 @@ def test_disconnect_command_registered_user(
     session, factory, generate_slash_command_request, add_user
 ):
     workspace_id = "test_id"
-    slack_installation = factory.SlackInstallationFactory(workspace_id=workspace_id)
+    slack_installation = factory.SlackInstallation(workspace_id=workspace_id)
     user = add_user(username="existing_user", installation=slack_installation)
     data = generate_slash_command_request(
         "disconnect", user_id="existing_user", team_id=workspace_id

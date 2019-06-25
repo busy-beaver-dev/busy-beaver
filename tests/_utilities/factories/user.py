@@ -1,12 +1,15 @@
 import factory
-from .slack import SlackInstallationFactory
-from busy_beaver.models import ApiUser, GitHubSummaryUser
+from .slack import SlackInstallation
+from busy_beaver.models import (
+    ApiUser as api_user_model,
+    GitHubSummaryUser as github_summary_model,
+)
 
 
-def ApiUserFactory(session):
+def ApiUser(session):
     class _ApiUserFactory(factory.alchemy.SQLAlchemyModelFactory):
         class Meta:
-            model = ApiUser
+            model = api_user_model
             sqlalchemy_session_persistence = "commit"
             sqlalchemy_session = session
 
@@ -17,10 +20,10 @@ def ApiUserFactory(session):
     return _ApiUserFactory
 
 
-def GitHubSummaryUserFactory(session):
+def GitHubSummaryUser(session):
     class _GitHubSummaryUserFactory(factory.alchemy.SQLAlchemyModelFactory):
         class Meta:
-            model = GitHubSummaryUser
+            model = github_summary_model
             sqlalchemy_session_persistence = "commit"
             sqlalchemy_session = session
 
@@ -29,6 +32,6 @@ def GitHubSummaryUserFactory(session):
         github_username = "github_user"
         github_state = ""
         github_access_token = factory.Faker("uuid4")
-        installation = factory.SubFactory(SlackInstallationFactory(session))
+        installation = factory.SubFactory(SlackInstallation(session))
 
     return _GitHubSummaryUserFactory

@@ -29,7 +29,7 @@ def patched_background_task(patcher, create_fake_background_task):
 def test_start_post_tweet_task(session, factory, patched_background_task):
     """Test trigger function"""
     # Arrange
-    api_user = factory.ApiUserFactory(username="admin")
+    api_user = factory.ApiUser(username="admin")
     channel_name = "test-channel"
 
     # Act
@@ -82,9 +82,9 @@ def test_post_tweets_to_slack(
     # Arrange
     kv_store.put_int(LAST_TWEET_KEY, 0)
     tweets = [
-        factory.TweetFactory(id=3, created_at=utc_now_minus(timedelta())),
-        factory.TweetFactory(id=2, created_at=utc_now_minus(timedelta(days=1))),
-        factory.TweetFactory(id=1, created_at=utc_now_minus(timedelta(days=1))),
+        factory.Tweet(id=3, created_at=utc_now_minus(timedelta())),
+        factory.Tweet(id=2, created_at=utc_now_minus(timedelta(days=1))),
+        factory.Tweet(id=1, created_at=utc_now_minus(timedelta(days=1))),
     ]
     patched_twitter(tweets)
 

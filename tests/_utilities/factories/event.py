@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta
 import factory
-from busy_beaver.models import Event
+from busy_beaver.models import Event as model
 
 
-def EventFactory(session):
+def Event(session):
     class _EventFactory(factory.alchemy.SQLAlchemyModelFactory):
         class Meta:
-            model = Event
+            model = model
             sqlalchemy_session_persistence = "commit"
             sqlalchemy_session = session
 

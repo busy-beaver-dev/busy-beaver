@@ -3,7 +3,7 @@ from busy_beaver.toolbox.slack_block_kit import Context, Divider, Image, Section
 
 
 def test_upcoming_event(factory):
-    event = factory.EventDetailsFactory()
+    event = factory.EventDetails()
 
     result = UpcomingEvent(event)
 
@@ -14,7 +14,7 @@ def test_upcoming_event(factory):
 
 
 def test_upcoming_event_to_dict(factory):
-    event = factory.EventDetailsFactory()
+    event = factory.EventDetails()
 
     result = UpcomingEvent(event).to_dict()
 
@@ -22,7 +22,7 @@ def test_upcoming_event_to_dict(factory):
 
 
 def test_upcoming_event_list(factory):
-    events = factory.EventDetailsFactory.create_batch(size=5)
+    events = factory.EventDetails.create_batch(size=5)
 
     result = UpcomingEventList(events, group_name="ChiPy", image_url="url")
 

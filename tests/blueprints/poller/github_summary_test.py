@@ -18,7 +18,7 @@ def test_github_summary_endpoint_no_token(
     client, session, factory, patched_post_github_summary_trigger
 ):
     # Arrange
-    factory.ApiUserFactory(username="test_user", token="abcd", role="user")
+    factory.ApiUser(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/github-summary")
@@ -32,7 +32,7 @@ def test_github_summary_endpoint_incorrect_token(
     client, session, factory, patched_post_github_summary_trigger
 ):
     # Arrange
-    factory.ApiUserFactory(username="test_user", token="abcd", role="user")
+    factory.ApiUser(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/github-summary")
@@ -46,7 +46,7 @@ def test_github_summary_endpoint_empty_body(
     caplog, client, session, factory, patched_post_github_summary_trigger
 ):
     # Arrange
-    factory.ApiUserFactory(username="test_user", token="abcd", role="admin")
+    factory.ApiUser(username="test_user", token="abcd", role="admin")
 
     # Act
     result = client.post(
@@ -62,8 +62,8 @@ def test_github_summary_endpoint_success(
     caplog, client, session, factory, patched_post_github_summary_trigger
 ):
     # Arrange
-    factory.ApiUserFactory(username="test_user", token="abcd", role="admin")
-    factory.SlackInstallationFactory(workspace_id="abc")
+    factory.ApiUser(username="test_user", token="abcd", role="admin")
+    factory.SlackInstallation(workspace_id="abc")
     mock = patched_post_github_summary_trigger
 
     # Act

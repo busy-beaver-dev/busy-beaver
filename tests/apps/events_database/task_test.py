@@ -27,7 +27,7 @@ def patched_background_task(patcher, create_fake_background_task):
 def test_start_add_events_task(session, factory, patched_background_task):
     """Test trigger function"""
     # Arrange
-    api_user = factory.ApiUserFactory(username="admin")
+    api_user = factory.ApiUser(username="admin")
 
     # Act
     start_sync_event_database_task(api_user)
@@ -58,7 +58,7 @@ def test_add_all_events_to_database(session, factory, patched_meetup):
     THEN: add all events to database
     """
     # Arrange
-    events = factory.EventDetailsFactory.create_batch(size=20)
+    events = factory.EventDetails.create_batch(size=20)
     patched_meetup(events=events)
 
     # Act
@@ -78,13 +78,11 @@ def test_update_all_events_in_database(session, factory, patched_meetup):
     """
     # Arrange
     num_events = 20
-    database_events = factory.EventFactory.create_batch(size=num_events)
+    database_events = factory.Event.create_batch(size=num_events)
 
     fetched_events = []
     for event in database_events:
-        fetched_events.append(
-            factory.EventDetailsFactory(id=event.remote_id, venue="TBD")
-        )
+        fetched_events.append(factory.EventDetails(id=event.remote_id, venue="TBD"))
     patched_meetup(events=fetched_events)
 
     # Act
@@ -106,7 +104,7 @@ def test_delete_all_events_in_database(session, factory, patched_meetup):
     """
     # Arrange
     num_events = 20
-    factory.EventFactory.create_batch(size=num_events)
+    factory.Event.create_batch(size=num_events)
 
     patched_meetup(events=[])
 
@@ -128,13 +126,11 @@ def test_sync_database(session, factory, patched_meetup):
     THEN: table is synced with fetched event
     """
     # Arrange
-    event_to_update = factory.EventFactory()
-    event_to_delete = factory.EventFactory()
+    event_to_update = factory.Event()
+    event_to_delete = factory.Event()
 
-    updated_event = factory.EventDetailsFactory(
-        id=event_to_update.remote_id, venue="TBD"
-    )
-    new_events = factory.EventDetailsFactory.create_batch(size=5)
+    updated_event = factory.EventDetails(id=event_to_update.remote_id, venue="TBD")
+    new_events = factory.EventDetails.create_batch(size=5)
     fetched_events = new_events + [updated_event]
     patched_meetup(events=fetched_events)
 

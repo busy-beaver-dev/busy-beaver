@@ -1,18 +1,18 @@
-from .event import EventFactory
-from .event_details import EventDetailsFactory
-from .slack import SlackInstallationFactory
-from .tweet import TweetFactory
-from .user import ApiUserFactory, GitHubSummaryUserFactory
+from .event import Event
+from .event_details import EventDetails
+from .slack import SlackInstallation
+from .tweet import Tweet
+from .user import ApiUser, GitHubSummaryUser
 
 
 class FactoryManager:
     known_factories = [
-        ApiUserFactory,
-        EventFactory,
-        EventDetailsFactory,
-        GitHubSummaryUserFactory,
-        SlackInstallationFactory,
-        TweetFactory,
+        ApiUser,
+        Event,
+        EventDetails,
+        GitHubSummaryUser,
+        SlackInstallation,
+        Tweet,
     ]
 
     def __init__(self, session):

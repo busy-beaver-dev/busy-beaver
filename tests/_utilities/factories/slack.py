@@ -1,11 +1,11 @@
 import factory
-from busy_beaver.models import SlackInstallation
+from busy_beaver.models import SlackInstallation as model
 
 
-def SlackInstallationFactory(session):
+def SlackInstallation(session):
     class _SlackInstallationFactory(factory.alchemy.SQLAlchemyModelFactory):
         class Meta:
-            model = SlackInstallation
+            model = model
             sqlalchemy_session_persistence = "commit"
             sqlalchemy_session = session
 

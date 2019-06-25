@@ -54,7 +54,7 @@ def test_slack_oauth_flow_reinstallation(session, factory):
     # Arrange
     # Create installation in database
     workspace_id = "TXXXXXXXXX"
-    installation = factory.SlackInstallationFactory(
+    installation = factory.SlackInstallation(
         workspace_id=workspace_id, workspace_name="Test"
     )
 

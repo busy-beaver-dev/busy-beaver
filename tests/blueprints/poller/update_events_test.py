@@ -35,7 +35,7 @@ def test_poll_twitter_smoke_test(
     caplog, client, session, factory, patched_background_task
 ):
     # Arrange
-    factory.ApiUserFactory(username="test_user", token="abcd", role="admin")
+    factory.ApiUser(username="test_user", token="abcd", role="admin")
 
     # Act
     client.post("/poll/sync-event-database", headers={"Authorization": "token abcd"})
@@ -51,7 +51,7 @@ def test_poll_twitter_smoke_test(
 @pytest.mark.unit
 def test_poll_events_endpoint_no_token(client, session, factory):
     # Arrange
-    factory.ApiUserFactory(username="test_user", token="abcd", role="user")
+    factory.ApiUser(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/sync-event-database")
@@ -63,7 +63,7 @@ def test_poll_events_endpoint_no_token(client, session, factory):
 @pytest.mark.unit
 def test_poll_events_endpoint_incorrect_token(client, session, factory):
     # Arrange
-    factory.ApiUserFactory(username="test_user", token="abcd", role="user")
+    factory.ApiUser(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/sync-event-database")
@@ -77,7 +77,7 @@ def test_poll_events_endpoint_success(
     client, session, factory, patched_update_events_trigger
 ):
     # Arrange
-    factory.ApiUserFactory(username="test_user", token="abcd", role="admin")
+    factory.ApiUser(username="test_user", token="abcd", role="admin")
 
     # Act
     result = client.post(

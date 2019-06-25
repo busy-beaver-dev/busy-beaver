@@ -11,9 +11,7 @@ import pytest
 @pytest.mark.freeze_time("2019-01-05")
 def test_generate_summary(session, factory):
     # Arrange
-    user = factory.GitHubSummaryUserFactory(
-        slack_id="alysivji", github_username="alysivji"
-    )
+    user = factory.GitHubSummaryUser(slack_id="alysivji", github_username="alysivji")
     user_events = GitHubUserEvents(user, utc_now_minus(timedelta(days=1)))
 
     # Act
@@ -26,7 +24,7 @@ def test_generate_summary(session, factory):
 @pytest.mark.freeze_time("2019-06-20")
 def test_generates_empty_summary_if_no_events_found(session, factory):
     # Arrange
-    user = factory.GitHubSummaryUserFactory(
+    user = factory.GitHubSummaryUser(
         slack_id="raymondberg", github_username="raymondberg"
     )
     user_events = GitHubUserEvents(user, utc_now_minus(timedelta(days=1)))

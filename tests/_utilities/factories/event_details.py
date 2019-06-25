@@ -1,12 +1,12 @@
 from datetime import datetime, timedelta
 import factory
-from busy_beaver.adapters.meetup import EventDetails
+from busy_beaver.adapters.meetup import EventDetails as model
 
 
-def EventDetailsFactory(session):
+def EventDetails(session):
     class _EventDetailsFactory(factory.Factory):
         class Meta:
-            model = EventDetails
+            model = model
 
         id = factory.Faker("uuid4")
         name = "ChiPy"
