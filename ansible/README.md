@@ -54,6 +54,7 @@ aws_secret_access_key = []
 
 ## Deployment Workflow
 
+1. Set environment variables in Ansible control environment: `HEALTHCHECK_GITHUB_SUMMARY`, `HEALTHCHECK_TWITTER_POLLER`, `HEALTHCHECK_SYNC_EVENTS_DATABASE`, `HEALTHCHECK_POST_UPCOMING_EVENTS`; grab uuid values from healthchecks.io
 1. `pip install ansible` installed the machine you will be deploying from
-2. Check to see what the ansible playbook would do, we can run `ansible-playbook -i ./hosts site.yml --ask-sudo-pass -C`
-3. Remove `-C` option to run playbook to deploy app
+1. Check to see what the ansible playbook would do, we can run `ansible-playbook -i ./hosts site.yml --ask-sudo-pass -C`
+1. Remove `-C` option to run playbook to deploy app
