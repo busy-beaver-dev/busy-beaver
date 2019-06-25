@@ -10,8 +10,8 @@ MODULE_TO_TEST = "busy_beaver.apps.upcoming_events.workflow"
 
 
 @pytest.mark.unit
-def test_generate_next_event(fm):
-    fm.EventFactory.create_batch(size=1)
+def test_generate_next_event(session, factory):
+    factory.EventFactory.create_batch(size=1)
 
     result = generate_next_event_message("ChiPy")
 
@@ -21,8 +21,8 @@ def test_generate_next_event(fm):
 
 
 @pytest.mark.unit
-def test_generate_upcoming_events_message(fm):
-    fm.EventFactory.create_batch(size=10)
+def test_generate_upcoming_events_message(session, factory):
+    factory.EventFactory.create_batch(size=10)
 
     result = generate_upcoming_events_message("ChiPy", count=1)
 
@@ -36,9 +36,9 @@ def patched_slack(patcher):
 
 
 @pytest.mark.unit
-def test_post_upcoming_events_message_to_slack(mocker, fm, patched_slack):
+def test_post_upcoming_events_message_to_slack(mocker, session, factory, patched_slack):
     # Arrange
-    fm.EventFactory.create_batch(size=10)
+    factory.EventFactory.create_batch(size=10)
 
     # Act
     post_upcoming_events_message_to_slack("announcements", "ChiPy", count=4)

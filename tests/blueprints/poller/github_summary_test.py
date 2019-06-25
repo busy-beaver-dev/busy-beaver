@@ -15,10 +15,10 @@ def patched_post_github_summary_trigger(mocker, patcher):
 
 @pytest.mark.unit
 def test_github_summary_endpoint_no_token(
-    client, session, fm, patched_post_github_summary_trigger
+    client, session, factory, patched_post_github_summary_trigger
 ):
     # Arrange
-    fm.ApiUserFactory(username="test_user", token="abcd", role="user")
+    factory.ApiUserFactory(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/github-summary")
@@ -29,10 +29,10 @@ def test_github_summary_endpoint_no_token(
 
 @pytest.mark.unit
 def test_github_summary_endpoint_incorrect_token(
-    client, session, fm, patched_post_github_summary_trigger
+    client, session, factory, patched_post_github_summary_trigger
 ):
     # Arrange
-    fm.ApiUserFactory(username="test_user", token="abcd", role="user")
+    factory.ApiUserFactory(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/github-summary")
@@ -43,10 +43,10 @@ def test_github_summary_endpoint_incorrect_token(
 
 @pytest.mark.unit
 def test_github_summary_endpoint_empty_body(
-    caplog, client, session, fm, patched_post_github_summary_trigger
+    caplog, client, session, factory, patched_post_github_summary_trigger
 ):
     # Arrange
-    fm.ApiUserFactory(username="test_user", token="abcd", role="admin")
+    factory.ApiUserFactory(username="test_user", token="abcd", role="admin")
 
     # Act
     result = client.post(
@@ -59,11 +59,11 @@ def test_github_summary_endpoint_empty_body(
 
 @pytest.mark.unit
 def test_github_summary_endpoint_success(
-    caplog, client, session, fm, patched_post_github_summary_trigger
+    caplog, client, session, factory, patched_post_github_summary_trigger
 ):
     # Arrange
-    fm.ApiUserFactory(username="test_user", token="abcd", role="admin")
-    fm.SlackInstallationFactory(workspace_id="abc")
+    factory.ApiUserFactory(username="test_user", token="abcd", role="admin")
+    factory.SlackInstallationFactory(workspace_id="abc")
     mock = patched_post_github_summary_trigger
 
     # Act

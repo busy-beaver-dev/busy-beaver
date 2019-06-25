@@ -24,10 +24,10 @@ def patched_background_task(patcher, create_fake_background_task):
 
 
 @pytest.mark.unit
-def test_start_add_events_task(session, fm, patched_background_task):
+def test_start_add_events_task(session, factory, patched_background_task):
     """Test trigger function"""
     # Arrange
-    api_user = fm.ApiUserFactory(username="admin")
+    api_user = factory.ApiUserFactory(username="admin")
 
     # Act
     start_sync_event_database_task(api_user)
@@ -51,14 +51,14 @@ def patched_meetup(patcher):
 
 
 @pytest.mark.integration
-def test_add_all_events_to_database(fm, patched_meetup):
+def test_add_all_events_to_database(session, factory, patched_meetup):
     """
     GIVEN: Empty database
     WHEN: add_events_to_database is called
     THEN: add all events to database
     """
     # Arrange
-    events = fm.EventDetailsFactory.create_batch(size=20)
+    events = factory.EventDetailsFactory.create_batch(size=20)
     patched_meetup(events=events)
 
     # Act
@@ -70,7 +70,7 @@ def test_add_all_events_to_database(fm, patched_meetup):
 
 
 @pytest.mark.integration
-def test_update_all_events_in_database(fm, patched_meetup):
+def test_update_all_events_in_database(session, factory, patched_meetup):
     """
     GIVEN: table contains upcoming events, adapter has same events with updated details
     WHEN: add_events_to_database is called
@@ -78,11 +78,13 @@ def test_update_all_events_in_database(fm, patched_meetup):
     """
     # Arrange
     num_events = 20
-    database_events = fm.EventFactory.create_batch(size=num_events)
+    database_events = factory.EventFactory.create_batch(size=num_events)
 
     fetched_events = []
     for event in database_events:
-        fetched_events.append(fm.EventDetailsFactory(id=event.remote_id, venue="TBD"))
+        fetched_events.append(
+            factory.EventDetailsFactory(id=event.remote_id, venue="TBD")
+        )
     patched_meetup(events=fetched_events)
 
     # Act
@@ -96,7 +98,7 @@ def test_update_all_events_in_database(fm, patched_meetup):
 
 
 @pytest.mark.integration
-def test_delete_all_events_in_database(fm, patched_meetup):
+def test_delete_all_events_in_database(session, factory, patched_meetup):
     """
     GIVEN: table contains upcoming events, adapter has no events
     WHEN: add_events_to_database is called
@@ -104,7 +106,7 @@ def test_delete_all_events_in_database(fm, patched_meetup):
     """
     # Arrange
     num_events = 20
-    fm.EventFactory.create_batch(size=num_events)
+    factory.EventFactory.create_batch(size=num_events)
 
     patched_meetup(events=[])
 
@@ -118,7 +120,7 @@ def test_delete_all_events_in_database(fm, patched_meetup):
 
 @pytest.mark.integration
 @pytest.mark.current
-def test_sync_database(session, fm, patched_meetup):
+def test_sync_database(session, factory, patched_meetup):
     """
     GIVEN: table has upcoming events, fetched events contains events
             that need to be: added, updated, deleted
@@ -126,11 +128,13 @@ def test_sync_database(session, fm, patched_meetup):
     THEN: table is synced with fetched event
     """
     # Arrange
-    event_to_update = fm.EventFactory()
-    event_to_delete = fm.EventFactory()
+    event_to_update = factory.EventFactory()
+    event_to_delete = factory.EventFactory()
 
-    updated_event = fm.EventDetailsFactory(id=event_to_update.remote_id, venue="TBD")
-    new_events = fm.EventDetailsFactory.create_batch(size=5)
+    updated_event = factory.EventDetailsFactory(
+        id=event_to_update.remote_id, venue="TBD"
+    )
+    new_events = factory.EventDetailsFactory.create_batch(size=5)
     fetched_events = new_events + [updated_event]
     patched_meetup(events=fetched_events)
 

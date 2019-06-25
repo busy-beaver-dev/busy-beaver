@@ -131,6 +131,6 @@ def create_fake_background_task():
     yield _create_fake_background_task
 
 
-@pytest.fixture(name="fm")
+@pytest.fixture(name="factory")
 def factory_manager(session):
     yield FactoryManager(session)

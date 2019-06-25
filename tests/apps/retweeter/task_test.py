@@ -26,10 +26,10 @@ def patched_background_task(patcher, create_fake_background_task):
 
 
 @pytest.mark.unit
-def test_start_post_tweet_task(session, fm, patched_background_task):
+def test_start_post_tweet_task(session, factory, patched_background_task):
     """Test trigger function"""
     # Arrange
-    api_user = fm.ApiUserFactory(username="admin")
+    api_user = factory.ApiUserFactory(username="admin")
     channel_name = "test-channel"
 
     # Act
@@ -71,7 +71,9 @@ def patched_slack(patcher):
 # but it's a unit test that should be around a class
 # TODO make the retweeter module into a class
 @pytest.mark.integration
-def test_post_tweets_to_slack(mocker, fm, kv_store, patched_twitter, patched_slack):
+def test_post_tweets_to_slack(
+    mocker, factory, kv_store, patched_twitter, patched_slack
+):
     """
     GIVEN: 3 tweets to post (2 within the window)
     WHEN: post_tweets_to_slack is called
@@ -80,9 +82,9 @@ def test_post_tweets_to_slack(mocker, fm, kv_store, patched_twitter, patched_sla
     # Arrange
     kv_store.put_int(LAST_TWEET_KEY, 0)
     tweets = [
-        fm.TweetFactory(id=3, created_at=utc_now_minus(timedelta())),
-        fm.TweetFactory(id=2, created_at=utc_now_minus(timedelta(days=1))),
-        fm.TweetFactory(id=1, created_at=utc_now_minus(timedelta(days=1))),
+        factory.TweetFactory(id=3, created_at=utc_now_minus(timedelta())),
+        factory.TweetFactory(id=2, created_at=utc_now_minus(timedelta(days=1))),
+        factory.TweetFactory(id=1, created_at=utc_now_minus(timedelta(days=1))),
     ]
     patched_twitter(tweets)
 

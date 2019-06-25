@@ -50,11 +50,11 @@ def test_slack_oauth_flow_first_time_installation(session):
 
 @pytest.mark.end2end
 @responses.activate
-def test_slack_oauth_flow_reinstallation(fm):
+def test_slack_oauth_flow_reinstallation(session, factory):
     # Arrange
     # Create installation in database
     workspace_id = "TXXXXXXXXX"
-    installation = fm.SlackInstallationFactory(
+    installation = factory.SlackInstallationFactory(
         workspace_id=workspace_id, workspace_name="Test"
     )
 

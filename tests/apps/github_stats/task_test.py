@@ -25,11 +25,11 @@ def patched_background_task(patcher, create_fake_background_task):
 
 
 @pytest.mark.unit
-def test_start_post_github_summary_task(session, fm, patched_background_task):
+def test_start_post_github_summary_task(session, factory, patched_background_task):
     """Test trigger function"""
     # Arrange
-    slack_installation = fm.SlackInstallationFactory(workspace_id="abc")
-    api_user = fm.ApiUserFactory(username="admin")
+    slack_installation = factory.SlackInstallationFactory(workspace_id="abc")
+    api_user = factory.ApiUserFactory(username="admin")
     channel_name = "test-channel"
 
     # Act
@@ -82,11 +82,11 @@ def patched_github_user_events(mocker, patcher):
 
 @pytest.mark.unit
 def test_fetch_github_summary_post_to_slack_with_no_users(
-    session, fm, t_minus_one_day, patched_slack, patched_github_user_events
+    session, factory, t_minus_one_day, patched_slack, patched_github_user_events
 ):
     # Arrange
     boundary_dt = t_minus_one_day
-    slack_installation = fm.SlackInstallationFactory(workspace_id="abc")
+    slack_installation = factory.SlackInstallationFactory(workspace_id="abc")
     channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
     patched_github_user_events(messages=["a", "b"])
@@ -111,11 +111,13 @@ def test_fetch_github_summary_post_to_slack_with_no_users(
 
 @pytest.mark.unit
 def test_fetch_github_summary_post_to_slack_with_no_activity(
-    session, fm, t_minus_one_day, patched_slack, patched_github_user_events
+    session, factory, t_minus_one_day, patched_slack, patched_github_user_events
 ):
     # Arrange
     boundary_dt = t_minus_one_day
-    user = fm.GitHubSummaryUserFactory(slack_id="user1", github_username="github_user1")
+    user = factory.GitHubSummaryUserFactory(
+        slack_id="user1", github_username="github_user1"
+    )
     slack_install = user.installation
     channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
@@ -140,13 +142,15 @@ def test_fetch_github_summary_post_to_slack_with_no_activity(
 
 @pytest.mark.unit
 def test_fetch_github_summary_post_to_slack_with_activity(
-    session, fm, t_minus_one_day, patched_slack, patched_github_user_events
+    session, factory, t_minus_one_day, patched_slack, patched_github_user_events
 ):
     # Arrange
     boundary_dt = t_minus_one_day
-    user = fm.GitHubSummaryUserFactory(slack_id="user1", github_username="github_user1")
+    user = factory.GitHubSummaryUserFactory(
+        slack_id="user1", github_username="github_user1"
+    )
     slack_install = user.installation
-    fm.GitHubSummaryUserFactory(
+    factory.GitHubSummaryUserFactory(
         slack_id="user2", github_username="github_user2", installation=slack_install
     )
     channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
@@ -175,11 +179,13 @@ def test_fetch_github_summary_post_to_slack_with_activity(
 @pytest.mark.integration
 @pytest.mark.wip
 def test_post_github_summary_task__integration(
-    session, fm, t_minus_one_day, patched_slack
+    session, factory, t_minus_one_day, patched_slack
 ):
     channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
-    user = fm.GitHubSummaryUserFactory(slack_id="user1", github_username="alysivji")
+    user = factory.GitHubSummaryUserFactory(
+        slack_id="user1", github_username="alysivji"
+    )
     slack_install = user.installation
 
     # Act

@@ -9,9 +9,11 @@ import pytest
 # TODO make freze_time into a test helper that pulls from the cassette directly
 @pytest.mark.vcr()
 @pytest.mark.freeze_time("2019-01-05")
-def test_generate_summary(session, fm):
+def test_generate_summary(session, factory):
     # Arrange
-    user = fm.GitHubSummaryUserFactory(slack_id="alysivji", github_username="alysivji")
+    user = factory.GitHubSummaryUserFactory(
+        slack_id="alysivji", github_username="alysivji"
+    )
     user_events = GitHubUserEvents(user, utc_now_minus(timedelta(days=1)))
 
     # Act
@@ -22,9 +24,9 @@ def test_generate_summary(session, fm):
 
 @pytest.mark.vcr()
 @pytest.mark.freeze_time("2019-06-20")
-def test_generates_empty_summary_if_no_events_found(session, fm):
+def test_generates_empty_summary_if_no_events_found(session, factory):
     # Arrange
-    user = fm.GitHubSummaryUserFactory(
+    user = factory.GitHubSummaryUserFactory(
         slack_id="raymondberg", github_username="raymondberg"
     )
     user_events = GitHubUserEvents(user, utc_now_minus(timedelta(days=1)))

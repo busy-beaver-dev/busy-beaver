@@ -2,8 +2,8 @@ from busy_beaver.apps.upcoming_events.cards import UpcomingEvent, UpcomingEventL
 from busy_beaver.toolbox.slack_block_kit import Context, Divider, Image, Section
 
 
-def test_upcoming_event(fm):
-    event = fm.EventDetailsFactory()
+def test_upcoming_event(factory):
+    event = factory.EventDetailsFactory()
 
     result = UpcomingEvent(event)
 
@@ -13,16 +13,16 @@ def test_upcoming_event(fm):
     assert isinstance(result[2], Divider)
 
 
-def test_upcoming_event_to_dict(fm):
-    event = fm.EventDetailsFactory()
+def test_upcoming_event_to_dict(factory):
+    event = factory.EventDetailsFactory()
 
     result = UpcomingEvent(event).to_dict()
 
     assert len(result) == 3  # sections: 3 in the header, each block is 3
 
 
-def test_upcoming_event_list(fm):
-    events = fm.EventDetailsFactory.create_batch(size=5)
+def test_upcoming_event_list(factory):
+    events = factory.EventDetailsFactory.create_batch(size=5)
 
     result = UpcomingEventList(events, group_name="ChiPy", image_url="url")
 
