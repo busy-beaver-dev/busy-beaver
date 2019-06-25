@@ -1,8 +1,9 @@
 from .event import EventFactory
+from .event_details import EventDetailsFactory
 
 
 class FactoryManager:
-    known_factories = [EventFactory]
+    known_factories = [EventFactory, EventDetailsFactory]
 
     def __init__(self, session):
         self.session = session

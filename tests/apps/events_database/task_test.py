@@ -5,7 +5,6 @@ from busy_beaver.apps.events_database.task import (
     sync_database_with_fetched_events,
     start_sync_event_database_task,
 )
-from busy_beaver.factories.event_details import EventDetailsFactory
 from busy_beaver.models import Event
 from tests.utilities import FakeMeetupAdapter
 
@@ -59,7 +58,7 @@ def test_add_all_events_to_database(fm, patched_meetup):
     THEN: add all events to database
     """
     # Arrange
-    events = EventDetailsFactory.create_batch(size=20)
+    events = fm.EventDetailsFactory.create_batch(size=20)
     patched_meetup(events=events)
 
     # Act
@@ -83,7 +82,7 @@ def test_update_all_events_in_database(fm, patched_meetup):
 
     fetched_events = []
     for event in database_events:
-        fetched_events.append(EventDetailsFactory(id=event.remote_id, venue="TBD"))
+        fetched_events.append(fm.EventDetailsFactory(id=event.remote_id, venue="TBD"))
     patched_meetup(events=fetched_events)
 
     # Act
@@ -130,8 +129,8 @@ def test_sync_database(session, fm, patched_meetup):
     event_to_update = fm.EventFactory()
     event_to_delete = fm.EventFactory()
 
-    updated_event = EventDetailsFactory(id=event_to_update.remote_id, venue="TBD")
-    new_events = EventDetailsFactory.create_batch(size=5)
+    updated_event = fm.EventDetailsFactory(id=event_to_update.remote_id, venue="TBD")
+    new_events = fm.EventDetailsFactory.create_batch(size=5)
     fetched_events = new_events + [updated_event]
     patched_meetup(events=fetched_events)
 
