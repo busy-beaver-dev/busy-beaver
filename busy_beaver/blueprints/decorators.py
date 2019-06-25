@@ -48,5 +48,4 @@ def authentication_required(roles):
     return auth_decorator
 
 
-# Create Decorators
 admin_role_required = authentication_required(roles=["admin"])

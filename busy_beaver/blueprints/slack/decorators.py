@@ -63,5 +63,4 @@ def limit_to(workspace_ids: List[str]):
     return limit_to_decorator
 
 
-# create decorator to use
 slack_verification_required = verify_slack_signature(SLACK_SIGNING_SECRET)

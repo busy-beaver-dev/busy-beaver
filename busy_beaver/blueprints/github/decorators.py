@@ -4,6 +4,7 @@ import hmac
 
 from flask import request
 
+from busy_beaver.config import GITHUB_SIGNING_SECRET
 from busy_beaver.exceptions import UnverifiedWebhookRequest
 
 
@@ -39,3 +40,6 @@ def calculate_signature(signing_secret, request_data):
 
 def signatures_unequal(request_hash, github_signature):
     return not hmac.compare_digest(request_hash, github_signature)
+
+
+github_verification_required = verify_github_signature(GITHUB_SIGNING_SECRET)
