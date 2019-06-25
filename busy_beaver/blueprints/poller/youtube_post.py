@@ -6,6 +6,7 @@ from sqlalchemy import desc
 
 from busy_beaver import config, chipy_slack
 from busy_beaver.adapters.youtube import YouTubeAdapter
+from busy_beaver.blueprints.decorators import admin_role_required
 from busy_beaver.toolbox import make_response
 from busy_beaver.extensions import db
 
@@ -15,6 +16,9 @@ logger = logging.getLogger(__name__)
 
 
 class YouTubePollingResource(MethodView):
+
+    decorators = [admin_role_required]
+
     def post(self):
         user = request._internal["user"]
         logger.info(

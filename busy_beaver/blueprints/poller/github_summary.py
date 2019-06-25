@@ -4,6 +4,7 @@ from flask import request
 from flask.views import MethodView
 
 from busy_beaver.apps.github_summary.task import start_post_github_summary_task
+from busy_beaver.blueprints.decorators import admin_role_required
 from busy_beaver.toolbox import make_response
 
 logger = logging.getLogger(__name__)
@@ -11,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 class PublishGitHubSummaryResource(MethodView):
     """Endpoint to trigger process of creating and publishing GitHub Summary to Slack"""
+
+    decorators = [admin_role_required]
 
     def post(self):
         user = request._internal["user"]

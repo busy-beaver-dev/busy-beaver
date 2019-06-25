@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request
 import pytest
 
 from busy_beaver.app import handle_http_error
-from busy_beaver.blueprints.toolbox import authentication_required
+from busy_beaver.blueprints.decorators import authentication_required
 from busy_beaver.exceptions import NotAuthorized
 from busy_beaver.models import ApiUser
 
