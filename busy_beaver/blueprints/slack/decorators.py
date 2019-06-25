@@ -6,6 +6,7 @@ from typing import List
 from flask import request
 
 from .toolbox import make_slack_response
+from busy_beaver.config import SLACK_SIGNING_SECRET
 from busy_beaver.exceptions import UnverifiedWebhookRequest
 
 
@@ -60,3 +61,7 @@ def limit_to(workspace_ids: List[str]):
         return _wrapper
 
     return limit_to_decorator
+
+
+# create decorator to use
+slack_verification_required = verify_slack_signature(SLACK_SIGNING_SECRET)

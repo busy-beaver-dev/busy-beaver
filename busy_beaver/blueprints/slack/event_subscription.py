@@ -3,6 +3,7 @@ import logging
 from flask import jsonify, request
 from flask.views import MethodView
 
+from .decorators import slack_verification_required
 from .slash_command import HELP_TEXT
 from busy_beaver import chipy_slack
 
@@ -16,6 +17,8 @@ logger = logging.getLogger(__name__)
 # https://api.slack.com/events/app_uninstalled
 class SlackEventSubscriptionResource(MethodView):
     """Callback endpoint for Slack event subscriptions"""
+
+    decorators = [slack_verification_required]
 
     def post(self):
         data = request.json
