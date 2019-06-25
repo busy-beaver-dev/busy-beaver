@@ -15,10 +15,10 @@ def patched_post_github_summary_trigger(mocker, patcher):
 
 @pytest.mark.unit
 def test_github_summary_endpoint_no_token(
-    client, session, create_api_user, patched_post_github_summary_trigger
+    client, session, fm, patched_post_github_summary_trigger
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="user")
+    fm.ApiUserFactory(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/github-summary")
@@ -29,10 +29,10 @@ def test_github_summary_endpoint_no_token(
 
 @pytest.mark.unit
 def test_github_summary_endpoint_incorrect_token(
-    client, session, create_api_user, patched_post_github_summary_trigger
+    client, session, fm, patched_post_github_summary_trigger
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="user")
+    fm.ApiUserFactory(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/github-summary")
@@ -43,10 +43,10 @@ def test_github_summary_endpoint_incorrect_token(
 
 @pytest.mark.unit
 def test_github_summary_endpoint_empty_body(
-    caplog, client, session, create_api_user, patched_post_github_summary_trigger
+    caplog, client, session, fm, patched_post_github_summary_trigger
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="admin")
+    fm.ApiUserFactory(username="test_user", token="abcd", role="admin")
 
     # Act
     result = client.post(
@@ -59,10 +59,10 @@ def test_github_summary_endpoint_empty_body(
 
 @pytest.mark.unit
 def test_github_summary_endpoint_success(
-    caplog, client, session, fm, create_api_user, patched_post_github_summary_trigger
+    caplog, client, session, fm, patched_post_github_summary_trigger
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="admin")
+    fm.ApiUserFactory(username="test_user", token="abcd", role="admin")
     fm.SlackInstallationFactory(workspace_id="abc")
     mock = patched_post_github_summary_trigger
 

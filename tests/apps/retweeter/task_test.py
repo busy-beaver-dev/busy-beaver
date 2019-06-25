@@ -26,10 +26,10 @@ def patched_background_task(patcher, create_fake_background_task):
 
 
 @pytest.mark.unit
-def test_start_post_tweet_task(session, create_api_user, patched_background_task):
+def test_start_post_tweet_task(session, fm, patched_background_task):
     """Test trigger function"""
     # Arrange
-    api_user = create_api_user("admin")
+    api_user = fm.ApiUserFactory(username="admin")
     channel_name = "test-channel"
 
     # Act

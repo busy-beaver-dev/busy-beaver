@@ -25,13 +25,11 @@ def patched_background_task(patcher, create_fake_background_task):
 
 
 @pytest.mark.unit
-def test_start_post_github_summary_task(
-    session, fm, patched_background_task, create_api_user
-):
+def test_start_post_github_summary_task(session, fm, patched_background_task):
     """Test trigger function"""
     # Arrange
     slack_installation = fm.SlackInstallationFactory(workspace_id="abc")
-    api_user = create_api_user("admin")
+    api_user = fm.ApiUserFactory(username="admin")
     channel_name = "test-channel"
 
     # Act

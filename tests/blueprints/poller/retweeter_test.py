@@ -29,11 +29,9 @@ def patched_background_task(patcher, create_fake_background_task):
 
 
 @pytest.mark.integration
-def test_poll_twitter_smoke_test(
-    caplog, client, session, create_api_user, patched_background_task
-):
+def test_poll_twitter_smoke_test(caplog, client, session, fm, patched_background_task):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="admin")
+    fm.ApiUserFactory(username="test_user", token="abcd", role="admin")
 
     # Act
     client.post(
@@ -51,11 +49,9 @@ def test_poll_twitter_smoke_test(
 # Unit Test
 ###########
 @pytest.mark.unit
-def test_poll_twitter_endpoint_no_token(
-    client, session, create_api_user, patched_retweeter_trigger
-):
+def test_poll_twitter_endpoint_no_token(client, session, fm, patched_retweeter_trigger):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="user")
+    fm.ApiUserFactory(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/twitter")
@@ -66,10 +62,10 @@ def test_poll_twitter_endpoint_no_token(
 
 @pytest.mark.unit
 def test_poll_twitter_endpoint_incorrect_token(
-    client, session, create_api_user, patched_retweeter_trigger
+    client, session, fm, patched_retweeter_trigger
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="user")
+    fm.ApiUserFactory(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/twitter")
@@ -80,10 +76,10 @@ def test_poll_twitter_endpoint_incorrect_token(
 
 @pytest.mark.unit
 def test_poll_twitter_endpoint_empty_body(
-    caplog, client, session, create_api_user, patched_retweeter_trigger
+    caplog, client, session, fm, patched_retweeter_trigger
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="admin")
+    fm.ApiUserFactory(username="test_user", token="abcd", role="admin")
 
     # Act
     result = client.post("/poll/twitter", headers={"Authorization": "token abcd"})
@@ -94,10 +90,10 @@ def test_poll_twitter_endpoint_empty_body(
 
 @pytest.mark.unit
 def test_poll_twitter_endpoint_success(
-    caplog, client, session, create_api_user, patched_retweeter_trigger
+    caplog, client, session, fm, patched_retweeter_trigger
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="admin")
+    fm.ApiUserFactory(username="test_user", token="abcd", role="admin")
     mock = patched_retweeter_trigger
 
     # Act

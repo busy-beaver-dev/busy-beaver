@@ -2,10 +2,12 @@ from .event import EventFactory
 from .event_details import EventDetailsFactory
 from .slack import SlackInstallationFactory
 from .tweet import TweetFactory
+from .user import ApiUserFactory
 
 
 class FactoryManager:
     known_factories = [
+        ApiUserFactory,
         EventFactory,
         EventDetailsFactory,
         SlackInstallationFactory,
