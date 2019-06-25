@@ -1,10 +1,16 @@
 from .event import EventFactory
 from .event_details import EventDetailsFactory
 from .slack import SlackInstallationFactory
+from .tweet import TweetFactory
 
 
 class FactoryManager:
-    known_factories = [EventFactory, EventDetailsFactory, SlackInstallationFactory]
+    known_factories = [
+        EventFactory,
+        EventDetailsFactory,
+        SlackInstallationFactory,
+        TweetFactory,
+    ]
 
     def __init__(self, session):
         self.session = session

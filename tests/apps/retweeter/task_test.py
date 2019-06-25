@@ -6,7 +6,6 @@ from busy_beaver.apps.retweeter.task import (
     LAST_TWEET_KEY,
     start_post_tweets_to_slack_task,
 )
-from busy_beaver.factories.tweet import TweetFactory
 from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
 from tests.utilities import FakeSlackClient
@@ -72,7 +71,7 @@ def patched_slack(patcher):
 # but it's a unit test that should be around a class
 # TODO make the retweeter module into a class
 @pytest.mark.integration
-def test_post_tweets_to_slack(mocker, kv_store, patched_twitter, patched_slack):
+def test_post_tweets_to_slack(mocker, fm, kv_store, patched_twitter, patched_slack):
     """
     GIVEN: 3 tweets to post (2 within the window)
     WHEN: post_tweets_to_slack is called
@@ -81,9 +80,9 @@ def test_post_tweets_to_slack(mocker, kv_store, patched_twitter, patched_slack):
     # Arrange
     kv_store.put_int(LAST_TWEET_KEY, 0)
     tweets = [
-        TweetFactory(id=3, created_at=utc_now_minus(timedelta())),
-        TweetFactory(id=2, created_at=utc_now_minus(timedelta(days=1))),
-        TweetFactory(id=1, created_at=utc_now_minus(timedelta(days=1))),
+        fm.TweetFactory(id=3, created_at=utc_now_minus(timedelta())),
+        fm.TweetFactory(id=2, created_at=utc_now_minus(timedelta(days=1))),
+        fm.TweetFactory(id=1, created_at=utc_now_minus(timedelta(days=1))),
     ]
     patched_twitter(tweets)
 
