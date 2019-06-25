@@ -10,8 +10,7 @@ from datetime import timedelta
 import uuid
 
 import pytest
-
-from .factories import FactoryManager
+from ._utilities import FactoryManager
 from busy_beaver.adapters import KeyValueStoreAdapter
 from busy_beaver.app import create_app
 from busy_beaver.extensions import db as _db, rq as _rq

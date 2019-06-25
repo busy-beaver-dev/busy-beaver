@@ -4,7 +4,7 @@ from busy_beaver.apps.upcoming_events.workflow import (
     generate_upcoming_events_message,
     post_upcoming_events_message_to_slack,
 )
-from tests.utilities import FakeSlackClient
+from tests._utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.apps.upcoming_events.workflow"
 

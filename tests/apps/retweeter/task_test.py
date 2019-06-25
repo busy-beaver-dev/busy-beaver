@@ -8,7 +8,7 @@ from busy_beaver.apps.retweeter.task import (
 )
 from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
-from tests.utilities import FakeSlackClient
+from tests._utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.apps.retweeter.task"
 

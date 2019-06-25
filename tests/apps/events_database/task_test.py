@@ -6,7 +6,7 @@ from busy_beaver.apps.events_database.task import (
     start_sync_event_database_task,
 )
 from busy_beaver.models import Event
-from tests.utilities import FakeMeetupAdapter
+from tests._utilities import FakeMeetupAdapter
 
 MODULE_TO_TEST = "busy_beaver.apps.events_database.task"
 
