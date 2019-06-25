@@ -10,12 +10,10 @@ from datetime import timedelta
 import uuid
 
 import pytest
-
+from ._utilities import FactoryManager
 from busy_beaver.adapters import KeyValueStoreAdapter
 from busy_beaver.app import create_app
 from busy_beaver.extensions import db as _db, rq as _rq
-from busy_beaver.factories.slack import SlackInstallationFactory
-from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
 
 
@@ -102,17 +100,6 @@ def t_minus_one_day():
 
 
 @pytest.fixture
-def create_api_user(session):
-    def _new_api_user(username, *, token="abcd", role="user"):
-        new_api_user = ApiUser(username=username, token=token, role=role)
-        session.add(new_api_user)
-        session.commit()
-        return new_api_user
-
-    return _new_api_user
-
-
-@pytest.fixture
 def create_fake_background_task():
     """This fixture creates fake background jobs.
 
@@ -144,12 +131,6 @@ def create_fake_background_task():
     yield _create_fake_background_task
 
 
-@pytest.fixture
-def create_slack_installation(session):
-    def _new_installation(workspace_id):
-        slack_installation = SlackInstallationFactory(workspace_id=workspace_id)
-        session.add(slack_installation)
-        session.commit()
-        return slack_installation
-
-    return _new_installation
+@pytest.fixture(name="factory")
+def factory_manager(session):
+    yield FactoryManager(session)

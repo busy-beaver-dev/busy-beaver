@@ -6,7 +6,7 @@ import pytest
 
 from busy_beaver.blueprints.github.decorators import calculate_signature
 from busy_beaver.config import GITHUB_SIGNING_SECRET
-from tests.utilities import FakeSlackClient
+from tests._utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.blueprints.github.event_subscription"
 pytest_plugins = ("tests.fixtures.github",)

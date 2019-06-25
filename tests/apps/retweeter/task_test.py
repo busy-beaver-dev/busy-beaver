@@ -6,10 +6,9 @@ from busy_beaver.apps.retweeter.task import (
     LAST_TWEET_KEY,
     start_post_tweets_to_slack_task,
 )
-from busy_beaver.factories.tweet import TweetFactory
 from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
-from tests.utilities import FakeSlackClient
+from tests._utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.apps.retweeter.task"
 
@@ -27,10 +26,10 @@ def patched_background_task(patcher, create_fake_background_task):
 
 
 @pytest.mark.unit
-def test_start_post_tweet_task(session, create_api_user, patched_background_task):
+def test_start_post_tweet_task(session, factory, patched_background_task):
     """Test trigger function"""
     # Arrange
-    api_user = create_api_user("admin")
+    api_user = factory.ApiUser(username="admin")
     channel_name = "test-channel"
 
     # Act
@@ -72,7 +71,9 @@ def patched_slack(patcher):
 # but it's a unit test that should be around a class
 # TODO make the retweeter module into a class
 @pytest.mark.integration
-def test_post_tweets_to_slack(mocker, kv_store, patched_twitter, patched_slack):
+def test_post_tweets_to_slack(
+    mocker, factory, kv_store, patched_twitter, patched_slack
+):
     """
     GIVEN: 3 tweets to post (2 within the window)
     WHEN: post_tweets_to_slack is called
@@ -81,9 +82,9 @@ def test_post_tweets_to_slack(mocker, kv_store, patched_twitter, patched_slack):
     # Arrange
     kv_store.put_int(LAST_TWEET_KEY, 0)
     tweets = [
-        TweetFactory(id=3, created_at=utc_now_minus(timedelta())),
-        TweetFactory(id=2, created_at=utc_now_minus(timedelta(days=1))),
-        TweetFactory(id=1, created_at=utc_now_minus(timedelta(days=1))),
+        factory.Tweet(id=3, created_at=utc_now_minus(timedelta())),
+        factory.Tweet(id=2, created_at=utc_now_minus(timedelta(days=1))),
+        factory.Tweet(id=1, created_at=utc_now_minus(timedelta(days=1))),
     ]
     patched_twitter(tweets)
 

@@ -3,6 +3,7 @@ import logging
 from flask import jsonify, request
 from flask.views import MethodView
 
+from .decorators import github_verification_required
 from busy_beaver import chipy_slack
 from busy_beaver.apps.github_webhook.workflow import (
     generate_new_issue_message,
@@ -17,6 +18,8 @@ github_event_dispatcher = EventEmitter()
 
 class GitHubEventSubscriptionResource(MethodView):
     """Callback endpoint for GitHub event subscriptions"""
+
+    decorators = [github_verification_required]
 
     def post(self):
         data = request.json

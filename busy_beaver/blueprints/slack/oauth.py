@@ -10,7 +10,7 @@ from busy_beaver.apps.external_integrations.workflow import (
 logger = logging.getLogger(__name__)
 
 
-class SlackWorkspaceInstallationCallbackResource(MethodView):
+class SlackAppInstallationCallbackResource(MethodView):
     """Callback endpoint for installing app into Slack workspace"""
 
     def get(self):

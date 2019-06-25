@@ -46,3 +46,6 @@ def authentication_required(roles):
         return _token_auth
 
     return auth_decorator
+
+
+admin_role_required = authentication_required(roles=["admin"])

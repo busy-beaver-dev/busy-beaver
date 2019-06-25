@@ -32,10 +32,10 @@ def patched_background_task(patcher, create_fake_background_task):
 
 @pytest.mark.integration
 def test_poll_twitter_smoke_test(
-    caplog, client, session, create_api_user, patched_background_task
+    caplog, client, session, factory, patched_background_task
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="admin")
+    factory.ApiUser(username="test_user", token="abcd", role="admin")
 
     # Act
     client.post("/poll/sync-event-database", headers={"Authorization": "token abcd"})
@@ -49,9 +49,9 @@ def test_poll_twitter_smoke_test(
 # Unit Test
 ###########
 @pytest.mark.unit
-def test_poll_events_endpoint_no_token(client, session, create_api_user):
+def test_poll_events_endpoint_no_token(client, session, factory):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="user")
+    factory.ApiUser(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/sync-event-database")
@@ -61,9 +61,9 @@ def test_poll_events_endpoint_no_token(client, session, create_api_user):
 
 
 @pytest.mark.unit
-def test_poll_events_endpoint_incorrect_token(client, session, create_api_user):
+def test_poll_events_endpoint_incorrect_token(client, session, factory):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="user")
+    factory.ApiUser(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/sync-event-database")
@@ -74,10 +74,10 @@ def test_poll_events_endpoint_incorrect_token(client, session, create_api_user):
 
 @pytest.mark.unit
 def test_poll_events_endpoint_success(
-    client, session, create_api_user, patched_update_events_trigger
+    client, session, factory, patched_update_events_trigger
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="admin")
+    factory.ApiUser(username="test_user", token="abcd", role="admin")
 
     # Act
     result = client.post(

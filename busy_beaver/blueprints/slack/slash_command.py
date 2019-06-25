@@ -6,7 +6,7 @@ import uuid
 from flask import request
 from flask.views import MethodView
 
-from .decorators import limit_to
+from .decorators import limit_to, slack_verification_required
 from .toolbox import make_slack_response
 from busy_beaver.apps.upcoming_events.workflow import (
     generate_next_event_message,
@@ -53,6 +53,8 @@ class Command(NamedTuple):
 
 class SlackSlashCommandDispatchResource(MethodView):
     """Dealing with slash commands"""
+
+    decorators = [slack_verification_required]
 
     def post(self):
         data = dict(request.form)

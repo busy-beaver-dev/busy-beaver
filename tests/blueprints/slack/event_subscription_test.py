@@ -1,5 +1,5 @@
 import pytest
-from tests.utilities import FakeSlackClient
+from tests._utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.blueprints.slack.event_subscription"
 
