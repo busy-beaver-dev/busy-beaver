@@ -2,7 +2,7 @@ from .event import EventFactory
 from .event_details import EventDetailsFactory
 from .slack import SlackInstallationFactory
 from .tweet import TweetFactory
-from .user import ApiUserFactory
+from .user import ApiUserFactory, GitHubSummaryUserFactory
 
 
 class FactoryManager:
@@ -10,6 +10,7 @@ class FactoryManager:
         ApiUserFactory,
         EventFactory,
         EventDetailsFactory,
+        GitHubSummaryUserFactory,
         SlackInstallationFactory,
         TweetFactory,
     ]

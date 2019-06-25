@@ -9,14 +9,9 @@ import pytest
 # TODO make freze_time into a test helper that pulls from the cassette directly
 @pytest.mark.vcr()
 @pytest.mark.freeze_time("2019-01-05")
-def test_generate_summary(fm, create_user):
+def test_generate_summary(session, fm):
     # Arrange
-    slack_install = fm.SlackInstallationFactory(workspace_id="abc")
-    user = create_user(
-        slack_id="alysivji",
-        github_username="alysivji",
-        installation_id=slack_install.id,
-    )
+    user = fm.GitHubSummaryUserFactory(slack_id="alysivji", github_username="alysivji")
     user_events = GitHubUserEvents(user, utc_now_minus(timedelta(days=1)))
 
     # Act
@@ -27,13 +22,10 @@ def test_generate_summary(fm, create_user):
 
 @pytest.mark.vcr()
 @pytest.mark.freeze_time("2019-06-20")
-def test_generates_empty_summary_if_no_events_found(fm, create_user):
+def test_generates_empty_summary_if_no_events_found(session, fm):
     # Arrange
-    slack_install = fm.SlackInstallationFactory(workspace_id="abc")
-    user = create_user(
-        slack_id="raymondberg",
-        github_username="raymondberg",
-        installation_id=slack_install.id,
+    user = fm.GitHubSummaryUserFactory(
+        slack_id="raymondberg", github_username="raymondberg"
     )
     user_events = GitHubUserEvents(user, utc_now_minus(timedelta(days=1)))
 
