@@ -9,7 +9,7 @@ from busy_beaver.config import GITHUB_SIGNING_SECRET
 from tests._utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.blueprints.github.event_subscription"
-pytest_plugins = ("tests.fixtures.github",)
+pytest_plugins = ("tests._utilities.fixtures.github",)
 
 
 @pytest.fixture

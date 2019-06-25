@@ -5,7 +5,7 @@ from busy_beaver.apps.github_webhook.workflow import (
     generate_new_pull_request_message,
 )
 
-pytest_plugins = ("tests.fixtures.github",)
+pytest_plugins = ("tests._utilities.fixtures.github",)
 
 
 @pytest.mark.unit
