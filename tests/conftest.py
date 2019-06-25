@@ -15,7 +15,6 @@ from busy_beaver.adapters import KeyValueStoreAdapter
 from busy_beaver.app import create_app
 from busy_beaver.extensions import db as _db, rq as _rq
 from busy_beaver.factories import FactoryManager
-from busy_beaver.factories.slack import SlackInstallationFactory
 from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
 
@@ -146,11 +145,9 @@ def create_fake_background_task():
 
 
 @pytest.fixture
-def create_slack_installation(session):
+def create_slack_installation(fm):
     def _new_installation(workspace_id):
-        slack_installation = SlackInstallationFactory(workspace_id=workspace_id)
-        session.add(slack_installation)
-        session.commit()
+        slack_installation = fm.SlackInstallationFactory(workspace_id=workspace_id)
         return slack_installation
 
     return _new_installation
