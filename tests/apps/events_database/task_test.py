@@ -5,7 +5,6 @@ from busy_beaver.apps.events_database.task import (
     sync_database_with_fetched_events,
     start_sync_event_database_task,
 )
-from busy_beaver.factories.event import EventFactory
 from busy_beaver.factories.event_details import EventDetailsFactory
 from busy_beaver.models import Event
 from tests.utilities import FakeMeetupAdapter
@@ -53,7 +52,7 @@ def patched_meetup(patcher):
 
 
 @pytest.mark.integration
-def test_add_all_events_to_database(session, patched_meetup):
+def test_add_all_events_to_database(fm, patched_meetup):
     """
     GIVEN: Empty database
     WHEN: add_events_to_database is called
@@ -72,7 +71,7 @@ def test_add_all_events_to_database(session, patched_meetup):
 
 
 @pytest.mark.integration
-def test_update_all_events_in_database(session, patched_meetup):
+def test_update_all_events_in_database(fm, patched_meetup):
     """
     GIVEN: table contains upcoming events, adapter has same events with updated details
     WHEN: add_events_to_database is called
@@ -80,9 +79,7 @@ def test_update_all_events_in_database(session, patched_meetup):
     """
     # Arrange
     num_events = 20
-    database_events = EventFactory.create_batch(size=num_events)
-    [session.add(event) for event in database_events]
-    session.commit()
+    database_events = fm.EventFactory.create_batch(size=num_events)
 
     fetched_events = []
     for event in database_events:
@@ -100,7 +97,7 @@ def test_update_all_events_in_database(session, patched_meetup):
 
 
 @pytest.mark.integration
-def test_delete_all_events_in_database(session, patched_meetup):
+def test_delete_all_events_in_database(fm, patched_meetup):
     """
     GIVEN: table contains upcoming events, adapter has no events
     WHEN: add_events_to_database is called
@@ -108,9 +105,7 @@ def test_delete_all_events_in_database(session, patched_meetup):
     """
     # Arrange
     num_events = 20
-    database_events = EventFactory.create_batch(size=num_events)
-    [session.add(event) for event in database_events]
-    session.commit()
+    fm.EventFactory.create_batch(size=num_events)
 
     patched_meetup(events=[])
 
@@ -124,7 +119,7 @@ def test_delete_all_events_in_database(session, patched_meetup):
 
 @pytest.mark.integration
 @pytest.mark.current
-def test_sync_database(session, patched_meetup):
+def test_sync_database(session, fm, patched_meetup):
     """
     GIVEN: table has upcoming events, fetched events contains events
             that need to be: added, updated, deleted
@@ -132,11 +127,8 @@ def test_sync_database(session, patched_meetup):
     THEN: table is synced with fetched event
     """
     # Arrange
-    event_to_update = EventFactory()
-    session.add(event_to_update)
-    event_to_delete = EventFactory()
-    session.add(event_to_delete)
-    session.commit()
+    event_to_update = fm.EventFactory()
+    event_to_delete = fm.EventFactory()
 
     updated_event = EventDetailsFactory(id=event_to_update.remote_id, venue="TBD")
     new_events = EventDetailsFactory.create_batch(size=5)

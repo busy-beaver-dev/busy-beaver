@@ -14,6 +14,7 @@ import pytest
 from busy_beaver.adapters import KeyValueStoreAdapter
 from busy_beaver.app import create_app
 from busy_beaver.extensions import db as _db, rq as _rq
+from busy_beaver.factories import FactoryManager
 from busy_beaver.factories.slack import SlackInstallationFactory
 from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
@@ -153,3 +154,8 @@ def create_slack_installation(session):
         return slack_installation
 
     return _new_installation
+
+
+@pytest.fixture(name="fm")
+def factory_manager(session):
+    yield FactoryManager(session)

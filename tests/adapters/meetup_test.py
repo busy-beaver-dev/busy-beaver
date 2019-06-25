@@ -6,7 +6,6 @@ import pytest
 from busy_beaver.adapters.meetup import MeetupAdapter, EventDetails
 from busy_beaver.config import MEETUP_API_KEY
 from busy_beaver.exceptions import NoMeetupEventsFound
-from busy_beaver.factories.event import EventFactory
 
 MODULE_TO_TEST = "busy_beaver.adapters.meetup"
 MeetupAPIFormat = namedtuple("MeetupAPIFormat", "results")
@@ -89,9 +88,9 @@ def test_no_events_found_raises_exception(patched_meetup_client):
 
 
 @pytest.mark.integration
-def test_event_details_creating_event_objects():
+def test_event_details_creating_event_objects(fm):
     # Arrange
-    event = EventFactory()
+    event = fm.EventFactory()
 
     # Act
     event_details = EventDetails.from_event_model(event)
