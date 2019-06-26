@@ -27,6 +27,7 @@ itsdangerous==1.1.0       # via flask
 jinja2==2.10.1            # via flask
 mako==1.0.12              # via alembic
 markupsafe==1.1.1         # via jinja2, mako
+marshmallow==3.0.0rc7
 meetup-api==0.1.1
 oauthlib==3.0.1           # via requests-oauthlib
 psycopg2-binary==2.7.7

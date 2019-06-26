@@ -8,6 +8,7 @@ flask-talisman==0.7.0
 Flask==1.0.2
 gunicorn==19.9.0
 inflect==2.1.0
+marshmallow==3.0.0rc7
 meetup-api==0.1.1
 psycopg2-binary==2.7.7
 python-dateutil==2.7.5
