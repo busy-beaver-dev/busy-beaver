@@ -1,3 +1,4 @@
+from datetime import timedelta
 from typing import List
 import pytest
 
@@ -7,9 +8,15 @@ from busy_beaver.apps.github_summary.task import (
     start_post_github_summary_task,
     fetch_github_summary_post_to_slack,
 )
+from busy_beaver.toolbox import utc_now_minus
 from tests._utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.apps.github_summary.task"
+
+
+@pytest.fixture
+def t_minus_one_day():
+    return utc_now_minus(timedelta(days=1))
 
 
 #######################
