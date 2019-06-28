@@ -4,6 +4,9 @@ help: ## This help
 	@echo "Makefile for managing application:\n"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+pull-upstream: ## pull from upstream master
+	git pull upstream master
+
 build: ## rebuild containers
 	docker-compose build
 
