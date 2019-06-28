@@ -22,11 +22,13 @@ class EventEmitter:
         else:
             return _on(func)
 
-    def emit(self, event, *args, default=None, **kwargs):
-        if event not in self.registered_events:
+    def emit(self, _event, *args, default=None, **kwargs):
+        if _event not in self.registered_events:
             if not default:
-                raise EventEmitterEventNotRegistered(f"{event} has not been registered")
-            event = default
+                raise EventEmitterEventNotRegistered(
+                    f"{_event} has not been registered"
+                )
+            _event = default
 
-        func = self.registered_events[event]
+        func = self.registered_events[_event]
         return func(*args, **kwargs)
