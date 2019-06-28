@@ -63,7 +63,8 @@ test-skipvcr: ## run non-vcr tests
 lint: ## run flake8 linter
 	docker-compose exec app flake8
 
-log: ## attach to logs
+.PHONY: logs
+logs: ## attach to logs
 	docker logs `docker-compose ps -q app`
 
 debug: ## attach to app container for debugging
