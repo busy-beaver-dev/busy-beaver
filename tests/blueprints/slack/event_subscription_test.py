@@ -55,7 +55,7 @@ def test_slack_callback_user_dms_bot_reply(
     # Arrange
     channel_id = 5
     data = {
-        "type": "unknown todo",
+        "type": "event_callback",
         "event": {
             "type": "message",
             "subtype": "not bot_message",

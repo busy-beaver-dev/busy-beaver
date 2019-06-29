@@ -28,6 +28,7 @@ class SlackAdapter:
         channel_id=None,
         unfurl_links=True,
         unfurl_media=True,
+        as_user=False,
     ):
         if not channel and not channel_id:
             raise ValueError("Must specify channel or channel_id")
@@ -42,7 +43,12 @@ class SlackAdapter:
             attachments=attachments,
             unfurl_links=unfurl_links,
             unfurl_media=unfurl_media,
+            as_user=as_user,
         )
+
+    def dm(self, user_id, message):
+        # TODO test this
+        self.post_message(message, channel_id=user_id, as_user=True)
 
     def _get_channel_id(self, channel_name: str) -> str:
         channels = self._get_all_channels()

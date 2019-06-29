@@ -26,6 +26,8 @@ def test_slack_oauth_endpoints(client, session):
             },
         },
     )
+    # TODO: create a slack adapter
+    responses.add(responses.POST, "https://slack.com/api/chat.postMessage", json={})
 
     # Act -- oauth callback and token exchange
     state = ""
@@ -43,3 +45,6 @@ def test_slack_oauth_endpoints(client, session):
     assert installation.authorizing_user_id == "test_user"
     assert installation.bot_user_id == "UTTTTTTTTTTR"
     assert installation.bot_access_token == "xoxb-XXXXXXXXXXXX-TTTTTTTTTTTTTT"
+
+    # assert things in slack adapter
+    assert installation.state == "user_welcomed"

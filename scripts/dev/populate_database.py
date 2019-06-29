@@ -22,9 +22,9 @@ if installation:
 else:
     installation = SlackInstallation(
         access_token="access_token",
-        authorizing_user_id="UA324",
+        authorizing_user_id="U5FTQ3QRZ",  # TODO: make env variable or have people
         bot_access_token=bot_token,
-        bot_user_id="bot",
+        bot_user_id="UEGGXQ5EF",  # TODO: install this to get information for database
         scope="test-scope",
         workspace_id=workspace_id,
         workspace_name="Development Environment",

@@ -3,7 +3,7 @@ import responses
 
 from busy_beaver.apps.external_integrations.oauth_providers.slack import SlackOAuthFlow
 from busy_beaver.apps.external_integrations.workflow import (
-    slack_verify_callback_and_save_access_tokens_in_database,
+    verify_callback_and_save_tokens_in_database,
 )
 from busy_beaver.models import SlackInstallation
 
@@ -35,7 +35,7 @@ def test_slack_oauth_flow_first_time_installation(session):
     code = "1234"
     qs = f"state={state}&code={code}"
     callback_url = f"https://busybeaver.sivji.com/slack/oauth?{qs}"
-    slack_verify_callback_and_save_access_tokens_in_database(callback_url, state)
+    verify_callback_and_save_tokens_in_database(callback_url, state)
 
     # Assert -- confirm info in database is as expected
     installation = SlackInstallation.query.first()
@@ -80,7 +80,7 @@ def test_slack_oauth_flow_reinstallation(session, factory):
     code = "1234"
     qs = f"state={state}&code={code}"
     callback_url = f"https://busybeaver.sivji.com/slack/oauth?{qs}"
-    slack_verify_callback_and_save_access_tokens_in_database(callback_url, state)
+    verify_callback_and_save_tokens_in_database(callback_url, state)
 
     # Assert -- information in database is as expected
     installation = SlackInstallation.query.first()
