@@ -40,7 +40,8 @@ class GitHubSummaryConfiguration(BaseModel):
         nullable=False,
     )
     channel = db.Column(db.String(20), nullable=False)
-    time_to_post = db.Column(db.Integer, nullable=False)
+    time_to_post = db.Column(db.String(20), nullable=True)
+    timezone_info = db.Column(db.JSON)
 
     # Relationships
     slack_installation = db.relationship(

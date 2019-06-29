@@ -49,13 +49,15 @@ def test_slack_callback_bot_message_is_ignored(
 
 @pytest.mark.integration
 def test_slack_callback_user_dms_bot_reply(
-    mocker, client, session, patched_slack, create_slack_headers
+    mocker, client, session, factory, patched_slack, create_slack_headers
 ):
     """When user messages bot, reply with help text"""
     # Arrange
+    factory.SlackInstallation(workspace_id="team_id")
     channel_id = 5
     data = {
         "type": "event_callback",
+        "team_id": "team_id",
         "event": {
             "type": "message",
             "subtype": "not bot_message",

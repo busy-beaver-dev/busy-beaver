@@ -1,12 +1,9 @@
+from datetime import time
+
 from busy_beaver import slack_oauth
 from busy_beaver.adapters import SlackAdapter
 from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation
-
-
-def perform(callback_url, state):
-    install = verify_callback_and_save_tokens_in_database(callback_url, state)
-    send_welcome_message(install)
 
 
 def verify_callback_and_save_tokens_in_database(callback_url, state):
@@ -28,22 +25,58 @@ def verify_callback_and_save_tokens_in_database(callback_url, state):
     return installation
 
 
-ONBOARDING_MESSAGE = """Hi <@{slack_id}>! :wave:
-
-I'm here to help engage tech-focused Slack communities.
-Thank you for taking part in our beta program. :pray:
-
-:zap: To get started `/invite` me to a public channel
-:bulb: I recommend creating `#busy-beaver`
-
-You can use the following text to publicize the bot:
-> Busy Beaver is a community engagement bot that
-> shares public GitHub activity for registered users.
-> Join #busy-beaver to see what everybody is working on.
-"""
+ONBOARDING_MESSAGE = (
+    "Hi <@{slack_id}>! :wave:\n\n"
+    "I'm here to help engage tech-focused Slack communities.\n"
+    "Thank you for taking part in our beta program. :pray:\n\n"
+    ":zap: To get started `/invite` me to a public channel\n"
+    ":bulb: I recommend creating `#busy-beaver`"
+)
 
 
 def send_welcome_message(installation: SlackInstallation):
     slack = SlackAdapter(installation.bot_access_token)
     user_id = installation.authorizing_user_id
     slack.dm(user_id, message=ONBOARDING_MESSAGE.format(slack_id=user_id))
+
+
+CONFIRMED_MESSAGE = (
+    "Thanks for the invite! I will post daily summaries in <#{channel}>\n\n"
+    "What time should I post the daily GitHub summary?"
+)
+
+
+def send_configuration_message(installation: SlackInstallation):
+    slack = SlackAdapter(installation.bot_access_token)
+    user_id = installation.authorizing_user_id
+    channel = installation.github_summary_config.channel
+    slack.dm(user_id, message=CONFIRMED_MESSAGE.format(channel=channel))
+
+
+ACTIVE_MESSAGE = (
+    "Confirmed; I will post daily summaries at {time}.\n\n"
+    "Busy Beaver is now active! :party-emoji: \n\n"
+    "You can use the following text to publicize the bot:\n"
+    "> Busy Beaver is a social coding platform that shares public"
+    "GitHub activity for registered users. "
+    "Join <#{channel}> to see what everybody is working on!"
+)
+
+
+def save_configuration(installation: SlackInstallation, time_to_post: time):
+    slack = SlackAdapter(installation.bot_access_token)
+    user_id = installation.authorizing_user_id
+    tz = slack.get_user_timzone(user_id)
+
+    github_summary_config = installation.github_summary_config
+    github_summary_config.time_to_post = str(time_to_post)
+    github_summary_config.timezone_info = tz._asdict()
+    db.session.add(github_summary_config)
+    db.session.commit()
+
+    slack.dm(
+        user_id,
+        message=ACTIVE_MESSAGE.format(
+            time=str(time_to_post), channel=github_summary_config.channel
+        ),
+    )

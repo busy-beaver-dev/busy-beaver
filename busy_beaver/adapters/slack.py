@@ -9,6 +9,12 @@ class Channel(NamedTuple):
     members: List[str] = None
 
 
+class TimezoneInfo(NamedTuple):
+    tz: str
+    label: str
+    offset: int
+
+
 class SlackAdapter:
     def __init__(self, slack_token):
         self.sc = SlackClient(slack_token)
@@ -49,6 +55,14 @@ class SlackAdapter:
     def dm(self, user_id, message):
         # TODO test this
         self.post_message(message, channel_id=user_id, as_user=True)
+
+    def get_user_timzone(self, user_id):
+        result = self.sc.api_call("users.info", user=user_id, include_locale=True)
+        return TimezoneInfo(
+            tz=result["user"]["tz"],
+            label=result["user"]["tz_label"],
+            offset=result["user"]["tz_offset"],
+        )
 
     def _get_channel_id(self, channel_name: str) -> str:
         channels = self._get_all_channels()

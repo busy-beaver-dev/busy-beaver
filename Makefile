@@ -13,7 +13,7 @@ build: ## rebuild containers
 up: ## start local dev environment; run migrations; populate database
 	docker-compose up -d
 	make migrate-up
-	make populate-db
+	# make populate-db
 
 down: ## stop local dev environment
 	docker-compose down

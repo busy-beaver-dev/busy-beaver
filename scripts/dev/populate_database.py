@@ -28,6 +28,7 @@ else:
         scope="test-scope",
         workspace_id=workspace_id,
         workspace_name="Development Environment",
+        state="installed",
     )
 
 db.session.add(installation)

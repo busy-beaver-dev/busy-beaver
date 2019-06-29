@@ -6,6 +6,10 @@ from flask.views import MethodView
 from .decorators import slack_verification_required
 from .slash_command import HELP_TEXT
 from busy_beaver import chipy_slack
+from busy_beaver.adapters import SlackAdapter
+from busy_beaver.extensions import db
+from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation
+from busy_beaver.sandbox.state_machine_spike import OnboardUserWorkflow
 from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
@@ -53,25 +57,52 @@ def event_callback_dispatcher(data):
 @event_dispatch.on("message")
 def message_handler(data):
     event = data["event"]
-    if event.get("bot_id"):
-        logger.info("[Busy Beaver] Slack -- Bot messaging user")
+    if event.get("bot_id") or event.get("subtype") == "bot_message":
         return jsonify(None)
-    if event.get("subtype") == "bot_message":
-        logger.info("[Busy Beaver] Slack -- Bot gets its own DM")
-        return jsonify(None)
+
+    # user messages bot
     if event["channel_type"] == "im":
-        logger.info("[Busy Beaver] Slack -- Unknown command")
-        chipy_slack.post_message(HELP_TEXT, channel_id=data["event"]["channel"])
+        i = SlackInstallation.query.filter_by(workspace_id=data["team_id"]).first()
+        if (i.state == "config_requested") and (i.authorizing_user_id == event["user"]):
+            # grab time and restart throw it into the state machine
+            entered_time = event["text"]
+            workflow = OnboardUserWorkflow(i, payload=entered_time)
+            workflow.advance()
+        else:
+            logger.info("[Busy Beaver] Slack -- Unknown command")
+            chipy_slack.post_message(HELP_TEXT, channel_id=data["event"]["channel"])
+
     return jsonify(None)
 
 
 @event_dispatch.on("member_joined_channel")
 def member_joined_channel_handler(data):
-    # workspace_id = data["team_id"]
-    # user_id = data["event"]["user"]
-    # channel_id = data["event"]["channel"]
+    workspace_id = data["team_id"]
+    user_id = data["event"]["user"]
+    channel_id = data["event"]["channel"]
 
-    # slack_installation
-    # if user matches my id
-    # if the team and channel are something i know about
+    installation = SlackInstallation.query.filter_by(workspace_id=workspace_id).first()
+    if user_id == installation.bot_user_id:
+        # bot was invited to channel
+        if not installation.github_summary_config:
+            github_summary_config = GitHubSummaryConfiguration(channel=channel_id)
+            github_summary_config.slack_installation = installation
+            db.session.add(github_summary_config)
+            db.session.commit()
+
+            db.session.refresh(installation)
+            workflow = OnboardUserWorkflow(installation)
+            workflow.advance()
+        else:
+            # bot was invited to a different channel
+            # TODO add to table of channels for that workspace
+            pass
+
+        return jsonify(None)
+
+    # TODO only if we are active once this is active
+    if channel_id == installation.github_summary_config.channel_id:
+        slack = SlackAdapter(installation.bot_access_token)
+        slack.dm(user_id, "thx for joining")
+
     return jsonify(None)
