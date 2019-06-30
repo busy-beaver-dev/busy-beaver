@@ -34,6 +34,7 @@ class SlackInstallationOnboardUserWorkflow:
             dest="config_requested",
             before="send_initial_configuration_request",
             after="update_state_in_database",
+            conditions="check_channel_membership",
         )
         self.machine.add_transition(
             trigger="advance",
@@ -42,6 +43,12 @@ class SlackInstallationOnboardUserWorkflow:
             before="save_configuration_to_database",
             after="update_state_in_database",
             conditions="validate_configuration",
+        )
+        self.machine.add_transition(
+            trigger="advance",
+            source="active",
+            dest="active",
+            after="update_state_in_database",
         )
 
     def send_installing_user_welcome_message(self):
@@ -58,10 +65,16 @@ class SlackInstallationOnboardUserWorkflow:
         db.session.add(self.slack_installation)
         db.session.commit()
 
+    def check_channel_membership(self):
+        if not self.slack_installation.github_summary_config:
+            send_welcome_message(self.slack_installation)
+            return False
+        return True
+
     def validate_configuration(self):
         try:
             self.payload = parse(self.payload).time()
-        except ValueError:
+        except (ValueError, TypeError):
             send_configuration_message(self.slack_installation)
             return False
         return True
