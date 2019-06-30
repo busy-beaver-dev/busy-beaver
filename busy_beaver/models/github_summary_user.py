@@ -3,7 +3,11 @@ from busy_beaver.extensions import db
 
 
 class GitHubSummaryUser(BaseModel):
-    """GitHub Summary User table"""
+    """GitHub Summary User table
+
+    TODO: GitHubSummaryUser should really be related to
+    GitHubSummaryConfiguration versus SlackInstallation
+    """
 
     __tablename__ = "github_summary_user"
 

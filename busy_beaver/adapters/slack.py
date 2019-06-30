@@ -27,7 +27,7 @@ class SlackAdapter:
         members = self._get_channel_members(channel_id)
         return Channel(channel_name, channel_id, members)
 
-    def get_user_timzone(self, user_id):
+    def get_user_timezone(self, user_id):
         result = self.sc.api_call("users.info", user=user_id, include_locale=True)
         return TimezoneInfo(
             tz=result["user"]["tz"],

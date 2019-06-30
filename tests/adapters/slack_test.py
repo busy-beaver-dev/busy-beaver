@@ -36,7 +36,7 @@ def test_slack_get_channel_info(slack: SlackAdapter):
 @pytest.mark.vcr()
 def test_slack_get_user_timezone(slack: SlackAdapter):
     # Act
-    result = slack.get_user_timzone("U5FTQ3QRZ")
+    result = slack.get_user_timezone("U5FTQ3QRZ")
 
     # Assert
     assert result.tz == "America/Chicago"

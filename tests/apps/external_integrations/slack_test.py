@@ -8,7 +8,7 @@ from busy_beaver.apps.external_integrations.workflow import (
 from busy_beaver.models import SlackInstallation
 
 
-@pytest.mark.integration
+@pytest.mark.unit
 @responses.activate
 def test_slack_oauth_flow_first_time_installation(session):
     # Arrange
@@ -48,7 +48,7 @@ def test_slack_oauth_flow_first_time_installation(session):
     assert installation.bot_access_token == "xoxb-XXXXXXXXXXXX-TTTTTTTTTTTTTT"
 
 
-@pytest.mark.end2end
+@pytest.mark.unit
 @responses.activate
 def test_slack_oauth_flow_reinstallation(session, factory):
     # Arrange

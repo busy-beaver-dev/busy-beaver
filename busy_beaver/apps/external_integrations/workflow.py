@@ -50,7 +50,7 @@ def send_configuration_message(installation: SlackInstallation):
     slack = SlackAdapter(installation.bot_access_token)
     user_id = installation.authorizing_user_id
     channel = installation.github_summary_config.channel
-    slack.dm(CONFIRMED_MESSAGE.format(channel=channel), user_id)
+    slack.dm(CONFIRMED_MESSAGE.format(channel=channel), user_id=user_id)
 
 
 ACTIVE_MESSAGE = (
@@ -66,7 +66,7 @@ ACTIVE_MESSAGE = (
 def save_configuration(installation: SlackInstallation, time_to_post: time):
     slack = SlackAdapter(installation.bot_access_token)
     user_id = installation.authorizing_user_id
-    tz = slack.get_user_timzone(user_id)
+    tz = slack.get_user_timezone(user_id)
 
     github_summary_config = installation.github_summary_config
     github_summary_config.time_to_post = str(time_to_post)
