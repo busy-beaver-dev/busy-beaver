@@ -54,12 +54,12 @@ def send_configuration_message(installation: SlackInstallation):
 
 
 ACTIVE_MESSAGE = (
-    "Confirmed; I will post daily summaries at {time}..\n\n"
-    "Busy Beaver is now active! :party-emoji: \n\n"
+    "Confirmed; I will post daily summaries at {time}.\n\n"
+    "Busy Beaver is now active! :tada: \n\n"
     "You can use the following text to publicize the bot:\n"
-    "> Busy Beaver is a social coding platform that shares public"
-    "GitHub activity for registered users. "
-    "Join <#{channel}> to see what everybody is working on!"
+    "> Busy Beaver is a community engagement bot that shares daily "
+    "sumarries of public GitHub activity for registered users. "
+    "Find out what everybody's working on in <#{channel}>!"
 )
 
 
@@ -78,3 +78,12 @@ def save_configuration(installation: SlackInstallation, time_to_post: time):
     slack.dm(
         ACTIVE_MESSAGE.format(time=str(time_to_post), channel=channel), user_id=user_id
     )
+
+
+GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE = (
+    "Welcome to <#{channel}>! I'm Busy Beaver. "
+    "I post daily summaries of public GitHub activity "
+    "in this channel.\n\n"
+    "To connect your GitHub account and share activity, "
+    "please register using `/busybeaver connect`."
+)

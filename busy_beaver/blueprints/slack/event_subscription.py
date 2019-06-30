@@ -9,6 +9,9 @@ from busy_beaver.adapters import SlackAdapter
 from busy_beaver.apps.external_integrations.state_machine import (
     SlackInstallationOnboardUserWorkflow,
 )
+from busy_beaver.apps.external_integrations.workflow import (
+    GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE,
+)
 from busy_beaver.extensions import db
 from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation
 from busy_beaver.toolbox import EventEmitter
@@ -118,7 +121,9 @@ def member_joined_channel_handler(data):
     if user_joins_github_summary_channel:
         slack = SlackAdapter(installation.bot_access_token)
         slack.post_ephemeral_message(
-            "thx for joining", channel_id=channel, user_id=user_id
+            GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE.format(channel=channel),
+            channel_id=channel,
+            user_id=user_id,
         )
 
     return jsonify(None)
