@@ -239,3 +239,42 @@ def test_slack_onboarding_send_bot_configuration(
     args, kwargs = patched_slack.mock.call_args
     assert "Busy Beaver is now active!" in args[0]
     assert kwargs["user_id"] == authorizing_user_id
+
+
+@pytest.mark.unit
+def test_user_joins_github_summary_channel(
+    client, session, factory, patch_slack, create_slack_headers
+):
+    # Arrange
+    patched_slack = patch_slack("busy_beaver.blueprints.slack.event_subscription")
+    # Create installation in database
+    workspace_id = "TXXXXXXXXX"
+    authorizing_user_id = "alysivji"
+    bot_id = "test_bot"
+    channel = "busy-beaver"
+    installation = factory.SlackInstallation(
+        authorizing_user_id=authorizing_user_id,
+        state="active",
+        workspace_id=workspace_id,
+        workspace_name="Test",
+        bot_user_id=bot_id,
+    )
+    factory.GitHubSummaryConfiguration(channel=channel, slack_installation=installation)
+
+    # Act -- event_subscription callback
+    data = {
+        "type": "event_callback",
+        "team_id": workspace_id,
+        "event": {
+            "type": "member_joined_channel",
+            "user": authorizing_user_id,
+            "channel": channel,
+        },
+    }
+    headers = create_slack_headers(100_000_000, data)
+    client.post("/slack/event-subscription", headers=headers, json=data)
+
+    # Assert -- check that we send ephhermal message
+    args, kwargs = patched_slack.mock.call_args
+    assert "/busybeaver connect" in args[0]
+    assert kwargs["user_id"] == authorizing_user_id
