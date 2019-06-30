@@ -59,8 +59,8 @@ def message_handler(data):
     if event.get("bot_id") or event.get("subtype") == "bot_message":
         return jsonify(None)
 
-    # user messages bot
-    if event["channel_type"] == "im":
+    user_messages_bot = event["channel_type"] == "im"
+    if user_messages_bot:
         params = {"workspace_id": data["team_id"]}
         installation = SlackInstallation.query.filter_by(**params).first()
 

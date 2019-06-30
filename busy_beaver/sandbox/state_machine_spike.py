@@ -65,12 +65,3 @@ class OnboardUserWorkflow:
             send_configuration_message(self.slack_installation)
             return False
         return True
-
-
-if __name__ == "__main__":
-    s = SlackInstallation.query.first()
-    s.state = "installed"
-    db.session.add(s)
-    db.session.commit()
-    workflow = OnboardUserWorkflow(s)
-    workflow.advance()
