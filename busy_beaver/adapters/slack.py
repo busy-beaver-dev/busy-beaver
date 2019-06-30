@@ -19,9 +19,8 @@ class SlackAdapter:
     def __init__(self, slack_token):
         self.sc = SlackClient(slack_token)
 
-    def dm(self, user_id, message):
-        # TODO test
-        self.post_message(message, channel_id=user_id, as_user=True)
+    def dm(self, message, user_id):
+        return self.post_message(message, channel_id=user_id, as_user=True)
 
     def get_channel_info(self, channel_name) -> Channel:
         channel_id = self._get_channel_id(channel_name)
@@ -29,7 +28,6 @@ class SlackAdapter:
         return Channel(channel_name, channel_id, members)
 
     def get_user_timzone(self, user_id):
-        # TODO test
         result = self.sc.api_call("users.info", user=user_id, include_locale=True)
         return TimezoneInfo(
             tz=result["user"]["tz"],

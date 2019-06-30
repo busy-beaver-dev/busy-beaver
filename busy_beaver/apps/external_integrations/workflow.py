@@ -37,7 +37,7 @@ ONBOARDING_MESSAGE = (
 def send_welcome_message(installation: SlackInstallation):
     slack = SlackAdapter(installation.bot_access_token)
     user_id = installation.authorizing_user_id
-    slack.dm(user_id, message=ONBOARDING_MESSAGE.format(slack_id=user_id))
+    slack.dm(ONBOARDING_MESSAGE.format(slack_id=user_id), user_id=user_id)
 
 
 CONFIRMED_MESSAGE = (
@@ -50,11 +50,11 @@ def send_configuration_message(installation: SlackInstallation):
     slack = SlackAdapter(installation.bot_access_token)
     user_id = installation.authorizing_user_id
     channel = installation.github_summary_config.channel
-    slack.dm(user_id, message=CONFIRMED_MESSAGE.format(channel=channel))
+    slack.dm(CONFIRMED_MESSAGE.format(channel=channel), user_id)
 
 
 ACTIVE_MESSAGE = (
-    "Confirmed; I will post daily summaries at {time}.\n\n"
+    "Confirmed; I will post daily summaries at {time}..\n\n"
     "Busy Beaver is now active! :party-emoji: \n\n"
     "You can use the following text to publicize the bot:\n"
     "> Busy Beaver is a social coding platform that shares public"
@@ -74,9 +74,7 @@ def save_configuration(installation: SlackInstallation, time_to_post: time):
     db.session.add(github_summary_config)
     db.session.commit()
 
+    channel = github_summary_config.channel
     slack.dm(
-        user_id,
-        message=ACTIVE_MESSAGE.format(
-            time=str(time_to_post), channel=github_summary_config.channel
-        ),
+        ACTIVE_MESSAGE.format(time=str(time_to_post), channel=channel), user_id=user_id
     )

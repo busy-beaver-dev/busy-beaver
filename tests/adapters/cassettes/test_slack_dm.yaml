@@ -1,0 +1,160 @@
+interactions:
+- request:
+    body: channel=U5FTQ3QRZ&text=test&unfurl_links=True&unfurl_media=True&as_user=True
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '76'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      authorization:
+      - DUMMY
+      user-agent:
+      - slackclient/1.3.0 Python/3.7.1 Linux/4.9.125-linuxkit
+    method: POST
+    uri: https://slack.com/api/chat.postMessage
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA32NQQuCQBCF/8ucJXaNXXCP1joQFCZG3cJyqCg13BEK8b83XTp2fN/3Hm+E7g6O
+        +4EiOF+rtqUHOFh6LEpbzHOIgIMAbaxOtDWJnikVa6VENBRCdSFwI5w6Pt5q6aV+Faeoc/wO30+R
+        v5oAerEApsCShkC9pJ1HPGyNz/5dMVWNqNKgyhbrzR6m6QOh5jBFuQAAAA==
+    headers:
+      Access-Control-Allow-Headers:
+      - slack-route, x-slack-version-ts
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - x-slack-req-id
+      Cache-Control:
+      - private, no-cache, no-store, must-revalidate
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '157'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Sun, 30 Jun 2019 17:43:11 GMT
+      Expires:
+      - Mon, 26 Jul 1997 05:00:00 GMT
+      Pragma:
+      - no-cache
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      Via:
+      - 1.1 90ec1457c46fc15b8daff1254c3211b7.cloudfront.net (CloudFront)
+      X-Accepted-OAuth-Scopes:
+      - chat:write:user,client
+      X-Amz-Cf-Id:
+      - GD767Hr5LD3IJ2De_c5v3cW-lG_l9FuwDj2gY1Z2xBNzx8q1Qod9pg==
+      X-Amz-Cf-Pop:
+      - IND6
+      X-Cache:
+      - Miss from cloudfront
+      X-Content-Type-Options:
+      - nosniff
+      X-OAuth-Scopes:
+      - identify,bot:basic
+      X-Slack-Req-Id:
+      - da681e6d-b46f-4b93-b2f6-54c159c6ee7a
+      X-Via:
+      - haproxy-www-482q
+      X-XSS-Protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+- request:
+    body: channel=U5FTQ3QRZ&text=test&unfurl_links=True&unfurl_media=True&as_user=True
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '76'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      authorization:
+      - DUMMY
+      user-agent:
+      - slackclient/1.3.0 Python/3.7.1 Linux/4.9.125-linuxkit
+    method: POST
+    uri: https://slack.com/api/chat.postMessage
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA32NwQrCMBBE/2XPRZJoAuZYTQOCUktFbxLroqJtpdmCUvrvrhePHue9GWaA9g6W
+        uh4TqK6hafABFpbOF6UppjkkQJGB1EbOpTFiNhFCKSFY1BhjuCDYAU4tHW9n7qVupVIvc/8dvp8s
+        fzUG+CIGhJE49RE7Tjvn/WGrXfbvijDUrErtRbZYb/Ywjh8p3zwUuQAAAA==
+    headers:
+      Access-Control-Allow-Headers:
+      - slack-route, x-slack-version-ts
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - x-slack-req-id
+      Cache-Control:
+      - private, no-cache, no-store, must-revalidate
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '157'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Sun, 30 Jun 2019 17:43:24 GMT
+      Expires:
+      - Mon, 26 Jul 1997 05:00:00 GMT
+      Pragma:
+      - no-cache
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      Via:
+      - 1.1 90ae7a2049c2513b89b7c6134cad70b6.cloudfront.net (CloudFront)
+      X-Accepted-OAuth-Scopes:
+      - chat:write:user,client
+      X-Amz-Cf-Id:
+      - uZdtiCK_bnuxvw4_cO1nFEnnku94gfrbrzZ6QmeCNXpGy5L_kSWFdQ==
+      X-Amz-Cf-Pop:
+      - IND6
+      X-Cache:
+      - Miss from cloudfront
+      X-Content-Type-Options:
+      - nosniff
+      X-OAuth-Scopes:
+      - identify,bot:basic
+      X-Slack-Req-Id:
+      - fcc5dcbd-5e2c-40c2-a056-35c44405e5c8
+      X-Via:
+      - haproxy-www-hjmi
+      X-XSS-Protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1
