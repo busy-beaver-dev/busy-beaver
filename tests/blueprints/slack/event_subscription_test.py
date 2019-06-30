@@ -7,7 +7,7 @@ MODULE_TO_TEST = "busy_beaver.blueprints.slack.event_subscription"
 @pytest.fixture
 def patched_slack(patcher):
     obj = FakeSlackClient()
-    return patcher(MODULE_TO_TEST, namespace="chipy_slack", replacement=obj)
+    return patcher(MODULE_TO_TEST, namespace="SlackAdapter", replacement=obj)
 
 
 @pytest.mark.integration
@@ -74,7 +74,7 @@ def test_slack_callback_user_dms_bot_reply(
 
     # Assert
     assert resp.status_code == 200
-    assert len(patched_slack.mock.mock_calls) == 1
+    assert len(patched_slack.mock.mock_calls) == 2
     args, kwargs = patched_slack.mock.call_args
     assert "/busybeaver help" in args[0]
     assert kwargs["channel_id"] == channel_id

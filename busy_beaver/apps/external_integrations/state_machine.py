@@ -10,7 +10,7 @@ from busy_beaver.apps.external_integrations.workflow import (
 from busy_beaver.models import SlackInstallation
 
 
-class OnboardUserWorkflow:
+class SlackInstallationOnboardUserWorkflow:
 
     STATES = ["installed", "user_welcomed", "config_requested", "active"]
 

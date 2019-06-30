@@ -6,9 +6,11 @@ from flask.views import MethodView
 from .decorators import slack_verification_required
 from .slash_command import HELP_TEXT
 from busy_beaver.adapters import SlackAdapter
+from busy_beaver.apps.external_integrations.state_machine import (
+    SlackInstallationOnboardUserWorkflow,
+)
 from busy_beaver.extensions import db
 from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation
-from busy_beaver.sandbox.state_machine_spike import OnboardUserWorkflow
 from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
@@ -70,7 +72,9 @@ def message_handler(data):
         )
         if bot_recieves_configuration_information:
             entered_time = event["text"]
-            workflow = OnboardUserWorkflow(installation, payload=entered_time)
+            workflow = SlackInstallationOnboardUserWorkflow(
+                installation, payload=entered_time
+            )
             workflow.advance()
             return jsonify(None)
 
@@ -98,7 +102,7 @@ def member_joined_channel_handler(data):
             db.session.commit()
 
             db.session.refresh(installation)
-            workflow = OnboardUserWorkflow(installation)
+            workflow = SlackInstallationOnboardUserWorkflow(installation)
             workflow.advance()
         else:
             # bot was invited to a different channel
