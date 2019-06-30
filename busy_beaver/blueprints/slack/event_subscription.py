@@ -5,7 +5,6 @@ from flask.views import MethodView
 
 from .decorators import slack_verification_required
 from .slash_command import HELP_TEXT
-from busy_beaver import chipy_slack
 from busy_beaver.adapters import SlackAdapter
 from busy_beaver.extensions import db
 from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation
@@ -62,15 +61,22 @@ def message_handler(data):
 
     # user messages bot
     if event["channel_type"] == "im":
-        i = SlackInstallation.query.filter_by(workspace_id=data["team_id"]).first()
-        if (i.state == "config_requested") and (i.authorizing_user_id == event["user"]):
-            # grab time and restart throw it into the state machine
+        params = {"workspace_id": data["team_id"]}
+        installation = SlackInstallation.query.filter_by(**params).first()
+
+        bot_recieves_configuration_information = (
+            installation.state == "config_requested"
+            and installation.authorizing_user_id == event["user"]
+        )
+        if bot_recieves_configuration_information:
             entered_time = event["text"]
-            workflow = OnboardUserWorkflow(i, payload=entered_time)
+            workflow = OnboardUserWorkflow(installation, payload=entered_time)
             workflow.advance()
-        else:
-            logger.info("[Busy Beaver] Slack -- Unknown command")
-            chipy_slack.post_message(HELP_TEXT, channel_id=data["event"]["channel"])
+            return jsonify(None)
+
+        logger.info("[Busy Beaver] Slack -- Unknown command")
+        slack = SlackAdapter(installation.bot_access_token)
+        slack.post_message(HELP_TEXT, channel_id=data["event"]["channel"])
 
     return jsonify(None)
 
@@ -79,13 +85,14 @@ def message_handler(data):
 def member_joined_channel_handler(data):
     workspace_id = data["team_id"]
     user_id = data["event"]["user"]
-    channel_id = data["event"]["channel"]
+    channel = data["event"]["channel"]
 
     installation = SlackInstallation.query.filter_by(workspace_id=workspace_id).first()
-    if user_id == installation.bot_user_id:
-        # bot was invited to channel
-        if not installation.github_summary_config:
-            github_summary_config = GitHubSummaryConfiguration(channel=channel_id)
+    bot_invited_to_channel = user_id == installation.bot_user_id
+    if bot_invited_to_channel:
+        github_summary_configured = installation.github_summary_config
+        if not github_summary_configured:
+            github_summary_config = GitHubSummaryConfiguration(channel=channel)
             github_summary_config.slack_installation = installation
             db.session.add(github_summary_config)
             db.session.commit()
@@ -100,9 +107,14 @@ def member_joined_channel_handler(data):
 
         return jsonify(None)
 
-    # TODO only if we are active once this is active
-    if channel_id == installation.github_summary_config.channel_id:
+    user_joins_github_summary_channel = (
+        installation.github_summary_config.channel == channel
+        and installation.state == "active"
+    )
+    if user_joins_github_summary_channel:
         slack = SlackAdapter(installation.bot_access_token)
-        slack.dm(user_id, "thx for joining")
+        slack.post_ephemeral_message(
+            "thx for joining", channel_id=channel, user_id=user_id
+        )
 
     return jsonify(None)

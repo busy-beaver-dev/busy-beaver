@@ -19,10 +19,32 @@ class SlackAdapter:
     def __init__(self, slack_token):
         self.sc = SlackClient(slack_token)
 
+    def dm(self, user_id, message):
+        # TODO test
+        self.post_message(message, channel_id=user_id, as_user=True)
+
     def get_channel_info(self, channel_name) -> Channel:
         channel_id = self._get_channel_id(channel_name)
         members = self._get_channel_members(channel_id)
         return Channel(channel_name, channel_id, members)
+
+    def get_user_timzone(self, user_id):
+        # TODO test
+        result = self.sc.api_call("users.info", user=user_id, include_locale=True)
+        return TimezoneInfo(
+            tz=result["user"]["tz"],
+            label=result["user"]["tz_label"],
+            offset=result["user"]["tz_offset"],
+        )
+
+    def post_ephemeral_message(self, message, channel_id, user_id):
+        return self.sc.api_call(
+            "chat.postEphemeral",
+            text=message,
+            channel=channel_id,
+            user=user_id,
+            attachments=None,
+        )
 
     def post_message(
         self,
@@ -50,18 +72,6 @@ class SlackAdapter:
             unfurl_links=unfurl_links,
             unfurl_media=unfurl_media,
             as_user=as_user,
-        )
-
-    def dm(self, user_id, message):
-        # TODO test this
-        self.post_message(message, channel_id=user_id, as_user=True)
-
-    def get_user_timzone(self, user_id):
-        result = self.sc.api_call("users.info", user=user_id, include_locale=True)
-        return TimezoneInfo(
-            tz=result["user"]["tz"],
-            label=result["user"]["tz_label"],
-            offset=result["user"]["tz_offset"],
         )
 
     def _get_channel_id(self, channel_name: str) -> str:
