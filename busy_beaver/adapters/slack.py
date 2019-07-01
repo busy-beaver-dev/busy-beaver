@@ -70,7 +70,3 @@ class SlackAdapter:
     def _get_channel_members(self, channel: str) -> List[str]:
         channel_info = self.sc.api_call("channels.info", channel=channel)
         return channel_info["channel"]["members"]
-
-    def _get_all_channels(self):
-        channels = self.sc.api_call("channels.list")
-        return [Channel(c["name"], c["id"]) for c in channels["channels"]]
