@@ -37,19 +37,15 @@ def test_start_post_github_summary_task(session, factory, patched_background_tas
     # Arrange
     slack_installation = factory.SlackInstallation(workspace_id="abc")
     api_user = factory.ApiUser(username="admin")
-    channel_name = "test-channel"
 
     # Act
-    start_post_github_summary_task(
-        api_user, slack_installation.workspace_id, channel_name
-    )
+    start_post_github_summary_task(api_user, slack_installation.workspace_id)
 
     # Assert
     api_user = ApiUser.query.get(api_user.id)
     task = api_user.tasks[0]
     assert task.job_id == patched_background_task.id
     assert task.data["slack_installation_id"] == slack_installation.id
-    assert task.data["channel_name"] == channel_name
     assert "boundary_dt" in task.data
 
 
@@ -92,17 +88,17 @@ def test_fetch_github_summary_post_to_slack_with_no_users(
     session, factory, t_minus_one_day, patched_slack, patched_github_user_events
 ):
     # Arrange
+    channel = "general"
     boundary_dt = t_minus_one_day
-    slack_installation = factory.SlackInstallation(workspace_id="abc")
-    channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
+    github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
+    slack_installation = github_summary_config.slack_installation
+    channel_info = Channel(name="general", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
     patched_github_user_events(messages=["a", "b"])
 
     # Act
     fetch_github_summary_post_to_slack(
-        installation_id=slack_installation.id,
-        channel_name="general",
-        boundary_dt=boundary_dt,
+        installation_id=slack_installation.id, boundary_dt=boundary_dt
     )
 
     # Assert
@@ -113,7 +109,7 @@ def test_fetch_github_summary_post_to_slack_with_no_users(
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
     assert "does it make a sound" in kwargs["message"]
-    assert "idz" in kwargs["channel_id"]
+    assert "general" in kwargs["channel"]
 
 
 @pytest.mark.unit
@@ -121,24 +117,28 @@ def test_fetch_github_summary_post_to_slack_with_no_activity(
     session, factory, t_minus_one_day, patched_slack, patched_github_user_events
 ):
     # Arrange
+    channel = "general"
     boundary_dt = t_minus_one_day
-    user = factory.GitHubSummaryUser(slack_id="user1", github_username="github_user1")
-    slack_install = user.installation
-    channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
+    github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
+    slack_installation = github_summary_config.slack_installation
+    factory.GitHubSummaryUser(
+        slack_id="user1",
+        github_username="github_user1",
+        installation=slack_installation,
+    )
+    channel_info = Channel(name="general", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
     patched_github_user_events(messages=[""])
 
     # Act
     fetch_github_summary_post_to_slack(
-        installation_id=slack_install.id,
-        channel_name="general",
-        boundary_dt=boundary_dt,
+        installation_id=slack_installation.id, boundary_dt=boundary_dt
     )
 
     # Assert
     slack_adapter_initalize_args = slack.mock.call_args_list[0]
     args, kwargs = slack_adapter_initalize_args
-    assert slack_install.bot_access_token in args
+    assert slack_installation.bot_access_token in args
 
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
@@ -150,27 +150,33 @@ def test_fetch_github_summary_post_to_slack_with_activity(
     session, factory, t_minus_one_day, patched_slack, patched_github_user_events
 ):
     # Arrange
+    channel = "general"
     boundary_dt = t_minus_one_day
-    user = factory.GitHubSummaryUser(slack_id="user1", github_username="github_user1")
-    slack_install = user.installation
+    github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
+    slack_installation = github_summary_config.slack_installation
     factory.GitHubSummaryUser(
-        slack_id="user2", github_username="github_user2", installation=slack_install
+        slack_id="user1",
+        github_username="github_user1",
+        installation=slack_installation,
     )
-    channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
+    factory.GitHubSummaryUser(
+        slack_id="user2",
+        github_username="github_user2",
+        installation=slack_installation,
+    )
+    channel_info = Channel(name="general", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
     patched_github_user_events(messages=["a", "b"])
 
     # Act
     fetch_github_summary_post_to_slack(
-        installation_id=slack_install.id,
-        channel_name="general",
-        boundary_dt=boundary_dt,
+        installation_id=slack_installation.id, boundary_dt=boundary_dt
     )
 
     # Assert
     slack_adapter_initalize_args = slack.mock.call_args_list[0]
     args, kwargs = slack_adapter_initalize_args
-    assert slack_install.bot_access_token in args
+    assert slack_installation.bot_access_token in args
 
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
@@ -184,22 +190,25 @@ def test_fetch_github_summary_post_to_slack_with_activity(
 def test_post_github_summary_task__integration(
     session, factory, t_minus_one_day, patched_slack
 ):
-    channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
+    channel = "general"
+    github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
+    slack_installation = github_summary_config.slack_installation
+    factory.GitHubSummaryUser(
+        slack_id="user1", github_username="alysivji", installation=slack_installation
+    )
+
+    channel_info = Channel(name="general", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
-    user = factory.GitHubSummaryUser(slack_id="user1", github_username="alysivji")
-    slack_install = user.installation
 
     # Act
     fetch_github_summary_post_to_slack(
-        installation_id=slack_install.id,
-        channel_name="general",
-        boundary_dt=t_minus_one_day,
+        installation_id=slack_installation.id, boundary_dt=t_minus_one_day
     )
 
     # Assert
     slack_adapter_initalize_args = slack.mock.call_args_list[0]
     args, kwargs = slack_adapter_initalize_args
-    assert slack_install.bot_access_token in args
+    assert slack_installation.bot_access_token in args
 
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args

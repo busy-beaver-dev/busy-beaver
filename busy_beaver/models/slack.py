@@ -28,8 +28,12 @@ class SlackInstallation(BaseModel):
     scope = db.Column(db.String(300), nullable=False)
     workspace_id = db.Column(db.String(20), index=True, nullable=False)
     workspace_name = db.Column(db.String(255), nullable=False)
+    state = db.Column(db.String(20), nullable=False, default="installed")
 
     # Relationships
     github_summary_users = db.relationship(
         "GitHubSummaryUser", back_populates="installation"
+    )
+    github_summary_config = db.relationship(
+        "GitHubSummaryConfiguration", back_populates="slack_installation", uselist=False
     )

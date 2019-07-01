@@ -1,8 +1,9 @@
 from .event import Event
 from .event_details import EventDetails
+from .github_summary_user import GitHubSummaryConfiguration, GitHubSummaryUser
 from .slack import SlackInstallation
 from .tweet import Tweet
-from .user import ApiUser, GitHubSummaryUser
+from .user import ApiUser
 
 
 class FactoryManager:
@@ -10,6 +11,7 @@ class FactoryManager:
         ApiUser,
         Event,
         EventDetails,
+        GitHubSummaryConfiguration,
         GitHubSummaryUser,
         SlackInstallation,
         Tweet,

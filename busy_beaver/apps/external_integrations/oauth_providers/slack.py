@@ -59,9 +59,7 @@ class SlackOAuthFlow:
         self.client_secret = client_secret
 
     def generate_authentication_tuple(self) -> ExternalOAuthDetails:
-        url = self.AUTHORIZATION_BASE_URL
-        authorization_url, state = self.session.authorization_url(url)
-        return ExternalOAuthDetails(url=authorization_url, state=state)
+        raise NotImplementedError  # pragma: no cover
 
     def process_callback(self, authorization_response_url, state) -> SlackOAuthInfo:
         """Slack OAuth for workspace installation adds params to response

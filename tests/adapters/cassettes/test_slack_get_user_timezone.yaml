@@ -1,0 +1,89 @@
+interactions:
+- request:
+    body: user=U5FTQ3QRZ&include_locale=True
+    headers:
+      Accept:
+      - '*/*'
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Length:
+      - '34'
+      Content-Type:
+      - application/x-www-form-urlencoded
+      authorization:
+      - DUMMY
+      user-agent:
+      - slackclient/1.3.0 Python/3.7.1 Linux/4.9.125-linuxkit
+    method: POST
+    uri: https://slack.com/api/users.info
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA61V22rbQBD9FbOQPvmiayQbQhtc3KcW0jgUikGMpZG08UordtdpnOB/z+gSV6LN
+        m0Cg2TNnzp7Zh5lXJg9sZdQRp+yoUbHVK+MJW7EHf7O9c+9+/mZTZhCKqEG3/jdrs/7+4xehJRRI
+        EIiT5k+PnJAEBRokXgpCk2AshSRFtkyvlxgQQSGIqKu7FafJfVdoXmqgQMVj2C3WOf0y2eCRgD0K
+        yq6xNArE5CucBM9yM9lykmkoMk01Graa2aFlWVNWKZlygXUrhps6YESscll2oT6cqi78yNEFj0qp
+        ChD8pe5rQEm4rgScov+8Qy8zrO+RtAFz1JHBZ9O5agEsJOUHyHPFFRguS7ai9uAJDKgoB50TLdsn
+        4C/jFO3EphIsgIveRV+yGpjHsqBkypU2vW4JEvAXeW+MF5Bh5HgE5cZUerVb7BYa46PCeaba62vF
+        3aKNd4ueh9BJvCBw/WDvWNeeY6Fn2+H8sco+6xvH+5TcNJJX7u2Vs6EP5lpAfJhhkmGtSZBl7a9d
+        +vMiqwnNFbqNIsuyrZnjzasyuxh1ndGNus4oRl1nYNQLRzfqhaMY9cKB0WD8Fw3GedFg+KL2cnyn
+        pDmKVdIZePXt8b2S5iheSafz2ptKUQylLGkUi3Ya1VtgsALO1JqOICl4+b5C6Cz/lPUauZwrRf2r
+        0z+4Qm1o3vf3BaFHQVP+g9xemv4RqipqV1aHHasEmhLb98PQ9SzXpgEnqYF6umE5e7hn5/Mb99j6
+        hvIGAAA=
+    headers:
+      Access-Control-Allow-Headers:
+      - slack-route, x-slack-version-ts
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - x-slack-req-id
+      Cache-Control:
+      - private, no-cache, no-store, must-revalidate
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '575'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Sun, 30 Jun 2019 17:39:50 GMT
+      Expires:
+      - Mon, 26 Jul 1997 05:00:00 GMT
+      Pragma:
+      - no-cache
+      Referrer-Policy:
+      - no-referrer
+      Server:
+      - Apache
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubDomains; preload
+      Vary:
+      - Accept-Encoding
+      Via:
+      - 1.1 638e2f6ec35874dad86fe2250f19c411.cloudfront.net (CloudFront)
+      X-Accepted-OAuth-Scopes:
+      - users:read,read
+      X-Amz-Cf-Id:
+      - mfsXIvUwqKN0DiOVFLzkhc4mxZ0RcF0YbsgaSkzpRKn8wJjMLIULtQ==
+      X-Amz-Cf-Pop:
+      - IND6
+      X-Cache:
+      - Miss from cloudfront
+      X-Content-Type-Options:
+      - nosniff
+      X-OAuth-Scopes:
+      - identify,bot:basic
+      X-Slack-Req-Id:
+      - 567c4853-a9bf-4062-8321-968888db44f6
+      X-Via:
+      - haproxy-www-4qov
+      X-XSS-Protection:
+      - '0'
+    status:
+      code: 200
+      message: OK
+version: 1

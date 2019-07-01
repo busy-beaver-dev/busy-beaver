@@ -62,18 +62,19 @@ def test_github_summary_endpoint_success(
     caplog, client, session, factory, patched_post_github_summary_trigger
 ):
     # Arrange
+    workspace_id = "test_workspace_id"
     factory.ApiUser(username="test_user", token="abcd", role="admin")
-    factory.SlackInstallation(workspace_id="abc")
+    factory.SlackInstallation(workspace_id=workspace_id)
     mock = patched_post_github_summary_trigger
 
     # Act
     result = client.post(
         "/poll/github-summary",
         headers={"Authorization": "token abcd"},
-        json={"channel": "general", "workspace_id": "test_id"},
+        json={"workspace_id": workspace_id},
     )
 
     # Assert
     assert result.status_code == 200
     args, kwargs = mock.call_args
-    assert "general" in args
+    assert workspace_id in args

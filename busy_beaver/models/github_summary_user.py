@@ -3,10 +3,11 @@ from busy_beaver.extensions import db
 
 
 class GitHubSummaryUser(BaseModel):
-    # TODO
-    # add a field for workspace_id
-    # add a relationship for the ORM
-    """GitHub Summary User table"""
+    """GitHub Summary User table
+
+    TODO: GitHubSummaryUser should really be related to
+    GitHubSummaryConfiguration versus SlackInstallation
+    """
 
     __tablename__ = "github_summary_user"
 
@@ -28,4 +29,25 @@ class GitHubSummaryUser(BaseModel):
     # Relationships
     installation = db.relationship(
         "SlackInstallation", back_populates="github_summary_users"
+    )
+
+
+class GitHubSummaryConfiguration(BaseModel):
+    __tablename__ = "github_summary_configuration"
+
+    def __repr__(self):  # pragma: no cover
+        return f"<GitHubSummaryConfiguration>"
+
+    installation_id = db.Column(
+        db.Integer,
+        db.ForeignKey("slack_installation.id", name="fk_installation_id"),
+        nullable=False,
+    )
+    channel = db.Column(db.String(20), nullable=False)
+    time_to_post = db.Column(db.String(20), nullable=True)
+    timezone_info = db.Column(db.JSON)
+
+    # Relationships
+    slack_installation = db.relationship(
+        "SlackInstallation", back_populates="github_summary_config"
     )

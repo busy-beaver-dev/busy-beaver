@@ -25,13 +25,14 @@ class PublishGitHubSummaryResource(MethodView):
         # TODO: replace this with marshmallow
         # Get workspace_id and pass it into github_summary task
         data = request.json
-        if not data or "channel" not in data or "workspace_id" not in data:
-            logger.error("[Busy Beaver] Post GitHub Summary Task -- channel in body")
-            return make_response(
-                status_code=422,
-                error={"message": "JSON requires both 'channel'and 'workspace_id' key"},
+        if not data or "workspace_id" not in data:
+            logger.error(
+                "[Busy Beaver] Post GitHub Summary Task -- workspace_id missing"
             )
-        start_post_github_summary_task(user, data["workspace_id"], data["channel"])
+            return make_response(
+                status_code=422, error={"message": "JSON requires 'workspace_id' key"}
+            )
+        start_post_github_summary_task(user, data["workspace_id"])
 
         logger.info("[Busy Beaver] Post GitHub Summary -- kicked-off")
         return make_response(200, json={"run": "complete"})
