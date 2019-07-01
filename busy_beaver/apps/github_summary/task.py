@@ -20,9 +20,7 @@ from busy_beaver.toolbox import utc_now_minus, set_task_progress
 logger = logging.getLogger(__name__)
 
 
-def start_post_github_summary_task(
-    task_owner: ApiUser, workspace_id: str, channel_name: str
-):
+def start_post_github_summary_task(task_owner: ApiUser, workspace_id: str):
     boundary_dt = utc_now_minus(timedelta(days=1))
     slack_installation = SlackInstallation.query.filter_by(
         workspace_id=workspace_id
@@ -30,9 +28,7 @@ def start_post_github_summary_task(
     if not slack_installation:
         raise ValidationError("workspace not found")
 
-    job = fetch_github_summary_post_to_slack.queue(
-        slack_installation.id, channel_name, boundary_dt
-    )
+    job = fetch_github_summary_post_to_slack.queue(slack_installation.id, boundary_dt)
 
     task = PostGitHubSummaryTask(
         job_id=job.id,
@@ -42,7 +38,6 @@ def start_post_github_summary_task(
         data={
             "workspace_id": workspace_id,
             "slack_installation_id": slack_installation.id,
-            "channel_name": channel_name,
             "boundary_dt": boundary_dt.isoformat(),
         },
     )
@@ -51,11 +46,12 @@ def start_post_github_summary_task(
 
 
 @rq.job
-def fetch_github_summary_post_to_slack(installation_id, channel_name, boundary_dt):
+def fetch_github_summary_post_to_slack(installation_id, boundary_dt):
     slack_installation = SlackInstallation.query.get(installation_id)
+    channel = slack_installation.github_summary_config.channel
     slack = SlackAdapter(slack_installation.bot_access_token)
 
-    channel_info = slack.get_channel_info(channel_name)
+    channel_info = slack.get_channel_info(channel)
     users: List[GitHubSummaryUser] = GitHubSummaryUser.query.filter(
         and_(
             GitHubSummaryUser.installation_id == installation_id,
@@ -80,6 +76,6 @@ def fetch_github_summary_post_to_slack(installation_id, channel_name, boundary_d
         )
 
     slack.post_message(
-        message=message, channel=channel_name, unfurl_links=False, unfurl_media=False
+        message=message, channel=channel, unfurl_links=False, unfurl_media=False
     )
     set_task_progress(100)
