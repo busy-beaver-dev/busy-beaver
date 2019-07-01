@@ -186,7 +186,6 @@ def test_fetch_github_summary_post_to_slack_with_activity(
 @pytest.mark.vcr()
 @pytest.mark.freeze_time("2019-03-31")
 @pytest.mark.integration
-@pytest.mark.wip
 def test_post_github_summary_task__integration(
     session, factory, t_minus_one_day, patched_slack
 ):
