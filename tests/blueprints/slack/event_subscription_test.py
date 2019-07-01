@@ -64,7 +64,7 @@ def test_slack_callback_user_dms_bot_reply(
     # Arrange
     patched_slack = patch_slack("busy_beaver.blueprints.slack.event_subscription")
     factory.SlackInstallation(workspace_id="team_id")
-    channel_id = 5
+    channel = 5
     data = {
         "type": "event_callback",
         "team_id": "team_id",
@@ -74,7 +74,7 @@ def test_slack_callback_user_dms_bot_reply(
             "channel_type": "im",
             "text": "random",
             "user": "random_user",
-            "channel": channel_id,
+            "channel": channel,
         },
     }
     headers = create_slack_headers(100_000_000, data)
@@ -87,7 +87,7 @@ def test_slack_callback_user_dms_bot_reply(
     assert len(patched_slack.mock.mock_calls) == 2
     args, kwargs = patched_slack.mock.call_args
     assert "/busybeaver help" in args[0]
-    assert kwargs["channel_id"] == channel_id
+    assert kwargs["channel"] == channel
 
 
 @pytest.mark.end2end

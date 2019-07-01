@@ -80,9 +80,6 @@ def fetch_github_summary_post_to_slack(installation_id, channel_name, boundary_d
         )
 
     slack.post_message(
-        message=message,
-        channel_id=channel_info.id,
-        unfurl_links=False,
-        unfurl_media=False,
+        message=message, channel=channel_name, unfurl_links=False, unfurl_media=False
     )
     set_task_progress(100)

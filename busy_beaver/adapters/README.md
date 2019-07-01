@@ -39,7 +39,7 @@ for instructions to generate the api key
 
 ```python
 api_key = "..."
-channel_id = "..."
+channel = "..."
 youtube = YouTubeAdapter(api_key=api_key)
-data = youtube.get_latest_videos_from_channel(channel_id)
+data = youtube.get_latest_videos_from_channel(channel)
 ```

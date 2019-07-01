@@ -83,7 +83,7 @@ def message_handler(data):
 
         logger.info("[Busy Beaver] Slack -- Unknown command")
         slack = SlackAdapter(installation.bot_access_token)
-        slack.post_message(HELP_TEXT, channel_id=data["event"]["channel"])
+        slack.post_message(HELP_TEXT, channel=data["event"]["channel"])
 
     return jsonify(None)
 
@@ -122,7 +122,7 @@ def member_joined_channel_handler(data):
         slack = SlackAdapter(installation.bot_access_token)
         slack.post_ephemeral_message(
             GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE.format(channel=channel),
-            channel_id=channel,
+            channel=channel,
             user_id=user_id,
         )
 

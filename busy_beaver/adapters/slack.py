@@ -5,7 +5,6 @@ from slackclient import SlackClient
 
 class Channel(NamedTuple):
     name: str
-    id: str
     members: List[str] = None
 
 
@@ -20,12 +19,11 @@ class SlackAdapter:
         self.sc = SlackClient(slack_token)
 
     def dm(self, message, user_id):
-        return self.post_message(message, channel_id=user_id, as_user=True)
+        return self.post_message(message, channel=user_id, as_user=True)
 
-    def get_channel_info(self, channel_name) -> Channel:
-        channel_id = self._get_channel_id(channel_name)
-        members = self._get_channel_members(channel_id)
-        return Channel(channel_name, channel_id, members)
+    def get_channel_info(self, channel) -> Channel:
+        members = self._get_channel_members(channel)
+        return Channel(channel, members)
 
     def get_user_timezone(self, user_id):
         result = self.sc.api_call("users.info", user=user_id, include_locale=True)
@@ -35,11 +33,11 @@ class SlackAdapter:
             offset=result["user"]["tz_offset"],
         )
 
-    def post_ephemeral_message(self, message, channel_id, user_id):
+    def post_ephemeral_message(self, message, channel, user_id):
         return self.sc.api_call(
             "chat.postEphemeral",
             text=message,
-            channel=channel_id,
+            channel=channel,
             user=user_id,
             attachments=None,
         )
@@ -47,23 +45,20 @@ class SlackAdapter:
     def post_message(
         self,
         message="",
+        channel=None,
         *,
         blocks=None,
         attachments=None,
-        channel=None,
-        channel_id=None,
         unfurl_links=True,
         unfurl_media=True,
         as_user=False,
     ):
-        if not channel and not channel_id:
-            raise ValueError("Must specify channel or channel_id")
+        if not channel:
+            raise ValueError("Must specify channel")
 
-        if not channel_id:
-            channel_id = self._get_channel_id(channel)
         return self.sc.api_call(
             "chat.postMessage",
-            channel=channel_id,
+            channel=channel,
             text=message,
             blocks=blocks,
             attachments=attachments,
@@ -72,12 +67,8 @@ class SlackAdapter:
             as_user=as_user,
         )
 
-    def _get_channel_id(self, channel_name: str) -> str:
-        channels = self._get_all_channels()
-        return [t.id for t in channels if t.name == channel_name][0]
-
-    def _get_channel_members(self, channel_id: str) -> List[str]:
-        channel_info = self.sc.api_call("channels.info", channel=channel_id)
+    def _get_channel_members(self, channel: str) -> List[str]:
+        channel_info = self.sc.api_call("channels.info", channel=channel)
         return channel_info["channel"]["members"]
 
     def _get_all_channels(self):

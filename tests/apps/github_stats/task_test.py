@@ -94,7 +94,7 @@ def test_fetch_github_summary_post_to_slack_with_no_users(
     # Arrange
     boundary_dt = t_minus_one_day
     slack_installation = factory.SlackInstallation(workspace_id="abc")
-    channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
+    channel_info = Channel(name="general", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
     patched_github_user_events(messages=["a", "b"])
 
@@ -113,7 +113,7 @@ def test_fetch_github_summary_post_to_slack_with_no_users(
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
     assert "does it make a sound" in kwargs["message"]
-    assert "idz" in kwargs["channel_id"]
+    assert "general" in kwargs["channel"]
 
 
 @pytest.mark.unit
@@ -124,7 +124,7 @@ def test_fetch_github_summary_post_to_slack_with_no_activity(
     boundary_dt = t_minus_one_day
     user = factory.GitHubSummaryUser(slack_id="user1", github_username="github_user1")
     slack_install = user.installation
-    channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
+    channel_info = Channel(name="general", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
     patched_github_user_events(messages=[""])
 
@@ -156,7 +156,7 @@ def test_fetch_github_summary_post_to_slack_with_activity(
     factory.GitHubSummaryUser(
         slack_id="user2", github_username="github_user2", installation=slack_install
     )
-    channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
+    channel_info = Channel(name="general", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
     patched_github_user_events(messages=["a", "b"])
 
@@ -184,7 +184,7 @@ def test_fetch_github_summary_post_to_slack_with_activity(
 def test_post_github_summary_task__integration(
     session, factory, t_minus_one_day, patched_slack
 ):
-    channel_info = Channel(name="general", id="idz", members=["user1", "user2"])
+    channel_info = Channel(name="general", members=["user1", "user2"])
     slack = patched_slack(channel_info=channel_info)
     user = factory.GitHubSummaryUser(slack_id="user1", github_username="alysivji")
     slack_install = user.installation

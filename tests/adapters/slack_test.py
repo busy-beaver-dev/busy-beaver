@@ -29,7 +29,6 @@ def test_slack_get_channel_info(slack: SlackAdapter):
 
     # Assert
     assert result.name == "general"
-    assert isinstance(result.id, str)
     assert len(result.members) > 0
 
 
@@ -48,7 +47,7 @@ def test_slack_get_user_timezone(slack: SlackAdapter):
 def test_slack_post_ephemeral_message_success(slack: SlackAdapter):
     # Act
     result = slack.post_ephemeral_message(
-        "test", channel_id="CEWD83Y74", user_id="U5FTQ3QRZ"
+        "test", channel="CEWD83Y74", user_id="U5FTQ3QRZ"
     )
 
     # Assert
