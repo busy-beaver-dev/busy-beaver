@@ -6,35 +6,58 @@ from typing import List
 from sqlalchemy import and_
 
 from .summary import GitHubUserEvents
-from busy_beaver import slack
+from busy_beaver.adapters import SlackAdapter
+from busy_beaver.exceptions import ValidationError
 from busy_beaver.extensions import db, rq
-from busy_beaver.models import ApiUser, User, PostGitHubSummaryTask
+from busy_beaver.models import (
+    ApiUser,
+    GitHubSummaryUser,
+    PostGitHubSummaryTask,
+    SlackInstallation,
+)
 from busy_beaver.toolbox import utc_now_minus, set_task_progress
 
 logger = logging.getLogger(__name__)
 
 
-def start_post_github_summary_task(task_owner: ApiUser, channel_name: str):
+def start_post_github_summary_task(task_owner: ApiUser, workspace_id: str):
     boundary_dt = utc_now_minus(timedelta(days=1))
+    slack_installation = SlackInstallation.query.filter_by(
+        workspace_id=workspace_id
+    ).first()
+    if not slack_installation:
+        raise ValidationError("workspace not found")
 
-    job = fetch_github_summary_post_to_slack.queue(channel_name, boundary_dt)
+    job = fetch_github_summary_post_to_slack.queue(slack_installation.id, boundary_dt)
 
     task = PostGitHubSummaryTask(
         job_id=job.id,
         name="Post GitHub Summary",
         description="Daily task to post GitHub Summary",
         user=task_owner,
-        data={"channel_name": channel_name, "boundary_dt": boundary_dt.isoformat()},
+        data={
+            "workspace_id": workspace_id,
+            "slack_installation_id": slack_installation.id,
+            "boundary_dt": boundary_dt.isoformat(),
+        },
     )
     db.session.add(task)
     db.session.commit()
 
 
 @rq.job
-def fetch_github_summary_post_to_slack(channel_name, boundary_dt):
-    channel_info = slack.get_channel_info(channel_name)
-    users: List[User] = User.query.filter(
-        and_(User.slack_id.in_(channel_info.members), User.github_username.isnot(None))
+def fetch_github_summary_post_to_slack(installation_id, boundary_dt):
+    slack_installation = SlackInstallation.query.get(installation_id)
+    channel = slack_installation.github_summary_config.channel
+    slack = SlackAdapter(slack_installation.bot_access_token)
+
+    channel_info = slack.get_channel_info(channel)
+    users: List[GitHubSummaryUser] = GitHubSummaryUser.query.filter(
+        and_(
+            GitHubSummaryUser.installation_id == installation_id,
+            GitHubSummaryUser.slack_id.in_(channel_info.members),
+            GitHubSummaryUser.github_username.isnot(None),
+        )
     ).all()
     random.shuffle(users)
 
@@ -52,5 +75,7 @@ def fetch_github_summary_post_to_slack(channel_name, boundary_dt):
             'does it make a sound?" - Zax Rosenberg'
         )
 
-    slack.post_message(message=message, channel_id=channel_info.id)
+    slack.post_message(
+        message=message, channel=channel, unfurl_links=False, unfurl_media=False
+    )
     set_task_progress(100)

@@ -2,13 +2,14 @@
 from .base import BaseModel  # noqa
 
 # Models
-from .user import User  # noqa
 from .api_user import ApiUser  # noqa
 from .event import Event  # noqa
+from .github_summary_user import GitHubSummaryUser, GitHubSummaryConfiguration  # noqa
 from .key_value import KeyValueStore  # noqa
+from .slack import SlackInstallation  # noqa
 from .task import (  # noqa
     Task,
-    AddNewEventsToDatabaseTask,
+    SyncEventDatabaseTask,
     PostGitHubSummaryTask,
     PostTweetTask,
 )

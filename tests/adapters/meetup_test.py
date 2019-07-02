@@ -6,7 +6,6 @@ import pytest
 from busy_beaver.adapters.meetup import MeetupAdapter, EventDetails
 from busy_beaver.config import MEETUP_API_KEY
 from busy_beaver.exceptions import NoMeetupEventsFound
-from busy_beaver.factories.event import EventFactory
 
 MODULE_TO_TEST = "busy_beaver.adapters.meetup"
 MeetupAPIFormat = namedtuple("MeetupAPIFormat", "results")
@@ -64,6 +63,7 @@ def test_venue_not_specified_returns_tbd(patched_meetup_client):
                 "name": "ChiPy",
                 "event_url": "http://meetup.com/_ChiPy_/event/blah",
                 "time": 1_557_959_400_000,
+                "duration": 1_557_959_400_000 + 60 * 60 * 2,
             }
         ]
     )
@@ -88,9 +88,9 @@ def test_no_events_found_raises_exception(patched_meetup_client):
 
 
 @pytest.mark.integration
-def test_event_details_creating_event_objects():
+def test_event_details_creating_event_objects(factory):
     # Arrange
-    event = EventFactory()
+    event = factory.Event()
 
     # Act
     event_details = EventDetails.from_event_model(event)
@@ -98,7 +98,7 @@ def test_event_details_creating_event_objects():
 
     # Assert
     assert event.name == created_event.name
-    assert event.utc_epoch == created_event.utc_epoch
+    assert event.start_epoch == created_event.start_epoch
     assert event.venue == created_event.venue
 
 

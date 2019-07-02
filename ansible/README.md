@@ -5,10 +5,15 @@ This folder contains Ansible configuration settings to deploy Busy Beaver on a V
 ## `~/.bash_profile`
 
 ```bash
-export POSTGRES_USER=[user]
-export POSTGRES_PASSWORD=[password]
-export DATABASE_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/busy-beaver
+export POSTGRES_USER=[do-console]
+export POSTGRES_PASSWORD=[do-console]
+export POSTGRES_HOST=[do-console--public]
+export POSTGRES_PORT=[do-console]
+export POSTGRES_DATABASE=[do-console]
+export DATABASE_URI=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DATABASE}?sslmode=require
 export REDIS_URI=redis://redis:6379
+
+export SECRET_KEY=[secret-key]
 
 # clients
 export BUSY_BEAVER_API_TOKEN=[bb-api-token]
@@ -16,9 +21,12 @@ export BUSY_BEAVER_API_TOKEN=[bb-api-token]
 export GITHUB_APP_CLIENT_ID=[client-id]
 export GITHUB_APP_CLIENT_SECRET=[client-secret]
 export GITHUB_OAUTH_TOKEN=[token-here]
+export GITHUB_SIGNING_SECRET=[signing-secret]
 
 export MEETUP_API_KEY=[meetup-api-key]
 
+export SLACK_CLIENT_ID=[client-id]
+export SLACK_CLIENT_SECRET=[client-secret]
 export SLACK_BOTUSER_OAUTH_TOKEN=[token-here]
 export SLACK_SIGNING_SECRET=[signing-secret]
 
@@ -46,14 +54,7 @@ aws_secret_access_key = []
 
 ## Deployment Workflow
 
+1. Set environment variables in Ansible control environment: `HEALTHCHECK_GITHUB_SUMMARY`, `HEALTHCHECK_TWITTER_POLLER`, `HEALTHCHECK_SYNC_EVENTS_DATABASE`, `HEALTHCHECK_POST_UPCOMING_EVENTS`; grab uuid values from healthchecks.io
 1. `pip install ansible` installed the machine you will be deploying from
-2. Check to see what the ansible playbook would do, we can run `ansible-playbook -i ./hosts site.yml --ask-sudo-pass -C`
-3. Remove `-C` option to run playbook to deploy app
-
-## Reloading Database from Backup
-
-[Postgres Docs](https://www.postgresql.org/docs/8.1/backup.html#BACKUP-DUMP-RESTORE)
-
-```console
-psql -U ${POSTGRES_USER} busy-beaver < [sql_dump]
-```
+1. Check to see what the ansible playbook would do, we can run `ansible-playbook -i ./hosts site.yml --ask-sudo-pass -C`
+1. Remove `-C` option to run playbook to deploy app

@@ -1,7 +1,7 @@
 from datetime import timedelta
 import logging
 
-from busy_beaver import kv_store, slack, twitter
+from busy_beaver import kv_store, chipy_slack, twitter
 from busy_beaver.config import TWITTER_USERNAME
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import ApiUser, PostTweetTask
@@ -61,5 +61,5 @@ def _post_to_slack(channel_name, tweets, twitter_username):
     url = "https://twitter.com/{username}/statuses/{id}"
     for tweet in tweets:
         tweet_url = url.format(username=twitter_username, id=tweet.id)
-        slack.post_message(tweet_url, channel=channel_name)
+        chipy_slack.post_message(tweet_url, channel=channel_name)
         kv_store.put_int(LAST_TWEET_KEY, tweet.id)

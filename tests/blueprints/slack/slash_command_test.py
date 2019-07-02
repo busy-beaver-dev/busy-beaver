@@ -9,14 +9,15 @@ from busy_beaver.blueprints.slack.slash_command import (
     relink_github,
     upcoming_events,
 )
-from busy_beaver.factories.event import EventFactory
-from busy_beaver.models import User
+from busy_beaver.config import FULL_INSTALLATION_WORKSPACE_IDS
+from busy_beaver.models import GitHubSummaryUser
 
 
 @pytest.fixture
 def add_user(session):
-    def _add_user(username):
-        user = User(slack_id=username)
+    def _add_user(username, installation):
+        user = GitHubSummaryUser(slack_id=username)
+        user.installation = installation
         session.add(user)
         session.commit()
         return user
@@ -29,8 +30,8 @@ def generate_slash_command_request():
     def _generate_data(
         command,
         user_id="U5FRZAD323",
-        channel_id="CFLDRNBSDFD",
         team_id="T5GCMNWAFSDFSDF",
+        channel_id="CFLDRNBSDFD",
     ):
         return {
             "token": "deprecated",
@@ -95,11 +96,24 @@ def test_slack_command_empty_command(
 # Upcoming Event Schedule
 #########################
 @pytest.mark.end2end
-def test_command_next(session, generate_slash_command_request):
-    events = EventFactory.create_batch(size=10)
-    [session.add(event) for event in events]
-    session.commit()
-    data = generate_slash_command_request("next")
+def test_command_next_workspace_not_allowed(
+    session, factory, generate_slash_command_request
+):
+    factory.Event.create_batch(size=10)
+    data = generate_slash_command_request("next", team_id="not allowed")
+
+    result = next_event(**data)
+
+    assert "command not supported" in result.json["text"].lower()
+
+
+@pytest.mark.end2end
+def test_command_next_workspace_allowed(
+    session, factory, generate_slash_command_request
+):
+    factory.Event.create_batch(size=10)
+    workspace_id = FULL_INSTALLATION_WORKSPACE_IDS[0]
+    data = generate_slash_command_request("next", team_id=workspace_id)
 
     result = next_event(**data)
 
@@ -110,11 +124,24 @@ def test_command_next(session, generate_slash_command_request):
 
 
 @pytest.mark.end2end
-def test_command_events(session, generate_slash_command_request):
-    events = EventFactory.create_batch(size=10)
-    [session.add(event) for event in events]
-    session.commit()
-    data = generate_slash_command_request("events")
+def test_command_events_workspace_not_allowed(
+    session, factory, generate_slash_command_request
+):
+    factory.Event.create_batch(size=10)
+    data = generate_slash_command_request("events", team_id="not_allowed")
+
+    result = upcoming_events(**data)
+
+    assert "command not supported" in result.json["text"].lower()
+
+
+@pytest.mark.end2end
+def test_command_events_workspace_allowed(
+    session, factory, generate_slash_command_request
+):
+    factory.Event.create_batch(size=10)
+    workspace_id = FULL_INSTALLATION_WORKSPACE_IDS[0]
+    data = generate_slash_command_request("events", team_id=workspace_id)
 
     result = upcoming_events(**data)
 
@@ -149,8 +176,12 @@ def test_command_not_found(generate_slash_command_request):
 # Associate GitHub account with Slack user
 ##########################################
 @pytest.mark.unit
-def test_connect_command_new_user(session, generate_slash_command_request):
-    data = generate_slash_command_request("connect", user_id="new_user")
+def test_connect_command_new_user(session, factory, generate_slash_command_request):
+    workspace_id = "test_id"
+    factory.SlackInstallation(workspace_id=workspace_id)
+    data = generate_slash_command_request(
+        "connect", user_id="new_user", team_id=workspace_id
+    )
 
     result = link_github(**data)
 
@@ -159,9 +190,15 @@ def test_connect_command_new_user(session, generate_slash_command_request):
 
 
 @pytest.mark.unit
-def test_connect_command_existing_user(add_user, generate_slash_command_request):
-    add_user(username="existing_user")
-    data = generate_slash_command_request("connect", user_id="existing_user")
+def test_connect_command_existing_user(
+    session, factory, add_user, generate_slash_command_request
+):
+    workspace_id = "test_id"
+    slack_installation = factory.SlackInstallation(workspace_id=workspace_id)
+    add_user(username="existing_user", installation=slack_installation)
+    data = generate_slash_command_request(
+        "connect", user_id="existing_user", team_id=workspace_id
+    )
 
     result = link_github(**data)
 
@@ -169,8 +206,12 @@ def test_connect_command_existing_user(add_user, generate_slash_command_request)
 
 
 @pytest.mark.unit
-def test_reconnect_command_new_user(session, generate_slash_command_request):
-    data = generate_slash_command_request("reconnect", user_id="new_user")
+def test_reconnect_command_new_user(session, factory, generate_slash_command_request):
+    workspace_id = "test_id"
+    factory.SlackInstallation(workspace_id=workspace_id)
+    data = generate_slash_command_request(
+        "reconnect", user_id="new_user", team_id=workspace_id
+    )
 
     result = relink_github(**data)
 
@@ -178,9 +219,15 @@ def test_reconnect_command_new_user(session, generate_slash_command_request):
 
 
 @pytest.mark.unit
-def test_reconnect_command_existing_user(generate_slash_command_request, add_user):
-    add_user(username="existing_user")
-    data = generate_slash_command_request("reconnect", user_id="existing_user")
+def test_reconnect_command_existing_user(
+    session, factory, generate_slash_command_request, add_user
+):
+    workspace_id = "test_id"
+    slack_installation = factory.SlackInstallation(workspace_id=workspace_id)
+    add_user(username="existing_user", installation=slack_installation)
+    data = generate_slash_command_request(
+        "reconnect", user_id="existing_user", team_id=workspace_id
+    )
 
     result = relink_github(**data)
 
@@ -189,8 +236,12 @@ def test_reconnect_command_existing_user(generate_slash_command_request, add_use
 
 
 @pytest.mark.unit
-def test_disconnect_command_unregistered_user(session, generate_slash_command_request):
-    data = generate_slash_command_request("disconnect")
+def test_disconnect_command_unregistered_user(
+    session, factory, generate_slash_command_request
+):
+    workspace_id = "test_id"
+    factory.SlackInstallation(workspace_id=workspace_id)
+    data = generate_slash_command_request("disconnect", team_id=workspace_id)
 
     result = disconnect_github(**data)
 
@@ -199,12 +250,16 @@ def test_disconnect_command_unregistered_user(session, generate_slash_command_re
 
 @pytest.mark.unit
 def test_disconnect_command_registered_user(
-    session, generate_slash_command_request, add_user
+    session, factory, generate_slash_command_request, add_user
 ):
-    user = add_user("existing_user")
-    data = generate_slash_command_request("disconnect", user_id="existing_user")
+    workspace_id = "test_id"
+    slack_installation = factory.SlackInstallation(workspace_id=workspace_id)
+    user = add_user(username="existing_user", installation=slack_installation)
+    data = generate_slash_command_request(
+        "disconnect", user_id="existing_user", team_id=workspace_id
+    )
 
     result = disconnect_github(**data)
 
     assert "Account has been deleted" in result.json["text"]
-    assert not User.query.get(user.id)
+    assert not GitHubSummaryUser.query.get(user.id)

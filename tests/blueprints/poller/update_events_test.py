@@ -1,9 +1,9 @@
 import pytest
 
-from busy_beaver.models import AddNewEventsToDatabaseTask
+from busy_beaver.models import SyncEventDatabaseTask
 from busy_beaver.apps.events_database.task import (
-    add_new_events_to_database,
-    start_add_new_events_to_database_task,
+    sync_database_with_fetched_events,
+    start_sync_event_database_task,
 )
 
 MODULE_TO_TEST = "busy_beaver.blueprints.poller.update_events"
@@ -13,7 +13,7 @@ MODULE_TO_TEST = "busy_beaver.blueprints.poller.update_events"
 def patched_update_events_trigger(mocker, patcher):
     return patcher(
         MODULE_TO_TEST,
-        namespace=start_add_new_events_to_database_task.__name__,
+        namespace=start_sync_event_database_task.__name__,
         replacement=mocker.Mock(),
     )
 
@@ -25,23 +25,23 @@ def patched_update_events_trigger(mocker, patcher):
 def patched_background_task(patcher, create_fake_background_task):
     return patcher(
         "busy_beaver.apps.events_database.task",
-        namespace=add_new_events_to_database.__name__,
+        namespace=sync_database_with_fetched_events.__name__,
         replacement=create_fake_background_task(),
     )
 
 
 @pytest.mark.integration
 def test_poll_twitter_smoke_test(
-    caplog, client, session, create_api_user, patched_background_task
+    caplog, client, session, factory, patched_background_task
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="admin")
+    factory.ApiUser(username="test_user", token="abcd", role="admin")
 
     # Act
-    client.post("/poll/events", headers={"Authorization": "token abcd"})
+    client.post("/poll/sync-event-database", headers={"Authorization": "token abcd"})
 
     # Assert
-    tasks = AddNewEventsToDatabaseTask.query.all()
+    tasks = SyncEventDatabaseTask.query.all()
     assert len(tasks) == 1
 
 
@@ -49,24 +49,24 @@ def test_poll_twitter_smoke_test(
 # Unit Test
 ###########
 @pytest.mark.unit
-def test_poll_events_endpoint_no_token(client, session, create_api_user):
+def test_poll_events_endpoint_no_token(client, session, factory):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="user")
+    factory.ApiUser(username="test_user", token="abcd", role="user")
 
     # Act
-    result = client.post("/poll/events")
+    result = client.post("/poll/sync-event-database")
 
     # Assert
     assert result.status_code == 401
 
 
 @pytest.mark.unit
-def test_poll_events_endpoint_incorrect_token(client, session, create_api_user):
+def test_poll_events_endpoint_incorrect_token(client, session, factory):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="user")
+    factory.ApiUser(username="test_user", token="abcd", role="user")
 
     # Act
-    result = client.post("/poll/events")
+    result = client.post("/poll/sync-event-database")
 
     # Assert
     assert result.status_code == 401
@@ -74,13 +74,15 @@ def test_poll_events_endpoint_incorrect_token(client, session, create_api_user):
 
 @pytest.mark.unit
 def test_poll_events_endpoint_success(
-    client, session, create_api_user, patched_update_events_trigger
+    client, session, factory, patched_update_events_trigger
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="admin")
+    factory.ApiUser(username="test_user", token="abcd", role="admin")
 
     # Act
-    result = client.post("/poll/events", headers={"Authorization": "token abcd"})
+    result = client.post(
+        "/poll/sync-event-database", headers={"Authorization": "token abcd"}
+    )
 
     # Assert
     assert result.status_code == 200

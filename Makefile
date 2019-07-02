@@ -4,12 +4,16 @@ help: ## This help
 	@echo "Makefile for managing application:\n"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
+pull-upstream: ## pull from upstream master
+	git pull upstream master
+
 build: ## rebuild containers
 	docker-compose build
 
-up: ## start local dev environment
+up: ## start local dev environment; run migrations; populate database
 	docker-compose up -d
 	make migrate-up
+	make populate-db
 
 down: ## stop local dev environment
 	docker-compose down
@@ -23,11 +27,23 @@ attach: ## attach to process for debugging purposes
 migration: ## create migration m="message"
 	docker-compose exec app flask db migrate -m "$(m)"
 
+migration-empty: ## create empty migration m="message
+	docker-compose exec app flask db revision -m "$(m)"
+
 migrate-up: ## run all migration
 	docker-compose exec app flask db upgrade
 
 migrate-down: ## roll back last migration
 	docker-compose exec app flask db downgrade
+
+dropdb:  ## drop all tables in development database
+	psql -d postgresql://bbdev_user:bbdev_password@localhost:9432/busy-beaver -f ./scripts/database/drop_all_tables.sql
+
+populate-db:  ## populate database
+	docker-compose exec app python scripts/dev/populate_database.py
+
+requirements: ## generate requirements.txt using piptools
+	pip-compile --output-file=requirements.txt requirements.in
 
 test: ## run tests
 	docker-compose exec app pytest $(args)
@@ -47,7 +63,8 @@ test-skipvcr: ## run non-vcr tests
 lint: ## run flake8 linter
 	docker-compose exec app flake8
 
-log: ## attach to logs
+.PHONY: logs
+logs: ## attach to logs
 	docker logs `docker-compose ps -q app`
 
 debug: ## attach to app container for debugging
@@ -75,18 +92,11 @@ prod-build-image:
 prod-build: ## build production images
 	docker-compose -f docker-compose.prod.yml build
 
-prod-backup-db:
-	docker-compose -f docker-compose.prod.yml exec db pg_dump -U ${POSTGRES_USER} busy-beaver > /tmp/data_dump.sql
-
-prod-upload-backup-to-s3:
-	docker run --rm -t \
-		-v ${HOME}/.aws:/home/worker/.aws:ro \
-		-v `pwd`/scripts/prod:/work \
-		-v /tmp/data_dump.sql:/tmp/data_dump.sql \
-		shinofara/docker-boto3 python /work/upload_db_backup_to_s3.py
-
 prod-migrate-up:
 	docker-compose -f docker-compose.prod.yml exec app flask db upgrade
+
+prod-migrate-down:
+	docker-compose -f docker-compose.prod.yml exec app flask db downgrade
 
 prod-up: ## start prod environment
 	docker-compose -f docker-compose.prod.yml up -d
@@ -102,5 +112,8 @@ prod-deploy: prod-pull-image ## redeploy application
 	make prod-down
 	make prod-up
 
-prod-shell-db:
-	docker-compose -f docker-compose.prod.yml exec db psql -w --username "${POSTGRES_USER}" --dbname "busy-beaver"
+prod-shell:  ## shell into production container
+	docker-compose -f docker-compose.prod.yml exec app bash
+
+prod-shell-db:  ## shell into prodution postgres instance
+	psql -d "${DATABASE_URI}"

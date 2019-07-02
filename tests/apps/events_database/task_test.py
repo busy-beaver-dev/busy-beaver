@@ -2,12 +2,11 @@ import pytest
 
 from busy_beaver.models import ApiUser
 from busy_beaver.apps.events_database.task import (
-    add_new_events_to_database,
-    start_add_new_events_to_database_task,
+    sync_database_with_fetched_events,
+    start_sync_event_database_task,
 )
-from busy_beaver.factories.event import EventFactory
-from busy_beaver.factories.event_details import EventDetailsFactory
 from busy_beaver.models import Event
+from tests._utilities import FakeMeetupAdapter
 
 MODULE_TO_TEST = "busy_beaver.apps.events_database.task"
 
@@ -19,19 +18,19 @@ MODULE_TO_TEST = "busy_beaver.apps.events_database.task"
 def patched_background_task(patcher, create_fake_background_task):
     return patcher(
         MODULE_TO_TEST,
-        namespace=add_new_events_to_database.__name__,
+        namespace=sync_database_with_fetched_events.__name__,
         replacement=create_fake_background_task(),
     )
 
 
 @pytest.mark.unit
-def test_start_add_new_events_task(session, create_api_user, patched_background_task):
+def test_start_add_events_task(session, factory, patched_background_task):
     """Test trigger function"""
     # Arrange
-    api_user = create_api_user("admin")
+    api_user = factory.ApiUser(username="admin")
 
     # Act
-    start_add_new_events_to_database_task(api_user)
+    start_sync_event_database_task(api_user)
 
     # Assert
     api_user = ApiUser.query.get(api_user.id)
@@ -44,13 +43,6 @@ def test_start_add_new_events_task(session, create_api_user, patched_background_
 #####################
 @pytest.fixture
 def patched_meetup(patcher):
-    class FakeMeetupAdapter:
-        def __init__(self, events):
-            self.events = events
-
-        def get_events(self, group_name, count):
-            return self.events
-
     def _wrapper(events):
         fake_meetup = FakeMeetupAdapter(events)
         patcher(MODULE_TO_TEST, namespace="meetup", replacement=fake_meetup)
@@ -59,18 +51,18 @@ def patched_meetup(patcher):
 
 
 @pytest.mark.integration
-def test_add_all_events_to_database(session, patched_meetup):
+def test_add_all_events_to_database(session, factory, patched_meetup):
     """
     GIVEN: Empty database
-    WHEN: add_new_events_to_database is called
+    WHEN: add_events_to_database is called
     THEN: add all events to database
     """
     # Arrange
-    events = EventDetailsFactory.create_batch(size=20)
+    events = factory.EventDetails.create_batch(size=20)
     patched_meetup(events=events)
 
     # Act
-    add_new_events_to_database("test_group")
+    sync_database_with_fetched_events("test_group")
 
     # Assert
     all_events_in_database = Event.query.all()
@@ -78,51 +70,79 @@ def test_add_all_events_to_database(session, patched_meetup):
 
 
 @pytest.mark.integration
-def test_add_new_events_to_database(session, patched_meetup):
+def test_update_all_events_in_database(session, factory, patched_meetup):
     """
-    GIVEN: table containing event
-    WHEN: add_new_events_to_database is called
-    THEN: add additional event that is not already in database to database
+    GIVEN: table contains upcoming events, adapter has same events with updated details
+    WHEN: add_events_to_database is called
+    THEN: update event information in database
     """
     # Arrange
-    event_in_db = EventFactory(name="Old ChiPy Event")
-    session.add(event_in_db)
-    session.commit()
+    num_events = 20
+    database_events = factory.Event.create_batch(size=num_events)
 
-    num_new_events = 5
-    events = EventDetailsFactory.create_batch(size=num_new_events)
-    events.append(EventDetailsFactory(id=event_in_db.remote_id))
-    patched_meetup(events=events)
+    fetched_events = []
+    for event in database_events:
+        fetched_events.append(factory.EventDetails(id=event.remote_id, venue="TBD"))
+    patched_meetup(events=fetched_events)
 
     # Act
-    add_new_events_to_database("test_group")
+    sync_database_with_fetched_events("test_group")
 
     # Assert
-    all_events_in_database = Event.query.all()
-    assert len(all_events_in_database) == num_new_events + 1
+    all_database_events = Event.query.all()
+    assert len(all_database_events) == num_events
+    for event in all_database_events:
+        assert event.venue == "TBD"
 
 
 @pytest.mark.integration
-def test_no_events_added_to_database(session, patched_meetup):
+def test_delete_all_events_in_database(session, factory, patched_meetup):
     """
-    GIVEN: table containing event
-    WHEN: add_new_events_to_database is called
-    THEN: add additional event that is not already in database to database
+    GIVEN: table contains upcoming events, adapter has no events
+    WHEN: add_events_to_database is called
+    THEN: all events are removed fromd atabase
     """
     # Arrange
-    events_in_db = EventFactory.create_batch(size=20)
-    [session.add(event) for event in events_in_db]
-    session.commit()
+    num_events = 20
+    factory.Event.create_batch(size=num_events)
 
-    events = []
-    for event in events_in_db:
-        events.append(EventDetailsFactory(id=event.remote_id))
-    patched_meetup(events=events)
+    patched_meetup(events=[])
 
     # Act
-    add_new_events_to_database("test_group")
+    sync_database_with_fetched_events("test_group")
 
     # Assert
+    all_database_events = Event.query.all()
+    assert len(all_database_events) == 0
+
+
+@pytest.mark.integration
+def test_sync_database(session, factory, patched_meetup):
+    """
+    GIVEN: table has upcoming events, fetched events contains events
+            that need to be: added, updated, deleted
+    WHEN: add_events_to_database is called
+    THEN: table is synced with fetched event
+    """
+    # Arrange
+    event_to_update = factory.Event()
+    event_to_delete = factory.Event()
+
+    updated_event = factory.EventDetails(id=event_to_update.remote_id, venue="TBD")
+    new_events = factory.EventDetails.create_batch(size=5)
+    fetched_events = new_events + [updated_event]
+    patched_meetup(events=fetched_events)
+
+    # Act
+    sync_database_with_fetched_events("test_group")
+
+    # Assert
+    assert not Event.query.get(event_to_delete.id)
+
+    session.refresh(event_to_update)
+    assert event_to_update.venue == "TBD"
+
     all_events_in_database = Event.query.all()
-    assert len(all_events_in_database) == len(events_in_db)
-    assert all_events_in_database == events_in_db
+    all_event_ids_in_database = set(event.remote_id for event in all_events_in_database)
+    for event in new_events:
+        assert event.id in all_event_ids_in_database

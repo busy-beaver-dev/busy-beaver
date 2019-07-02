@@ -11,6 +11,7 @@ from .adapters import (
     SlackAdapter,
     TwitterAdapter,
 )
+from .apps.external_integrations.oauth_providers.slack import SlackOAuthFlow
 from .config import (
     GITHUB_OAUTH_TOKEN,
     IN_PRODUCTION,
@@ -18,6 +19,8 @@ from .config import (
     MEETUP_API_KEY,
     SENTRY_DSN,
     SLACK_TOKEN,
+    SLACK_CLIENT_ID,
+    SLACK_CLIENT_SECRET,
     TWITTER_ACCESS_TOKEN,
     TWITTER_ACCESS_TOKEN_SECRET,
     TWITTER_CONSUMER_KEY,
@@ -38,13 +41,15 @@ logger.info("[BusyBeaver] Configure Integrations")
 github = GitHubAdapter(GITHUB_OAUTH_TOKEN)
 kv_store = KeyValueStoreAdapter()
 meetup = MeetupAdapter(MEETUP_API_KEY)
-slack = SlackAdapter(SLACK_TOKEN)
+chipy_slack = SlackAdapter(SLACK_TOKEN)  # Default Workspace -- this is being phased out
 twitter = TwitterAdapter(
     TWITTER_CONSUMER_KEY,
     TWITTER_CONSUMER_SECRET,
     TWITTER_ACCESS_TOKEN,
     TWITTER_ACCESS_TOKEN_SECRET,
 )
+
+slack_oauth = SlackOAuthFlow(SLACK_CLIENT_ID, SLACK_CLIENT_SECRET)
 
 logger.info("[BusyBeaver] Starting Server")
 from .app import create_app  # noqa

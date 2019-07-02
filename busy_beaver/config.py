@@ -3,11 +3,19 @@ import os
 IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
 TASK_QUEUE_MAX_RETRIES = 1
 
+SECRET_KEY = os.getenv("SECRET_KEY", "abcdef").encode("utf-8")
+
 # app urls
 PROD_BASE_URI = "https://busybeaver.sivji.com"
 DEV_BASE_URI = os.getenv("NGROK_BASE_URI", None)
 APP_URI = PROD_BASE_URI if IN_PRODUCTION else DEV_BASE_URI
-GITHUB_REDIRECT_URI = f"{APP_URI}/github-integration"
+GITHUB_REDIRECT_URI = f"{APP_URI}/github/oauth"
+
+# app constraints
+FULL_INSTALLATION_WORKSPACE_IDS = [
+    "T093FC1RC",  # ChiPy Workspace -- https://chipy.slack.com -- prod env
+    "T5G0FCMNW",  # SivBots -- https://sivbots.slack.com -- dev env
+]
 
 # infrastructure
 DATABASE_URI = os.getenv("DATABASE_URI")
@@ -18,14 +26,18 @@ MEETUP_GROUP_NAME = "_ChiPy_"
 TWITTER_USERNAME = "ChicagoPython"
 YOUTUBE_CHANNEL = "UCT372EAC1orBOSUd2fsA8WA"
 
+SLACK_DEV_WORKSPACE_ID = os.getenv("SLACK_DEV_WORKSPACE_ID", None)
+SLACK_CLIENT_ID = os.getenv("SLACK_CLIENT_ID", None)
+SLACK_CLIENT_SECRET = os.getenv("SLACK_CLIENT_SECRET", None)
+SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN", None)
+SLACK_SIGNING_SECRET = os.getenv("SLACK_SIGNING_SECRET", "TestSigningSecretSlack")
+
 # credentials
 GITHUB_OAUTH_TOKEN = os.getenv("GITHUB_OAUTH_TOKEN", None)
 GITHUB_CLIENT_ID = os.getenv("GITHUB_APP_CLIENT_ID", None)
 GITHUB_CLIENT_SECRET = os.getenv("GITHUB_APP_CLIENT_SECRET", None)
-GITHUB_REDIRECT_URI = f"{APP_URI}/github-integration"
+GITHUB_SIGNING_SECRET = os.getenv("GITHUB_SIGNING_SECRET", "TestSigningSecretGitHub")
 MEETUP_API_KEY = os.getenv("MEETUP_API_KEY", "abcdef")
-SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN", None)
-SLACK_SIGNING_SECRET = os.getenv("SLACK_SIGNING_SECRET", "TestSigningSecret")
 TWITTER_CONSUMER_KEY = os.getenv("TWITTER_CONSUMER_KEY", None)
 TWITTER_CONSUMER_SECRET = os.getenv("TWITTER_CONSUMER_SECRET", None)
 TWITTER_ACCESS_TOKEN = os.getenv("TWITTER_ACCESS_TOKEN", None)

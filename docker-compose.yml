@@ -41,12 +41,13 @@ services:
     depends_on: &app_depends_on
       - db
     environment: &app_env_vars
-      IN_PRODUCTION: 0
       PYTHONPATH: .
       FLASK_APP: /app/busy_beaver/__init__.py
       FLASK_ENV: development
       DATABASE_URI: postgresql://bbdev_user:bbdev_password@db:5432/busy-beaver
       REDIS_URI: redis://redis:6379
+      OAUTHLIB_INSECURE_TRANSPORT: 1
+      OAUTHLIB_RELAX_TOKEN_SCOPE: 1
     volumes: &app_volumes
       - .:/app/
       - ./logs:/app/logs/

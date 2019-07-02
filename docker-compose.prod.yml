@@ -12,26 +12,6 @@ volumes:
 
 services:
   # infrastructure
-  db:
-    image: postgres:10.3-alpine
-    environment:
-      POSTGRES_DB: busy-beaver
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 3s
-      retries: 3
-      start_period: 10s
-    volumes:
-      - pgdata:/var/lib/postgresql/data/
-    ports:
-      - "9432:5432"
-    networks:
-      - local
-    labels:
-      - traefik.enable=false
   redis:
     image: redis:4.0-alpine
     healthcheck:
@@ -54,13 +34,19 @@ services:
       DATABASE_URI: ${DATABASE_URI}
       REDIS_URI: ${REDIS_URI}
       SENTRY_DSN: ${SENTRY_DSN}
+      OAUTHLIB_INSECURE_TRANSPORT: 1
+      OAUTHLIB_RELAX_TOKEN_SCOPE: 1
+      SECRET_KEY: ${SECRET_KEY}
       # integrations
+      SLACK_CLIENT_ID: ${SLACK_CLIENT_ID}
+      SLACK_CLIENT_SECRET: ${SLACK_CLIENT_SECRET}
       SLACK_BOTUSER_OAUTH_TOKEN: ${SLACK_BOTUSER_OAUTH_TOKEN}
       SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}
       MEETUP_API_KEY: ${MEETUP_API_KEY}
       GITHUB_APP_CLIENT_ID: ${GITHUB_APP_CLIENT_ID}
       GITHUB_APP_CLIENT_SECRET: ${GITHUB_APP_CLIENT_SECRET}
       GITHUB_OAUTH_TOKEN: ${GITHUB_OAUTH_TOKEN}
+      GITHUB_SIGNING_SECRET: ${GITHUB_SIGNING_SECRET}
       TWITTER_ACCESS_TOKEN_SECRET: ${TWITTER_ACCESS_TOKEN_SECRET}
       TWITTER_ACCESS_TOKEN: ${TWITTER_ACCESS_TOKEN}
       TWITTER_CONSUMER_KEY: ${TWITTER_CONSUMER_KEY}
@@ -129,9 +115,9 @@ services:
     environment:
       DB_TYPE: postgres
       DB_DRIVER: psycopg2
-      DB_HOST: db
-      DB_PORT: 5432
-      DATABASE: busy-beaver
+      DB_HOST: ${POSTGRES_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DATABASE: ${POSTGRES_DATABASE}
       USERNAME: ${POSTGRES_USER}
       PASSWORD: ${POSTGRES_PASSWORD}
     ports:

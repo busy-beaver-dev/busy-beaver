@@ -4,6 +4,7 @@ from flask import request
 from flask.views import MethodView
 
 from busy_beaver.apps.retweeter.task import start_post_tweets_to_slack_task
+from busy_beaver.blueprints.decorators import admin_role_required
 from busy_beaver.toolbox import make_response
 
 logger = logging.getLogger(__name__)
@@ -11,6 +12,8 @@ logger = logging.getLogger(__name__)
 
 class TwitterPollingResource(MethodView):
     """Endpoint to trigger polling of Twitter for new tweets to post to channel"""
+
+    decorators = [admin_role_required]
 
     def post(self):
         user = request._internal["user"]
@@ -20,6 +23,8 @@ class TwitterPollingResource(MethodView):
         )
 
         # TODO: replace this with marshmallow
+        # Get workspace_id and pass it into task
+        # for now we can hack it so we only use chipy_slack for this
         data = request.json
         if not data or "channel" not in data:
             logger.error(

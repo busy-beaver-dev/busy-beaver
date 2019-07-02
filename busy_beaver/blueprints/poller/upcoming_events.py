@@ -6,6 +6,7 @@ from flask.views import MethodView
 from busy_beaver.apps.upcoming_events.workflow import (
     post_upcoming_events_message_to_slack,
 )
+from busy_beaver.blueprints.decorators import admin_role_required
 from busy_beaver.toolbox import make_response
 
 logger = logging.getLogger(__name__)
@@ -13,6 +14,8 @@ logger = logging.getLogger(__name__)
 
 class PublishUpcomingEventsResource(MethodView):
     """Endpoint to trigger posting of Upcoming Events to Slack"""
+
+    decorators = [admin_role_required]
 
     def post(self):
         user = request._internal["user"]

@@ -158,3 +158,13 @@ In order to [verify requests are sent from Slack](https://api.slack.com/docs/ver
 <a href="images/signing-secret-1.png">
 <img src="images/signing-secret-1.png" width=300/>
 </a>
+
+## Enable all Busy Beaver Features in Development Workspace
+
+Currently we are moving from a single-tenant application to a multi-tenant app that anybody can install. For now we are limiting functionality for non-Chicago Python workspaces. This is done via Python decorator.
+
+We have a whitelist of Slack Workspace IDs (`team_id`, in Slack speak) that can use all features of Busy Beaver. We recommend adding your development workspace to the whitelist in `config.py`
+
+1. Find your Slack Workspace ID; follow the instruction in this helpful [StackOverlfow post]https://stackoverflow.com/a/44883343/4326704)
+1. Add the identifer to the `FULL_INSTALLATION_WORKSPACE_IDS` list defined in `config.py`
+1. Add this variable to the .env file, `SLACK_DEV_WORKSPACE_ID`

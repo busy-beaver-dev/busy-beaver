@@ -13,15 +13,18 @@ Busy Beaver welcomes any, and all, contributions. Every little bit helps!
   - [Setting up Development Environment](#setting-up-development-environment)
   - [Verify Installation](#verify-installation)
   - [Running Tests](#running-tests)
+- [Adding New Requirements](#adding-new-requirements)
 - [Modifying Third-Party Integrations](#modifying-third-party-integrations)
 - [Adding New Third-Party Integrations](#adding-new-third-party-integrations)
 - [Slack Slash Commands](#slack-slash-commands)
 - [Task Queues](#task-queues)
+  - [Creating a New Task](#creating-a-new-task)
+  - [Notes](#notes)
 - [Miscellaneous](#miscellaneous)
   - [Pre-commit](#pre-commit)
   - [PDB++ Configuration](#pdb-configuration)
   - [Windows Development](#windows-development)
-  - [Pushing Commits to PR](#pushing-commits-to-pr)
+  - [Pushing Commits to Pull Request made from Fork](#pushing-commits-to-pull-request-made-from-fork)
 
 <!-- /TOC -->
 
@@ -83,6 +86,7 @@ An in-depth guide can be followed at <a href=docs/development-create-slack-bot/r
    |---|---|---|
    |**SLACK_BOTUSER_OAUTH_TOKEN**|From the Dev-Bot Slack App API page under `Install App > OAuth Tokens for Your Team > Bot User OAuth Access Token`| Value obtained after - [Create a Slack Dev-Bot - Define App OAuth and Permissions](docs/development-create-slack-bot/readme.md#Define-App-OAuth-and-Permissions)|
    |**SLACK_SIGNING_SECRET**|From the Dev-Bot Slack App API page under `Basic Information > App Credentials > Signing Secret`| Value obtained after - [Create a Slack Dev-Bot - Define App OAuth and Permissions](docs/development-create-slack-bot/readme.md#Define-App-OAuth-and-Permissions)|
+   |**SLACK_DEV_WORKSPACE_ID**|From Browser Console; follow [instructions from StackOverflow](https://stackoverflow.com/a/44883343/4326704)
    |**NGROK_BASE_URI**|From the **ngrok** instance forwarding address|Value obtained after - [Create a Slack Dev-Bot - Enable Event Subscription](docs/development-create-slack-bot/readme.md#Enable-Event-Subscription)|
 
    Note: The **NGROK_BASE_URI** and **Slack Event Subscription > Request URL** values may need to be updated each time a new **ngrok** instance is created or if the address is expired.
@@ -122,6 +126,19 @@ run pytest with:
 $ make test
 ```
 
+## Adding New Requirements
+
+Busy Beaver uses [`pip-tools`](https://github.com/jazzband/pip-tools) to
+manage `pip` dependencies.
+
+If you need to update any mainline dependencies in `requirements.txt`,
+please add the package to `requirements.in` and
+run the following command:
+`pip-compile --output-file=requirements.txt requirements.in`.
+
+You will need to have `pip-tools` installed on your local machine to
+perform this actin.
+
 ## Modifying Third-Party Integrations
 
 As each integration requires API credentials, it is recommended that contributors create apps for integration connect to their personal accounts.
@@ -152,7 +169,7 @@ Busy Beaver uses [RQ](http://python-rq.org) to queue jobs and process them in th
 
 The Docker Compose development environment spins up a single worker along with a Redis instance. For testing purposes, we set `is_async=False` to force code to be executed synchronously. Need to find a way to simulate production environment with workers in Travis, or it might make sense to migrate to Jenkins.
 
-#### Creating a New Task
+### Creating a New Task
 
 1. Create a SQLAlchemy model to store task-specific information to the database
 1. Run a database migration, `$ make migration m="migration message"`
@@ -160,7 +177,7 @@ The Docker Compose development environment spins up a single worker along with a
 1. In the trigger function, start the background job and save job specific information to the database
 1. Write tests unti you have confidence that your code works and can be reviewed by others
 
-#### Notes
+### Notes
 
 - The [Flask-RQ](https://flask-rq2.readthedocs.io/en/latest/) library provides convenient, Flask-specific helpers. Background tasks are identified using the `@rq.job` decorator; jobs can be created using the `[background_task_function_name].queue(params)` method.
 - Both the trigger function and background task are unit tested to ensure things occur as expected. A high-level integration test can help codify the requirements of the workflow.
@@ -234,7 +251,7 @@ If run into issues with `make up`, it's most likely Windows and Docker. Try the 
     - Reset to factory defaults...
 1. Uninstall Windows, Install Linux
 
-### Pushing Commits to PR
+### Pushing Commits to Pull Request made from Fork
 
 GitHub allows upstream maintainers, with permission,
 to push to downstream forks.

@@ -1,4 +1,4 @@
-from typing import List, NamedTuple
+from typing import Dict, List, NamedTuple
 from meetup.api import Client as MeetupClient
 
 from busy_beaver.exceptions import NoMeetupEventsFound
@@ -10,16 +10,8 @@ class EventDetails(NamedTuple):
     name: str
     url: str
     venue: str
-    dt: int  # utc epoch
-
-    def create_event_record(self) -> Event:
-        return Event(
-            remote_id=self.id,
-            name=self.name,
-            url=self.url,
-            venue=self.venue,
-            utc_epoch=self.dt,
-        )
+    start_epoch: int  # utc epoch
+    end_epoch: int
 
     @classmethod
     def from_event_model(cls, model):
@@ -30,8 +22,23 @@ class EventDetails(NamedTuple):
             name=model.name,
             url=model.url,
             venue=model.venue,
-            dt=model.utc_epoch,
+            start_epoch=model.start_epoch,
+            end_epoch=model.end_epoch,
         )
+
+    def create_event_record_dict(self) -> Dict[str, str]:
+        return {
+            "remote_id": self.id,
+            "name": self.name,
+            "url": self.url,
+            "venue": self.venue,
+            "start_epoch": self.start_epoch,
+            "end_epoch": self.end_epoch,
+        }
+
+    def create_event_record(self) -> Event:
+        event_params = self.create_event_record_dict()
+        return Event(**event_params)
 
 
 class MeetupAdapter:
@@ -52,13 +59,15 @@ class MeetupAdapter:
             else:
                 venue_name = "TBD"
 
+            start_epoch = int(event["time"] / 1000)
             upcoming_events.append(
                 EventDetails(
                     id=event["id"],
                     name=event["name"],
                     url=event["event_url"],
                     venue=venue_name,
-                    dt=int(event["time"] / 1000),
+                    start_epoch=start_epoch,
+                    end_epoch=start_epoch + int(event["duration"]),
                 )
             )
 

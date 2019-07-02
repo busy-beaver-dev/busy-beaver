@@ -15,10 +15,10 @@ def patched_post_github_summary_trigger(mocker, patcher):
 
 @pytest.mark.unit
 def test_github_summary_endpoint_no_token(
-    client, session, create_api_user, patched_post_github_summary_trigger
+    client, session, factory, patched_post_github_summary_trigger
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="user")
+    factory.ApiUser(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/github-summary")
@@ -29,10 +29,10 @@ def test_github_summary_endpoint_no_token(
 
 @pytest.mark.unit
 def test_github_summary_endpoint_incorrect_token(
-    client, session, create_api_user, patched_post_github_summary_trigger
+    client, session, factory, patched_post_github_summary_trigger
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="user")
+    factory.ApiUser(username="test_user", token="abcd", role="user")
 
     # Act
     result = client.post("/poll/github-summary")
@@ -43,10 +43,10 @@ def test_github_summary_endpoint_incorrect_token(
 
 @pytest.mark.unit
 def test_github_summary_endpoint_empty_body(
-    caplog, client, session, create_api_user, patched_post_github_summary_trigger
+    caplog, client, session, factory, patched_post_github_summary_trigger
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="admin")
+    factory.ApiUser(username="test_user", token="abcd", role="admin")
 
     # Act
     result = client.post(
@@ -59,20 +59,22 @@ def test_github_summary_endpoint_empty_body(
 
 @pytest.mark.unit
 def test_github_summary_endpoint_success(
-    caplog, client, session, create_api_user, patched_post_github_summary_trigger
+    caplog, client, session, factory, patched_post_github_summary_trigger
 ):
     # Arrange
-    create_api_user(username="test_user", token="abcd", role="admin")
+    workspace_id = "test_workspace_id"
+    factory.ApiUser(username="test_user", token="abcd", role="admin")
+    factory.SlackInstallation(workspace_id=workspace_id)
     mock = patched_post_github_summary_trigger
 
     # Act
     result = client.post(
         "/poll/github-summary",
         headers={"Authorization": "token abcd"},
-        json={"channel": "general"},
+        json={"workspace_id": workspace_id},
     )
 
     # Assert
     assert result.status_code == 200
     args, kwargs = mock.call_args
-    assert "general" in args
+    assert workspace_id in args

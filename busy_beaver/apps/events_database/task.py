@@ -1,26 +1,34 @@
+"""Update Events Database task
+
+This task pulls a set of events from Meetup and performs the following action against
+the set of future events in the database:
+    - if event is new => create
+    - if event is in the database, but not in the fetched events => delete
+    - if event is in the database => update
+"""
+
 import logging
 import time
-from typing import List
 
+from .sync_database import SyncEventDatabase
 from busy_beaver import meetup
 from busy_beaver.config import MEETUP_GROUP_NAME
 from busy_beaver.extensions import db, rq
-from busy_beaver.models import ApiUser, AddNewEventsToDatabaseTask
-from busy_beaver.models import Event
+from busy_beaver.models import ApiUser, SyncEventDatabaseTask, Event
 
 logger = logging.getLogger(__name__)
 
 
-def start_add_new_events_to_database_task(task_owner: ApiUser):
-    logger.info("[Busy Beaver] Kick off fetch new meetup events task")
+def start_sync_event_database_task(task_owner: ApiUser):
+    logger.info("[Busy Beaver] Kick off fetch meetup events task")
 
     group_name = MEETUP_GROUP_NAME
-    job = add_new_events_to_database.queue(group_name)
+    job = sync_database_with_fetched_events.queue(group_name)
 
-    task = AddNewEventsToDatabaseTask(
+    task = SyncEventDatabaseTask(
         job_id=job.id,
         name="Poll Meetup",
-        description="Poll Meetup for new events",
+        description="Poll Meetup for events",
         user=task_owner,
         data={"group_name": group_name},
     )
@@ -29,33 +37,11 @@ def start_add_new_events_to_database_task(task_owner: ApiUser):
 
 
 @rq.job
-def add_new_events_to_database(group_name):
+def sync_database_with_fetched_events(group_name):
     fetched_events = meetup.get_events(group_name, count=20)
-    fetched_remote_id = [event.id for event in fetched_events]
 
-    remote_ids_in_database = _fetch_future_event_ids_from_database()
-    ids_to_add = set(fetched_remote_id) - set(remote_ids_in_database)
-    events_to_add: List[Event] = [
-        event for event in fetched_events if event.id in ids_to_add
-    ]
-
-    _insert_events_into_database(events_to_add)
-
-
-def _fetch_future_event_ids_from_database():
     current_epoch_time = int(time.time())
-    upcoming_events_in_db = Event.query.filter(
-        Event.utc_epoch > current_epoch_time
-    ).all()
-    return [event.remote_id for event in upcoming_events_in_db]
+    database_events = Event.query.filter(Event.start_epoch > current_epoch_time).all()
 
-
-def _insert_events_into_database(events):
-    num_records_created = 0
-    for event in events:
-        record = event.create_event_record()
-        db.session.add(record)
-        num_records_created += 1
-    else:
-        db.session.commit()
-        logger.info("{0} events saved to the database".format(num_records_created))
+    sync_database = SyncEventDatabase(fetched_events, database_events)
+    sync_database.perform()
