@@ -117,7 +117,6 @@ def test_delete_all_events_in_database(session, factory, patched_meetup):
 
 
 @pytest.mark.integration
-@pytest.mark.current
 def test_sync_database(session, factory, patched_meetup):
     """
     GIVEN: table has upcoming events, fetched events contains events
