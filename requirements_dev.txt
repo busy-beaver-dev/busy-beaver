@@ -5,7 +5,7 @@ ipython
 pdbpp
 pip-tools
 pre-commit==1.14.4
-pytest-cov==2.6.0
+pytest-cov==2.7.1
 pytest-freezegun==0.3.0.post1
 pytest-mock==1.10.0
 pytest-vcr==1.0.1
