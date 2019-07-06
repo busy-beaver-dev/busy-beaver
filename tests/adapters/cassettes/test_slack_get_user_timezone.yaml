@@ -1,89 +1,83 @@
 interactions:
 - request:
-    body: user=U5FTQ3QRZ&include_locale=True
+    body: null
     headers:
-      Accept:
-      - '*/*'
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      Content-Length:
-      - '34'
       Content-Type:
-      - application/x-www-form-urlencoded
+      - application/x-www-form-urlencoded;charset=utf-8
+      User-Agent:
+      - Python/3.7.1 slackclient/2.1.0 Linux/4.9.125-linuxkit
       authorization:
       - DUMMY
-      user-agent:
-      - slackclient/1.3.0 Python/3.7.1 Linux/4.9.125-linuxkit
-    method: POST
-    uri: https://slack.com/api/users.info
+    method: GET
+    uri: https://www.slack.com/api/users.info?include_locale=True&user=U5FTQ3QRZ
   response:
     body:
-      string: !!binary |
-        H4sIAAAAAAAAA61V22rbQBD9FbOQPvmiayQbQhtc3KcW0jgUikGMpZG08UordtdpnOB/z+gSV6LN
-        m0Cg2TNnzp7Zh5lXJg9sZdQRp+yoUbHVK+MJW7EHf7O9c+9+/mZTZhCKqEG3/jdrs/7+4xehJRRI
-        EIiT5k+PnJAEBRokXgpCk2AshSRFtkyvlxgQQSGIqKu7FafJfVdoXmqgQMVj2C3WOf0y2eCRgD0K
-        yq6xNArE5CucBM9yM9lykmkoMk01Graa2aFlWVNWKZlygXUrhps6YESscll2oT6cqi78yNEFj0qp
-        ChD8pe5rQEm4rgScov+8Qy8zrO+RtAFz1JHBZ9O5agEsJOUHyHPFFRguS7ai9uAJDKgoB50TLdsn
-        4C/jFO3EphIsgIveRV+yGpjHsqBkypU2vW4JEvAXeW+MF5Bh5HgE5cZUerVb7BYa46PCeaba62vF
-        3aKNd4ueh9BJvCBw/WDvWNeeY6Fn2+H8sco+6xvH+5TcNJJX7u2Vs6EP5lpAfJhhkmGtSZBl7a9d
-        +vMiqwnNFbqNIsuyrZnjzasyuxh1ndGNus4oRl1nYNQLRzfqhaMY9cKB0WD8Fw3GedFg+KL2cnyn
-        pDmKVdIZePXt8b2S5iheSafz2ptKUQylLGkUi3Ya1VtgsALO1JqOICl4+b5C6Cz/lPUauZwrRf2r
-        0z+4Qm1o3vf3BaFHQVP+g9xemv4RqipqV1aHHasEmhLb98PQ9SzXpgEnqYF6umE5e7hn5/Mb99j6
-        hvIGAAA=
+      string: '{"ok":true,"user":{"id":"U5FTQ3QRZ","team_id":"T5G0FCMNW","name":"alysivji","deleted":false,"color":"9f69e7","real_name":"Aly
+        Sivji","tz":"America\/Chicago","tz_label":"Central Daylight Time","tz_offset":-18000,"profile":{"title":"","phone":"","skype":"","real_name":"Aly
+        Sivji","real_name_normalized":"Aly Sivji","display_name":"alysivji","display_name_normalized":"alysivji","status_text":"","status_emoji":"","status_expiration":0,"avatar_hash":"gbda59cfe1d1","email":"alysivji@gmail.com","first_name":"Aly","last_name":"Sivji","image_24":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=24&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-24.png","image_32":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=32&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-32.png","image_48":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-48.png","image_72":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=72&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-72.png","image_192":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=192&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-192.png","image_512":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-512.png","status_text_canonical":"","team":"T5G0FCMNW"},"is_admin":true,"is_owner":true,"is_primary_owner":true,"is_restricted":false,"is_ultra_restricted":false,"is_bot":false,"is_app_user":false,"updated":1558834031,"locale":"en-US"}}'
     headers:
-      Access-Control-Allow-Headers:
-      - slack-route, x-slack-version-ts
-      Access-Control-Allow-Origin:
-      - '*'
-      Access-Control-Expose-Headers:
-      - x-slack-req-id
-      Cache-Control:
-      - private, no-cache, no-store, must-revalidate
-      Connection:
-      - keep-alive
-      Content-Encoding:
-      - gzip
-      Content-Length:
-      - '575'
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Sun, 30 Jun 2019 17:39:50 GMT
-      Expires:
-      - Mon, 26 Jul 1997 05:00:00 GMT
-      Pragma:
-      - no-cache
-      Referrer-Policy:
-      - no-referrer
-      Server:
-      - Apache
-      Strict-Transport-Security:
-      - max-age=31536000; includeSubDomains; preload
-      Vary:
-      - Accept-Encoding
-      Via:
-      - 1.1 638e2f6ec35874dad86fe2250f19c411.cloudfront.net (CloudFront)
-      X-Accepted-OAuth-Scopes:
-      - users:read,read
-      X-Amz-Cf-Id:
-      - mfsXIvUwqKN0DiOVFLzkhc4mxZ0RcF0YbsgaSkzpRKn8wJjMLIULtQ==
-      X-Amz-Cf-Pop:
-      - IND6
-      X-Cache:
-      - Miss from cloudfront
-      X-Content-Type-Options:
-      - nosniff
-      X-OAuth-Scopes:
-      - identify,bot:basic
-      X-Slack-Req-Id:
-      - 567c4853-a9bf-4062-8321-968888db44f6
-      X-Via:
-      - haproxy-www-4qov
-      X-XSS-Protection:
-      - '0'
+      ? !!python/object/new:multidict._istr.istr
+      - Access-Control-Allow-Headers
+      : slack-route, x-slack-version-ts
+      ? !!python/object/new:multidict._istr.istr
+      - Access-Control-Allow-Origin
+      : '*'
+      ? !!python/object/new:multidict._istr.istr
+      - Access-Control-Expose-Headers
+      : x-slack-req-id, retry-after
+      ? !!python/object/new:multidict._istr.istr
+      - Cache-Control
+      : private, no-cache, no-store, must-revalidate
+      ? !!python/object/new:multidict._istr.istr
+      - Connection
+      : keep-alive
+      ? !!python/object/new:multidict._istr.istr
+      - Content-Encoding
+      : gzip
+      ? !!python/object/new:multidict._istr.istr
+      - Content-Length
+      : '575'
+      ? !!python/object/new:multidict._istr.istr
+      - Content-Type
+      : application/json; charset=utf-8
+      ? !!python/object/new:multidict._istr.istr
+      - Date
+      : Sat, 06 Jul 2019 14:23:29 GMT
+      ? !!python/object/new:multidict._istr.istr
+      - Expires
+      : Mon, 26 Jul 1997 05:00:00 GMT
+      ? !!python/object/new:multidict._istr.istr
+      - Pragma
+      : no-cache
+      Referrer-Policy: no-referrer
+      ? !!python/object/new:multidict._istr.istr
+      - Server
+      : Apache
+      Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+      ? !!python/object/new:multidict._istr.istr
+      - Vary
+      : Accept-Encoding
+      ? !!python/object/new:multidict._istr.istr
+      - Via
+      : 1.1 851ddb32cd4fb6ca4503e357c5e6a0cd.cloudfront.net (CloudFront)
+      X-Accepted-OAuth-Scopes: users:read,read
+      X-Amz-Cf-Id: OCh4HlKE6nirqgSYeO3sMDqJMYgVLptnROgV8mpIoYDYVmQ6X-tY_A==
+      X-Amz-Cf-Pop: ORD52-C2
+      X-Cache: Miss from cloudfront
+      X-Content-Type-Options: nosniff
+      X-OAuth-Scopes: identify,bot:basic
+      X-Slack-Req-Id: fe7a0d8c-1f99-4e69-8b5f-d34f093e24cf
+      X-Via: haproxy-www-107g
+      X-XSS-Protection: '0'
     status:
       code: 200
       message: OK
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - www.slack.com
+        - /api/users.info
+        - include_locale=True&user=U5FTQ3QRZ
+        - ''
 version: 1

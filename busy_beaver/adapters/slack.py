@@ -1,6 +1,6 @@
 from typing import List, NamedTuple
 
-from slackclient import SlackClient
+from slack import WebClient
 
 
 class Channel(NamedTuple):
@@ -16,17 +16,18 @@ class TimezoneInfo(NamedTuple):
 
 class SlackAdapter:
     def __init__(self, slack_token):
-        self.sc = SlackClient(slack_token)
+        self.client = WebClient(slack_token, run_async=False)
 
     def dm(self, message, user_id):
         return self.post_message(message, channel=user_id, as_user=True)
 
     def get_channel_info(self, channel) -> Channel:
-        members = self._get_channel_members(channel)
+        channel_info = self.client.channels_info(channel=channel)
+        members = channel_info["channel"]["members"]
         return Channel(channel, members)
 
     def get_user_timezone(self, user_id):
-        result = self.sc.api_call("users.info", user=user_id, include_locale=True)
+        result = self.client.users_info(user=user_id, include_locale=True)
         return TimezoneInfo(
             tz=result["user"]["tz"],
             label=result["user"]["tz_label"],
@@ -34,12 +35,8 @@ class SlackAdapter:
         )
 
     def post_ephemeral_message(self, message, channel, user_id):
-        return self.sc.api_call(
-            "chat.postEphemeral",
-            text=message,
-            channel=channel,
-            user=user_id,
-            attachments=None,
+        return self.client.chat_postEphemeral(
+            text=message, channel=channel, user=user_id, attachments=None
         )
 
     def post_message(
@@ -56,8 +53,7 @@ class SlackAdapter:
         if not channel:
             raise ValueError("Must specify channel")
 
-        return self.sc.api_call(
-            "chat.postMessage",
+        return self.client.chat_postMessage(
             channel=channel,
             text=message,
             blocks=blocks,
@@ -66,7 +62,3 @@ class SlackAdapter:
             unfurl_media=unfurl_media,
             as_user=as_user,
         )
-
-    def _get_channel_members(self, channel: str) -> List[str]:
-        channel_info = self.sc.api_call("channels.info", channel=channel)
-        return channel_info["channel"]["members"]
