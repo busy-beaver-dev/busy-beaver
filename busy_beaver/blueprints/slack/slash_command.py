@@ -1,15 +1,11 @@
 import logging
 from typing import List, NamedTuple
-
 from urllib.parse import urlencode
 import uuid
-
 from flask import request
 from flask.views import MethodView
-
 from .decorators import limit_to, slack_verification_required
 from .toolbox import make_slack_response
-
 from busy_beaver.apps.upcoming_events.workflow import (
     generate_next_event_message,
     generate_upcoming_events_message,
@@ -89,6 +85,7 @@ def display_help_text(**data):
 def command_not_found(**data):
     logger.info("[Busy Beaver] Unknown command")
     return make_slack_response(text="Command not found. Try `/busybeaver help`")
+
 
 @slash_command_dispatcher.on("connect")
 def link_github(**data):
