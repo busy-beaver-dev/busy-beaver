@@ -1,6 +1,7 @@
 import logging
-import uuid
 from urllib.parse import urlencode
+import uuid
+
 
 from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI, MEETUP_GROUP_NAME
 from busy_beaver.extensions import db

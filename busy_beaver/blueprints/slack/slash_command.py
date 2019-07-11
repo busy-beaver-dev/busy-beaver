@@ -1,8 +1,8 @@
 import logging
 from typing import List, NamedTuple
 
-import uuid
 from urllib.parse import urlencode
+import uuid
 
 from flask import request
 from flask.views import MethodView
