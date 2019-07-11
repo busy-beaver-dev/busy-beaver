@@ -1,8 +1,6 @@
 import logging
 from urllib.parse import urlencode
 import uuid
-
-
 from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI, MEETUP_GROUP_NAME
 from busy_beaver.extensions import db
 from busy_beaver.models import User
@@ -49,13 +47,12 @@ def create_github_account_attachment(state):
         "actions": [{"text": "Associate GitHub Profile", "type": "button", "url": url}],
     }
 
+
 def check_account_existing(slack_id):
     user_record = User.query.filter_by(slack_id=slack_id).first()
-
     if user_record:
         logger.info("[Busy Beaver] Slack account already linked to Github")
         return True
-
     logger.info("[Busy Beaver] New user. No Github account associated with profile.")
     return False
 
@@ -63,28 +60,24 @@ def check_account_existing(slack_id):
 def generate_account_attachment(**data):
     slack_id = data["user_id"]
     account_exists = check_account_existing(slack_id)
-
     if(account_exists):
         return ACCOUNT_ALREADY_ASSOCIATED, None
-
     user = User()
     user.slack_id = slack_id
     user = add_tracking_identifer_and_save_record(user)
     attachment = create_github_account_attachment(user.github_state)
     return VERIFY_ACCOUNT, attachment
 
+
 def delete_account_attachment(**data):
 
     slack_id = data["user_id"]
     account_exists = check_account_existing(slack_id)
-
     if(account_exists):
         return ACCOUNT_ALREADY_ASSOCIATED
-
     user = User.query.filter_by(slack_id=slack_id).first()
     db.session.delete(user)
     db.session.commit()
-
     return DELETE_ACCOUNT
 
 
