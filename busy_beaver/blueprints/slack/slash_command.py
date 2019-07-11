@@ -28,17 +28,6 @@ from busy_beaver.toolbox import EventEmitter
 logger = logging.getLogger(__name__)
 slash_command_dispatcher = EventEmitter()
 
-ACCOUNT_ALREADY_ASSOCIATED = (
-    "You have already associated a GitHub account with your Slack handle. "
-    "Please use `/busybeaver reconnect` to link to a different account."
-)
-NO_ASSOCIATED_ACCOUNT = (
-    "No associated account. Use `/busybeaver connect` to link your account."
-)
-VERIFY_ACCOUNT = (
-    "Follow the link below to validate your GitHub account. "
-    "I'll reference your GitHub username to track your public activity."
-)
 HELP_TEXT = (
     "`/busybeaver next`\t\t Retrieve next event\n"
     "`/busybeaver events`\t\t Retrieve list of upcoming event\n"
