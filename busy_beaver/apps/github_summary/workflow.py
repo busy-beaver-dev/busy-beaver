@@ -7,11 +7,9 @@ from busy_beaver.extensions import db
 from busy_beaver.models import User
 from busy_beaver.toolbox import EventEmitter
 
-#Setup logging
 logger = logging.getLogger(__name__)
 slash_command_dispatcher = EventEmitter()
 
-#String variables to describe state
 ACCOUNT_ALREADY_ASSOCIATED = (
     "You have already associated a GitHub account with your Slack handle. "
     "Please use `/busybeaver reconnect` to link to a different account."
@@ -28,7 +26,6 @@ DELETE_ACCOUNT = (
     "Account has been deleted. Run '/busybeaver connect' to reconnect"
 )
 
-#functions to create, delete, and manipulate github attachments.
 def add_tracking_identifer_and_save_record(user: User) -> None:
     user.github_state = str(uuid.uuid4())  # generate unique identifer to track user
     db.session.add(user)
