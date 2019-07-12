@@ -25,6 +25,7 @@ DELETE_ACCOUNT = (
     "Account has been deleted. Run '/busybeaver connect' to reconnect"
 )
 
+
 def add_tracking_identifer_and_save_record(user: User) -> None:
     user.github_state = str(uuid.uuid4())  # generate unique identifer to track user
     db.session.add(user)
@@ -79,5 +80,3 @@ def delete_account_attachment(**data):
     db.session.delete(user)
     db.session.commit()
     return DELETE_ACCOUNT
-
-
