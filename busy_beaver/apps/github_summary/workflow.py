@@ -61,12 +61,12 @@ def check_account_existing(slack_id):
 def generate_account_attachment(**data):
     slack_id = data["user_id"]
     account_exists = check_account_existing(slack_id)
-    if(account_exists):
-        return ACCOUNT_ALREADY_ASSOCIATED, None
     user = GitHubSummaryUser()
     user.slack_id = slack_id
     user = add_tracking_identifer_and_save_record(user)
     attachment = create_github_account_attachment(user.github_state)
+    if(account_exists):
+        return ACCOUNT_ALREADY_ASSOCIATED, attachment
     return VERIFY_ACCOUNT, attachment
 
 
