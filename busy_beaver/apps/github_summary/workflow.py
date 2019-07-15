@@ -22,7 +22,7 @@ VERIFY_ACCOUNT = (
 )
 
 DELETE_ACCOUNT = (
-    "Account has been deleted. Run '/busybeaver connect' to reconnect"
+    "You have already associated a GitHub account with your Slack handle. Please use `/busybeaver reconnect` to link to a different account."
 )
 
 
