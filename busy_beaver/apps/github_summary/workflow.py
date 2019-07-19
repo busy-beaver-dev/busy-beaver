@@ -58,6 +58,28 @@ def check_account_existing(slack_id):
 
 
 def generate_account_attachment(**data):
+    logger.info("[Busy Beaver] New user. Linking GitHub account.")
+    slack_id = data["user_id"]
+    workspace_id = data["team_id"]
+    slack_installation = SlackInstallation.query.filter_by(
+        workspace_id=workspace_id
+    ).first()
+
+    user_record = GitHubSummaryUser.query.filter_by(
+        slack_id=slack_id, installation_id=slack_installation.id
+    ).first()
+    if user_record:
+        logger.info("[Busy Beaver] Slack acount already linked to GitHub")
+        return make_slack_response(text=ACCOUNT_ALREADY_ASSOCIATED)
+
+    user = GitHubSummaryUser()
+    user.slack_id = slack_id
+    user.installation_id = slack_installation.id
+    user = add_tracking_identifer_and_save_record(user)
+    attachment = create_github_account_attachment(user.github_state)
+    return text=VERIFY_ACCOUNT, attachments=attachment
+
+    """
     slack_id = data["user_id"]
     account_exists = check_account_existing(slack_id)
     if(account_exists == NO_ASSOCIATED_ACCOUNT):
@@ -67,4 +89,5 @@ def generate_account_attachment(**data):
         attachment = create_github_account_attachment(user.github_state)
         return VERIFY_ACCOUNT, attachment
     return ACCOUNT_ALREADY_ASSOCIATED
+    """
 
