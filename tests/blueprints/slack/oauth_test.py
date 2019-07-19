@@ -3,11 +3,20 @@ import responses
 
 from busy_beaver.apps.external_integrations.oauth_providers.slack import SlackOAuthFlow
 from busy_beaver.models import SlackInstallation
+from tests._utilities import FakeSlackClient
+
+MODULE_TO_TEST = "busy_beaver.apps.external_integrations.workflow"
+
+
+@pytest.fixture
+def patched_slack(patcher):
+    obj = FakeSlackClient()
+    return patcher(MODULE_TO_TEST, namespace="SlackAdapter", replacement=obj)
 
 
 @pytest.mark.end2end
 @responses.activate
-def test_slack_oauth_endpoints(client, session):
+def test_slack_oauth_endpoints(client, session, patched_slack):
     # Arrange
     # Step 1 -- User goes to 3rd party website and authenticates us
     # Step 2 -- create response to send back during token exchange
@@ -26,8 +35,7 @@ def test_slack_oauth_endpoints(client, session):
             },
         },
     )
-    # TODO: create a slack adapter
-    responses.add(responses.POST, "https://slack.com/api/chat.postMessage", json={})
+    slack = patched_slack
 
     # Act -- oauth callback and token exchange
     state = ""
@@ -48,3 +56,8 @@ def test_slack_oauth_endpoints(client, session):
 
     # assert things in slack adapter
     assert installation.state == "user_welcomed"
+
+    post_message_args = slack.mock.call_args_list[-1]
+    args, kwargs = post_message_args
+    assert "To get started" in args[0]
+    assert kwargs["user_id"] == "test_user"

@@ -5,7 +5,15 @@
     state: present
     minute: 0
     hour: 19
-    job: "/bin/bash {{ run_summary }} && curl -fsS --retry 3 https://hc-ping.com/{{ lookup('env', 'HEALTHCHECK_GITHUB_SUMMARY') }} > /dev/null"
+    job: "/bin/bash {{ run_summary_chipy }} && curl -fsS --retry 3 https://hc-ping.com/{{ lookup('env', 'HEALTHCHECK_GITHUB_SUMMARY_CHIPY') }} > /dev/null"
+
+- cron:
+    name: Post GitHub summary for Python Belgrade
+    user: "{{ user }}"
+    state: present
+    minute: 0
+    hour: 8
+    job: "/bin/bash {{ run_summary_belgrade }} && curl -fsS --retry 3 https://hc-ping.com/{{ lookup('env', 'HEALTHCHECK_GITHUB_SUMMARY_BELGRADE') }} > /dev/null"
 
 - cron:
     name: Run Twitter poller to retweet new posts to Slack

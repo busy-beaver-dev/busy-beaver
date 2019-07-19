@@ -9,6 +9,7 @@ from busy_beaver.toolbox import EventEmitter
 logger = logging.getLogger(__name__)
 slash_command_dispatcher = EventEmitter()
 
+
 ACCOUNT_ALREADY_ASSOCIATED = (
     "You have already associated a GitHub account with your Slack handle. "
     "Please use `/busybeaver reconnect` to link to a different account."
