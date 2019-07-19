@@ -18,6 +18,9 @@ class SlackAdapter:
     def __init__(self, slack_token):
         self.client = WebClient(slack_token, run_async=False)
 
+    def _api_call(self, slack_method, **params):
+        return self.client
+
     def dm(self, message, user_id):
         return self.post_message(message, channel=user_id, as_user=True)
 
@@ -26,8 +29,12 @@ class SlackAdapter:
         members = channel_info["channel"]["members"]
         return Channel(channel, members)
 
+    def get_channel_list(self, *, include_members=False):
+        exclude_members = not include_members
+        return self.client.channels_list(exclude_members=int(exclude_members))
+
     def get_user_timezone(self, user_id):
-        result = self.client.users_info(user=user_id, include_locale=True)
+        result = self.client.users_info(user=user_id)
         return TimezoneInfo(
             tz=result["user"]["tz"],
             label=result["user"]["tz_label"],
