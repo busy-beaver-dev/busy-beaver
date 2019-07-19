@@ -36,6 +36,11 @@ class SlackEventSubscriptionResource(MethodView):
 # Subscription Handlers
 #######################
 @subscription_dispatch.on("app_uninstalled")  # TODO
+def app_uninstalled_dispatcher():
+    logger.info("[Busy beaver] Slack api has been uninstalled.")
+    return
+
+
 @subscription_dispatch.on("not_found")
 @event_dispatch.on("not_found")
 def command_not_found(data):
