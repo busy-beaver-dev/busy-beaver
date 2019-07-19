@@ -1,13 +1,9 @@
 import logging
 from typing import List, NamedTuple
-<<<<<<< HEAD
 
-import uuid
-from urllib.parse import urlencode
-=======
 from urllib.parse import urlencode
 import uuid
->>>>>>> 28299bd1064c77175b5146ab84c7d88d1c9b4659
+
 from flask import request
 from flask.views import MethodView
 from .decorators import limit_to, slack_verification_required
