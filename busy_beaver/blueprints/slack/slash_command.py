@@ -3,10 +3,8 @@ from typing import List, NamedTuple
 
 import uuid
 from urllib.parse import urlencode
-
 from flask import request
 from flask.views import MethodView
-
 from .decorators import limit_to, slack_verification_required
 from .toolbox import make_slack_response
 
@@ -23,17 +21,6 @@ from busy_beaver.toolbox import EventEmitter
 logger = logging.getLogger(__name__)
 slash_command_dispatcher = EventEmitter()
 
-ACCOUNT_ALREADY_ASSOCIATED = (
-    "You have already associated a GitHub account with your Slack handle. "
-    "Please use `/busybeaver reconnect` to link to a different account."
-)
-NO_ASSOCIATED_ACCOUNT = (
-    "No associated account. Use `/busybeaver connect` to link your account."
-)
-VERIFY_ACCOUNT = (
-    "Follow the link below to validate your GitHub account. "
-    "I'll reference your GitHub username to track your public activity."
-)
 HELP_TEXT = (
     "`/busybeaver next`\t\t Retrieve next event\n"
     "`/busybeaver events`\t\t Retrieve list of upcoming event\n"
@@ -97,58 +84,25 @@ def command_not_found(**data):
     return make_slack_response(text="Command not found. Try `/busybeaver help`")
 
 
-##########################################
-# Associate GitHub account with Slack user
-# TODO refactor this
-##########################################
 @slash_command_dispatcher.on("connect")
 def link_github(**data):
     logger.info("[Busy Beaver] Slash command to associate with Github account.")
     message, attachment = generate_account_attachment(**data)
     return make_slack_response(text=message, attachments=attachment)
 
+
 @slash_command_dispatcher.on("reconnect")
 def relink_github(**data):
-    logger.info("[Busy Beaver] Relinking GitHub account.")
-    slack_id = data["user_id"]
-    workspace_id = data["team_id"]
-    slack_installation = SlackInstallation.query.filter_by(
-        workspace_id=workspace_id
-    ).first()
-
-    user = GitHubSummaryUser.query.filter_by(
-        slack_id=slack_id, installation_id=slack_installation.id
-    ).first()
-    if not user:
-        logger.info("[Busy Beaver] Slack acount does not have associated GitHub")
-        return make_slack_response(text=NO_ASSOCIATED_ACCOUNT)
-
-    user = add_tracking_identifer_and_save_record(user)
-    attachment = create_github_account_attachment(user.github_state)
-    return make_slack_response(text=VERIFY_ACCOUNT, attachments=attachment)
+    logger.info("[Busy Beaver] Slash command to relink GitHub account.")
+    message, attachment = generate_account_attachment(**data)
+    return make_slack_response(text=message, attachments=attachment)
 
 
 @slash_command_dispatcher.on("disconnect")
 def disconnect_github(**data):
     logger.info("[Busy Beaver] Disconnecting GitHub account.")
-    slack_id = data["user_id"]
-    workspace_id = data["team_id"]
-    slack_installation = SlackInstallation.query.filter_by(
-        workspace_id=workspace_id
-    ).first()
-
-    user = GitHubSummaryUser.query.filter_by(
-        slack_id=slack_id, installation_id=slack_installation.id
-    ).first()
-    if not user:
-        logger.info("[Busy Beaver] Slack acount does not have associated GitHub")
-        return make_slack_response(text="No GitHub account associated with profile")
-
-    db.session.delete(user)
-    db.session.commit()
-    return make_slack_response(
-        text="Account has been deleted. `/busybeaver connect` to reconnect"
-    )
+    message = delete_account_attachment(**data)
+    return make_slack_response(text=message)
 
 
 def add_tracking_identifer_and_save_record(user: GitHubSummaryUser) -> None:

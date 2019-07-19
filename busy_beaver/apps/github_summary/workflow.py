@@ -1,10 +1,9 @@
 import logging
-import uuid
 from urllib.parse import urlencode
-
-from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI, MEETUP_GROUP_NAME
+import uuid
+from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI
 from busy_beaver.extensions import db
-from busy_beaver.models import User
+from busy_beaver.models import GitHubSummaryUser
 from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
@@ -23,8 +22,12 @@ VERIFY_ACCOUNT = (
     "I'll reference your GitHub username to track your public activity."
 )
 
+DELETE_ACCOUNT = (
+    "You have already associated a GitHub account with your Slack handle. Please use `/busybeaver reconnect` to link to a different account."
+)
 
-def add_tracking_identifer_and_save_record(user: User) -> None:
+
+def add_tracking_identifer_and_save_record(user: GitHubSummaryUser) -> None:
     user.github_state = str(uuid.uuid4())  # generate unique identifer to track user
     db.session.add(user)
     db.session.commit()
@@ -37,6 +40,7 @@ def create_github_account_attachment(state):
         "redirect_uri": GITHUB_REDIRECT_URI,
         "state": state,
     }
+
     query_params = urlencode(data)
     url = f"https://github.com/login/oauth/authorize?{query_params}"
     return {
@@ -44,50 +48,36 @@ def create_github_account_attachment(state):
         "attachment_type": "default",
         "actions": [{"text": "Associate GitHub Profile", "type": "button", "url": url}],
     }
-##########################################
-# Associate GitHub account with Slack user
-# TODO refactor this
-##########################################
+
+
 def check_account_existing(slack_id):
-    user_record = User.query.filter_by(slack_id=slack_id).first()
+    user_record = GitHubSummaryUser.query.filter_by(slack_id=slack_id).first()
     if user_record:
         logger.info("[Busy Beaver] Slack account already linked to Github")
-        return ACCOUNT_ALREADY_ASSOCIATED
-    logger.info("[Busy Beaver] New user. Linking GitHub account.")
-    return NO_ASSOCIATED_ACCOUNT
+        return True
+    logger.info("[Busy Beaver] New user. No Github account associated with profile.")
+    return False
 
 
 def generate_account_attachment(**data):
-    logger.info("[Busy Beaver] New user. Linking GitHub account.")
-    slack_id = data["user_id"]
-    workspace_id = data["team_id"]
-    slack_installation = SlackInstallation.query.filter_by(
-        workspace_id=workspace_id
-    ).first()
-
-    user_record = GitHubSummaryUser.query.filter_by(
-        slack_id=slack_id, installation_id=slack_installation.id
-    ).first()
-    if user_record:
-        logger.info("[Busy Beaver] Slack acount already linked to GitHub")
-        return make_slack_response(text=ACCOUNT_ALREADY_ASSOCIATED)
-
-    user = GitHubSummaryUser()
-    user.slack_id = slack_id
-    user.installation_id = slack_installation.id
-    user = add_tracking_identifer_and_save_record(user)
-    attachment = create_github_account_attachment(user.github_state)
-    return text=VERIFY_ACCOUNT, attachments=attachment
-
-    """
     slack_id = data["user_id"]
     account_exists = check_account_existing(slack_id)
-    if(account_exists == NO_ASSOCIATED_ACCOUNT):
-        user = User()
-        user.slack_id = slack_id
-        user = add_tracking_identifer_and_save_record(user)
-        attachment = create_github_account_attachment(user.github_state)
-        return VERIFY_ACCOUNT, attachment
-    return ACCOUNT_ALREADY_ASSOCIATED
-    """
+    user = GitHubSummaryUser()
+    user.slack_id = slack_id
+    user = add_tracking_identifer_and_save_record(user)
+    attachment = create_github_account_attachment(user.github_state)
+    if(account_exists):
+        return ACCOUNT_ALREADY_ASSOCIATED, attachment
+    return VERIFY_ACCOUNT, attachment
 
+
+def delete_account_attachment(**data):
+
+    slack_id = data["user_id"]
+    account_exists = check_account_existing(slack_id)
+    if(account_exists):
+        return ACCOUNT_ALREADY_ASSOCIATED
+    user = GitHubSummaryUser.query.filter_by(slack_id=slack_id).first()
+    db.session.delete(user)
+    db.session.commit()
+    return DELETE_ACCOUNT
