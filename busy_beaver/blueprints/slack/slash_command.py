@@ -1,8 +1,13 @@
 import logging
 from typing import List, NamedTuple
+<<<<<<< HEAD
 
 import uuid
 from urllib.parse import urlencode
+=======
+from urllib.parse import urlencode
+import uuid
+>>>>>>> 28299bd1064c77175b5146ab84c7d88d1c9b4659
 from flask import request
 from flask.views import MethodView
 from .decorators import limit_to, slack_verification_required
@@ -12,8 +17,13 @@ from busy_beaver.apps.upcoming_events.workflow import (
     generate_next_event_message,
     generate_upcoming_events_message,
 )
-from busy_beaver.apps.github_summary.workflow import (generate_account_attachment)
-from busy_beaver.config import GITHUB_CLIENT_ID, GITHUB_REDIRECT_URI, MEETUP_GROUP_NAME, FULL_INSTALLATION_WORKSPACE_IDS
+from busy_beaver.apps.github_summary.workflow import (generate_account_attachment, delete_account_attachment)
+from busy_beaver.config import (
+    FULL_INSTALLATION_WORKSPACE_IDS,
+    GITHUB_CLIENT_ID,
+    GITHUB_REDIRECT_URI,
+    MEETUP_GROUP_NAME,
+)
 from busy_beaver.extensions import db
 from busy_beaver.models import GitHubSummaryUser, SlackInstallation
 from busy_beaver.toolbox import EventEmitter
