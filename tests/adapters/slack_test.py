@@ -68,3 +68,23 @@ def test_slack_post_message_success(slack: SlackAdapter):
 def test_slack_post_message_without_specifying_channel(slack: SlackAdapter):
     with pytest.raises(ValueError):
         slack.post_message(message="test")
+
+
+@pytest.mark.vcr()
+def test_slack_get_channel_list(slack: SlackAdapter):
+    result = slack.get_channel_list()
+
+    assert result["ok"] is True
+    channel_info = result["channels"]
+    if channel_info:
+        assert "members" not in channel_info[0]
+
+
+@pytest.mark.vcr()
+def test_slack_get_channel_list_with_members(slack: SlackAdapter):
+    result = slack.get_channel_list(include_members=True)
+
+    assert result["ok"] is True
+    channel_info = result["channels"]
+    if channel_info:
+        assert "members" in channel_info[0]

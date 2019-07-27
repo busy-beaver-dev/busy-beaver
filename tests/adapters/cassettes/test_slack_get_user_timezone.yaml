@@ -9,12 +9,12 @@ interactions:
       authorization:
       - DUMMY
     method: GET
-    uri: https://www.slack.com/api/users.info?include_locale=True&user=U5FTQ3QRZ
+    uri: https://www.slack.com/api/users.info?user=U5FTQ3QRZ
   response:
     body:
       string: '{"ok":true,"user":{"id":"U5FTQ3QRZ","team_id":"T5G0FCMNW","name":"alysivji","deleted":false,"color":"9f69e7","real_name":"Aly
         Sivji","tz":"America\/Chicago","tz_label":"Central Daylight Time","tz_offset":-18000,"profile":{"title":"","phone":"","skype":"","real_name":"Aly
-        Sivji","real_name_normalized":"Aly Sivji","display_name":"alysivji","display_name_normalized":"alysivji","status_text":"","status_emoji":"","status_expiration":0,"avatar_hash":"gbda59cfe1d1","email":"alysivji@gmail.com","first_name":"Aly","last_name":"Sivji","image_24":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=24&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-24.png","image_32":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=32&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-32.png","image_48":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-48.png","image_72":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=72&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-72.png","image_192":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=192&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-192.png","image_512":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-512.png","status_text_canonical":"","team":"T5G0FCMNW"},"is_admin":true,"is_owner":true,"is_primary_owner":true,"is_restricted":false,"is_ultra_restricted":false,"is_bot":false,"is_app_user":false,"updated":1558834031,"locale":"en-US"}}'
+        Sivji","real_name_normalized":"Aly Sivji","display_name":"alysivji","display_name_normalized":"alysivji","status_text":"","status_emoji":"","status_expiration":0,"avatar_hash":"gbda59cfe1d1","email":"alysivji@gmail.com","first_name":"Aly","last_name":"Sivji","image_24":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=24&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-24.png","image_32":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=32&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-32.png","image_48":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-48.png","image_72":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=72&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-72.png","image_192":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=192&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-192.png","image_512":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2F00b63%2Fimg%2Favatars%2Fava_0010-512.png","status_text_canonical":"","team":"T5G0FCMNW"},"is_admin":true,"is_owner":true,"is_primary_owner":true,"is_restricted":false,"is_ultra_restricted":false,"is_bot":false,"is_app_user":false,"updated":1558834031}}'
     headers:
       ? !!python/object/new:multidict._istr.istr
       - Access-Control-Allow-Headers
@@ -36,13 +36,13 @@ interactions:
       : gzip
       ? !!python/object/new:multidict._istr.istr
       - Content-Length
-      : '575'
+      : '564'
       ? !!python/object/new:multidict._istr.istr
       - Content-Type
       : application/json; charset=utf-8
       ? !!python/object/new:multidict._istr.istr
       - Date
-      : Sat, 06 Jul 2019 14:23:29 GMT
+      : Fri, 19 Jul 2019 01:39:34 GMT
       ? !!python/object/new:multidict._istr.istr
       - Expires
       : Mon, 26 Jul 1997 05:00:00 GMT
@@ -59,15 +59,15 @@ interactions:
       : Accept-Encoding
       ? !!python/object/new:multidict._istr.istr
       - Via
-      : 1.1 851ddb32cd4fb6ca4503e357c5e6a0cd.cloudfront.net (CloudFront)
+      : 1.1 061a00fb73c7b9b18dbae9db08e7a852.cloudfront.net (CloudFront)
       X-Accepted-OAuth-Scopes: users:read,read
-      X-Amz-Cf-Id: OCh4HlKE6nirqgSYeO3sMDqJMYgVLptnROgV8mpIoYDYVmQ6X-tY_A==
-      X-Amz-Cf-Pop: ORD52-C2
+      X-Amz-Cf-Id: 4VxRZ-PlFrI5-RsMT9kOQO50t9lcB0WKwKi3d31zeCblD57N_R-5fg==
+      X-Amz-Cf-Pop: EWR52-C2
       X-Cache: Miss from cloudfront
       X-Content-Type-Options: nosniff
       X-OAuth-Scopes: identify,bot:basic
-      X-Slack-Req-Id: fe7a0d8c-1f99-4e69-8b5f-d34f093e24cf
-      X-Via: haproxy-www-107g
+      X-Slack-Req-Id: 232acc99-32a7-49bc-a9b5-5826d3acb317
+      X-Via: haproxy-www-ysom
       X-XSS-Protection: '0'
     status:
       code: 200
@@ -78,6 +78,6 @@ interactions:
         - https
         - www.slack.com
         - /api/users.info
-        - include_locale=True&user=U5FTQ3QRZ
+        - user=U5FTQ3QRZ
         - ''
 version: 1

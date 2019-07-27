@@ -27,6 +27,7 @@ services:
   app:
     image: alysivji/busy-beaver:latest
     command: webserver
+    restart: always
     environment: &app_env_vars
       IN_PRODUCTION: 1
       PYTHONPATH: .
@@ -67,6 +68,7 @@ services:
   worker:
     image: alysivji/busy-beaver:latest
     command: worker
+    restart: always
     environment: *app_env_vars
     volumes: *app_volumes
     networks:

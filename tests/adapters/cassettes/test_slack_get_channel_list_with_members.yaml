@@ -1,0 +1,89 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=utf-8
+      User-Agent:
+      - Python/3.7.1 slackclient/2.1.0 Linux/4.9.125-linuxkit
+      authorization:
+      - DUMMY
+    method: GET
+    uri: https://www.slack.com/api/channels.list?exclude_members=0
+  response:
+    body:
+      string: '{"ok":true,"channels":[{"id":"C5FTQ3RK5","name":"random","is_channel":true,"created":1495325664,"is_archived":false,"is_general":false,"unlinked":0,"creator":"U5FTQ3QRZ","name_normalized":"random","is_shared":false,"is_org_shared":false,"is_member":true,"is_private":false,"is_mpim":false,"members":["U5FTQ3QRZ","UEANVEWMN","UEGGXQ5EF","UFZKG96KD","UGG6065AP","UKZEZHF7A"],"topic":{"value":"Non-work
+        banter and water cooler conversation","creator":"","last_set":0},"purpose":{"value":"A
+        place for non-work-related flimflam, faffing, hodge-podge or jibber-jabber
+        you''d prefer to keep out of more focused work-related channels.","creator":"","last_set":0},"previous_names":[],"num_members":6},{"id":"C5GQNTS07","name":"general","is_channel":true,"created":1495325664,"is_archived":false,"is_general":true,"unlinked":0,"creator":"U5FTQ3QRZ","name_normalized":"general","is_shared":false,"is_org_shared":false,"is_member":true,"is_private":false,"is_mpim":false,"members":["U5FTQ3QRZ","UEANVEWMN","UEGGXQ5EF","UFZKG96KD","UGG6065AP","UGLHLEJMT","UKZF9G2SH"],"topic":{"value":"Company-wide
+        announcements and work-based matters","creator":"","last_set":0},"purpose":{"value":"This
+        channel is for team-wide communication and announcements. All team members
+        are in this channel.","creator":"","last_set":0},"previous_names":[],"num_members":7},{"id":"CECSXDD9U","name":"busybeaver_test","is_channel":true,"created":1543174729,"is_archived":false,"is_general":false,"unlinked":0,"creator":"U5FTQ3QRZ","name_normalized":"busybeaver_test","is_shared":false,"is_org_shared":false,"is_member":true,"is_private":false,"is_mpim":false,"members":["U5FTQ3QRZ","UEANVEWMN","UEGGXQ5EF","UKZF9G2SH"],"topic":{"value":"","creator":"","last_set":0},"purpose":{"value":"","creator":"","last_set":0},"previous_names":[],"num_members":4},{"id":"CEWD83Y74","name":"busy-beaver","is_channel":true,"created":1545106792,"is_archived":false,"is_general":false,"unlinked":0,"creator":"U5FTQ3QRZ","name_normalized":"busy-beaver","is_shared":false,"is_org_shared":false,"is_member":true,"is_private":false,"is_mpim":false,"members":["U5FTQ3QRZ","UEGGXQ5EF"],"topic":{"value":"","creator":"","last_set":0},"purpose":{"value":"","creator":"","last_set":0},"previous_names":[],"num_members":2},{"id":"CFLDREQNB","name":"bot-testing","is_channel":true,"created":1548120312,"is_archived":false,"is_general":false,"unlinked":0,"creator":"U5FTQ3QRZ","name_normalized":"bot-testing","is_shared":false,"is_org_shared":false,"is_member":true,"is_private":false,"is_mpim":false,"members":["U5FTQ3QRZ","UEGGXQ5EF"],"topic":{"value":"","creator":"","last_set":0},"purpose":{"value":"","creator":"","last_set":0},"previous_names":[],"num_members":2},{"id":"CGL6T198U","name":"codytest","is_channel":true,"created":1551411458,"is_archived":false,"is_general":false,"unlinked":0,"creator":"UGG6065AP","name_normalized":"codytest","is_shared":false,"is_org_shared":false,"is_member":false,"is_private":false,"is_mpim":false,"members":["U5FTQ3QRZ","UGG6065AP","UGLHLEJMT"],"topic":{"value":"","creator":"","last_set":0},"purpose":{"value":"testing
+        channel","creator":"UGG6065AP","last_set":1551411459},"previous_names":[],"num_members":3},{"id":"CKD5Y3NGY","name":"busy-beaver-meta","is_channel":true,"created":1559960699,"is_archived":false,"is_general":false,"unlinked":0,"creator":"U5FTQ3QRZ","name_normalized":"busy-beaver-meta","is_shared":false,"is_org_shared":false,"is_member":true,"is_private":false,"is_mpim":false,"members":["U5FTQ3QRZ","UEGGXQ5EF"],"topic":{"value":"","creator":"","last_set":0},"purpose":{"value":"","creator":"","last_set":0},"previous_names":[],"num_members":2},{"id":"CKN4HGGTU","name":"my-channel","is_channel":true,"created":1561730789,"is_archived":false,"is_general":false,"unlinked":0,"creator":"U5FTQ3QRZ","name_normalized":"my-channel","is_shared":false,"is_org_shared":false,"is_member":true,"is_private":false,"is_mpim":false,"members":["U5FTQ3QRZ","UEGGXQ5EF"],"topic":{"value":"","creator":"","last_set":0},"purpose":{"value":"","creator":"","last_set":0},"previous_names":[],"num_members":2},{"id":"CKT6CKVCH","name":"my-channel123","is_channel":true,"created":1561730794,"is_archived":false,"is_general":false,"unlinked":0,"creator":"U5FTQ3QRZ","name_normalized":"my-channel123","is_shared":false,"is_org_shared":false,"is_member":true,"is_private":false,"is_mpim":false,"members":["U5FTQ3QRZ","UEGGXQ5EF"],"topic":{"value":"","creator":"","last_set":0},"purpose":{"value":"","creator":"","last_set":0},"previous_names":[],"num_members":2},{"id":"CKVT9R5DJ","name":"donut-crew","is_channel":true,"created":1561510245,"is_archived":false,"is_general":false,"unlinked":0,"creator":"U5FTQ3QRZ","name_normalized":"donut-crew","is_shared":false,"is_org_shared":false,"is_member":true,"is_private":false,"is_mpim":false,"members":["U5FTQ3QRZ","UEGGXQ5EF","UKZF9G2SH"],"topic":{"value":"","creator":"","last_set":0},"purpose":{"value":"Trying
+        out donut","creator":"U5FTQ3QRZ","last_set":1561510245},"previous_names":[],"num_members":3},{"id":"CKZFBTM3J","name":"new-channel","is_channel":true,"created":1561728348,"is_archived":false,"is_general":false,"unlinked":0,"creator":"U5FTQ3QRZ","name_normalized":"new-channel","is_shared":false,"is_org_shared":false,"is_member":true,"is_private":false,"is_mpim":false,"members":["U5FTQ3QRZ","UEGGXQ5EF"],"topic":{"value":"","creator":"","last_set":0},"purpose":{"value":"","creator":"","last_set":0},"previous_names":[],"num_members":2}],"response_metadata":{"next_cursor":""}}'
+    headers:
+      ? !!python/object/new:multidict._istr.istr
+      - Access-Control-Allow-Headers
+      : slack-route, x-slack-version-ts
+      ? !!python/object/new:multidict._istr.istr
+      - Access-Control-Allow-Origin
+      : '*'
+      ? !!python/object/new:multidict._istr.istr
+      - Access-Control-Expose-Headers
+      : x-slack-req-id, retry-after
+      ? !!python/object/new:multidict._istr.istr
+      - Cache-Control
+      : private, no-cache, no-store, must-revalidate
+      ? !!python/object/new:multidict._istr.istr
+      - Connection
+      : keep-alive
+      ? !!python/object/new:multidict._istr.istr
+      - Content-Encoding
+      : gzip
+      ? !!python/object/new:multidict._istr.istr
+      - Content-Length
+      : '925'
+      ? !!python/object/new:multidict._istr.istr
+      - Content-Type
+      : application/json; charset=utf-8
+      ? !!python/object/new:multidict._istr.istr
+      - Date
+      : Fri, 19 Jul 2019 01:34:37 GMT
+      ? !!python/object/new:multidict._istr.istr
+      - Expires
+      : Mon, 26 Jul 1997 05:00:00 GMT
+      ? !!python/object/new:multidict._istr.istr
+      - Pragma
+      : no-cache
+      Referrer-Policy: no-referrer
+      ? !!python/object/new:multidict._istr.istr
+      - Server
+      : Apache
+      Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+      ? !!python/object/new:multidict._istr.istr
+      - Vary
+      : Accept-Encoding
+      ? !!python/object/new:multidict._istr.istr
+      - Via
+      : 1.1 5d30bddc33873eabb9b72dc3039e11bf.cloudfront.net (CloudFront)
+      X-Accepted-OAuth-Scopes: channels:read,read
+      X-Amz-Cf-Id: rfjlZnaSpj-Hu8MwnsSLtjRMU9TveOlBK_p88Vn3OMZUKIr6_b0XMg==
+      X-Amz-Cf-Pop: EWR52-C2
+      X-Cache: Miss from cloudfront
+      X-Content-Type-Options: nosniff
+      X-OAuth-Scopes: identify,bot:basic
+      X-Slack-Req-Id: e0052183-19d1-4666-97eb-d5caf55cd88d
+      X-Via: haproxy-www-wn9r
+      X-XSS-Protection: '0'
+    status:
+      code: 200
+      message: OK
+    url: !!python/object/new:yarl.URL
+      state: !!python/tuple
+      - !!python/object/new:urllib.parse.SplitResult
+        - https
+        - www.slack.com
+        - /api/channels.list
+        - exclude_members=0
+        - ''
+version: 1
