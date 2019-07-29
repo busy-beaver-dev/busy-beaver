@@ -52,7 +52,7 @@ class GitHubAdapter:
 
         all_items = []
         for page_num in range(1, min(last_page, max_pages) + 1):
-            combined_params = ChainMap({"page": page_num}, self.params) 
+            combined_params = ChainMap({"page": page_num}, self.params)
             resp = self.__get(url, params=combined_params)
             all_items.extend(resp.json)
 
