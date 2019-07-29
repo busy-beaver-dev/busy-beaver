@@ -4,6 +4,8 @@ from typing import Any, Dict, List, NamedTuple, Union
 
 import requests
 
+from collections import ChainMap
+
 logger = logging.getLogger(__name__)
 DEFAULT_HEADERS = {
     "Accept": "application/json",
@@ -22,9 +24,9 @@ class RequestsClient:
     """Wrapper around requests to simplify interaction with JSON REST APIs"""
 
     def __init__(self, headers: dict = None):
-        _headers = dict(DEFAULT_HEADERS)
+        _headers = ChainMap(DEFAULT_HEADERS)
         if headers is not None:
-            _headers.update(headers)
+            _headers = ChainMap(headers, _headers)
 
         s = requests.Session()
         self.headers = _headers
@@ -43,10 +45,9 @@ class RequestsClient:
         return self._request("post", url, **kwargs)
 
     def _request(self, method: str, url: str, **kwargs) -> Response:
-        req_headers = dict(self.headers)
+        req_headers = ChainMap(self.headers)
         if "headers" in kwargs:
-            headers_to_add = kwargs.pop("headers")
-            req_headers.update(headers_to_add)
+            req_headers = ChainMap(kwargs.pop("headers"), req_headers)
 
         r = self.session.request(method, url, headers=req_headers, **kwargs)
         r.raise_for_status()

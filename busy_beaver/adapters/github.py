@@ -7,6 +7,8 @@ from dateutil.parser import parse as date_parse
 from .requests_client import RequestsClient, Response
 from busy_beaver.exceptions import UnexpectedStatusCode
 
+from collections import ChainMap
+
 BASE_URL = "https://api.github.com"
 
 
@@ -50,8 +52,7 @@ class GitHubAdapter:
 
         all_items = []
         for page_num in range(1, min(last_page, max_pages) + 1):
-            combined_params = self.params.copy()
-            combined_params.update({"page": page_num})
+            combined_params = ChainMap({"page": page_num}, self.params) 
             resp = self.__get(url, params=combined_params)
             all_items.extend(resp.json)
 
@@ -63,8 +64,7 @@ class GitHubAdapter:
         page_num = 1
 
         while True:
-            combined_params = self.params.copy()
-            combined_params.update({"page": page_num})
+            combined_params = ChainMap({"page": page_num}, self.params)
             resp = self.__get(url, params=combined_params)
             all_items.extend(resp.json)
 
