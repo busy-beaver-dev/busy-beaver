@@ -10,6 +10,5 @@
   git:
     repo: "{{ code_repository }}"
     dest: "{{ app_dir }}"
-    version: "deploy"
 
 # TODO: create and start systemd service
