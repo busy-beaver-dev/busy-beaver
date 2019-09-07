@@ -1,8 +1,10 @@
 from typing import Dict, List, NamedTuple
-from meetup.api import Client as MeetupClient
 
-from busy_beaver.exceptions import NoMeetupEventsFound
+from .requests_client import RequestsClient, Response
+from busy_beaver.exceptions import NoMeetupEventsFound, UnexpectedStatusCode
 from busy_beaver.models import Event
+
+BASE_URL = "https://api.meetup.com"
 
 
 class EventDetails(NamedTuple):
@@ -44,16 +46,24 @@ class EventDetails(NamedTuple):
 class MeetupAdapter:
     """Pull the upcoming events from Meetup and send the message to Slack."""
 
-    def __init__(self, api_key):
-        self.meetup_client = MeetupClient(api_key)
+    def __init__(self, oauth_token: str):
+        default_headers = {"Authorization": f"Bearer {oauth_token}"}
+        self.client = RequestsClient(headers=default_headers)
 
     def get_events(self, group_name: str, count: int = 1) -> List[EventDetails]:
-        events = self.meetup_client.GetEvents(group_urlname=group_name)
-        if not events.results:
+        url = BASE_URL + f"/{group_name}/events"
+        payload = {"page": count}
+        resp: Response = self.client.get(url, params=payload)
+
+        if resp.status_code != 200:
+            raise UnexpectedStatusCode
+
+        events = resp.json
+        if not events:
             raise NoMeetupEventsFound
 
         upcoming_events = []
-        for event in events.results[:count]:
+        for event in events:
             if "venue" in event:
                 venue_name = event["venue"]["name"]
             else:
@@ -64,7 +74,7 @@ class MeetupAdapter:
                 EventDetails(
                     id=event["id"],
                     name=event["name"],
-                    url=event["event_url"],
+                    url=event["link"],
                     venue=venue_name,
                     start_epoch=start_epoch,
                     end_epoch=start_epoch + int(event["duration"]),
