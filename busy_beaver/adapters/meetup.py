@@ -52,8 +52,7 @@ class MeetupAdapter:
 
     def get_events(self, group_name: str, count: int = 1) -> List[EventDetails]:
         url = BASE_URL + f"/{group_name}/events"
-        payload = {"page": count}
-        resp: Response = self.client.get(url, params=payload)
+        resp: Response = self.client.get(url)
 
         if resp.status_code != 200:
             raise UnexpectedStatusCode
