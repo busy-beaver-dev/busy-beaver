@@ -52,7 +52,8 @@ class MeetupAdapter:
 
     def get_events(self, group_name: str, count: int = 1) -> List[EventDetails]:
         url = BASE_URL + f"/{group_name}/events"
-        resp: Response = self.client.get(url)
+        payload = {"page": count}
+        resp: Response = self.client.get(url, params=payload)
 
         if resp.status_code != 200:
             raise UnexpectedStatusCode
@@ -62,7 +63,7 @@ class MeetupAdapter:
             raise NoMeetupEventsFound
 
         upcoming_events = []
-        for event in events[:count]:
+        for event in events:
             if "venue" in event:
                 venue_name = event["venue"]["name"]
             else:
