@@ -1,14 +1,13 @@
-from collections import namedtuple
 import uuid
 
 import pytest
 
 from busy_beaver.adapters.meetup import MeetupAdapter, EventDetails
+from busy_beaver.adapters.requests_client import Response
 from busy_beaver.config import MEETUP_API_KEY
 from busy_beaver.exceptions import NoMeetupEventsFound
 
 MODULE_TO_TEST = "busy_beaver.adapters.meetup"
-MeetupAPIFormat = namedtuple("MeetupAPIFormat", "results")
 
 
 @pytest.fixture
@@ -23,13 +22,13 @@ def test_meetup_get_events(meetup_client):
     assert len(events) == 2
 
     event = events[0]
-    assert "ChiPy Data SIG" in event.name
-    assert "CCC Information Services" in event.venue
+    assert "ChiPy __main__ Meeting" in event.name
+    assert "ActiveCampaign" in event.venue
 
 
 @pytest.fixture
-def patched_meetup_client(mocker, patcher):
-    class FakeMeetupClient:
+def patched_requests_client(mocker, patcher):
+    class FakeRequestsClient:
         def __init__(self, *, events=None):
             self.mock = mocker.MagicMock()
             self.events = events if events else []
@@ -38,30 +37,30 @@ def patched_meetup_client(mocker, patcher):
             # We are replacing with a class that is initialized
             return self
 
-        def GetEvents(self, *args, **kwargs):
+        def get(self, *args, **kwargs):
             self.mock(*args, **kwargs)
-            return MeetupAPIFormat(results=self.events)
+            return Response(status_code=200, headers={}, json=self.events)
 
         def __repr__(self):
-            return "<FakeMeetupClient>"
+            return "<FakeRequestsClient>"
 
     def _wrapper(*, events=None):
-        obj = FakeMeetupClient(events=events)
-        return patcher(MODULE_TO_TEST, namespace="MeetupClient", replacement=obj)
+        obj = FakeRequestsClient(events=events)
+        return patcher(MODULE_TO_TEST, namespace="RequestsClient", replacement=obj)
 
     return _wrapper
 
 
 @pytest.mark.unit
-def test_venue_not_specified_returns_tbd(patched_meetup_client):
+def test_venue_not_specified_returns_tbd(patched_requests_client):
     # Arrange
     remote_id = str(uuid.uuid4())
-    patched_meetup_client(
+    patched_requests_client(
         events=[
             {
                 "id": remote_id,
                 "name": "ChiPy",
-                "event_url": "http://meetup.com/_ChiPy_/event/blah",
+                "link": "http://meetup.com/_ChiPy_/event/blah",
                 "time": 1_557_959_400_000,
                 "duration": 1_557_959_400_000 + 60 * 60 * 2,
             }
@@ -80,8 +79,8 @@ def test_venue_not_specified_returns_tbd(patched_meetup_client):
 
 
 @pytest.mark.unit
-def test_no_events_found_raises_exception(patched_meetup_client):
-    patched_meetup_client(events=[])
+def test_no_events_found_raises_exception(patched_requests_client):
+    patched_requests_client(events=[])
 
     with pytest.raises(NoMeetupEventsFound):
         MeetupAdapter("API_KEY").get_events("ChiPy", count=10)
