@@ -34,7 +34,7 @@ script:
 before_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker pull ${IMAGE_NAME} || true
-  - docker build -f docker/prod/Dockerfile --pull --cache-from ${IMAGE_NAME} --tag ${IMAGE_NAME} --tag ${IMAGE_NAME}:${TRAVIS_COMMIT} .
+  - docker build -f docker/prod/Dockerfile --pull --cache-from ${IMAGE_NAME} --tag ${IMAGE_NAME} --tag ${IMAGE_NAME}:${TRAVIS_TAG} .
 deploy:
   provider: script
   script:
