@@ -20,7 +20,7 @@ def test_generate_new_issue_message_action_is_open(generate_event_subscription_r
 
 @pytest.mark.unit
 def test_generate_new_issue_message_action_is_not_open(
-    generate_event_subscription_request
+    generate_event_subscription_request,
 ):
     data = generate_event_subscription_request(action="something_else")
     result = generate_new_issue_message(data)
@@ -39,7 +39,7 @@ def test_generate_new_pr_message_action_is_open(generate_event_subscription_requ
 
 @pytest.mark.unit
 def test_generate_new_pr_message_action_is_not_open(
-    generate_event_subscription_request
+    generate_event_subscription_request,
 ):
     data = generate_event_subscription_request(action="something_else")
     result = generate_new_pull_request_message(data)
