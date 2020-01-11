@@ -42,16 +42,6 @@ export SENTRY_DSN=[sentry-dsn]
 export DATADOG_API_KEY=[datadog-api-key]
 ```
 
-## AWS Credentials
-
-Create AWS credentials file, `/.aws/credentials`, using details in the [IAM Console](https://console.aws.amazon.com/iam/home)
-
-```ini
-[default]
-aws_access_key_id = []
-aws_secret_access_key = []
-```
-
 ## Deployment Workflow
 
 1. Set environment variables in Ansible control environment: `HEALTHCHECK_GITHUB_SUMMARY_CHIPY`, `HEALTHCHECK_GITHUB_SUMMARY_BELGRADE`, `HEALTHCHECK_TWITTER_POLLER`, `HEALTHCHECK_SYNC_EVENTS_DATABASE`, `HEALTHCHECK_POST_UPCOMING_EVENTS`; grab uuid values from healthchecks.io

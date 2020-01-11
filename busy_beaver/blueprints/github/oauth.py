@@ -33,7 +33,9 @@ class GitHubIdentityVerificationCallbackResource(MethodView):
         user = GitHubSummaryUser.query.filter_by(github_state=state).first()
         if not user:
             logger.error("[Busy Beaver] GitHub state does not match")
-            return jsonify({"Error": "Unknown"})
+            return jsonify(
+                {"Message": "Please reach out for help in the #busy-beaver channel"}
+            )
 
         exchange_code_for_access_token(code, state, user)
         logger.info("[Busy Beaver] Account is linked to GitHub")
