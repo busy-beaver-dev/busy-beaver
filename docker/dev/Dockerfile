@@ -1,4 +1,4 @@
-FROM python:3.7.1-stretch
+FROM python:3.8.1-buster
 
 LABEL maintainer="Aly Sivji <alysivji@gmail.com>" \
     description="BusyBeaver -- Development image"

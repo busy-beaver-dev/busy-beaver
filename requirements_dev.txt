@@ -5,10 +5,10 @@ ipython
 pdbpp
 pip-tools
 pre-commit==1.14.4
-pytest-cov==2.7.1
+pytest-cov==2.8.1
 pytest-freezegun==0.3.0.post1
-pytest-mock==1.10.0
-pytest-vcr==1.0.1
-pytest==5.0.0
-responses==0.10.6
-vcrpy==2.0.1
+pytest-mock==2.0.0
+pytest-vcr==1.0.2
+pytest==5.3.2
+responses==0.10.9
+vcrpy==4.0.2
