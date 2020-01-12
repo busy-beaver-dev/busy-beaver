@@ -3,6 +3,9 @@ FROM python:3.8.1-buster
 LABEL maintainer="Aly Sivji <alysivji@gmail.com>" \
     description="BusyBeaver -- Development image"
 
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 WORKDIR /app
 
 RUN groupadd -g 901 -r busybeaverdev \

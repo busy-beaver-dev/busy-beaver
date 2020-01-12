@@ -42,13 +42,15 @@ def do_nothing(data):
 @github_event_dispatcher.on("issues")
 def handle_issue(data):
     message = generate_new_issue_message(data)
-    _post_to_slack(message)
+    if message:
+        _post_to_slack(message)
 
 
 @github_event_dispatcher.on("pull_request")
 def handle_pr(data):
     message = generate_new_pull_request_message(data)
-    _post_to_slack(message)
+    if message:
+        _post_to_slack(message)
 
 
 def _post_to_slack(message):
