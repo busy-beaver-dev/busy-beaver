@@ -6,6 +6,8 @@ docker-compose.yml
 docker-compose-prod.yml
 .travis.yml
 
+.env.template
+.env
 .envrc
 creds.txt
 
