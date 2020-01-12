@@ -76,12 +76,8 @@ shell: ## log into into app container -- bash-shell
 shell-db:  ## log into database container -- psql
 	docker-compose exec db psql -w --username "bbdev_user" --dbname "busy-beaver"
 
-shell-dev: ## open ipython shell with application context
+devshell:  ## open ipython shell with application context
 	docker-compose exec app ipython -i scripts/dev/shell.py
-
-dev-shell: shell-dev
-
-devshell: shell-dev
 
 ngrok: ## start ngrok to forward port
 	ngrok http 5000
