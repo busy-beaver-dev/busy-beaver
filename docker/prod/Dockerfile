@@ -5,17 +5,19 @@ LABEL maintainer="Aly Sivji <alysivji@gmail.com>" \
 
 WORKDIR /app
 
-COPY requirements.txt /tmp/
+RUN groupadd -g 901 -r busybeaverdev \
+    && useradd -g busybeaverdev -r -u 901 busybeaver_user \
+    && mkdir /app/logs /home/busybeaver_user \
+    && chmod -R 777 /app/logs /home/busybeaver_user
 
-RUN groupadd -g 901 -r sivdev \
-    && useradd -g sivdev -r -u 901 sivdev_user \
-    && pip install --no-cache-dir -r /tmp/requirements.txt
+COPY requirements.txt /tmp/
+RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
 EXPOSE 5000
 
-# Switch from root user for security
-# USER sivdev_user
-# TODO: as we are writing logs, we need to be root. find a better solution
 COPY ./ /app
+
+# Switch from root user for security
+USER busybeaver_user
 
 ENTRYPOINT [ "scripts/entrypoint.sh" ]
