@@ -1,4 +1,4 @@
-.PHONY: help
+.PHONY: help logs
 
 help: ## This help
 	@echo "Makefile for managing application:\n"
@@ -63,9 +63,8 @@ test-skipvcr: ## run non-vcr tests
 lint: ## run flake8 linter
 	docker-compose exec app flake8
 
-.PHONY: logs
 logs: ## attach to logs
-	docker logs `docker-compose ps -q app`
+	docker-compose logs
 
 debug: ## attach to app container for debugging
 	docker attach `docker-compose ps -q app`
@@ -113,3 +112,7 @@ prod-shell:  ## shell into production container
 
 prod-shell-db:  ## shell into prodution postgres instance
 	psql -d "${DATABASE_URI}"
+
+prod-logs: ## attach to logs in production container
+	docker-compose -f docker-compose.prod.yml logs
+
