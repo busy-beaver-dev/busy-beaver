@@ -5,17 +5,19 @@ LABEL maintainer="Aly Sivji <alysivji@gmail.com>" \
 
 WORKDIR /app
 
-COPY requirements.txt requirements_dev.txt /tmp/
+RUN groupadd -g 901 -r busybeaverdev \
+    && useradd -g busybeaverdev -r -u 901 busybeaver_user \
+    && mkdir /app/logs /home/busybeaver_user \
+    && chmod -R 777 /app/logs /home/busybeaver_user
 
-RUN groupadd -g 901 -r sivdev \
-    && useradd -g sivdev -r -u 901 sivdev_user \
-    && pip install --no-cache-dir -r /tmp/requirements_dev.txt
+COPY requirements.txt requirements_dev.txt /tmp/
+RUN pip install --no-cache-dir -r /tmp/requirements_dev.txt
 
 EXPOSE 5000
 
-# Switch from root user for security
-# USER sivdev_user
-
 COPY ./ /app
+
+# Switch from root user for security
+USER busybeaverdev
 
 ENTRYPOINT [ "scripts/entrypoint.sh" ]
