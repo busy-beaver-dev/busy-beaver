@@ -108,7 +108,6 @@ ENV/
 .vscode
 
 # local development files
-logs/
 busy_beaver*db
 creds.txt
 .pdbrc.py
