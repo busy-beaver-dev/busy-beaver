@@ -66,8 +66,8 @@ services:
     tty: true
 
   # tools
-  loggly:
-    image: sendgridlabs/loggly-docker
-    environment:
-      TOKEN: ${BUSYBEAVER_LOGGLY_TOKEN}
-      TAG: DEV
+  # loggly:
+  #   image: sendgridlabs/loggly-docker
+  #   environment:
+  #     TOKEN: ${BUSYBEAVER_LOGGLY_TOKEN}
+  #     TAG: DEV
