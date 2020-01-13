@@ -8,7 +8,6 @@ networks:
 
 volumes:
   pgdata:
-  bb-logs:
 
 services:
   # infrastructure
