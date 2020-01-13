@@ -78,3 +78,11 @@ services:
       PASSWORD: bbdev_password
     ports:
       - 9000:5000
+  loggly:
+    image: sendgridlabs/loggly-docker
+    environment:
+      TOKEN: 8b18533a-1c9c-4747-9698-db531c81e54b
+      TAG: Docker
+      LOGGLY_DEBUG: 1
+    ports:
+      - 514:514/udp

@@ -59,17 +59,16 @@ LOGGING_CONFIG = {
         },
     },
     "handlers": {
-        "console": {"class": "logging.StreamHandler", "formatter": "standard"},
-        "datadog_file": {
-            "class": "logging.FileHandler",
-            "filename": "logs/busy_beaver_log.json",
-            "mode": "w",
+        "console": {"class": "logging.StreamHandler", "formatter": "json"},
+        "loggly": {
+            "class": "logging.handlers.SysLogHandler",
+            "address": ("loggly", 514),
             "formatter": "json",
         },
     },
     "loggers": {
         "busy_beaver": {
-            "handlers": ["datadog_file"] if IN_PRODUCTION else ["console"],
+            "handlers": ["loggly"],  # if IN_PRODUCTION else ["console"],
             "level": "INFO" if IN_PRODUCTION else "DEBUG",
         }
     },
