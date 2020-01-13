@@ -17,6 +17,4 @@ htmlcov/
 
 Makefile
 busy_beaver.db
-datadog/
-logs/
 tests/

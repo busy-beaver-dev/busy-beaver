@@ -3,7 +3,6 @@ version: '3.6'
 volumes:
   pgdata:
 
-
 services:
   db:
     # infrastructure
@@ -50,7 +49,6 @@ services:
       OAUTHLIB_RELAX_TOKEN_SCOPE: 1
     volumes: &app_volumes
       - .:/app/
-      - ./logs:/app/logs/
     ports:
       - 5000:5000
     stdin_open: true
