@@ -10,7 +10,6 @@ from busy_beaver.extensions import rq
 from busy_beaver.toolbox.rq import retry_failed_job
 
 # observability
-# LOGGING_CONFIG["handlers"]["datadog_file"]["filename"] = "logs/busy_beaver_worker.json"
 load_dict_config(LOGGING_CONFIG)
 if IN_PRODUCTION and SENTRY_DSN:
     sentry_sdk.init(SENTRY_DSN, integrations=[RqIntegration(), SqlalchemyIntegration()])

@@ -38,8 +38,8 @@ export TWITTER_ACCESS_TOKEN_SECRET=[]
 export YOUTUBE_API_KEY=[]
 export YOUTUBE_CHANNEL=[]
 
-export SENTRY_DSN=[sentry-dsn]
-export DATADOG_API_KEY=[datadog-api-key]
+export BUSYBEAVER_SENTRY_DSN=[sentry-dsn]
+export BUSYBEAVER_LOGGLY_TOKEN=[api-key]
 ```
 
 ## Deployment Workflow

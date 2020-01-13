@@ -56,10 +56,11 @@ LOGGING_CONFIG = {
         "json": {
             "class": "pythonjsonlogger.jsonlogger.JsonFormatter",
             "format": "%(asctime)s %(levelname)s %(filename)s %(funcName)s %(lineno)s %(message)s",  # noqa
+            "datefmt": "%Y-%m-%d %H:%M:%S",
         },
     },
     "handlers": {
-        "console": {"class": "logging.StreamHandler", "formatter": "json"},
+        "console": {"class": "logging.StreamHandler", "formatter": "standard"},
         "loggly": {
             "class": "logging.handlers.SysLogHandler",
             "address": ("loggly", 514),
@@ -68,7 +69,7 @@ LOGGING_CONFIG = {
     },
     "loggers": {
         "busy_beaver": {
-            "handlers": ["loggly"],  # if IN_PRODUCTION else ["console"],
+            "handlers": ["console", "loggly"] if IN_PRODUCTION else ["console"],
             "level": "INFO" if IN_PRODUCTION else "DEBUG",
         }
     },

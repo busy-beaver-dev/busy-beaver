@@ -1,6 +1,5 @@
 import logging
 from logging.config import dictConfig as load_dict_config
-import pathlib
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
@@ -27,10 +26,6 @@ from .config import (
     TWITTER_CONSUMER_KEY,
     TWITTER_CONSUMER_SECRET,
 )
-
-# Forgot why I do this... probalby should have commented as it is not ovious
-# TODO test if it is needed in datadog
-pathlib.Path("logs").mkdir(exist_ok=True)
 
 # observability
 load_dict_config(LOGGING_CONFIG)
