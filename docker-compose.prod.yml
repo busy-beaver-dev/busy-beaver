@@ -8,7 +8,6 @@ networks:
 
 volumes:
   pgdata:
-  bb-logs:
 
 services:
   # infrastructure
@@ -28,13 +27,15 @@ services:
     image: alysivji/busy-beaver:latest
     command: webserver
     restart: always
+    depends_on: &app_depends_on
+      - loggly
     environment: &app_env_vars
       IN_PRODUCTION: 1
       PYTHONPATH: .
       FLASK_APP: /app/busy_beaver/__init__.py
       DATABASE_URI: ${DATABASE_URI}
       REDIS_URI: ${REDIS_URI}
-      SENTRY_DSN: ${SENTRY_DSN}
+      SENTRY_DSN: ${BUSYBEAVER_SENTRY_DSN}
       OAUTHLIB_INSECURE_TRANSPORT: 1
       OAUTHLIB_RELAX_TOKEN_SCOPE: 1
       SECRET_KEY: ${SECRET_KEY}
@@ -53,8 +54,6 @@ services:
       TWITTER_CONSUMER_KEY: ${TWITTER_CONSUMER_KEY}
       TWITTER_CONSUMER_SECRET: ${TWITTER_CONSUMER_SECRET}
       YOUTUBE_API_KEY: ${YOUTUBE_API_KEY}
-    volumes: &app_volumes
-      - bb-logs:/app/logs/
     networks:
       - sivnet
       - local
@@ -69,8 +68,8 @@ services:
     image: alysivji/busy-beaver:latest
     command: worker
     restart: always
+    depends_on: *app_depends_on
     environment: *app_env_vars
-    volumes: *app_volumes
     networks:
       - local
     labels:
@@ -78,7 +77,7 @@ services:
       - traefik.enable=false
 
   # agents to support busy-beaver
-  watchtower: #  restart app container when new releases
+  watchtower:  # restart app container when new releases
     image: v2tec/watchtower
     command: --label-enable --cleanup
     volumes:
@@ -87,43 +86,11 @@ services:
       - local
     labels:
       - traefik.enable=false
-  datadog:  # collect logs
-    build: datadog
-    depends_on:
-      - app
-    links:
-      - app
+  loggly:  # collect logs
+    image: sendgridlabs/loggly-docker
     environment:
-      - DD_API_KEY=${DATADOG_API_KEY}
-      - DD_HOSTNAME=busybeaver.sivji.com
-      - DD_LOGS_ENABLED=true
-      - DD_ENABLE_PAYLOADS_EVENTS=false
-      - DD_ENABLE_PAYLOADS_SERIES=false
-      - DD_ENABLE_PAYLOADS_SERVICE_CHECKS=false
-      - DD_ENABLE_PAYLOADS_SKETCHES=false
-    volumes:
-      - bb-logs:/busy-beaver/logs
-      - /var/run/docker.sock:/var/run/docker.sock
-      - /proc/:/host/proc/:ro
-      - /sys/fs/cgroup:/host/sys/fs/cgroup:ro
-    networks:
-      - local
-    labels:
-      - traefik.enable=false
-
-  # tools
-  admin:
-    image: jeffknupp/sandman2
-    environment:
-      DB_TYPE: postgres
-      DB_DRIVER: psycopg2
-      DB_HOST: ${POSTGRES_HOST}
-      DB_PORT: ${POSTGRES_PORT}
-      DATABASE: ${POSTGRES_DATABASE}
-      USERNAME: ${POSTGRES_USER}
-      PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - 9000:5000
+      TOKEN: ${BUSYBEAVER_LOGGLY_TOKEN}
+      TAG: PROD
     networks:
       - local
     labels:

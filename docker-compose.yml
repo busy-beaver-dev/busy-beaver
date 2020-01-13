@@ -66,15 +66,8 @@ services:
     tty: true
 
   # tools
-  admin:
-    image: jeffknupp/sandman2
-    environment:
-      DB_TYPE: postgres
-      DB_DRIVER: psycopg2
-      DB_HOST: db
-      DB_PORT: 5432
-      DATABASE: busy-beaver
-      USERNAME: bbdev_user
-      PASSWORD: bbdev_password
-    ports:
-      - 9000:5000
+  # loggly:
+  #   image: sendgridlabs/loggly-docker
+  #   environment:
+  #     TOKEN: ${BUSYBEAVER_LOGGLY_TOKEN}
+  #     TAG: DEV
