@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from .event_list import (
     CommitsList,
@@ -28,7 +28,11 @@ class GitHubUserEvents:
             StarredReposList(),
         ]
 
-        timeline = github.user_activity_after(user.github_username, boundary_dt)
+        username = user.github_username
+        start_dt = boundary_dt
+        end_dt = start_dt + timedelta(days=1)  # TODO depends on cadence
+
+        timeline = github.user_activity_during_range(username, start_dt, end_dt)
         for event in timeline:
             for event_list in self.event_lists:
                 if event_list.matches_event(event):

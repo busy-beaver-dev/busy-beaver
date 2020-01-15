@@ -33,3 +33,17 @@ def test_generates_empty_summary_if_no_events_found(session, factory):
     summary = user_events.generate_summary_text()
 
     assert summary == ""
+
+
+@pytest.mark.vcr()
+@pytest.mark.freeze_time("2020-01-14")
+def test_generate_summary_for_releases(session, factory):
+    # Arrange
+    user = factory.GitHubSummaryUser(slack_id="alysivji", github_username="alysivji")
+    user_events = GitHubUserEvents(user, utc_now_minus(timedelta(days=1)))
+
+    # Act
+    summary = user_events.generate_summary_text()
+
+    assert "alysivji" in summary
+    assert "2 new releases" in summary
