@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from dateutil.parser import parse as parse_dt
 import pytest
 import pytz
 
@@ -32,6 +33,24 @@ def test_all_user_activity_after(client):
     user_activity = client.user_activity_after(user="alysivji", timestamp=boundary_dt)
 
     assert len(user_activity) >= 0
+
+
+@pytest.mark.vcr()
+@pytest.mark.freeze_time("2020-01-13")
+def test_user_activity_during_range(client):
+    # Arrange
+    start_dt = pytz.utc.localize(datetime.utcnow())
+    end_dt = start_dt + timedelta(days=1)
+
+    # Act
+    user_activity = client.user_activity_during_range(
+        user="alysivji", start_dt=start_dt, end_dt=end_dt
+    )
+
+    # Assert
+    assert len(user_activity) >= 0
+    for event in user_activity:
+        assert start_dt <= parse_dt(event["created_at"]) <= end_dt
 
 
 @pytest.mark.vcr()
