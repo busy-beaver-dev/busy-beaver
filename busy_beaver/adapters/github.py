@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Dict, List, NamedTuple, Tuple
 import urllib
 
@@ -39,7 +39,7 @@ class GitHubAdapter:
         return user_events
 
     def user_activity_during_range(
-        self, user: str, start_dt: datetime, end_dt: timedelta
+        self, user: str, start_dt: datetime, end_dt: datetime
     ) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/events/public"
         user_events = self._get_items_after_timestamp(url, timestamp=start_dt)
