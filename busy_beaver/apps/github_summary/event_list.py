@@ -136,6 +136,13 @@ class ReleasesPublishedList(EventList):
     def matches_event(event):
         return event.get("type") == "ReleaseEvent"
 
+    @staticmethod
+    def _generate_link(event):
+        release_url = event["payload"]["release"]["html_url"]
+        release_name = event["payload"]["release"]["name"]
+        repo_name = event["repo"]["name"]
+        return f"<{release_url}|{repo_name} - {release_name}>"
+
 
 class StarredReposList(EventList):
     EMOJI = ":star:"
