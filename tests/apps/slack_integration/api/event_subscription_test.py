@@ -2,7 +2,7 @@ import pytest
 import responses
 
 from busy_beaver.adapters.slack import TimezoneInfo
-from busy_beaver.apps.oauth_integrations.oauth_providers.slack import SlackOAuthFlow
+from busy_beaver.apps.slack_integration.oauth_flow import SlackOAuthFlow
 from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation
 from tests._utilities import FakeSlackClient
 

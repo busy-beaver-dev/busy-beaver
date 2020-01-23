@@ -23,7 +23,7 @@ from .config import (
     TWITTER_CONSUMER_SECRET,
 )
 from busy_beaver.apps.github_integration.oauth_flow import GitHubOAuthFlow
-from busy_beaver.apps.oauth_integrations.oauth_providers.slack import SlackOAuthFlow
+from busy_beaver.apps.slack_integration.oauth_flow import SlackOAuthFlow
 
 chipy_slack = SlackAdapter(SLACK_TOKEN)  # Default Workspace -- this is being phased out
 github = GitHubAdapter(GITHUB_OAUTH_TOKEN)
