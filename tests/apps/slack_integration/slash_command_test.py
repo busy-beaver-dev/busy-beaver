@@ -75,7 +75,8 @@ def test_reconnect_command_new_user(session, factory, generate_slash_command_req
 
     result = relink_github(**data)
 
-    assert "/busybeaver connect" in result["text"]
+    slack_response = result["attachments"][0]
+    assert "Associate GitHub Profile" in slack_response["actions"][0]["text"]
 
 
 @pytest.mark.unit
