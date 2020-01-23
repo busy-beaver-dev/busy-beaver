@@ -1,3 +1,10 @@
+"""OAuth Integrations
+
+This module ontains logic for integration with third-party APIs.
+We provide a nice wrapper around `requests-oauthlib` to
+simplify the OAuth process for the user..
+"""
+
 import abc
 from typing import NamedTuple
 
