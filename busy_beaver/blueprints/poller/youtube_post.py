@@ -4,9 +4,10 @@ from flask import request
 from flask.views import MethodView
 from sqlalchemy import desc
 
-from busy_beaver import config, chipy_slack
+from busy_beaver import config
 from busy_beaver.adapters.youtube import YouTubeAdapter
 from busy_beaver.blueprints.decorators import admin_role_required
+from busy_beaver.clients import chipy_slack
 from busy_beaver.toolbox import make_response
 from busy_beaver.extensions import db
 
