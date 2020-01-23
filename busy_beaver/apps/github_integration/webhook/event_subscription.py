@@ -1,4 +1,4 @@
-from busy_beaver.apps.github_webhook.workflow import (
+from busy_beaver.apps.github_integration.webhook.workflow import (
     generate_new_issue_message,
     generate_new_pull_request_message,
 )
