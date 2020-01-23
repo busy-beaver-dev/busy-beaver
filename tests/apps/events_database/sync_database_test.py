@@ -1,5 +1,7 @@
 import pytest
-from busy_beaver.apps.events_database.sync_database import classify_transaction_type
+from busy_beaver.apps.upcoming_events.event_database.sync_database import (
+    classify_transaction_type,
+)
 
 
 @pytest.mark.unit
