@@ -4,7 +4,6 @@ from flask import jsonify, request
 from flask.views import MethodView
 
 from .decorators import slack_verification_required
-from .slash_command import HELP_TEXT
 from busy_beaver.adapters import SlackAdapter
 from busy_beaver.apps.external_integrations.state_machine import (
     SlackInstallationOnboardUserWorkflow,
@@ -19,6 +18,16 @@ from busy_beaver.toolbox import EventEmitter
 logger = logging.getLogger(__name__)
 subscription_dispatch = EventEmitter()
 event_dispatch = EventEmitter()
+
+# TODO copied this from slash_commands
+HELP_TEXT = (
+    "`/busybeaver next`\t\t Retrieve next event\n"
+    "`/busybeaver events`\t\t Retrieve list of upcoming event\n"
+    "`/busybeaver connect`\t\t Connect GitHub Account\n"
+    "`/busybeaver reconnect`\t\t Connect to difference GitHub Account\n"
+    "`/busybeaver disconnect`\t\t Disconenct GitHub Account\n"
+    "`/busybeaver help`\t\t Display help text"
+)
 
 
 class SlackEventSubscriptionResource(MethodView):
