@@ -7,10 +7,7 @@ Wrappers around third-party integrations.
 ## Apps
 
 All business logic specific code.
-
-## Blueprints
-
-Things related to Flask.
+HTTP endpoints are located in `api/` subfolders.
 
 ## Models
 
