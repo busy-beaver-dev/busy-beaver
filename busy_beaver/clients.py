@@ -1,3 +1,13 @@
+"""Third-party integrations
+
+This module contains logic to configure third-party
+integrations. The integrations in this module are
+global across the application.
+
+Variables are assigned Singleton instances of each
+integration.
+"""
+
 from .apps.external_integrations.oauth_providers.slack import SlackOAuthFlow
 from .adapters import (
     GitHubAdapter,
@@ -20,7 +30,7 @@ from .config import (
 
 chipy_slack = SlackAdapter(SLACK_TOKEN)  # Default Workspace -- this is being phased out
 github = GitHubAdapter(GITHUB_OAUTH_TOKEN)
-kv_store = KeyValueStoreAdapter()
+kv_store = KeyValueStoreAdapter()  # TODO move
 meetup = MeetupAdapter(MEETUP_API_KEY)
 twitter = TwitterAdapter(
     TWITTER_CONSUMER_KEY,
