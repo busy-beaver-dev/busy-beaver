@@ -11,7 +11,7 @@ import logging
 import time
 
 from .sync_database import SyncEventDatabase
-from busy_beaver import meetup
+from busy_beaver.clients import meetup
 from busy_beaver.config import MEETUP_GROUP_NAME
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import ApiUser, SyncEventDatabaseTask, Event

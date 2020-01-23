@@ -4,19 +4,12 @@ import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
-from .adapters import (
-    GitHubAdapter,
-    KeyValueStoreAdapter,
-    MeetupAdapter,
-    SlackAdapter,
-    TwitterAdapter,
-)
+from .adapters import GitHubAdapter, KeyValueStoreAdapter, SlackAdapter, TwitterAdapter
 from .apps.external_integrations.oauth_providers.slack import SlackOAuthFlow
 from .config import (
     GITHUB_OAUTH_TOKEN,
     IN_PRODUCTION,
     LOGGING_CONFIG,
-    MEETUP_API_KEY,
     SENTRY_DSN,
     SLACK_TOKEN,
     SLACK_CLIENT_ID,
@@ -37,7 +30,6 @@ if IN_PRODUCTION and SENTRY_DSN:
 logger.info("[BusyBeaver] Configure Integrations")
 github = GitHubAdapter(GITHUB_OAUTH_TOKEN)
 kv_store = KeyValueStoreAdapter()
-meetup = MeetupAdapter(MEETUP_API_KEY)
 chipy_slack = SlackAdapter(SLACK_TOKEN)  # Default Workspace -- this is being phased out
 twitter = TwitterAdapter(
     TWITTER_CONSUMER_KEY,
@@ -45,6 +37,7 @@ twitter = TwitterAdapter(
     TWITTER_ACCESS_TOKEN,
     TWITTER_ACCESS_TOKEN_SECRET,
 )
+from .clients import meetup  # noqa
 
 slack_oauth = SlackOAuthFlow(SLACK_CLIENT_ID, SLACK_CLIENT_SECRET)
 
