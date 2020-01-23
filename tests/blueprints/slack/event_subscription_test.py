@@ -6,6 +6,8 @@ from busy_beaver.apps.oauth_integrations.oauth_providers.slack import SlackOAuth
 from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation
 from tests._utilities import FakeSlackClient
 
+pytest_plugins = ("tests._utilities.fixtures.slack",)
+
 
 @pytest.fixture
 def patch_slack(patcher):
