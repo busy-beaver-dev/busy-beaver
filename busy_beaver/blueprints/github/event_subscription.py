@@ -53,5 +53,12 @@ def handle_pr(data):
         _post_to_slack(message)
 
 
+@github_event_dispatcher.on("release")
+def handle_release(data):
+    message = generate_new_pull_request_message(data)
+    if message:
+        _post_to_slack(message)
+
+
 def _post_to_slack(message):
     chipy_slack.post_message(message=message, channel="busy-beaver-meta")

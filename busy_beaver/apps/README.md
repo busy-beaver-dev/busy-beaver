@@ -41,6 +41,7 @@ Currently we post messages when:
 
 - an issue is created
 - a Pull Request is opened
+- a new release is published
 
 There are many other Slack integrations which
 post messages when triggered by GithHub events.
