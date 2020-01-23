@@ -13,6 +13,10 @@ adds syncs database with fetched events.
 - removed events get deleted
 - existing events get updated
 
+### GitHub Integration
+
+We have an OAuth integration with GitHub. TODO: consolidate
+
 ### GitHub Summary
 
 Public GitHub activity of registered users is shared

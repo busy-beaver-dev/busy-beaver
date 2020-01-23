@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 
 import pytest
 
-from busy_beaver.blueprints.slack.decorators import calculate_signature
+from busy_beaver.apps.slack_integration.api.decorators import calculate_signature
 from busy_beaver.config import SLACK_SIGNING_SECRET
 
 
