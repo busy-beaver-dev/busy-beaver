@@ -18,4 +18,4 @@ from . import clients  # noqa
 
 logger.info("[BusyBeaver] Starting Server")
 from .app import create_app  # noqa
-from .models import *  # noqa
+from . import models  # noqa
