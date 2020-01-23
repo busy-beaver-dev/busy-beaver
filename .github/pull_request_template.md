@@ -1,4 +1,4 @@
-[Closes #]
+Closes #
 
 [Context]
 

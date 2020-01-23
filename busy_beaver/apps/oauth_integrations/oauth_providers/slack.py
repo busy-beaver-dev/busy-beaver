@@ -4,7 +4,7 @@ from urllib.parse import parse_qs, urlparse
 from oauthlib.common import urldecode
 from requests_oauthlib import OAuth2Session
 
-from .base import ExternalOAuthDetails, OAuthFlow
+from busy_beaver.common.oauth import ExternalOAuthDetails, OAuthFlow
 
 
 class SlackOAuthInfo(NamedTuple):
