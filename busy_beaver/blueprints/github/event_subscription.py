@@ -8,10 +8,8 @@ from busy_beaver.apps.github_webhook.event_subscription import (
     process_github_event_subscription,
 )
 from busy_beaver.exceptions import UnverifiedWebhookRequest
-from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
-github_event_dispatcher = EventEmitter()
 
 
 class GitHubEventSubscriptionResource(MethodView):
