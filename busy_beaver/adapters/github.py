@@ -51,6 +51,10 @@ class GitHubAdapter:
                 break
         return user_events[idx:]
 
+    def user_details(self):
+        url = f"{BASE_URL}/user"
+        return self.__get(url).json
+
     def _get_all_items(self, url, *, max_pages=5) -> List[Dict]:
         resp = self.__head(url)
         headers = resp.headers

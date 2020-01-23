@@ -1,0 +1,87 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/vnd.github.v3+json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - BusyBeaver
+      authorization:
+      - DUMMY
+    method: GET
+    uri: https://api.github.com/user
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA52TzWrcMBSFXyVo7Yn8l0wqCKU0m0IzEJqWkM0gy4p9p7JkJNnBM+Tde2W7rTuL
+        grOyudzz6fhY50SUqUATRrgaHPQHIBGBkrA8u/6Q5VlEtCnlPkzI/d3D9Y+nnRKHh+Pu8PO4u7u/
+        xW3ec8/tvrMKd2rvW8conYYuvqzA113ROWmF0V5qfylMQzs68z/2tzkyKjtTxoNwcEZrYQZNaqQ5
+        ujBc+0adGZjOHdcXiy9GKfOK6nO7/zuA/lGhsekddPUOAqpO1PhaYlr4CW/hw8H5dWZGxYmGB/6W
+        wHAYv5XlKkOzBu28anRyola2ZoR1hRMWWg9GrzP2jxJJxlZcw5GvJ6HSISBYWmdhVKBS9njR1kkn
+        yYm2FnouhhCFlUJCj8G+A3emRZofWol3+zv++BAzeLnnZROq98KVk1g03oSFT2q4+DYXEW9vy/VA
+        mO6UikiBXV12bG7s72qAQbAyYkwc9z7XIHhloosvX0MmDQds6ESqwUpeKDxvJqN2fm27QoHYT1Gy
+        JIkjMo/Gm0dYmPxtBEu26aIVhN3cREQg3WNw3KONNE6yTXy1ibePacLinGXJM/rp2nK5k8abONmk
+        2WOcsqstS/Nn8vYLAeEUd50EAAA=
+    headers:
+      Access-Control-Allow-Origin:
+      - '*'
+      Access-Control-Expose-Headers:
+      - ETag, Link, Location, Retry-After, X-GitHub-OTP, X-RateLimit-Limit, X-RateLimit-Remaining,
+        X-RateLimit-Reset, X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Poll-Interval,
+        X-GitHub-Media-Type
+      Cache-Control:
+      - private, max-age=60, s-maxage=60
+      Content-Encoding:
+      - gzip
+      Content-Security-Policy:
+      - default-src 'none'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Thu, 23 Jan 2020 07:13:11 GMT
+      ETag:
+      - W/"f994ce76543503f71143c68097a58609"
+      Last-Modified:
+      - Thu, 23 Jan 2020 02:57:24 GMT
+      Referrer-Policy:
+      - origin-when-cross-origin, strict-origin-when-cross-origin
+      Server:
+      - GitHub.com
+      Status:
+      - 200 OK
+      Strict-Transport-Security:
+      - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
+      Vary:
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      X-Accepted-OAuth-Scopes:
+      - ''
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - deny
+      X-GitHub-Media-Type:
+      - github.v3; format=json
+      X-GitHub-Request-Id:
+      - CE0A:6D3C:1E4DD6:4EF514:5E294787
+      X-OAuth-Scopes:
+      - ''
+      X-RateLimit-Limit:
+      - '5000'
+      X-RateLimit-Remaining:
+      - '4999'
+      X-RateLimit-Reset:
+      - '1579767191'
+      X-XSS-Protection:
+      - 1; mode=block
+    status:
+      code: 200
+      message: OK
+version: 1

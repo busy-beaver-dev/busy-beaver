@@ -60,6 +60,13 @@ def test_all_user_repos(client):
     assert len(all_repos) >= 50
 
 
+@pytest.mark.vcr()
+def test_user_details(client):
+    details = client.user_details()
+
+    assert details["login"] == "alysivji"
+
+
 @pytest.mark.unit
 def test_parsing_header_links():
     # Arrange
