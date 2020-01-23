@@ -8,19 +8,22 @@ Variables are assigned Singleton instances of each
 integration.
 """
 
-from .apps.oauth_integrations.oauth_providers.slack import SlackOAuthFlow
 from .adapters import GitHubAdapter, MeetupAdapter, SlackAdapter, TwitterAdapter
 from .config import (
+    GITHUB_CLIENT_ID,
+    GITHUB_CLIENT_SECRET,
     GITHUB_OAUTH_TOKEN,
     MEETUP_API_KEY,
-    SLACK_TOKEN,
-    TWITTER_ACCESS_TOKEN,
-    TWITTER_ACCESS_TOKEN_SECRET,
-    TWITTER_CONSUMER_KEY,
-    TWITTER_CONSUMER_SECRET,
     SLACK_CLIENT_ID,
     SLACK_CLIENT_SECRET,
+    SLACK_TOKEN,
+    TWITTER_ACCESS_TOKEN_SECRET,
+    TWITTER_ACCESS_TOKEN,
+    TWITTER_CONSUMER_KEY,
+    TWITTER_CONSUMER_SECRET,
 )
+from busy_beaver.apps.oauth_integrations.github.oauth_flow import GitHubOAuthFlow
+from busy_beaver.apps.oauth_integrations.oauth_providers.slack import SlackOAuthFlow
 
 chipy_slack = SlackAdapter(SLACK_TOKEN)  # Default Workspace -- this is being phased out
 github = GitHubAdapter(GITHUB_OAUTH_TOKEN)
@@ -33,3 +36,4 @@ twitter = TwitterAdapter(
 )
 
 slack_oauth = SlackOAuthFlow(SLACK_CLIENT_ID, SLACK_CLIENT_SECRET)
+github_oauth = GitHubOAuthFlow(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
