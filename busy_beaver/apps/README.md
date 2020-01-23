@@ -24,12 +24,6 @@ to simplify the OAuth process for the user.
 Public GitHub activity of registered users is shared
 on a Slack channel once a day.
 
-Users can use the following commands:
-
-- `/busybeaver connect` to create a new account,
-- `/busybeaver reconnect` to link Slack ID to different GitHub account
-- `/busybeaver disconnect` to delete user account.
-
 ### GitHub Webhook
 
 Events from the [busy-beaver-dev](https://github.com/busy-beaver-dev)
@@ -60,7 +54,19 @@ in a GitHub repository.
 This feature shares tweets made by a given Twitter account
 in a Slack workspace after a configurable length of time has passed.
 
+### Slack Integration
+
+Contains actual business logic for handling Slack Slash Commands and Slack Event Callbacks.
+
+Users can use the following commands:
+
+- `/busybeaver connect` to create a new account,
+- `/busybeaver reconnect` to link Slack ID to different GitHub account
+- `/busybeaver disconnect` to delete user account.
+
 ### Upcoming Events
+
+TODO -- merge this app with the Slack Integration
 
 - Users can query the database using the
 [Slack slash commands](https://api.slack.com/slash-commands)

@@ -10,10 +10,10 @@ from busy_beaver.adapters import KeyValueStoreAdapter
 from busy_beaver.extensions import rq as _rq
 
 pytest_plugins = (
-    "tests._utilities.fixtures.flask",
     "tests._utilities.fixtures.database",
-    "tests._utilities.fixtures.vcr",
+    "tests._utilities.fixtures.flask",
     "tests._utilities.fixtures.toolbox",
+    "tests._utilities.fixtures.vcr",
 )
 
 
