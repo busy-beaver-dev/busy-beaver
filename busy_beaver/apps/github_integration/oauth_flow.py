@@ -3,10 +3,7 @@ from typing import NamedTuple
 from requests_oauthlib import OAuth2Session
 from busy_beaver.adapters import GitHubAdapter
 
-from busy_beaver.apps.oauth_integrations.oauth_providers.base import (
-    OAuthFlow,
-    ExternalOAuthDetails,
-)
+from busy_beaver.common.oauth import OAuthFlow, ExternalOAuthDetails
 
 
 class GitHubOAuthInfo(NamedTuple):
