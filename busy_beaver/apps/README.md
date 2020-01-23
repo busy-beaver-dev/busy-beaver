@@ -63,12 +63,6 @@ you will need to set up a
 [secret token](https://developer.github.com/webhooks/securing/#setting-your-secret-token)
 in a GitHub repository.
 
-### OAuth Integrations
-
-Contains logic for integration with third-party APIs.
-We provide a nice wrapper around `requests-oauthlib`
-to simplify the OAuth process for the user.
-
 ## Poller
 
 Endpoints that are used to trigger tasks.

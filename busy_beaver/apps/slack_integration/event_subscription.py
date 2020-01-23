@@ -2,10 +2,10 @@ import logging
 
 from .slash_command import HELP_TEXT
 from busy_beaver.adapters import SlackAdapter
-from busy_beaver.apps.oauth_integrations.state_machine import (
+from busy_beaver.apps.slack_integration.oauth.state_machine import (
     SlackInstallationOnboardUserWorkflow,
 )
-from busy_beaver.apps.oauth_integrations.workflow import (
+from busy_beaver.apps.slack_integration.oauth.workflow import (
     GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE,
 )
 from busy_beaver.extensions import db
