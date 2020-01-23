@@ -27,4 +27,5 @@ class GitHubEventSubscriptionResource(MethodView):
         if not event_type:
             raise UnverifiedWebhookRequest("Missing GitHub event type")
 
-        return jsonify(process_github_event_subscription(event_type, data))
+        result = process_github_event_subscription(event_type, data)
+        return jsonify(result)
