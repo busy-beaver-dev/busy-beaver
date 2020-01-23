@@ -4,7 +4,7 @@ from urllib.parse import parse_qs, urlparse
 from oauthlib.common import urldecode
 from requests_oauthlib import OAuth2Session
 
-from .base import ExternalOAuthDetails
+from .base import ExternalOAuthDetails, OAuthFlow
 
 
 class SlackOAuthInfo(NamedTuple):
@@ -42,7 +42,7 @@ class StateToOAuthResponse:
         return response
 
 
-class SlackOAuthFlow:
+class SlackOAuthFlow(OAuthFlow):
     AUTHORIZATION_BASE_URL = "https://slack.com/oauth/authorize"
     TOKEN_URL = "https://slack.com/api/oauth.access"
     SCOPES = [
