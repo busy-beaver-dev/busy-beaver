@@ -1,11 +1,11 @@
 import pytest
 import responses
 
-from busy_beaver.apps.external_integrations.oauth_providers.slack import SlackOAuthFlow
+from busy_beaver.apps.oauth_integrations.oauth_providers.slack import SlackOAuthFlow
 from busy_beaver.models import SlackInstallation
 from tests._utilities import FakeSlackClient
 
-MODULE_TO_TEST = "busy_beaver.apps.external_integrations.workflow"
+MODULE_TO_TEST = "busy_beaver.apps.oauth_integrations.workflow"
 
 
 @pytest.fixture

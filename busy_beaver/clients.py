@@ -8,7 +8,7 @@ Variables are assigned Singleton instances of each
 integration.
 """
 
-from .apps.external_integrations.oauth_providers.slack import SlackOAuthFlow
+from .apps.oauth_integrations.oauth_providers.slack import SlackOAuthFlow
 from .adapters import GitHubAdapter, MeetupAdapter, SlackAdapter, TwitterAdapter
 from .config import (
     GITHUB_OAUTH_TOKEN,

@@ -3,10 +3,10 @@ import logging
 from flask import jsonify, request
 from flask.views import MethodView
 
-from busy_beaver.apps.external_integrations.workflow import (
+from busy_beaver.apps.oauth_integrations.workflow import (
     verify_callback_and_save_tokens_in_database,
 )
-from busy_beaver.apps.external_integrations.state_machine import (
+from busy_beaver.apps.oauth_integrations.state_machine import (
     SlackInstallationOnboardUserWorkflow,
 )
 

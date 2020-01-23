@@ -2,7 +2,7 @@ from dateutil.parser import parse
 from transitions import Machine
 
 from busy_beaver.extensions import db
-from busy_beaver.apps.external_integrations.workflow import (
+from busy_beaver.apps.oauth_integrations.workflow import (
     save_configuration,
     send_configuration_message,
     send_welcome_message,
