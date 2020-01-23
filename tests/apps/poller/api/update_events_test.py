@@ -1,7 +1,7 @@
 import pytest
 
 from busy_beaver.models import SyncEventDatabaseTask
-from busy_beaver.apps.events_database.task import (
+from busy_beaver.apps.upcoming_events.event_database.task import (
     sync_database_with_fetched_events,
     start_sync_event_database_task,
 )
@@ -24,7 +24,7 @@ def patched_update_events_trigger(mocker, patcher):
 @pytest.fixture
 def patched_background_task(patcher, create_fake_background_task):
     return patcher(
-        "busy_beaver.apps.events_database.task",
+        "busy_beaver.apps.upcoming_events.event_database.task",
         namespace=sync_database_with_fetched_events.__name__,
         replacement=create_fake_background_task(),
     )
