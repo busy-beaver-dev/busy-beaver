@@ -19,15 +19,15 @@ class OAuthFlow(abc.ABC):
     """Defining a common API to add consistency to software design process"""
 
     @abc.abstractmethod
-    def __init__(self, client_id, client_secret):  # noqa
+    def __init__(self, client_id, client_secret):  # pragma: no cover
         pass
 
     @abc.abstractmethod
-    def generate_authentication_tuple(self) -> ExternalOAuthDetails:  # noqa
+    def generate_authentication_tuple(self) -> ExternalOAuthDetails:  # pragma: no cover
         """Creates a (URL, state) tuple used to authenticate users"""
         pass
 
     @abc.abstractmethod
-    def process_callback(self, authorization_response_url, state):  # noqa
+    def process_callback(self, authorization_response_url, state):  # pragma: no cover
         """Handles callback made by authentication service servers to verify users"""
         pass
