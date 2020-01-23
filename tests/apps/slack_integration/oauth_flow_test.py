@@ -1,8 +1,8 @@
 import pytest
 import responses
 
-from busy_beaver.apps.slack_integration.oauth_flow import SlackOAuthFlow
-from busy_beaver.apps.oauth_integrations.workflow import (
+from busy_beaver.apps.slack_integration.oauth.oauth_flow import SlackOAuthFlow
+from busy_beaver.apps.slack_integration.oauth.workflow import (
     verify_callback_and_save_tokens_in_database,
 )
 from busy_beaver.models import SlackInstallation

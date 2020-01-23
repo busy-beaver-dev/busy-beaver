@@ -2,7 +2,7 @@ import pytest
 import responses
 
 from busy_beaver.adapters.slack import TimezoneInfo
-from busy_beaver.apps.slack_integration.oauth_flow import SlackOAuthFlow
+from busy_beaver.apps.slack_integration.oauth.oauth_flow import SlackOAuthFlow
 from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation
 from tests._utilities import FakeSlackClient
 
@@ -98,7 +98,7 @@ def test_slack_onboarding_install(client, session, patch_slack):
     # Arrange
     # Step 1 -- User goes to 3rd party website and authenticates app
     # Step 2 -- Create response to send back during token exchange
-    patched_slack = patch_slack("busy_beaver.apps.oauth_integrations.workflow")
+    patched_slack = patch_slack("busy_beaver.apps.slack_integration.oauth.workflow")
     responses.add(
         responses.POST,
         SlackOAuthFlow.TOKEN_URL,
@@ -145,7 +145,7 @@ def test_slack_onboarding_invite_bot_to_channel(
 ):
     """TODO deal with situation where bot is invited to multiple channels"""
     # Arrange
-    patched_slack = patch_slack("busy_beaver.apps.oauth_integrations.workflow")
+    patched_slack = patch_slack("busy_beaver.apps.slack_integration.oauth.workflow")
     # Create installation in database
     workspace_id = "TXXXXXXXXX"
     authorizing_user_id = "alysivji"
@@ -196,7 +196,7 @@ def test_slack_onboarding_send_bot_configuration(
         tz="America/Chicago", label="Central Daylight Time", offset=-18000
     )
     patched_slack = patch_slack(
-        "busy_beaver.apps.oauth_integrations.workflow", timezone_info=tz
+        "busy_beaver.apps.slack_integration.oauth.workflow", timezone_info=tz
     )
     # Create installation in database
     workspace_id = "TXXXXXXXXX"
