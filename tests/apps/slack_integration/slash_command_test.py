@@ -15,18 +15,6 @@ from busy_beaver.models import GitHubSummaryUser
 pytest_plugins = ("tests._utilities.fixtures.slack",)
 
 
-@pytest.fixture
-def add_user(session):
-    def _add_user(username, installation):
-        user = GitHubSummaryUser(slack_id=username)
-        user.installation = installation
-        session.add(user)
-        session.commit()
-        return user
-
-    return _add_user
-
-
 ########################
 # Miscellaneous Commands
 ########################
@@ -53,10 +41,9 @@ def test_command_not_found(generate_slash_command_request):
 ##########################################
 @pytest.mark.unit
 def test_connect_command_new_user(session, factory, generate_slash_command_request):
-    workspace_id = "test_id"
-    factory.SlackInstallation(workspace_id=workspace_id)
+    install = factory.SlackInstallation()
     data = generate_slash_command_request(
-        "connect", user_id="new_user", team_id=workspace_id
+        "connect", user_id="new_user", team_id=install.workspace_id
     )
 
     result = link_github(**data)
@@ -67,13 +54,11 @@ def test_connect_command_new_user(session, factory, generate_slash_command_reque
 
 @pytest.mark.unit
 def test_connect_command_existing_user(
-    session, factory, add_user, generate_slash_command_request
+    session, factory, generate_slash_command_request
 ):
-    workspace_id = "test_id"
-    slack_installation = factory.SlackInstallation(workspace_id=workspace_id)
-    add_user(username="existing_user", installation=slack_installation)
+    user = factory.GitHubSummaryUser(slack_id="existing_user")
     data = generate_slash_command_request(
-        "connect", user_id="existing_user", team_id=workspace_id
+        "connect", user_id=user.slack_id, team_id=user.installation.workspace_id
     )
 
     result = link_github(**data)
@@ -83,26 +68,24 @@ def test_connect_command_existing_user(
 
 @pytest.mark.unit
 def test_reconnect_command_new_user(session, factory, generate_slash_command_request):
-    workspace_id = "test_id"
-    factory.SlackInstallation(workspace_id=workspace_id)
+    install = factory.SlackInstallation()
     data = generate_slash_command_request(
-        "reconnect", user_id="new_user", team_id=workspace_id
+        "reconnect", user_id="new_user", team_id=install.workspace_id
     )
 
     result = relink_github(**data)
 
-    assert "/busybeaver connect" in result["text"]
+    slack_response = result["attachments"][0]
+    assert "Associate GitHub Profile" in slack_response["actions"][0]["text"]
 
 
 @pytest.mark.unit
 def test_reconnect_command_existing_user(
-    session, factory, generate_slash_command_request, add_user
+    session, factory, generate_slash_command_request
 ):
-    workspace_id = "test_id"
-    slack_installation = factory.SlackInstallation(workspace_id=workspace_id)
-    add_user(username="existing_user", installation=slack_installation)
+    user = factory.GitHubSummaryUser(slack_id="existing_user")
     data = generate_slash_command_request(
-        "reconnect", user_id="existing_user", team_id=workspace_id
+        "reconnect", user_id=user.slack_id, team_id=user.installation.workspace_id
     )
 
     result = relink_github(**data)
@@ -115,9 +98,8 @@ def test_reconnect_command_existing_user(
 def test_disconnect_command_unregistered_user(
     session, factory, generate_slash_command_request
 ):
-    workspace_id = "test_id"
-    factory.SlackInstallation(workspace_id=workspace_id)
-    data = generate_slash_command_request("disconnect", team_id=workspace_id)
+    install = factory.SlackInstallation()
+    data = generate_slash_command_request("disconnect", team_id=install.workspace_id)
 
     result = disconnect_github(**data)
 
@@ -126,13 +108,11 @@ def test_disconnect_command_unregistered_user(
 
 @pytest.mark.unit
 def test_disconnect_command_registered_user(
-    session, factory, generate_slash_command_request, add_user
+    session, factory, generate_slash_command_request
 ):
-    workspace_id = "test_id"
-    slack_installation = factory.SlackInstallation(workspace_id=workspace_id)
-    user = add_user(username="existing_user", installation=slack_installation)
+    user = factory.GitHubSummaryUser(slack_id="existing_user")
     data = generate_slash_command_request(
-        "disconnect", user_id="existing_user", team_id=workspace_id
+        "disconnect", user_id=user.slack_id, team_id=user.installation.workspace_id
     )
 
     result = disconnect_github(**data)

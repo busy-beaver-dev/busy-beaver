@@ -1,3 +1,4 @@
+import abc
 from typing import NamedTuple
 
 
@@ -14,16 +15,19 @@ class ExternalOAuthDetails(NamedTuple):
     state: str
 
 
-class OAuthFlowInterface:
+class OAuthFlow(abc.ABC):
     """Defining a common API to add consistency to software design process"""
 
-    def __init__(self, client_id, client_secret):
-        return NotImplementedError  # pragma: no cover
+    @abc.abstractmethod
+    def __init__(self, client_id, client_secret):  # pragma: no cover
+        pass
 
-    def generate_authentication_tuple(self) -> ExternalOAuthDetails:
+    @abc.abstractmethod
+    def generate_authentication_tuple(self) -> ExternalOAuthDetails:  # pragma: no cover
         """Creates a (URL, state) tuple used to authenticate users"""
-        return NotImplementedError  # pragma: no cover
+        pass
 
-    def process_callback(self, authorization_response_url, state):
+    @abc.abstractmethod
+    def process_callback(self, authorization_response_url, state):  # pragma: no cover
         """Handles callback made by authentication service servers to verify users"""
-        return NotImplementedError  # pragma: no cover
+        pass

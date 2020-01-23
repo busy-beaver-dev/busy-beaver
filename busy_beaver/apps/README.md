@@ -13,12 +13,6 @@ adds syncs database with fetched events.
 - removed events get deleted
 - existing events get updated
 
-### External Integrations
-
-Contains logic for integration with third-party APIs.
-We provide a nice wrapper around `requests-oauthlib`
-to simplify the OAuth process for the user.
-
 ### GitHub Summary
 
 Public GitHub activity of registered users is shared
@@ -48,6 +42,12 @@ Note: In order to work on this feature,
 you will need to set up a
 [secret token](https://developer.github.com/webhooks/securing/#setting-your-secret-token)
 in a GitHub repository.
+
+### OAuth Integrations
+
+Contains logic for integration with third-party APIs.
+We provide a nice wrapper around `requests-oauthlib`
+to simplify the OAuth process for the user.
 
 ### Retweeter
 
