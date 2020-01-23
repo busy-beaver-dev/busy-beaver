@@ -1,5 +1,6 @@
 import logging
 
+from busy_beaver.apps.oauth_integrations.oauth_providers.base import OAuthError
 from busy_beaver.clients import github_oauth
 from busy_beaver.extensions import db
 from busy_beaver.models import GitHubSummaryUser
@@ -21,7 +22,7 @@ def process_github_oauth_callback(callback_url, state, code):
     user = GitHubSummaryUser.query.filter_by(github_state=state).first()
     if not user:
         logger.error("GitHub state does not match")
-        return {"Message": "Please reach out for help in the #busy-beaver channel"}
+        raise OAuthError("GitHub verification failed. Please try again.")
 
     oauth_details = github_oauth.process_callback(callback_url, state)
     _save_github_user_information_to_database(user, oauth_details)
