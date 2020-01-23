@@ -4,7 +4,7 @@ from flask import Flask, jsonify
 import pytest
 
 from busy_beaver.app import handle_http_error
-from busy_beaver.blueprints.github.decorators import verify_github_signature
+from busy_beaver.apps.github_integration.api.decorators import verify_github_signature
 from busy_beaver.exceptions import UnverifiedWebhookRequest
 
 GITHUB_SIGNING_SECRET = "1824732430417652981161f3320885ed802cd374"

@@ -4,7 +4,7 @@ from urllib.parse import urlencode
 
 import pytest
 
-from busy_beaver.blueprints.github.decorators import calculate_signature
+from busy_beaver.apps.github_integration.api.decorators import calculate_signature
 from busy_beaver.config import GITHUB_SIGNING_SECRET
 from tests._utilities import FakeSlackClient
 
