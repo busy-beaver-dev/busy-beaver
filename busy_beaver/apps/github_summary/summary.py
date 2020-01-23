@@ -10,7 +10,7 @@ from .event_list import (
     ReleasesPublishedList,
     StarredReposList,
 )
-from busy_beaver import github
+from busy_beaver.clients import github
 from busy_beaver.models import GitHubSummaryUser
 
 
