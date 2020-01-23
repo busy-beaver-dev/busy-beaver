@@ -1,9 +1,9 @@
 import pytest
-from busy_beaver.blueprints.poller.upcoming_events import (
+from busy_beaver.apps.poller.api.upcoming_events import (
     post_upcoming_events_message_to_slack,
 )
 
-MODULE_TO_TEST = "busy_beaver.blueprints.poller.upcoming_events"
+MODULE_TO_TEST = "busy_beaver.apps.poller.api.upcoming_events"
 
 
 @pytest.fixture

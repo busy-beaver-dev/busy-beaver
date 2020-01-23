@@ -6,7 +6,7 @@ from busy_beaver.apps.events_database.task import (
     start_sync_event_database_task,
 )
 
-MODULE_TO_TEST = "busy_beaver.blueprints.poller.update_events"
+MODULE_TO_TEST = "busy_beaver.apps.poller.api.update_events"
 
 
 @pytest.fixture

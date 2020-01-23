@@ -1,7 +1,7 @@
 import pytest
-from busy_beaver.blueprints.poller.github_summary import start_post_github_summary_task
+from busy_beaver.apps.poller.api.github_summary import start_post_github_summary_task
 
-MODULE_TO_TEST = "busy_beaver.blueprints.poller.github_summary"
+MODULE_TO_TEST = "busy_beaver.apps.poller.api.github_summary"
 
 
 @pytest.fixture
