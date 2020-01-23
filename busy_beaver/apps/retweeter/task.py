@@ -1,7 +1,8 @@
 from datetime import timedelta
 import logging
 
-from busy_beaver.clients import chipy_slack, kv_store, twitter
+from busy_beaver.adapters import KeyValueStoreAdapter
+from busy_beaver.clients import chipy_slack, twitter
 from busy_beaver.config import TWITTER_USERNAME
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import ApiUser, PostTweetTask
@@ -9,6 +10,7 @@ from busy_beaver.toolbox import utc_now_minus, set_task_progress
 
 LAST_TWEET_KEY = "last_posted_tweet_id"
 logger = logging.getLogger(__name__)
+kv_store = KeyValueStoreAdapter()
 
 
 def start_post_tweets_to_slack_task(task_owner: ApiUser, channel_name):

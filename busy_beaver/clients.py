@@ -9,13 +9,7 @@ integration.
 """
 
 from .apps.external_integrations.oauth_providers.slack import SlackOAuthFlow
-from .adapters import (
-    GitHubAdapter,
-    KeyValueStoreAdapter,
-    MeetupAdapter,
-    SlackAdapter,
-    TwitterAdapter,
-)
+from .adapters import GitHubAdapter, MeetupAdapter, SlackAdapter, TwitterAdapter
 from .config import (
     GITHUB_OAUTH_TOKEN,
     MEETUP_API_KEY,
@@ -30,7 +24,6 @@ from .config import (
 
 chipy_slack = SlackAdapter(SLACK_TOKEN)  # Default Workspace -- this is being phased out
 github = GitHubAdapter(GITHUB_OAUTH_TOKEN)
-kv_store = KeyValueStoreAdapter()  # TODO move
 meetup = MeetupAdapter(MEETUP_API_KEY)
 twitter = TwitterAdapter(
     TWITTER_CONSUMER_KEY,
