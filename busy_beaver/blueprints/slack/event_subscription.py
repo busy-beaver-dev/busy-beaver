@@ -1,6 +1,6 @@
 import logging
 
-from flask import request
+from flask import jsonify, request
 from flask.views import MethodView
 
 from .decorators import slack_verification_required
@@ -19,4 +19,4 @@ class SlackEventSubscriptionResource(MethodView):
     def post(self):
         data = request.json
         logger.info("Received event from Slack", extra={"request_json": data})
-        return process_event_subscription_callback(data)
+        return jsonify(process_event_subscription_callback(data))

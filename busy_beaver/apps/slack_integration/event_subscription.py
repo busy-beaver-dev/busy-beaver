@@ -1,7 +1,5 @@
 import logging
 
-from flask import jsonify
-
 from .slash_command import HELP_TEXT
 from busy_beaver.adapters import SlackAdapter
 from busy_beaver.apps.external_integrations.state_machine import (
@@ -31,13 +29,13 @@ def process_event_subscription_callback(data):
 @event_dispatch.on("not_found")
 def command_not_found(data):
     logger.info("[Busy Beaver] Unknown command")
-    return jsonify(None)
+    return None
 
 
 @subscription_dispatch.on("url_verification")
 def url_verification_handler(data):
     logger.info("[Busy Beaver] Slack -- API Verification")
-    return jsonify({"challenge": data["challenge"]})
+    return {"challenge": data["challenge"]}
 
 
 @subscription_dispatch.on("event_callback")
@@ -53,7 +51,7 @@ def event_callback_dispatcher(data):
 def message_handler(data):
     event = data["event"]
     if event.get("bot_id") or event.get("subtype") == "bot_message":
-        return jsonify(None)
+        return None
 
     user_messages_bot = event["channel_type"] == "im"
     if user_messages_bot:
@@ -70,13 +68,13 @@ def message_handler(data):
                 installation, payload=entered_time
             )
             workflow.advance()
-            return jsonify(None)
+            return None
 
         logger.info("[Busy Beaver] Slack -- Unknown command")
         slack = SlackAdapter(installation.bot_access_token)
         slack.post_message(HELP_TEXT, channel=data["event"]["channel"])
 
-    return jsonify(None)
+    return None
 
 
 @event_dispatch.on("member_joined_channel")
@@ -103,7 +101,7 @@ def member_joined_channel_handler(data):
             # TODO add to table of channels for that workspace
             pass
 
-        return jsonify(None)
+        return None
 
     user_joins_github_summary_channel = (
         installation.github_summary_config.channel == channel
@@ -117,4 +115,4 @@ def member_joined_channel_handler(data):
             user_id=user_id,
         )
 
-    return jsonify(None)
+    return None
