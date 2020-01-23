@@ -9,7 +9,6 @@ SECRET_KEY = os.getenv("SECRET_KEY", "abcdef").encode("utf-8")
 PROD_BASE_URI = "https://busybeaver.sivji.com"
 DEV_BASE_URI = os.getenv("NGROK_BASE_URI", None)
 APP_URI = PROD_BASE_URI if IN_PRODUCTION else DEV_BASE_URI
-GITHUB_REDIRECT_URI = f"{APP_URI}/github/oauth"
 
 # app constraints
 FULL_INSTALLATION_WORKSPACE_IDS = [

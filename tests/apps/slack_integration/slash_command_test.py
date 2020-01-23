@@ -41,10 +41,9 @@ def test_command_not_found(generate_slash_command_request):
 ##########################################
 @pytest.mark.unit
 def test_connect_command_new_user(session, factory, generate_slash_command_request):
-    workspace_id = "test_id"
-    factory.SlackInstallation(workspace_id=workspace_id)
+    install = factory.SlackInstallation()
     data = generate_slash_command_request(
-        "connect", user_id="new_user", team_id=workspace_id
+        "connect", user_id="new_user", team_id=install.workspace_id
     )
 
     result = link_github(**data)
