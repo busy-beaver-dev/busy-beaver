@@ -4,7 +4,7 @@ from flask import request
 from flask.views import MethodView
 
 from busy_beaver.apps.events_database.task import start_sync_event_database_task
-from busy_beaver.blueprints.decorators import admin_role_required
+from busy_beaver.common.decorators import admin_role_required
 from busy_beaver.toolbox import make_response
 
 logger = logging.getLogger(__name__)
