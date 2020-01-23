@@ -22,7 +22,7 @@ def test_slack_callback_url_verification(
     client, session, patch_slack, create_slack_headers
 ):
     # Arrange
-    patch_slack("busy_beaver.blueprints.slack.event_subscription")
+    patch_slack("busy_beaver.apps.slack_integration.event_subscription")
     challenge_code = "test_code"
     data = {"type": "url_verification", "challenge": challenge_code}
     headers = create_slack_headers(100_000_000, data)
@@ -41,7 +41,7 @@ def test_slack_callback_bot_message_is_ignored(
 ):
     """Bot get notified of its own DM replies to users... ignore"""
     # Arrange
-    patched_slack = patch_slack("busy_beaver.blueprints.slack.event_subscription")
+    patched_slack = patch_slack("busy_beaver.apps.slack_integration.event_subscription")
     data = {
         "type": "unknown todo",
         "event": {"type": "message", "subtype": "bot_message"},
@@ -62,7 +62,7 @@ def test_slack_callback_user_dms_bot_reply(
 ):
     """When user messages bot, reply with help text"""
     # Arrange
-    patched_slack = patch_slack("busy_beaver.blueprints.slack.event_subscription")
+    patched_slack = patch_slack("busy_beaver.apps.slack_integration.event_subscription")
     factory.SlackInstallation(workspace_id="team_id")
     channel = 5
     data = {
@@ -246,7 +246,7 @@ def test_user_joins_github_summary_channel(
     client, session, factory, patch_slack, create_slack_headers
 ):
     # Arrange
-    patched_slack = patch_slack("busy_beaver.blueprints.slack.event_subscription")
+    patched_slack = patch_slack("busy_beaver.apps.slack_integration.event_subscription")
     # Create installation in database
     workspace_id = "TXXXXXXXXX"
     authorizing_user_id = "alysivji"
