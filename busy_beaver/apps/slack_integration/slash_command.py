@@ -3,12 +3,12 @@ from typing import List, NamedTuple
 from urllib.parse import urlencode
 import uuid
 
+from .decorators import limit_to
+from .toolbox import make_slack_response
 from busy_beaver.apps.upcoming_events.workflow import (
     generate_next_event_message,
     generate_upcoming_events_message,
 )
-from busy_beaver.blueprints.slack.decorators import limit_to
-from busy_beaver.blueprints.slack.toolbox import make_slack_response
 from busy_beaver.config import (
     FULL_INSTALLATION_WORKSPACE_IDS,
     GITHUB_CLIENT_ID,
