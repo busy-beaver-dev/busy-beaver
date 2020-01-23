@@ -3,7 +3,7 @@ from typing import List, NamedTuple
 
 from .decorators import limit_to
 from .toolbox import make_slack_response
-from busy_beaver.apps.github_integration.workflow import (
+from busy_beaver.apps.github_integration.oauth.workflow import (
     connect_github_to_slack,
     disconnect_github_from_slack,
     relink_github_to_slack,

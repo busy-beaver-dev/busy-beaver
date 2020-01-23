@@ -3,7 +3,9 @@ import logging
 from flask import jsonify, request
 from flask.views import MethodView
 
-from busy_beaver.apps.github_integration.workflow import process_github_oauth_callback
+from busy_beaver.apps.github_integration.oauth.workflow import (
+    process_github_oauth_callback,
+)
 
 logger = logging.getLogger(__name__)
 

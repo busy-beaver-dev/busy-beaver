@@ -4,7 +4,7 @@ import pytest
 import responses
 
 from busy_beaver.adapters.github import BASE_URL as GITHUB_BASE_URL
-from busy_beaver.apps.github_integration.oauth_flow import GitHubOAuthFlow
+from busy_beaver.apps.github_integration.oauth.oauth_flow import GitHubOAuthFlow
 
 pytest_plugins = ("tests._utilities.fixtures.slack",)
 
