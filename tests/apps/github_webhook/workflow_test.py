@@ -49,7 +49,7 @@ def test_generate_new_pr_message_action_is_not_open(
 
 @pytest.mark.unit
 def test_post_message_when_release_action_is_published(
-    generate_event_subscription_request
+    generate_event_subscription_request,
 ):
     data = generate_event_subscription_request(
         action="published", release_html_url="url"
