@@ -4,11 +4,11 @@ from flask import jsonify, request
 from flask.views import MethodView
 
 from .decorators import github_verification_required
-from busy_beaver import chipy_slack
 from busy_beaver.apps.github_webhook.workflow import (
     generate_new_issue_message,
     generate_new_pull_request_message,
 )
+from busy_beaver.clients import chipy_slack
 from busy_beaver.exceptions import UnverifiedWebhookRequest
 from busy_beaver.toolbox import EventEmitter
 
