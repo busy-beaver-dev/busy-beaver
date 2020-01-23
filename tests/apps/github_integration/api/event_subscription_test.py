@@ -8,7 +8,7 @@ from busy_beaver.apps.github_integration.api.decorators import calculate_signatu
 from busy_beaver.config import GITHUB_SIGNING_SECRET
 from tests._utilities import FakeSlackClient
 
-MODULE_TO_TEST = "busy_beaver.apps.github_webhook.event_subscription"
+MODULE_TO_TEST = "busy_beaver.apps.github_integration.webhook.event_subscription"
 pytest_plugins = ("tests._utilities.fixtures.github",)
 
 

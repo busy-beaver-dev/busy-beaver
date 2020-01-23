@@ -4,7 +4,7 @@ from flask import jsonify, request
 from flask.views import MethodView
 
 from .decorators import github_verification_required
-from busy_beaver.apps.github_webhook.event_subscription import (
+from busy_beaver.apps.github_integration.webhook.event_subscription import (
     process_github_event_subscription,
 )
 from busy_beaver.exceptions import UnverifiedWebhookRequest

@@ -3,7 +3,9 @@ import logging
 from flask import request
 from flask.views import MethodView
 
-from busy_beaver.apps.github_summary.task import start_post_github_summary_task
+from busy_beaver.apps.github_integration.summary.task import (
+    start_post_github_summary_task,
+)
 from busy_beaver.common.decorators import admin_role_required
 from busy_beaver.toolbox import make_response
 
