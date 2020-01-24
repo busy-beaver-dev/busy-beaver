@@ -15,6 +15,7 @@ class SlackOAuthInfo(NamedTuple):
     scope: str
     workspace_id: str
     workspace_name: str
+    auth_response: dict
 
 
 class StateToOAuthResponse:
@@ -44,12 +45,29 @@ class StateToOAuthResponse:
 
 class SlackOAuthFlow(OAuthFlow):
     AUTHORIZATION_BASE_URL = "https://slack.com/oauth/authorize"
-    TOKEN_URL = "https://slack.com/api/oauth.access"
-    SCOPES = [
-        "bot",  # enable bot user
-        "channels:read",  # read list of channels
-        "chat:write:bot",  # allow bot to write in channels
-        "commands",  # enable slash commands
+    TOKEN_URL = "https://slack.com/api/oauth.v2.access"
+    SCOPES = [  # https://api.slack.com/scopes
+        "app_mentions:read",
+        "channels:history",
+        "channels:join",
+        "channels:read",
+        "chat:write",
+        "commands",
+        "emoji:read",
+        "groups:read",
+        "im:history",
+        "im:read",
+        "im:write",
+        "mpim:history",
+        "mpim:read",
+        "mpim:write",
+        "reactions:read",
+        "reactions:write",
+        "team:read",
+        "usergroups:read",
+        "users.profile:read",
+        "users:read",
+        "users:write",
     ]
 
     def __init__(self, client_id, client_secret):
@@ -58,8 +76,8 @@ class SlackOAuthFlow(OAuthFlow):
         self.session.register_compliance_hook("access_token_response", hook)
         self.client_secret = client_secret
 
-    def generate_authentication_tuple(self) -> ExternalOAuthDetails:
-        raise NotImplementedError  # pragma: no cover
+    def generate_authentication_tuple(self) -> ExternalOAuthDetails:  # pragma: no cover
+        raise NotImplementedError
 
     def process_callback(self, authorization_response_url, state) -> SlackOAuthInfo:
         """Slack OAuth for workspace installation adds params to response
@@ -68,7 +86,7 @@ class SlackOAuthFlow(OAuthFlow):
         when we are loading additional items whenhooking into the response
 
         Additional Resources
-            - https://api.slack.com/methods/oauth.access
+            - https://api.slack.com/methods/oauth.v2.access
         """
         self._fetch_token(authorization_response_url, state)
         code = parse_qs(urlparse(authorization_response_url).query)["code"][0]
@@ -90,11 +108,12 @@ class SlackOAuthFlow(OAuthFlow):
 
         # TODO do this with marshmallow
         output = {}
-        output["access_token"] = oauth_json["access_token"]
+        output["access_token"] = oauth_json["authed_user"]["access_token"]
         output["scope"] = oauth_json["scope"]
-        output["authorizing_user_id"] = oauth_json["user_id"]
-        output["workspace_id"] = oauth_json["team_id"]
-        output["workspace_name"] = oauth_json["team_name"]
-        output["bot_user_id"] = oauth_json["bot"]["bot_user_id"]
-        output["bot_access_token"] = oauth_json["bot"]["bot_access_token"]
+        output["authorizing_user_id"] = oauth_json["authed_user"]["id"]
+        output["workspace_id"] = oauth_json["team"]["id"]
+        output["workspace_name"] = oauth_json["team"]["name"]
+        output["bot_user_id"] = oauth_json["bot_user_id"]
+        output["bot_access_token"] = oauth_json["access_token"]
+        output["auth_response"] = oauth_json
         return output
