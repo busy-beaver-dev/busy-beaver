@@ -126,7 +126,12 @@ def member_joined_channel_handler(data):
 
 @event_dispatch.on("app_home_opened")
 def app_home_handler(data):
+    """Display App Home
+
+    Currently we do show first-time viewers a separate screen... should we?
+    """
     logger.info("app_home_opened Event", extra=data)
+    print(data)
     workspace_id = data["team_id"]
     user_id = data["event"]["user"]
     tab_opened = data["event"]["tab"]
@@ -134,9 +139,7 @@ def app_home_handler(data):
     if tab_opened != "home":
         return None
 
-    params = {"workspace_id": workspace_id}
-    installation = SlackInstallation.query.filter_by(**params).first()
-
+    installation = SlackInstallation.query.filter_by(workspace_id=workspace_id).first()
     params = {"installation_id": installation.id, "slack_id": user_id}
     user = SlackAppHomeOpened.query.filter_by(**params).first()
     if user:

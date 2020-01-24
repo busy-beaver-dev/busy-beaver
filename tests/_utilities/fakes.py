@@ -45,5 +45,9 @@ class FakeSlackClient:
         self.mock(*args, **kwargs)
         return
 
+    def display_app_home(self, *args, **kwargs):
+        self.mock(*args, **kwargs)
+        return
+
     def __repr__(self):
         return "<FakeSlackClient>"

@@ -18,6 +18,9 @@ class SlackAdapter:
     def __init__(self, slack_token):
         self.client = WebClient(slack_token, run_async=False)
 
+    def __repr__(self):
+        return "<SlackClient>"
+
     def _api_call(self, slack_method, **params):
         return self.client
 

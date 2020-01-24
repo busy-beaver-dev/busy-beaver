@@ -3,7 +3,13 @@ import responses
 
 from busy_beaver.adapters.slack import TimezoneInfo
 from busy_beaver.apps.slack_integration.oauth.oauth_flow import SlackOAuthFlow
-from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation
+from busy_beaver.apps.slack_integration.event_subscription import app_home_handler
+from busy_beaver.apps.slack_integration.blocks import AppHome
+from busy_beaver.models import (
+    GitHubSummaryConfiguration,
+    SlackAppHomeOpened,
+    SlackInstallation,
+)
 from tests._utilities import FakeSlackClient
 
 pytest_plugins = ("tests._utilities.fixtures.slack",)
@@ -251,7 +257,7 @@ def test_slack_onboarding_send_bot_configuration(
     assert kwargs["user_id"] == authorizing_user_id
 
 
-@pytest.mark.unit
+@pytest.mark.end2end
 def test_user_joins_github_summary_channel(
     client, session, factory, patch_slack, create_slack_headers
 ):
@@ -288,3 +294,111 @@ def test_user_joins_github_summary_channel(
     args, kwargs = patched_slack.mock.call_args
     assert "/busybeaver connect" in args[0]
     assert kwargs["user_id"] == authorizing_user_id
+
+
+@pytest.mark.integration
+def test_user_opens_app_home_for_first_time__shown_app_home(
+    client, session, factory, patch_slack, create_slack_headers
+):
+    # Arrange
+    workspace_id = "TXXXXXXXXX"
+    user_id = "U5FTQ3QRZ"
+    installation = factory.SlackInstallation(workspace_id=workspace_id)
+    patched_slack = patch_slack("busy_beaver.apps.slack_integration.event_subscription")
+
+    # Act
+    data = {
+        "type": "event_callback",
+        "team_id": workspace_id,
+        "event": {"type": "app_home_opened", "user": user_id, "tab": "home"},
+    }
+    app_home_handler(data)
+
+    # Assert -- check we send the app home send
+    args, kwargs = patched_slack.mock.call_args
+    assert args[0] == user_id
+    assert kwargs.get("view", {}) == AppHome().to_dict()
+
+    params = {"installation_id": installation.id, "slack_id": user_id}
+    user = SlackAppHomeOpened.query.filter_by(**params).first()
+    assert user
+    assert user.count == 1
+
+
+@pytest.mark.integration
+def test_user_opens_app_home_for_greater_than_first_time__shown_app_home(
+    client, session, factory, patch_slack, create_slack_headers
+):
+    pass
+
+
+# {
+#     "token": "PnsjwrU9jTzsZK2Q2FVqWn1b",
+#     "team_id": "T5G0FCMNW",
+#     "api_app_id": "AECGKV06T",
+#     "event": {
+#         "type": "app_home_opened",
+#         "user": "U5FTQ3QRZ",
+#         "channel": "DEGRT6R3P",
+#         "tab": "home",
+#         "view": {
+#             "id": "VSRA36U2F",
+#             "team_id": "T5G0FCMNW",
+#             "type": "home",
+#             "blocks": [
+#                 {
+#                     "type": "section",
+#                     "block_id": "c=g=",
+#                     "text": {
+#                         "type": "mrkdwn",
+#                         "text": "*Upcoming Events*",
+#                         "verbatim": False,
+#                     },
+#                 },
+#                 {"type": "divider", "block_id": "f30"},
+#                 {
+#                     "type": "section",
+#                     "block_id": "WRIup",
+#                     "text": {
+#                         "type": "mrkdwn",
+#                         "text": "how 2tasdfasdo use",
+#                         "verbatim": False,
+#                     },
+#                 },
+#             ],
+#             "private_metadata": "",
+#             "callback_id": "",
+#             "state": {"values": {}},
+#             "hash": "1579888567.8e8b18e4",
+#             "title": {"type": "plain_text", "text": "View Title", "emoji": True},
+#             "clear_on_close": False,
+#             "notify_on_close": False,
+#             "close": None,
+#             "submit": None,
+#             "previous_view_id": None,
+#             "root_view_id": "VSRA36U2F",
+#             "app_id": "AECGKV06T",
+#             "external_id": "",
+#             "app_installed_team_id": "T5G0FCMNW",
+#             "bot_id": "BEJ2BG1PG",
+#         },
+#     },
+#     "type": "event_callback",
+#     "event_id": "EvT50G80Q7",
+#     "event_time": 1579888572,
+# }
+
+# {
+#     "token": "PnsjwrU9jTzsZK2Q2FVqWn1b",
+#     "team_id": "T5G0FCMNW",
+#     "api_app_id": "AECGKV06T",
+#     "event": {
+#         "type": "app_home_opened",
+#         "user": "U5FTQ3QRZ",
+#         "channel": "DEGRT6R3P",
+#         "tab": "messages",
+#     },
+#     "type": "event_callback",
+#     "event_id": "EvT5AQ4U6S",
+#     "event_time": 1579888579,
+# }
