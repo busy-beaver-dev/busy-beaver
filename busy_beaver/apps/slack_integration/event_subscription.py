@@ -131,7 +131,6 @@ def app_home_handler(data):
     Currently we do show first-time viewers a separate screen... should we?
     """
     logger.info("app_home_opened Event", extra=data)
-    print(data)
     workspace_id = data["team_id"]
     user_id = data["event"]["user"]
     tab_opened = data["event"]["tab"]
