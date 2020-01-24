@@ -18,14 +18,19 @@ def test_slack_oauth_flow_first_time_installation(session):
         responses.POST,
         SlackOAuthFlow.TOKEN_URL,
         json={
-            "access_token": "xoxp-XXXXXXXX-XXXXXXXX-XXXXX",
-            "scope": "incoming-webhook,commands,bot",
-            "team_name": "Team Installing Your Hook",
-            "team_id": "TXXXXXXXXX",
-            "user_id": "test_user",
-            "bot": {
-                "bot_user_id": "UTTTTTTTTTTR",
-                "bot_access_token": "xoxb-XXXXXXXXXXXX-TTTTTTTTTTTTTT",
+            "ok": True,
+            "access_token": "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy",
+            "token_type": "bot",
+            "scope": "commands,incoming-webhook",
+            "bot_user_id": "U0KRQLJ9H",
+            "app_id": "A0KRD7HC3",
+            "team": {"name": "Slack Softball Team", "id": "T9TK3CUKW"},
+            "enterprise": {"name": "slack-sports", "id": "E12345678"},
+            "authed_user": {
+                "id": "U1234",
+                "scope": "chat:write",
+                "access_token": "xoxp-1234",
+                "token_type": "user",
             },
         },
     )
@@ -39,13 +44,16 @@ def test_slack_oauth_flow_first_time_installation(session):
 
     # Assert -- confirm info in database is as expected
     installation = SlackInstallation.query.first()
-    assert installation.access_token == "xoxp-XXXXXXXX-XXXXXXXX-XXXXX"
-    assert installation.scope == "incoming-webhook,commands,bot"
-    assert installation.workspace_name == "Team Installing Your Hook"
-    assert installation.workspace_id == "TXXXXXXXXX"
-    assert installation.authorizing_user_id == "test_user"
-    assert installation.bot_user_id == "UTTTTTTTTTTR"
-    assert installation.bot_access_token == "xoxb-XXXXXXXXXXXX-TTTTTTTTTTTTTT"
+    assert installation.access_token == "xoxp-1234"
+    assert installation.scope == "commands,incoming-webhook"
+    assert installation.workspace_name == "Slack Softball Team"
+    assert installation.workspace_id == "T9TK3CUKW"
+    assert installation.authorizing_user_id == "U1234"
+    assert installation.bot_user_id == "U0KRQLJ9H"
+    assert (
+        installation.bot_access_token
+        == "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy"
+    )
 
 
 @pytest.mark.unit
