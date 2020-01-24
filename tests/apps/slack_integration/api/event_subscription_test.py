@@ -329,7 +329,31 @@ def test_user_opens_app_home_for_first_time__shown_app_home(
 def test_user_opens_app_home_for_greater_than_first_time__shown_app_home(
     client, session, factory, patch_slack, create_slack_headers
 ):
-    pass
+    # Arrange
+    workspace_id = "TXXXXXXXXX"
+    user_id = "U5FTQ3QRZ"
+    installation = factory.SlackInstallation(workspace_id=workspace_id)
+    user = factory.SlackAppHomeOpened(slack_id=user_id, installation=installation)
+    original_user_count = user.count
+    patched_slack = patch_slack("busy_beaver.apps.slack_integration.event_subscription")
+
+    # Act
+    data = {
+        "type": "event_callback",
+        "team_id": workspace_id,
+        "event": {"type": "app_home_opened", "user": user_id, "tab": "home"},
+    }
+    app_home_handler(data)
+
+    # Assert -- check we send the app home send
+    args, kwargs = patched_slack.mock.call_args
+    assert args[0] == user_id
+    assert kwargs.get("view", {}) == AppHome().to_dict()
+
+    params = {"installation_id": installation.id, "slack_id": user_id}
+    user = SlackAppHomeOpened.query.filter_by(**params).first()
+    assert user
+    assert user.count == original_user_count + 1
 
 
 # {
