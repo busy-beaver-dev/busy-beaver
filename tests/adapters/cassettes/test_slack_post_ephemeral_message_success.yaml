@@ -5,77 +5,44 @@ interactions:
       Content-Type:
       - application/json;charset=utf-8
       User-Agent:
-      - Python/3.7.1 slackclient/2.1.0 Linux/4.9.125-linuxkit
+      - Python/3.8.1 slackclient/2.5.0 Linux/4.9.184-linuxkit
       authorization:
       - DUMMY
     method: POST
     uri: https://www.slack.com/api/chat.postEphemeral
   response:
     body:
-      string: '{"ok":true,"message_ts":"1562423009.000200"}'
+      string: '{"ok":true,"message_ts":"1579899726.000100"}'
     headers:
-      ? !!python/object/new:multidict._istr.istr
-      - Access-Control-Allow-Headers
-      : slack-route, x-slack-version-ts
-      ? !!python/object/new:multidict._istr.istr
-      - Access-Control-Allow-Origin
-      : '*'
-      ? !!python/object/new:multidict._istr.istr
-      - Access-Control-Expose-Headers
-      : x-slack-req-id, retry-after
-      ? !!python/object/new:multidict._istr.istr
-      - Cache-Control
-      : private, no-cache, no-store, must-revalidate
-      ? !!python/object/new:multidict._istr.istr
-      - Connection
-      : keep-alive
-      ? !!python/object/new:multidict._istr.istr
-      - Content-Encoding
-      : gzip
-      ? !!python/object/new:multidict._istr.istr
-      - Content-Length
-      : '64'
-      ? !!python/object/new:multidict._istr.istr
-      - Content-Type
-      : application/json; charset=utf-8
-      ? !!python/object/new:multidict._istr.istr
-      - Date
-      : Sat, 06 Jul 2019 14:23:29 GMT
-      ? !!python/object/new:multidict._istr.istr
-      - Expires
-      : Mon, 26 Jul 1997 05:00:00 GMT
-      ? !!python/object/new:multidict._istr.istr
-      - Pragma
-      : no-cache
+      Access-Control-Allow-Headers: slack-route, x-slack-version-ts, x-b3-traceid,
+        x-b3-spanid, x-b3-parentspanid, x-b3-sampled, x-b3-flags
+      Access-Control-Allow-Origin: '*'
+      Access-Control-Expose-Headers: x-slack-req-id, retry-after
+      Cache-Control: private, no-cache, no-store, must-revalidate
+      Connection: keep-alive
+      Content-Encoding: gzip
+      Content-Length: '64'
+      Content-Type: application/json; charset=utf-8
+      Date: Fri, 24 Jan 2020 21:02:06 GMT
+      Expires: Mon, 26 Jul 1997 05:00:00 GMT
+      Pragma: no-cache
       Referrer-Policy: no-referrer
-      ? !!python/object/new:multidict._istr.istr
-      - Server
-      : Apache
+      Server: Apache
       Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-      ? !!python/object/new:multidict._istr.istr
-      - Vary
-      : Accept-Encoding
-      ? !!python/object/new:multidict._istr.istr
-      - Via
-      : 1.1 17256fd1010bade0d64432a8527fd53c.cloudfront.net (CloudFront)
-      X-Accepted-OAuth-Scopes: chat:write:bot,post
-      X-Amz-Cf-Id: 3vNL6oDbSemdxJHvzgcAPl01CXrQFgLGs1F3mkLW8g1AhaixIFtj-A==
-      X-Amz-Cf-Pop: ORD52-C2
+      Vary: Accept-Encoding
+      Via: 1.1 7e264b012ace881ecbfde10695bc373c.cloudfront.net (CloudFront)
+      X-Accepted-OAuth-Scopes: chat:write
+      X-Amz-Cf-Id: RSskojXiQo36E6iH9KsCmvtDXugWGx1qh5Rx_uQ817oxDTXxaJ3kFw==
+      X-Amz-Cf-Pop: ORD51-C2
       X-Cache: Miss from cloudfront
       X-Content-Type-Options: nosniff
-      X-OAuth-Scopes: identify,bot:basic
-      X-Slack-Req-Id: cd1295bb-613c-4351-a43f-9acb51f3fb21
-      X-Via: haproxy-www-sneq
+      X-OAuth-Scopes: app_mentions:read,channels:history,channels:join,channels:read,chat:write,commands,emoji:read,groups:read,im:history,im:read,im:write,mpim:history,mpim:read,mpim:write,reactions:read,reactions:write,team:read,usergroups:read,users.profile:read,users:read,users:write,pins:read,pins:write
+      X-Slack-Backend: h
+      X-Slack-Req-Id: c42f37732213ee0e6caea9e2cfc31ab8
+      X-Via: haproxy-www-5bch
       X-XSS-Protection: '0'
     status:
       code: 200
       message: OK
-    url: !!python/object/new:yarl.URL
-      state: !!python/tuple
-      - !!python/object/new:urllib.parse.SplitResult
-        - https
-        - www.slack.com
-        - /api/chat.postEphemeral
-        - ''
-        - ''
+    url: https://www.slack.com/api/chat.postEphemeral
 version: 1
