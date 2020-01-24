@@ -46,11 +46,28 @@ class StateToOAuthResponse:
 class SlackOAuthFlow(OAuthFlow):
     AUTHORIZATION_BASE_URL = "https://slack.com/oauth/authorize"
     TOKEN_URL = "https://slack.com/api/oauth.v2.access"
-    SCOPES = [
-        "bot",  # enable bot user
-        "channels:read",  # read list of channels
-        "chat:write:bot",  # allow bot to write in channels
-        "commands",  # enable slash commands
+    SCOPES = [  # https://api.slack.com/scopes
+        "app_mentions:read",
+        "channels:history",
+        "channels:join",
+        "channels:read",
+        "chat:write",
+        "commands",
+        "emoji:read",
+        "groups:read",
+        "im:history",
+        "im:read",
+        "im:write",
+        "mpim:history",
+        "mpim:read",
+        "mpim:write",
+        "reactions:read",
+        "reactions:write",
+        "team:read",
+        "usergroups:read",
+        "users.profile:read",
+        "users:read",
+        "users:write",
     ]
 
     def __init__(self, client_id, client_secret):
