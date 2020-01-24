@@ -18,11 +18,8 @@ class SlackAdapter:
     def __init__(self, slack_token):
         self.client = WebClient(slack_token, run_async=False)
 
-    def __repr__(self):
+    def __repr__(self):  # pragma: no cover
         return "<SlackClient>"
-
-    def _api_call(self, slack_method, **params):
-        return self.client
 
     def dm(self, message, user_id):
         return self.post_message(message, channel=user_id)
