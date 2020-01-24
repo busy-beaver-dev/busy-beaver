@@ -10,7 +10,11 @@ from busy_beaver.apps.slack_integration.oauth.workflow import (
     GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE,
 )
 from busy_beaver.extensions import db
-from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation
+from busy_beaver.models import (
+    GitHubSummaryConfiguration,
+    SlackAppHomeOpened,
+    SlackInstallation,
+)
 from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
@@ -123,15 +127,25 @@ def member_joined_channel_handler(data):
 @event_dispatch.on("app_home_opened")
 def app_home_handler(data):
     logger.info("app_home_opened Event", extra=data)
+    workspace_id = data["team_id"]
+    user_id = data["event"]["user"]
+    tab_opened = data["event"]["tab"]
 
-    if data["event"]["tab"] != "home":
+    if tab_opened != "home":
         return None
 
-    # TODO add one to the counter (might do something with flow later)
-    user_id = data["event"]["user"]
-
-    params = {"workspace_id": data["team_id"]}
+    params = {"workspace_id": workspace_id}
     installation = SlackInstallation.query.filter_by(**params).first()
+
+    params = {"installation_id": installation.id, "slack_id": user_id}
+    user = SlackAppHomeOpened.query.filter_by(**params).first()
+    if user:
+        user.count += 1
+    else:
+        user = SlackAppHomeOpened(**params)
+    db.session.add(user)
+    db.session.commit()
+
     slack = SlackAdapter(installation.bot_access_token)
     slack.display_app_home(user_id, view=app_home.to_dict())
     return None
