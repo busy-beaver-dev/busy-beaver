@@ -1,5 +1,6 @@
 import logging
 
+from .blocks import AppHome
 from .slash_command import HELP_TEXT
 from busy_beaver.adapters import SlackAdapter
 from busy_beaver.apps.slack_integration.oauth.state_machine import (
@@ -15,6 +16,7 @@ from busy_beaver.toolbox import EventEmitter
 logger = logging.getLogger(__name__)
 subscription_dispatch = EventEmitter()
 event_dispatch = EventEmitter()
+app_home = AppHome()  # initialize here since it doesn't change
 
 
 def process_event_subscription_callback(data):
@@ -115,4 +117,21 @@ def member_joined_channel_handler(data):
             user_id=user_id,
         )
 
+    return None
+
+
+@event_dispatch.on("app_home_opened")
+def app_home_handler(data):
+    logger.info("app_home_opened Event", extra=data)
+
+    if data["event"]["tab"] != "home":
+        return None
+
+    # TODO add one to the counter (might do something with flow later)
+    user_id = data["event"]["user"]
+
+    params = {"workspace_id": data["team_id"]}
+    installation = SlackInstallation.query.filter_by(**params).first()
+    slack = SlackAdapter(installation.bot_access_token)
+    slack.display_app_home(user_id, view=app_home.to_dict())
     return None

@@ -69,3 +69,6 @@ class SlackAdapter:
             unfurl_media=unfurl_media,
             as_user=as_user,
         )
+
+    def display_app_home(self, user_id, view):
+        return self.client.views_publish(user_id=user_id, view=view)
