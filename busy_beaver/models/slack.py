@@ -52,9 +52,10 @@ class SlackAppHomeOpened(BaseModel):
     installation_id = db.Column(
         db.Integer,
         db.ForeignKey("slack_installation.id", name="fk_installation_id"),
+        index=True,
         nullable=False,
     )
-    slack_id = db.Column(db.String(30), nullable=False)
+    slack_id = db.Column(db.String(30), index=True, nullable=False)
     count = db.Column(db.Integer, nullable=False, default=1)
 
     # Relationships
