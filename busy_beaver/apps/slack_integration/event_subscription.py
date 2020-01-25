@@ -9,6 +9,7 @@ from busy_beaver.apps.slack_integration.oauth.state_machine import (
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE,
 )
+from busy_beaver.config import FULL_INSTALLATION_WORKSPACE_IDS, MEETUP_GROUP_NAME
 from busy_beaver.extensions import db
 from busy_beaver.models import (
     GitHubSummaryConfiguration,
@@ -20,7 +21,6 @@ from busy_beaver.toolbox import EventEmitter
 logger = logging.getLogger(__name__)
 subscription_dispatch = EventEmitter()
 event_dispatch = EventEmitter()
-app_home = AppHome()  # initialize here since it doesn't change
 
 
 def process_event_subscription_callback(data):
@@ -147,6 +147,17 @@ def app_home_handler(data):
         user = SlackAppHomeOpened(**params)
     db.session.add(user)
     db.session.commit()
+
+    # TODO would be smart to use the state machine to figure out what to post
+    github_summary_configured = installation.github_summary_config
+    if github_summary_configured:
+        channel = installation.github_summary_config.channel
+        if workspace_id in FULL_INSTALLATION_WORKSPACE_IDS:
+            app_home = AppHome(channel=channel, meetup_group=MEETUP_GROUP_NAME)
+        else:
+            app_home = AppHome(channel=channel)
+    else:
+        app_home = AppHome()
 
     slack = SlackAdapter(installation.bot_access_token)
     slack.display_app_home(user_id, view=app_home.to_dict())
