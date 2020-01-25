@@ -100,3 +100,19 @@ def test_pull_request_event(
     assert response.status_code == 200
     args, kwargs = patched_slack.mock.call_args
     assert "New Pull Request" in kwargs["message"]
+
+
+@pytest.mark.integration
+def test_new_published_release_event(
+    client, generate_event_subscription_request, patched_slack, create_github_headers
+):
+    # Arrange
+    url = "https://github.com/busy-beaver-dev/busy-beaver/releases/tag/1.3.0"
+    data = generate_event_subscription_request(action="published", release_html_url=url)
+    headers = create_github_headers(data, event="release", is_json_data=True)
+
+    response = client.post("/github/event-subscription", headers=headers, json=data)
+
+    assert response.status_code == 200
+    args, kwargs = patched_slack.mock.call_args
+    assert "New Release" in kwargs["message"]

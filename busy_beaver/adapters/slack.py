@@ -18,11 +18,11 @@ class SlackAdapter:
     def __init__(self, slack_token):
         self.client = WebClient(slack_token, run_async=False)
 
-    def _api_call(self, slack_method, **params):
-        return self.client
+    def __repr__(self):  # pragma: no cover
+        return "<SlackClient>"
 
     def dm(self, message, user_id):
-        return self.post_message(message, channel=user_id, as_user=True)
+        return self.post_message(message, channel=user_id)
 
     def get_channel_info(self, channel) -> Channel:
         channel_info = self.client.channels_info(channel=channel)
@@ -55,7 +55,6 @@ class SlackAdapter:
         attachments=None,
         unfurl_links=True,
         unfurl_media=True,
-        as_user=False,
     ):
         if not channel:
             raise ValueError("Must specify channel")
@@ -67,5 +66,7 @@ class SlackAdapter:
             attachments=attachments,
             unfurl_links=unfurl_links,
             unfurl_media=unfurl_media,
-            as_user=as_user,
         )
+
+    def display_app_home(self, user_id, view):
+        return self.client.views_publish(user_id=user_id, view=view)

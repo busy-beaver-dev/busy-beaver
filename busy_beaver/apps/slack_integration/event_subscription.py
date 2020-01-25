@@ -1,5 +1,6 @@
 import logging
 
+from .blocks import AppHome
 from .slash_command import HELP_TEXT
 from busy_beaver.adapters import SlackAdapter
 from busy_beaver.apps.slack_integration.oauth.state_machine import (
@@ -8,8 +9,13 @@ from busy_beaver.apps.slack_integration.oauth.state_machine import (
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE,
 )
+from busy_beaver.config import FULL_INSTALLATION_WORKSPACE_IDS, MEETUP_GROUP_NAME
 from busy_beaver.extensions import db
-from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation
+from busy_beaver.models import (
+    GitHubSummaryConfiguration,
+    SlackAppHomeOpened,
+    SlackInstallation,
+)
 from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
@@ -115,4 +121,44 @@ def member_joined_channel_handler(data):
             user_id=user_id,
         )
 
+    return None
+
+
+@event_dispatch.on("app_home_opened")
+def app_home_handler(data):
+    """Display App Home
+
+    Currently we do show first-time viewers a separate screen... should we?
+    """
+    logger.info("app_home_opened Event", extra=data)
+    workspace_id = data["team_id"]
+    user_id = data["event"]["user"]
+    tab_opened = data["event"]["tab"]
+
+    if tab_opened != "home":
+        return None
+
+    installation = SlackInstallation.query.filter_by(workspace_id=workspace_id).first()
+    params = {"installation_id": installation.id, "slack_id": user_id}
+    user = SlackAppHomeOpened.query.filter_by(**params).first()
+    if user:
+        user.count += 1
+    else:
+        user = SlackAppHomeOpened(**params)
+    db.session.add(user)
+    db.session.commit()
+
+    # TODO would be smart to use the state machine to figure out what to post
+    github_summary_configured = installation.github_summary_config
+    if github_summary_configured:
+        channel = installation.github_summary_config.channel
+        if workspace_id in FULL_INSTALLATION_WORKSPACE_IDS:
+            app_home = AppHome(channel=channel, meetup_group=MEETUP_GROUP_NAME)
+        else:
+            app_home = AppHome(channel=channel)
+    else:
+        app_home = AppHome()
+
+    slack = SlackAdapter(installation.bot_access_token)
+    slack.display_app_home(user_id, view=app_home.to_dict())
     return None

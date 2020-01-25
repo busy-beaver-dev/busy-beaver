@@ -1,6 +1,7 @@
 from busy_beaver.apps.github_integration.webhook.workflow import (
     generate_new_issue_message,
     generate_new_pull_request_message,
+    generate_new_release_message,
 )
 from busy_beaver.clients import chipy_slack
 from busy_beaver.toolbox import EventEmitter
@@ -34,7 +35,7 @@ def handle_pr(data):
 
 @github_event_dispatcher.on("release")
 def handle_release(data):
-    message = generate_new_pull_request_message(data)
+    message = generate_new_release_message(data)
     if message:
         _post_to_slack(message)
 

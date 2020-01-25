@@ -1,11 +1,14 @@
 import factory
-from busy_beaver.models import SlackInstallation as model
+from busy_beaver.models import (
+    SlackInstallation as slack_installation_model,
+    SlackAppHomeOpened as slack_app_home_opened_model,
+)
 
 
 def SlackInstallation(session):
     class _SlackInstallationFactory(factory.alchemy.SQLAlchemyModelFactory):
         class Meta:
-            model = model
+            model = slack_installation_model
             sqlalchemy_session_persistence = "commit"
             sqlalchemy_session = session
 
@@ -22,3 +25,17 @@ def SlackInstallation(session):
         state = "active"
 
     return _SlackInstallationFactory
+
+
+def SlackAppHomeOpened(session):
+    class _SlackAppHomeOpenedFactory(factory.alchemy.SQLAlchemyModelFactory):
+        class Meta:
+            model = slack_app_home_opened_model
+            sqlalchemy_session_persistence = "commit"
+            sqlalchemy_session = session
+
+        installation = factory.SubFactory(SlackInstallation(session))
+        slack_id = "user_id"
+        count = 1
+
+    return _SlackAppHomeOpenedFactory

@@ -2,6 +2,7 @@ import pytest
 
 from busy_beaver.adapters.slack import SlackAdapter
 from busy_beaver.config import SLACK_TOKEN
+from busy_beaver.apps.slack_integration.blocks import AppHome
 
 
 MODULE_TO_TEST = "busy_beaver.adapters.slack"
@@ -88,3 +89,12 @@ def test_slack_get_channel_list_with_members(slack: SlackAdapter):
     channel_info = result["channels"]
     if channel_info:
         assert "members" in channel_info[0]
+
+
+@pytest.mark.vcr()
+def test_slack_display_app_home(slack: SlackAdapter):
+    result = slack.display_app_home("U5FTQ3QRZ", view=AppHome().to_dict())
+
+    assert result.status_code == 200
+    assert result["ok"] is True
+    assert result["view"]

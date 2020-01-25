@@ -9,10 +9,13 @@ interactions:
       authorization:
       - DUMMY
     method: POST
-    uri: https://www.slack.com/api/chat.postMessage
+    uri: https://www.slack.com/api/views.publish
   response:
     body:
-      string: '{"ok":true,"channel":"DEGRT6R3P","ts":"1579899520.000900","message":{"bot_id":"BEJ2BG1PG","type":"message","text":"test","user":"UEGGXQ5EF","ts":"1579899520.000900","team":"T5G0FCMNW","bot_profile":{"id":"BEJ2BG1PG","deleted":false,"name":"BusyBeaverDev","updated":1561762075,"app_id":"AECGKV06T","icons":{"image_36":"https:\/\/avatars.slack-edge.com\/2018-12-15\/504322108624_7253fc514c8df792ad2e_36.png","image_48":"https:\/\/avatars.slack-edge.com\/2018-12-15\/504322108624_7253fc514c8df792ad2e_48.png","image_72":"https:\/\/avatars.slack-edge.com\/2018-12-15\/504322108624_7253fc514c8df792ad2e_72.png"},"team_id":"T5G0FCMNW"}}}'
+      string: '{"ok":true,"view":{"id":"VSRA36U2F","team_id":"T5G0FCMNW","app_id":"AECGKV06T","app_installed_team_id":"T5G0FCMNW","bot_id":"BEJ2BG1PG","type":"home","blocks":[{"type":"section","block_id":"83OH","text":{"type":"mrkdwn","text":"*Upcoming
+        Events*","verbatim":false}},{"type":"divider","block_id":"9w\/"},{"type":"section","block_id":"K7f","text":{"type":"mrkdwn","text":"how
+        2tasdfasdo use","verbatim":false}}],"state":{"values":{}},"hash":"1579878687.58aa96e7","private_metadata":"","callback_id":"","root_view_id":"VSRA36U2F","external_id":"","title":{"type":"plain_text","text":"View
+        Title","emoji":true},"close":null,"submit":null,"previous_view_id":null,"clear_on_close":false,"notify_on_close":false}}'
     headers:
       Access-Control-Allow-Headers: slack-route, x-slack-version-ts, x-b3-traceid,
         x-b3-spanid, x-b3-parentspanid, x-b3-sampled, x-b3-flags
@@ -21,28 +24,27 @@ interactions:
       Cache-Control: private, no-cache, no-store, must-revalidate
       Connection: keep-alive
       Content-Encoding: gzip
-      Content-Length: '331'
+      Content-Length: '392'
       Content-Type: application/json; charset=utf-8
-      Date: Fri, 24 Jan 2020 20:58:40 GMT
+      Date: Fri, 24 Jan 2020 15:11:27 GMT
       Expires: Mon, 26 Jul 1997 05:00:00 GMT
       Pragma: no-cache
       Referrer-Policy: no-referrer
       Server: Apache
       Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
       Vary: Accept-Encoding
-      Via: 1.1 208320d5d3c5a065544043ad00e6858b.cloudfront.net (CloudFront)
-      X-Accepted-OAuth-Scopes: chat:write
-      X-Amz-Cf-Id: q7DVXg7_rLwop12ASPCwChw21Ox6HYEfkSCHzwn2TGoZBCsZ7roGkw==
-      X-Amz-Cf-Pop: ORD51-C3
+      Via: 1.1 3ae60d25523f8eb288827356d9c416c6.cloudfront.net (CloudFront)
+      X-Amz-Cf-Id: 90_740vNTrc7ocRvSi1QjaV4f1SRcOxj8SP0MXs57pyd_iODLygKJA==
+      X-Amz-Cf-Pop: ORD51-C2
       X-Cache: Miss from cloudfront
       X-Content-Type-Options: nosniff
       X-OAuth-Scopes: app_mentions:read,channels:history,channels:join,channels:read,chat:write,commands,emoji:read,groups:read,im:history,im:read,im:write,mpim:history,mpim:read,mpim:write,reactions:read,reactions:write,team:read,usergroups:read,users.profile:read,users:read,users:write,pins:read,pins:write
       X-Slack-Backend: h
-      X-Slack-Req-Id: c9c1f08a5b5038fe6d6886769f92c941
-      X-Via: haproxy-www-uxkn
+      X-Slack-Req-Id: 86e61a3d375ecbc2804fd2281373a056
+      X-Via: haproxy-www-wg11
       X-XSS-Protection: '0'
     status:
       code: 200
       message: OK
-    url: https://www.slack.com/api/chat.postMessage
+    url: https://www.slack.com/api/views.publish
 version: 1
