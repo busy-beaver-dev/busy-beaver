@@ -6,7 +6,7 @@ from busy_beaver.adapters import (
     KeyValueStoreClient,
     MeetupClient,
     SlackClient,
-    TwitterAdapter,
+    TwitterClient,
     YouTubeAdapter,
 )
 from busy_beaver.extensions import db, rq  # noqa
@@ -28,7 +28,7 @@ TWITTER_CONSUMER_KEY = os.getenv("TWITTER_CONSUMER_KEY")
 TWITTER_CONSUMER_SECRET = os.getenv("TWITTER_CONSUMER_SECRET")
 TWITTER_ACCESS_TOKEN = os.getenv("TWITTER_ACCESS_TOKEN")
 TWITTER_ACCESS_TOKEN_SECRET = os.getenv("TWITTER_ACCESS_TOKEN_SECRET")
-twitter = TwitterAdapter(
+twitter = TwitterClient(
     TWITTER_CONSUMER_KEY,
     TWITTER_CONSUMER_SECRET,
     TWITTER_ACCESS_TOKEN,

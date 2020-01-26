@@ -1,6 +1,6 @@
 import os
 import pytest
-from busy_beaver.adapters.twitter import TwitterAdapter
+from busy_beaver.adapters.twitter import TwitterClient
 
 
 @pytest.fixture
@@ -9,7 +9,7 @@ def client():
     TWITTER_CONSUMER_SECRET = os.getenv("TWITTER_CONSUMER_SECRET", "test")
     TWITTER_ACCESS_TOKEN = os.getenv("TWITTER_ACCESS_TOKEN", "test")
     TWITTER_ACCESS_TOKEN_SECRET = os.getenv("TWITTER_ACCESS_TOKEN_SECRET", "test")
-    yield TwitterAdapter(
+    yield TwitterClient(
         TWITTER_CONSUMER_KEY,
         TWITTER_CONSUMER_SECRET,
         TWITTER_ACCESS_TOKEN,

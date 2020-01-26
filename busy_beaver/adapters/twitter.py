@@ -12,7 +12,7 @@ class Tweet(NamedTuple):
     created_at: datetime
 
 
-class TwitterAdapter:
+class TwitterClient:
     def __init__(self, consumer_key, consumer_secret, token, token_secret):
         auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
         auth.set_access_token(token, token_secret)
