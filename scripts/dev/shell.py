@@ -1,7 +1,7 @@
 import os
 
 from busy_beaver import create_app
-from busy_beaver.adapters import (
+from busy_beaver.common.wrappers import (
     GitHubClient,
     KeyValueStoreClient,
     MeetupClient,

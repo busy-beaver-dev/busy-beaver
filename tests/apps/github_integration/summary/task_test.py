@@ -2,7 +2,7 @@ from datetime import timedelta
 from typing import List
 import pytest
 
-from busy_beaver.adapters.slack import Channel
+from busy_beaver.common.wrappers.slack import Channel
 from busy_beaver.models import ApiUser
 from busy_beaver.apps.github_integration.summary.task import (
     start_post_github_summary_task,

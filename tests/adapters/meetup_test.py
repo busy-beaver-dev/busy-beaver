@@ -2,12 +2,12 @@ import uuid
 
 import pytest
 
-from busy_beaver.adapters.meetup import MeetupClient, EventDetails
-from busy_beaver.adapters.requests_client import Response
+from busy_beaver.common.wrappers.meetup import MeetupClient, EventDetails
+from busy_beaver.common.wrappers.requests_client import Response
 from busy_beaver.config import MEETUP_API_KEY
 from busy_beaver.exceptions import NoMeetupEventsFound
 
-MODULE_TO_TEST = "busy_beaver.adapters.meetup"
+MODULE_TO_TEST = "busy_beaver.common.wrappers.meetup"
 
 
 @pytest.fixture

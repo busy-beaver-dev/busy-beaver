@@ -8,7 +8,7 @@ Variables are assigned Singleton instances of each
 integration.
 """
 
-from .adapters import GitHubClient, MeetupClient, SlackClient, TwitterClient
+from .common.wrappers import GitHubClient, MeetupClient, SlackClient, TwitterClient
 from .config import (
     GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET,

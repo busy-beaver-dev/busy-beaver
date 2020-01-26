@@ -1,6 +1,6 @@
 import os
 import pytest
-from busy_beaver.adapters.twitter import TwitterClient
+from busy_beaver.common.wrappers.twitter import TwitterClient
 
 
 @pytest.fixture

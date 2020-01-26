@@ -1,4 +1,4 @@
-from busy_beaver.adapters.requests_client import RequestsClient
+from busy_beaver.common.wrappers.requests_client import RequestsClient
 
 
 def test_adding_headers():

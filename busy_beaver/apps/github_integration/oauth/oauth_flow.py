@@ -1,7 +1,7 @@
 from typing import NamedTuple
 
 from requests_oauthlib import OAuth2Session
-from busy_beaver.adapters import GitHubClient
+from busy_beaver.common.wrappers import GitHubClient
 
 from busy_beaver.common.oauth import OAuthFlow, ExternalOAuthDetails
 

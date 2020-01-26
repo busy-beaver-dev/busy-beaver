@@ -1,6 +1,6 @@
 import pytest
 
-from busy_beaver.adapters.youtube import YouTubeClient
+from busy_beaver.common.wrappers.youtube import YouTubeClient
 from busy_beaver.config import YOUTUBE_API_KEY, YOUTUBE_CHANNEL
 
 

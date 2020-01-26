@@ -6,7 +6,7 @@ from typing import List
 from sqlalchemy import and_
 
 from .summary import GitHubUserEvents
-from busy_beaver.adapters import SlackClient
+from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import ValidationError
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import (

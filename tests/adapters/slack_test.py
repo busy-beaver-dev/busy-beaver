@@ -1,11 +1,11 @@
 import pytest
 
-from busy_beaver.adapters.slack import SlackClient
+from busy_beaver.common.wrappers.slack import SlackClient
 from busy_beaver.config import SLACK_TOKEN
 from busy_beaver.apps.slack_integration.blocks import AppHome
 
 
-MODULE_TO_TEST = "busy_beaver.adapters.slack"
+MODULE_TO_TEST = "busy_beaver.common.wrappers.slack"
 
 
 @pytest.fixture(scope="module")

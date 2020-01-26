@@ -4,7 +4,7 @@ from dateutil.parser import parse as parse_dt
 import pytest
 import pytz
 
-from busy_beaver.adapters.github import (
+from busy_beaver.common.wrappers.github import (
     APINav,
     create_github_navigation_panel,
     GitHubClient,

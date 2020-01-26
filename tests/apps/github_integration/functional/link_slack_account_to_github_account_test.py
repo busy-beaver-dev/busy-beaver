@@ -3,7 +3,7 @@ from urllib.parse import urlparse, parse_qs
 import pytest
 import responses
 
-from busy_beaver.adapters.github import BASE_URL as GITHUB_BASE_URL
+from busy_beaver.common.wrappers.github import BASE_URL as GITHUB_BASE_URL
 from busy_beaver.apps.github_integration.oauth.oauth_flow import GitHubOAuthFlow
 
 pytest_plugins = ("tests._utilities.fixtures.slack",)

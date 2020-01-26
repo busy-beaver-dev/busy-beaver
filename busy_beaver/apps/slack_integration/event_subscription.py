@@ -2,7 +2,7 @@ import logging
 
 from .blocks import AppHome
 from .slash_command import HELP_TEXT
-from busy_beaver.adapters import SlackClient
+from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.apps.slack_integration.oauth.state_machine import (
     SlackInstallationOnboardUserWorkflow,
 )
