@@ -2,7 +2,7 @@ import os
 
 from busy_beaver import create_app
 from busy_beaver.adapters import (
-    GitHubAdapter,
+    GitHubClient,
     KeyValueStoreAdapter,
     MeetupAdapter,
     SlackAdapter,
@@ -19,7 +19,7 @@ ctx.push()
 
 # configure adapters
 OAUTH_TOKEN = os.getenv("GITHUB_OAUTH_TOKEN")
-github = GitHubAdapter(OAUTH_TOKEN)
+github = GitHubClient(OAUTH_TOKEN)
 
 SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN")
 slack = SlackAdapter(SLACK_TOKEN)

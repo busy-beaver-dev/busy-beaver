@@ -8,7 +8,7 @@ Variables are assigned Singleton instances of each
 integration.
 """
 
-from .adapters import GitHubAdapter, MeetupAdapter, SlackAdapter, TwitterAdapter
+from .adapters import GitHubClient, MeetupAdapter, SlackAdapter, TwitterAdapter
 from .config import (
     GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET,
@@ -26,7 +26,7 @@ from busy_beaver.apps.github_integration.oauth.oauth_flow import GitHubOAuthFlow
 from busy_beaver.apps.slack_integration.oauth.oauth_flow import SlackOAuthFlow
 
 chipy_slack = SlackAdapter(SLACK_TOKEN)  # Default Workspace -- this is being phased out
-github = GitHubAdapter(GITHUB_OAUTH_TOKEN)
+github = GitHubClient(GITHUB_OAUTH_TOKEN)
 meetup = MeetupAdapter(MEETUP_API_KEY)
 twitter = TwitterAdapter(
     TWITTER_CONSUMER_KEY,

@@ -1,4 +1,4 @@
-from .github import GitHubAdapter  # noqa
+from .github import GitHubClient  # noqa
 from .key_value_store import KeyValueStoreAdapter  # noqa
 from .meetup import MeetupAdapter  # noqa
 from .requests_client import RequestsClient  # noqa
