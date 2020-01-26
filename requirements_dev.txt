@@ -2,6 +2,7 @@
 black
 flake8
 ipython
+isort
 pdbpp
 pip-tools
 pre-commit==1.14.4
