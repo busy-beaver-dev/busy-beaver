@@ -3,7 +3,7 @@ import os
 from busy_beaver import create_app
 from busy_beaver.adapters import (
     GitHubClient,
-    KeyValueStoreAdapter,
+    KeyValueStoreClient,
     MeetupClient,
     SlackClient,
     TwitterAdapter,
@@ -42,7 +42,7 @@ MEETUP_API_KEY = os.getenv("MEETUP_API_KEY")
 MEETUP_GROUP_NAME = "_ChiPy_"
 meetup = MeetupClient(MEETUP_API_KEY)
 
-kv = KeyValueStoreAdapter()
+kv = KeyValueStoreClient()
 
 # log to console
 display_text = "busy-beaver Development Shell"

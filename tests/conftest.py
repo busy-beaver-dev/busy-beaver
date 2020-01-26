@@ -6,7 +6,7 @@ References:
 """
 
 import pytest
-from busy_beaver.adapters import KeyValueStoreAdapter
+from busy_beaver.adapters import KeyValueStoreClient
 from busy_beaver.extensions import rq as _rq
 
 pytest_plugins = (
@@ -19,7 +19,7 @@ pytest_plugins = (
 
 @pytest.fixture
 def kv_store(session):
-    return KeyValueStoreAdapter()
+    return KeyValueStoreClient()
 
 
 @pytest.fixture(scope="module")
