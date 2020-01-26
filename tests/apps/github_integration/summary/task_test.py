@@ -56,7 +56,7 @@ def test_start_post_github_summary_task(session, factory, patched_background_tas
 def patched_slack(patcher):
     def _wrapper(channel_info):
         obj = FakeSlackClient(channel_info=channel_info)
-        return patcher(MODULE_TO_TEST, namespace="SlackAdapter", replacement=obj)
+        return patcher(MODULE_TO_TEST, namespace="SlackClient", replacement=obj)
 
     return _wrapper
 

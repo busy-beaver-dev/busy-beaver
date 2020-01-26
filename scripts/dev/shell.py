@@ -5,7 +5,7 @@ from busy_beaver.adapters import (
     GitHubClient,
     KeyValueStoreAdapter,
     MeetupClient,
-    SlackAdapter,
+    SlackClient,
     TwitterAdapter,
     YouTubeAdapter,
 )
@@ -22,7 +22,7 @@ OAUTH_TOKEN = os.getenv("GITHUB_OAUTH_TOKEN")
 github = GitHubClient(OAUTH_TOKEN)
 
 SLACK_TOKEN = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN")
-slack = SlackAdapter(SLACK_TOKEN)
+slack = SlackClient(SLACK_TOKEN)
 
 TWITTER_CONSUMER_KEY = os.getenv("TWITTER_CONSUMER_KEY")
 TWITTER_CONSUMER_SECRET = os.getenv("TWITTER_CONSUMER_SECRET")

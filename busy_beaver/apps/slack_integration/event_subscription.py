@@ -2,7 +2,7 @@ import logging
 
 from .blocks import AppHome
 from .slash_command import HELP_TEXT
-from busy_beaver.adapters import SlackAdapter
+from busy_beaver.adapters import SlackClient
 from busy_beaver.apps.slack_integration.oauth.state_machine import (
     SlackInstallationOnboardUserWorkflow,
 )
@@ -77,7 +77,7 @@ def message_handler(data):
             return None
 
         logger.info("[Busy Beaver] Slack -- Unknown command")
-        slack = SlackAdapter(installation.bot_access_token)
+        slack = SlackClient(installation.bot_access_token)
         slack.post_message(HELP_TEXT, channel=data["event"]["channel"])
 
     return None
@@ -114,7 +114,7 @@ def member_joined_channel_handler(data):
         and installation.state == "active"
     )
     if user_joins_github_summary_channel:
-        slack = SlackAdapter(installation.bot_access_token)
+        slack = SlackClient(installation.bot_access_token)
         slack.post_ephemeral_message(
             GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE.format(channel=channel),
             channel=channel,
@@ -159,6 +159,6 @@ def app_home_handler(data):
     else:
         app_home = AppHome()
 
-    slack = SlackAdapter(installation.bot_access_token)
+    slack = SlackClient(installation.bot_access_token)
     slack.display_app_home(user_id, view=app_home.to_dict())
     return None

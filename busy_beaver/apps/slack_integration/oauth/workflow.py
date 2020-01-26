@@ -1,6 +1,6 @@
 from datetime import time
 
-from busy_beaver.adapters import SlackAdapter
+from busy_beaver.adapters import SlackClient
 from busy_beaver.clients import slack_oauth
 from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation
@@ -35,7 +35,7 @@ ONBOARDING_MESSAGE = (
 
 
 def send_welcome_message(installation: SlackInstallation):
-    slack = SlackAdapter(installation.bot_access_token)
+    slack = SlackClient(installation.bot_access_token)
     user_id = installation.authorizing_user_id
     slack.dm(ONBOARDING_MESSAGE.format(slack_id=user_id), user_id=user_id)
 
@@ -47,7 +47,7 @@ CONFIRMED_MESSAGE = (
 
 
 def send_configuration_message(installation: SlackInstallation):
-    slack = SlackAdapter(installation.bot_access_token)
+    slack = SlackClient(installation.bot_access_token)
     user_id = installation.authorizing_user_id
     channel = installation.github_summary_config.channel
     slack.dm(CONFIRMED_MESSAGE.format(channel=channel), user_id=user_id)
@@ -64,7 +64,7 @@ ACTIVE_MESSAGE = (
 
 
 def save_configuration(installation: SlackInstallation, time_to_post: time):
-    slack = SlackAdapter(installation.bot_access_token)
+    slack = SlackClient(installation.bot_access_token)
     user_id = installation.authorizing_user_id
     tz = slack.get_user_timezone(user_id)
 

@@ -6,7 +6,7 @@ from typing import List
 from sqlalchemy import and_
 
 from .summary import GitHubUserEvents
-from busy_beaver.adapters import SlackAdapter
+from busy_beaver.adapters import SlackClient
 from busy_beaver.exceptions import ValidationError
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import (
@@ -49,7 +49,7 @@ def start_post_github_summary_task(task_owner: ApiUser, workspace_id: str):
 def fetch_github_summary_post_to_slack(installation_id, boundary_dt):
     slack_installation = SlackInstallation.query.get(installation_id)
     channel = slack_installation.github_summary_config.channel
-    slack = SlackAdapter(slack_installation.bot_access_token)
+    slack = SlackClient(slack_installation.bot_access_token)
 
     channel_info = slack.get_channel_info(channel)
     users: List[GitHubSummaryUser] = GitHubSummaryUser.query.filter(

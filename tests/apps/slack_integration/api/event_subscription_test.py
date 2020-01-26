@@ -19,7 +19,7 @@ pytest_plugins = ("tests._utilities.fixtures.slack",)
 def patch_slack(patcher):
     def _patch_slack(module_to_patch_slack, *, timezone_info=None):
         obj = FakeSlackClient(timezone_info=timezone_info)
-        patcher(module_to_patch_slack, namespace="SlackAdapter", replacement=obj)
+        patcher(module_to_patch_slack, namespace="SlackClient", replacement=obj)
         return obj
 
     return _patch_slack
