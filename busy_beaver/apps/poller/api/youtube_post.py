@@ -5,7 +5,7 @@ from flask.views import MethodView
 from sqlalchemy import desc
 
 from busy_beaver import config
-from busy_beaver.adapters.youtube import YouTubeAdapter
+from busy_beaver.adapters.youtube import YouTubeClient
 from busy_beaver.common.decorators import admin_role_required
 from busy_beaver.clients import chipy_slack
 from busy_beaver.toolbox import make_response
@@ -35,7 +35,7 @@ class YouTubePollingResource(MethodView):
                 400, json={"run": "incomplete"}, error="Missing Channel"
             )
         self.channel = data["channel"]
-        youtube = YouTubeAdapter(api_key=config.YOUTUBE_API_KEY)
+        youtube = YouTubeClient(api_key=config.YOUTUBE_API_KEY)
         videos = youtube.get_latest_videos_from_channel(config.YOUTUBE_CHANNEL)
         self.parse_and_post_videos(videos)
         return make_response(200, json={"run": "complete"})

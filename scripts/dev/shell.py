@@ -7,7 +7,7 @@ from busy_beaver.adapters import (
     MeetupClient,
     SlackClient,
     TwitterClient,
-    YouTubeAdapter,
+    YouTubeClient,
 )
 from busy_beaver.extensions import db, rq  # noqa
 from busy_beaver.models import *  # noqa
@@ -36,7 +36,7 @@ twitter = TwitterClient(
 )
 
 YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
-youtube = YouTubeAdapter(api_key=YOUTUBE_API_KEY)
+youtube = YouTubeClient(api_key=YOUTUBE_API_KEY)
 
 MEETUP_API_KEY = os.getenv("MEETUP_API_KEY")
 MEETUP_GROUP_NAME = "_ChiPy_"
