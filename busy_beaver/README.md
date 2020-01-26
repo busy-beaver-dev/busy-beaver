@@ -1,9 +1,5 @@
 # Busy Beaver Project Layout
 
-## Adapters
-
-Wrappers around third-party integrations.
-
 ## Apps
 
 All business logic specific code.
