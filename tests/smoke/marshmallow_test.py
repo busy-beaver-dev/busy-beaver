@@ -1,10 +1,10 @@
 """Ensure Marshmallow is working the way we intended"""
 
+from datetime import date
+
+import pytest
 from marshmallow import Schema, fields
 from marshmallow.exceptions import ValidationError
-import pytest
-
-from datetime import date
 
 
 class ArtistSchema(Schema):

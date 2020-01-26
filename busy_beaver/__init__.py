@@ -1,5 +1,6 @@
 import logging
 from logging.config import dictConfig as load_dict_config
+
 import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
@@ -14,8 +15,8 @@ if IN_PRODUCTION and SENTRY_DSN:
     sentry_sdk.init(dsn=SENTRY_DSN, integrations=integrations)
 
 logger.info("[BusyBeaver] Configure Integrations")
-from . import clients  # noqa
+from . import clients  # noqa isort:skip
 
 logger.info("[BusyBeaver] Starting Server")
-from .app import create_app  # noqa
-from . import models  # noqa
+from .app import create_app  # noqa isort:skip
+from . import models  # noqa isort:skip

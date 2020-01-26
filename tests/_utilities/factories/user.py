@@ -1,4 +1,5 @@
 import factory
+
 from busy_beaver.models import ApiUser as api_user_model
 
 

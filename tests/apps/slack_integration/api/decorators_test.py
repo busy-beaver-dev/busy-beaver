@@ -1,5 +1,5 @@
-from flask import Flask, jsonify
 import pytest
+from flask import Flask, jsonify
 
 from busy_beaver.app import handle_http_error
 from busy_beaver.apps.slack_integration.api.decorators import verify_slack_signature

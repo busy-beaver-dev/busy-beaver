@@ -1,12 +1,11 @@
 import pytest
-
-from busy_beaver.models import ApiUser
-from busy_beaver.apps.upcoming_events.event_database.task import (
-    sync_database_with_fetched_events,
-    start_sync_event_database_task,
-)
-from busy_beaver.models import Event
 from tests._utilities import FakeMeetupAdapter
+
+from busy_beaver.apps.upcoming_events.event_database.task import (
+    start_sync_event_database_task,
+    sync_database_with_fetched_events,
+)
+from busy_beaver.models import ApiUser, Event
 
 MODULE_TO_TEST = "busy_beaver.apps.upcoming_events.event_database.task"
 

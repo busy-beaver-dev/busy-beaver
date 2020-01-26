@@ -6,6 +6,7 @@ References:
 """
 
 import pytest
+
 from busy_beaver.common.wrappers import KeyValueStoreClient
 from busy_beaver.extensions import rq as _rq
 

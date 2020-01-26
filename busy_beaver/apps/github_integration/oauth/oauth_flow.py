@@ -1,9 +1,9 @@
 from typing import NamedTuple
 
 from requests_oauthlib import OAuth2Session
-from busy_beaver.common.wrappers import GitHubClient
 
-from busy_beaver.common.oauth import OAuthFlow, ExternalOAuthDetails
+from busy_beaver.common.oauth import ExternalOAuthDetails, OAuthFlow
+from busy_beaver.common.wrappers import GitHubClient
 
 
 class GitHubOAuthInfo(NamedTuple):

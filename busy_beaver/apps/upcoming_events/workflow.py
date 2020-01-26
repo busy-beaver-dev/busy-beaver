@@ -1,8 +1,8 @@
 import time
 
 from busy_beaver.apps.upcoming_events.cards import UpcomingEventList
-from busy_beaver.common.wrappers.meetup import EventDetails
 from busy_beaver.clients import chipy_slack
+from busy_beaver.common.wrappers.meetup import EventDetails
 from busy_beaver.models import Event
 
 

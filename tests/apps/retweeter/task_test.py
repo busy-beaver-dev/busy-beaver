@@ -1,14 +1,15 @@
 from datetime import timedelta
+
 import pytest
+from tests._utilities import FakeSlackClient
 
 from busy_beaver.apps.retweeter.task import (
-    fetch_tweets_post_to_slack,
     LAST_TWEET_KEY,
+    fetch_tweets_post_to_slack,
     start_post_tweets_to_slack_task,
 )
 from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
-from tests._utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.apps.retweeter.task"
 

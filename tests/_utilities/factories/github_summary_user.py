@@ -1,9 +1,10 @@
 import factory
+
 from .slack import SlackInstallation
 from busy_beaver.models import (
-    GitHubSummaryUser as github_summary_user_model,
     GitHubSummaryConfiguration as github_summary_configuration_model,
 )
+from busy_beaver.models import GitHubSummaryUser as github_summary_user_model
 
 
 def GitHubSummaryUser(session):

@@ -1,4 +1,5 @@
 from typing import Optional, Union
+
 from busy_beaver.extensions import db
 from busy_beaver.models import KeyValueStore
 

@@ -1,8 +1,8 @@
 from datetime import datetime
 from typing import List, NamedTuple
 
-import tweepy
 import pytz
+import tweepy
 
 from busy_beaver.config import TWITTER_USERNAME
 

@@ -1,4 +1,5 @@
 import logging
+
 from rq import get_current_job
 
 from busy_beaver.config import TASK_QUEUE_MAX_RETRIES

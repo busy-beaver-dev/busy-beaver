@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from busy_beaver.extensions import db
 from . import BaseModel
+from busy_beaver.extensions import db
 
 
 class YouTubeVideo(BaseModel):

@@ -1,4 +1,5 @@
 import factory
+
 from busy_beaver.common.wrappers.twitter import Tweet as model
 
 

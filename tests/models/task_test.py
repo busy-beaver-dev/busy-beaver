@@ -3,9 +3,9 @@ from redis.exceptions import RedisError
 from rq.exceptions import NoSuchJobError
 
 from busy_beaver.models import (
-    SyncEventDatabaseTask,
     PostGitHubSummaryTask,
     PostTweetTask,
+    SyncEventDatabaseTask,
     Task,
 )
 

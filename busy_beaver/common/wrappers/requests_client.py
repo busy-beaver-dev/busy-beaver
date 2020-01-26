@@ -1,5 +1,5 @@
-from json import JSONDecodeError
 import logging
+from json import JSONDecodeError
 from typing import Any, Dict, List, NamedTuple, Union
 
 import requests

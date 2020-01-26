@@ -1,12 +1,12 @@
 from dateutil.parser import parse
 from transitions import Machine
 
-from busy_beaver.extensions import db
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     save_configuration,
     send_configuration_message,
     send_welcome_message,
 )
+from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation
 
 
