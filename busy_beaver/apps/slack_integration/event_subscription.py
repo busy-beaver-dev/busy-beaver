@@ -2,13 +2,13 @@ import logging
 
 from .blocks import AppHome
 from .slash_command import HELP_TEXT
-from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.apps.slack_integration.oauth.state_machine import (
     SlackInstallationOnboardUserWorkflow,
 )
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE,
 )
+from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.config import FULL_INSTALLATION_WORKSPACE_IDS, MEETUP_GROUP_NAME
 from busy_beaver.extensions import db
 from busy_beaver.models import (

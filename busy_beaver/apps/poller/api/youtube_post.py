@@ -5,11 +5,11 @@ from flask.views import MethodView
 from sqlalchemy import desc
 
 from busy_beaver import config
-from busy_beaver.common.wrappers.youtube import YouTubeClient
-from busy_beaver.common.decorators import admin_role_required
 from busy_beaver.clients import chipy_slack
-from busy_beaver.toolbox import make_response
+from busy_beaver.common.decorators import admin_role_required
+from busy_beaver.common.wrappers.youtube import YouTubeClient
 from busy_beaver.extensions import db
+from busy_beaver.toolbox import make_response
 
 from busy_beaver.models import YouTubeVideo
 

@@ -1,7 +1,7 @@
 from datetime import time
 
-from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.clients import slack_oauth
+from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation
 

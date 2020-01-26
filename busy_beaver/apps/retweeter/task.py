@@ -1,8 +1,8 @@
 from datetime import timedelta
 import logging
 
-from busy_beaver.common.wrappers import KeyValueStoreClient
 from busy_beaver.clients import chipy_slack, twitter
+from busy_beaver.common.wrappers import KeyValueStoreClient
 from busy_beaver.config import TWITTER_USERNAME
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import ApiUser, PostTweetTask

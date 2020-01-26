@@ -1,10 +1,10 @@
 import pytest
 import responses
 
-from busy_beaver.common.wrappers.slack import TimezoneInfo
-from busy_beaver.apps.slack_integration.oauth.oauth_flow import SlackOAuthFlow
-from busy_beaver.apps.slack_integration.event_subscription import app_home_handler
 from busy_beaver.apps.slack_integration.blocks import AppHome
+from busy_beaver.apps.slack_integration.event_subscription import app_home_handler
+from busy_beaver.apps.slack_integration.oauth.oauth_flow import SlackOAuthFlow
+from busy_beaver.common.wrappers.slack import TimezoneInfo
 from busy_beaver.models import (
     GitHubSummaryConfiguration,
     SlackAppHomeOpened,
