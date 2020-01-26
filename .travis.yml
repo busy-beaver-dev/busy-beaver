@@ -28,6 +28,7 @@ before_script:
 script:
   - flask db upgrade
   - pytest --cov=./busy_beaver
+  - isort --check -rc ./busy_beaver ./tests scripts
   - flake8
   - black --check .
   - codecov
