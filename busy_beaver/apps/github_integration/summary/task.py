@@ -15,7 +15,7 @@ from busy_beaver.models import (
     PostGitHubSummaryTask,
     SlackInstallation,
 )
-from busy_beaver.toolbox import utc_now_minus, set_task_progress
+from busy_beaver.toolbox import set_task_progress, utc_now_minus
 
 logger = logging.getLogger(__name__)
 

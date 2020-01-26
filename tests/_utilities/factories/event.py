@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
+
 import factory
+
 from busy_beaver.models import Event as model
 
 

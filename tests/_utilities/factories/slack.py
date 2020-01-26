@@ -1,8 +1,7 @@
 import factory
-from busy_beaver.models import (
-    SlackInstallation as slack_installation_model,
-    SlackAppHomeOpened as slack_app_home_opened_model,
-)
+
+from busy_beaver.models import SlackAppHomeOpened as slack_app_home_opened_model
+from busy_beaver.models import SlackInstallation as slack_installation_model
 
 
 def SlackInstallation(session):

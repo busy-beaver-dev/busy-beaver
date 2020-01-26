@@ -1,4 +1,5 @@
 import pytest
+
 from busy_beaver.apps.poller.api.upcoming_events import (
     post_upcoming_events_message_to_slack,
 )

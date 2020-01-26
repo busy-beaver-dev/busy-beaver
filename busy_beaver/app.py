@@ -1,11 +1,11 @@
 from flask import Flask, request
 
+from .blueprints import github_bp, healthcheck_bp, poller_bp, slack_bp
 from .common.oauth import OAuthError
 from .config import DATABASE_URI, REDIS_URI, SECRET_KEY
-from .extensions import db, migrate, rq, talisman
 from .exceptions import NotAuthorized, ValidationError
+from .extensions import db, migrate, rq, talisman
 from .toolbox import make_response
-from .blueprints import healthcheck_bp, github_bp, poller_bp, slack_bp
 
 
 def handle_http_error(error):

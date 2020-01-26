@@ -1,6 +1,6 @@
 import logging
-from flask import jsonify
-from flask import blueprints
+
+from flask import blueprints, jsonify
 
 logger = logging.getLogger(__name__)
 healthcheck_bp = blueprints.Blueprint("healthcheck", __name__)

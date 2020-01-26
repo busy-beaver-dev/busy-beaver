@@ -1,10 +1,10 @@
 import pytest
 
-from busy_beaver.models import SyncEventDatabaseTask
 from busy_beaver.apps.upcoming_events.event_database.task import (
-    sync_database_with_fetched_events,
     start_sync_event_database_task,
+    sync_database_with_fetched_events,
 )
+from busy_beaver.models import SyncEventDatabaseTask
 
 MODULE_TO_TEST = "busy_beaver.apps.poller.api.update_events"
 

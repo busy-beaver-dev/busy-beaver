@@ -1,9 +1,9 @@
 import pytest
 
 from busy_beaver.apps.github_integration.summary.event_list import (
-    EventList,
     CommitsList,
     CreatedReposList,
+    EventList,
     ForkedReposList,
     IssuesOpenedList,
     PublicizedReposList,

@@ -6,7 +6,7 @@ from busy_beaver.common.wrappers import KeyValueStoreClient
 from busy_beaver.config import TWITTER_USERNAME
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import ApiUser, PostTweetTask
-from busy_beaver.toolbox import utc_now_minus, set_task_progress
+from busy_beaver.toolbox import set_task_progress, utc_now_minus
 
 LAST_TWEET_KEY = "last_posted_tweet_id"
 logger = logging.getLogger(__name__)

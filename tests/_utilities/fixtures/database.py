@@ -1,4 +1,5 @@
 import pytest
+
 from busy_beaver.extensions import db as db
 
 

@@ -1,10 +1,11 @@
 import pytest
+from tests._utilities import FakeSlackClient
+
 from busy_beaver.apps.upcoming_events.workflow import (
     generate_next_event_message,
     generate_upcoming_events_message,
     post_upcoming_events_message_to_slack,
 )
-from tests._utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.apps.upcoming_events.workflow"
 

@@ -1,8 +1,8 @@
 import logging
 from typing import NamedTuple
 
-from busy_beaver.common.oauth import OAuthError
 from busy_beaver.clients import github_oauth
+from busy_beaver.common.oauth import OAuthError
 from busy_beaver.extensions import db
 from busy_beaver.models import GitHubSummaryUser, SlackInstallation
 

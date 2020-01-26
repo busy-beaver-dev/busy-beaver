@@ -1,4 +1,5 @@
 import pytest
+
 from busy_beaver.app import create_app
 
 

@@ -1,9 +1,9 @@
 from datetime import timedelta
 
+import pytest
+
 from busy_beaver.apps.github_integration.summary.summary import GitHubUserEvents
 from busy_beaver.toolbox import utc_now_minus
-
-import pytest
 
 
 # TODO make freze_time into a test helper that pulls from the cassette directly
