@@ -2,7 +2,7 @@ import uuid
 
 import pytest
 
-from busy_beaver.adapters.meetup import MeetupAdapter, EventDetails
+from busy_beaver.adapters.meetup import MeetupClient, EventDetails
 from busy_beaver.adapters.requests_client import Response
 from busy_beaver.config import MEETUP_API_KEY
 from busy_beaver.exceptions import NoMeetupEventsFound
@@ -12,7 +12,7 @@ MODULE_TO_TEST = "busy_beaver.adapters.meetup"
 
 @pytest.fixture
 def meetup_client():
-    return MeetupAdapter(MEETUP_API_KEY)
+    return MeetupClient(MEETUP_API_KEY)
 
 
 @pytest.mark.vcr()
@@ -68,7 +68,7 @@ def test_venue_not_specified_returns_tbd(patched_requests_client):
     )
 
     # Act
-    events = MeetupAdapter("API_KEY").get_events("ChiPy", count=1)
+    events = MeetupClient("API_KEY").get_events("ChiPy", count=1)
 
     # Assert
     event = events[0]
@@ -83,7 +83,7 @@ def test_no_events_found_raises_exception(patched_requests_client):
     patched_requests_client(events=[])
 
     with pytest.raises(NoMeetupEventsFound):
-        MeetupAdapter("API_KEY").get_events("ChiPy", count=10)
+        MeetupClient("API_KEY").get_events("ChiPy", count=10)
 
 
 @pytest.mark.integration

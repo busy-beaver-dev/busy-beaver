@@ -43,7 +43,7 @@ class EventDetails(NamedTuple):
         return Event(**event_params)
 
 
-class MeetupAdapter:
+class MeetupClient:
     """Pull the upcoming events from Meetup and send the message to Slack."""
 
     def __init__(self, oauth_token: str):
