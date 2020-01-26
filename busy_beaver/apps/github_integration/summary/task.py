@@ -1,6 +1,6 @@
+from datetime import timedelta
 import logging
 import random
-from datetime import timedelta
 from typing import List
 
 from sqlalchemy import and_

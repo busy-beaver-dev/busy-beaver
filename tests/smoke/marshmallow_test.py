@@ -2,9 +2,9 @@
 
 from datetime import date
 
-import pytest
 from marshmallow import Schema, fields
 from marshmallow.exceptions import ValidationError
+import pytest
 
 
 class ArtistSchema(Schema):

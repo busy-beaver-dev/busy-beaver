@@ -1,7 +1,7 @@
 import os
 
-import pytest
 from flask import Flask, jsonify
+import pytest
 
 from busy_beaver.app import handle_http_error
 from busy_beaver.apps.github_integration.api.decorators import verify_github_signature

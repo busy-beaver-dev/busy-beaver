@@ -1,5 +1,5 @@
-import pytest
 from flask import Flask, jsonify, request
+import pytest
 
 from busy_beaver.app import handle_http_error
 from busy_beaver.common.decorators import authentication_required

@@ -1,7 +1,7 @@
 """pytest Fixutres that make living my test life easy"""
 
-import uuid
 from collections import namedtuple
+import uuid
 
 import pytest
 from tests._utilities import FactoryManager

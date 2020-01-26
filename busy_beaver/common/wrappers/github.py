@@ -1,6 +1,6 @@
-import urllib
 from datetime import datetime
 from typing import Dict, List, NamedTuple, Tuple
+import urllib
 
 from dateutil.parser import parse as date_parse
 

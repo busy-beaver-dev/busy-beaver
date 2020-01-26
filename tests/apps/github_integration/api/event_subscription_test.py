@@ -1,5 +1,5 @@
-import json
 from collections import OrderedDict
+import json
 from urllib.parse import urlencode
 
 import pytest

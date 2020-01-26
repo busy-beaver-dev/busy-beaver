@@ -1,8 +1,8 @@
 from datetime import datetime, timedelta
 
+from dateutil.parser import parse as parse_dt
 import pytest
 import pytz
-from dateutil.parser import parse as parse_dt
 
 from busy_beaver.common.wrappers.github import (
     APINav,
