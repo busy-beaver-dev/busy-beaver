@@ -1,6 +1,6 @@
 from typing import List
 
-from busy_beaver.adapters.meetup import EventDetails
+from busy_beaver.common.wrappers.meetup import EventDetails
 from busy_beaver.toolbox.slack_block_kit import Context, Divider, Image, Section
 
 

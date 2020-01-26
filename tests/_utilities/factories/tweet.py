@@ -1,5 +1,5 @@
 import factory
-from busy_beaver.adapters.twitter import Tweet as model
+from busy_beaver.common.wrappers.twitter import Tweet as model
 
 
 def Tweet(session):

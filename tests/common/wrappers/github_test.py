@@ -4,10 +4,10 @@ from dateutil.parser import parse as parse_dt
 import pytest
 import pytz
 
-from busy_beaver.adapters.github import (
+from busy_beaver.common.wrappers.github import (
     APINav,
     create_github_navigation_panel,
-    GitHubAdapter,
+    GitHubClient,
     page_from_url,
 )
 from busy_beaver.config import GITHUB_OAUTH_TOKEN
@@ -15,7 +15,7 @@ from busy_beaver.config import GITHUB_OAUTH_TOKEN
 
 @pytest.fixture
 def client():
-    yield GitHubAdapter(oauth_token=GITHUB_OAUTH_TOKEN)
+    yield GitHubClient(oauth_token=GITHUB_OAUTH_TOKEN)
 
 
 @pytest.mark.vcr()

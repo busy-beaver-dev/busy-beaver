@@ -11,7 +11,7 @@ def sort_by_published(video_json: Dict) -> datetime:
     return YouTubeVideo.date_str_to_datetime(publish_at)
 
 
-class YouTubeAdapter:
+class YouTubeClient:
     def __init__(self, *, api_key: str) -> None:
         self.base_url = "https://www.googleapis.com/youtube/v3"
         self.api_key = api_key

@@ -3,7 +3,7 @@ from busy_beaver.extensions import db
 from busy_beaver.models import KeyValueStore
 
 
-class KeyValueStoreAdapter:
+class KeyValueStoreClient:
     """Wrapper around KeyValue Table"""
 
     def get(self, key: str) -> str:

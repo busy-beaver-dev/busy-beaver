@@ -14,7 +14,7 @@ class TimezoneInfo(NamedTuple):
     offset: int
 
 
-class SlackAdapter:
+class SlackClient:
     def __init__(self, slack_token):
         self.client = WebClient(slack_token, run_async=False)
 

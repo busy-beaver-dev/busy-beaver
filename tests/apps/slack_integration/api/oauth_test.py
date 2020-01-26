@@ -11,7 +11,7 @@ MODULE_TO_TEST = "busy_beaver.apps.slack_integration.oauth.workflow"
 @pytest.fixture
 def patched_slack(patcher):
     obj = FakeSlackClient()
-    return patcher(MODULE_TO_TEST, namespace="SlackAdapter", replacement=obj)
+    return patcher(MODULE_TO_TEST, namespace="SlackClient", replacement=obj)
 
 
 @pytest.mark.end2end

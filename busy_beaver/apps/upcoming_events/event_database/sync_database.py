@@ -1,7 +1,7 @@
 import logging
 from typing import List, NamedTuple
 
-from busy_beaver.adapters.meetup import EventDetails
+from busy_beaver.common.wrappers.meetup import EventDetails
 from busy_beaver.extensions import db
 from busy_beaver.models import Event
 

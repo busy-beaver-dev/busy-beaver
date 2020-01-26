@@ -1,20 +1,20 @@
 import pytest
 
-from busy_beaver.adapters.slack import SlackAdapter
+from busy_beaver.common.wrappers.slack import SlackClient
 from busy_beaver.config import SLACK_TOKEN
 from busy_beaver.apps.slack_integration.blocks import AppHome
 
 
-MODULE_TO_TEST = "busy_beaver.adapters.slack"
+MODULE_TO_TEST = "busy_beaver.common.wrappers.slack"
 
 
 @pytest.fixture(scope="module")
 def slack():
-    return SlackAdapter(SLACK_TOKEN)
+    return SlackClient(SLACK_TOKEN)
 
 
 @pytest.mark.vcr()
-def test_slack_dm(slack: SlackAdapter):
+def test_slack_dm(slack: SlackClient):
     # Act
     result = slack.dm("test", user_id="U5FTQ3QRZ")
 
@@ -24,7 +24,7 @@ def test_slack_dm(slack: SlackAdapter):
 
 
 @pytest.mark.vcr()
-def test_slack_get_channel_info(slack: SlackAdapter):
+def test_slack_get_channel_info(slack: SlackClient):
     # Act
     result = slack.get_channel_info("C5GQNTS07")
 
@@ -34,7 +34,7 @@ def test_slack_get_channel_info(slack: SlackAdapter):
 
 
 @pytest.mark.vcr()
-def test_slack_get_user_timezone(slack: SlackAdapter):
+def test_slack_get_user_timezone(slack: SlackClient):
     # Act
     result = slack.get_user_timezone("U5FTQ3QRZ")
 
@@ -45,7 +45,7 @@ def test_slack_get_user_timezone(slack: SlackAdapter):
 
 
 @pytest.mark.vcr()
-def test_slack_post_ephemeral_message_success(slack: SlackAdapter):
+def test_slack_post_ephemeral_message_success(slack: SlackClient):
     # Act
     result = slack.post_ephemeral_message(
         "test", channel="CEWD83Y74", user_id="U5FTQ3QRZ"
@@ -56,7 +56,7 @@ def test_slack_post_ephemeral_message_success(slack: SlackAdapter):
 
 
 @pytest.mark.vcr()
-def test_slack_post_message_success(slack: SlackAdapter):
+def test_slack_post_message_success(slack: SlackClient):
     # Act
     result = slack.post_message("test", channel="general")
 
@@ -66,13 +66,13 @@ def test_slack_post_message_success(slack: SlackAdapter):
 
 
 @pytest.mark.vcr()
-def test_slack_post_message_without_specifying_channel(slack: SlackAdapter):
+def test_slack_post_message_without_specifying_channel(slack: SlackClient):
     with pytest.raises(ValueError):
         slack.post_message(message="test")
 
 
 @pytest.mark.vcr()
-def test_slack_get_channel_list(slack: SlackAdapter):
+def test_slack_get_channel_list(slack: SlackClient):
     result = slack.get_channel_list()
 
     assert result["ok"] is True
@@ -82,7 +82,7 @@ def test_slack_get_channel_list(slack: SlackAdapter):
 
 
 @pytest.mark.vcr()
-def test_slack_get_channel_list_with_members(slack: SlackAdapter):
+def test_slack_get_channel_list_with_members(slack: SlackClient):
     result = slack.get_channel_list(include_members=True)
 
     assert result["ok"] is True
@@ -92,7 +92,7 @@ def test_slack_get_channel_list_with_members(slack: SlackAdapter):
 
 
 @pytest.mark.vcr()
-def test_slack_display_app_home(slack: SlackAdapter):
+def test_slack_display_app_home(slack: SlackClient):
     result = slack.display_app_home("U5FTQ3QRZ", view=AppHome().to_dict())
 
     assert result.status_code == 200

@@ -1,10 +1,10 @@
 import pytest
 import responses
 
-from busy_beaver.adapters.slack import TimezoneInfo
-from busy_beaver.apps.slack_integration.oauth.oauth_flow import SlackOAuthFlow
-from busy_beaver.apps.slack_integration.event_subscription import app_home_handler
 from busy_beaver.apps.slack_integration.blocks import AppHome
+from busy_beaver.apps.slack_integration.event_subscription import app_home_handler
+from busy_beaver.apps.slack_integration.oauth.oauth_flow import SlackOAuthFlow
+from busy_beaver.common.wrappers.slack import TimezoneInfo
 from busy_beaver.models import (
     GitHubSummaryConfiguration,
     SlackAppHomeOpened,
@@ -19,7 +19,7 @@ pytest_plugins = ("tests._utilities.fixtures.slack",)
 def patch_slack(patcher):
     def _patch_slack(module_to_patch_slack, *, timezone_info=None):
         obj = FakeSlackClient(timezone_info=timezone_info)
-        patcher(module_to_patch_slack, namespace="SlackAdapter", replacement=obj)
+        patcher(module_to_patch_slack, namespace="SlackClient", replacement=obj)
         return obj
 
     return _patch_slack

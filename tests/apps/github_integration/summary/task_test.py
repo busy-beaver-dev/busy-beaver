@@ -2,12 +2,12 @@ from datetime import timedelta
 from typing import List
 import pytest
 
-from busy_beaver.adapters.slack import Channel
-from busy_beaver.models import ApiUser
 from busy_beaver.apps.github_integration.summary.task import (
     start_post_github_summary_task,
     fetch_github_summary_post_to_slack,
 )
+from busy_beaver.common.wrappers.slack import Channel
+from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
 from tests._utilities import FakeSlackClient
 
@@ -56,7 +56,7 @@ def test_start_post_github_summary_task(session, factory, patched_background_tas
 def patched_slack(patcher):
     def _wrapper(channel_info):
         obj = FakeSlackClient(channel_info=channel_info)
-        return patcher(MODULE_TO_TEST, namespace="SlackAdapter", replacement=obj)
+        return patcher(MODULE_TO_TEST, namespace="SlackClient", replacement=obj)
 
     return _wrapper
 

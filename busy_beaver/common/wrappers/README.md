@@ -1,4 +1,6 @@
-# Adapter Information
+# Wrappers
+
+Wrappers around third-party integrations.
 
 <!-- TOC -->
 

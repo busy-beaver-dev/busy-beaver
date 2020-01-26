@@ -10,7 +10,7 @@ from busy_beaver.exceptions import UnexpectedStatusCode
 BASE_URL = "https://api.github.com"
 
 
-class GitHubAdapter:
+class GitHubClient:
     def __init__(self, oauth_token: str):
         default_headers = {
             "Accept": "application/vnd.github.v3+json",
