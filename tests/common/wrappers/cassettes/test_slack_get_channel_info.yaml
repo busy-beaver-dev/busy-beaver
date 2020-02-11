@@ -5,80 +5,93 @@ interactions:
       Content-Type:
       - application/x-www-form-urlencoded;charset=utf-8
       User-Agent:
-      - Python/3.7.1 slackclient/2.1.0 Linux/4.9.125-linuxkit
+      - Python/3.8.1 slackclient/2.5.0 Linux/4.19.76-linuxkit
       authorization:
       - DUMMY
     method: GET
     uri: https://www.slack.com/api/channels.info?channel=C5GQNTS07
   response:
     body:
-      string: '{"ok":true,"channel":{"id":"C5GQNTS07","name":"general","is_channel":true,"created":1495325664,"is_archived":false,"is_general":true,"unlinked":0,"creator":"U5FTQ3QRZ","name_normalized":"general","is_read_only":false,"is_shared":false,"is_org_shared":false,"is_member":true,"is_private":false,"is_mpim":false,"last_read":"1560902428.000100","latest":{"type":"message","subtype":"bot_message","text":"test","ts":"1562423010.003600","username":"BusyBeaverDev","bot_id":"BEJ2BG1PG"},"unread_count":13,"unread_count_display":11,"members":["U5FTQ3QRZ","UEANVEWMN","UEGGXQ5EF","UFZKG96KD","UGG6065AP","UGLHLEJMT","UKZF9G2SH"],"topic":{"value":"Company-wide
+      string: '{"ok":true,"channel":{"id":"C5GQNTS07","name":"general","is_channel":true,"created":1495325664,"is_archived":false,"is_general":true,"unlinked":0,"creator":"U5FTQ3QRZ","name_normalized":"general","is_read_only":false,"is_thread_only":false,"is_non_threadable":false,"is_shared":false,"is_org_shared":false,"is_member":true,"is_private":false,"is_mpim":false,"last_read":"1560902428.000100","latest":{"bot_id":"BEJ2BG1PG","type":"message","text":"test","user":"UEGGXQ5EF","ts":"1579899726.000100","team":"T5G0FCMNW","bot_profile":{"id":"BEJ2BG1PG","deleted":false,"name":"BusyBeaverDev","updated":1561762075,"app_id":"AECGKV06T","icons":{"image_36":"https:\/\/avatars.slack-edge.com\/2018-12-15\/504322108624_7253fc514c8df792ad2e_36.png","image_48":"https:\/\/avatars.slack-edge.com\/2018-12-15\/504322108624_7253fc514c8df792ad2e_48.png","image_72":"https:\/\/avatars.slack-edge.com\/2018-12-15\/504322108624_7253fc514c8df792ad2e_72.png"},"team_id":"T5G0FCMNW"}},"unread_count":17,"unread_count_display":14,"members":["U5FTQ3QRZ","UGG6065AP","UFZKG96KD","UEANVEWMN","UGLHLEJMT","UEGGXQ5EF","UKZF9G2SH"],"topic":{"value":"Company-wide
         announcements and work-based matters","creator":"","last_set":0},"purpose":{"value":"This
         channel is for team-wide communication and announcements. All team members
         are in this channel.","creator":"","last_set":0},"previous_names":[]}}'
     headers:
-      ? !!python/object/new:multidict._istr.istr
-      - Access-Control-Allow-Headers
-      : slack-route, x-slack-version-ts
-      ? !!python/object/new:multidict._istr.istr
-      - Access-Control-Allow-Origin
-      : '*'
-      ? !!python/object/new:multidict._istr.istr
-      - Access-Control-Expose-Headers
-      : x-slack-req-id, retry-after
-      ? !!python/object/new:multidict._istr.istr
-      - Cache-Control
-      : private, no-cache, no-store, must-revalidate
-      ? !!python/object/new:multidict._istr.istr
-      - Connection
-      : keep-alive
-      ? !!python/object/new:multidict._istr.istr
-      - Content-Encoding
-      : gzip
-      ? !!python/object/new:multidict._istr.istr
-      - Content-Length
-      : '502'
-      ? !!python/object/new:multidict._istr.istr
-      - Content-Type
-      : application/json; charset=utf-8
-      ? !!python/object/new:multidict._istr.istr
-      - Date
-      : Sat, 06 Jul 2019 14:26:02 GMT
-      ? !!python/object/new:multidict._istr.istr
-      - Expires
-      : Mon, 26 Jul 1997 05:00:00 GMT
-      ? !!python/object/new:multidict._istr.istr
-      - Pragma
-      : no-cache
+      Access-Control-Allow-Headers: slack-route, x-slack-version-ts, x-b3-traceid,
+        x-b3-spanid, x-b3-parentspanid, x-b3-sampled, x-b3-flags
+      Access-Control-Allow-Origin: '*'
+      Access-Control-Expose-Headers: x-slack-req-id, retry-after
+      Cache-Control: private, no-cache, no-store, must-revalidate
+      Connection: keep-alive
+      Content-Encoding: gzip
+      Content-Length: '677'
+      Content-Type: application/json; charset=utf-8
+      Date: Tue, 11 Feb 2020 01:56:32 GMT
+      Expires: Mon, 26 Jul 1997 05:00:00 GMT
+      Pragma: no-cache
       Referrer-Policy: no-referrer
-      ? !!python/object/new:multidict._istr.istr
-      - Server
-      : Apache
+      Server: Apache
       Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
-      ? !!python/object/new:multidict._istr.istr
-      - Vary
-      : Accept-Encoding
-      ? !!python/object/new:multidict._istr.istr
-      - Via
-      : 1.1 e9df1c8f21e296ac8b108870aadd91f7.cloudfront.net (CloudFront)
-      X-Accepted-OAuth-Scopes: channels:read,read
-      X-Amz-Cf-Id: yBlVMbEL-L01VTRHPtEbZi-F14KT5z7RXWEZFW20P7Ly0v4z2ty72A==
-      X-Amz-Cf-Pop: ORD52-C2
+      Vary: Accept-Encoding
+      Via: 1.1 af88c9b57fbd5ab387fd51007a072650.cloudfront.net (CloudFront)
+      X-Accepted-OAuth-Scopes: channels:read
+      X-Amz-Cf-Id: vmHaOG5tpDiJBvvqCt4NMmqXt2vQ_PWa0IMsSLu5M8mjXgDQWyQCgg==
+      X-Amz-Cf-Pop: ORD52-C1
       X-Cache: Miss from cloudfront
       X-Content-Type-Options: nosniff
-      X-OAuth-Scopes: identify,bot:basic
-      X-Slack-Req-Id: b292edb2-9b5a-4369-a7af-a2742fa08950
-      X-Via: haproxy-www-qtt5
+      X-OAuth-Scopes: app_mentions:read,channels:history,channels:join,channels:read,chat:write,commands,emoji:read,groups:read,im:history,im:read,im:write,mpim:history,mpim:read,mpim:write,reactions:read,reactions:write,team:read,usergroups:read,users.profile:read,users:read,users:write,pins:read,pins:write
+      X-Slack-Backend: h
+      X-Slack-Req-Id: bf308b5367d61de8a5ba2f678db729ee
+      X-Via: haproxy-www-9611
       X-XSS-Protection: '0'
     status:
       code: 200
       message: OK
-    url: !!python/object/new:yarl.URL
-      state: !!python/tuple
-      - !!python/object/new:urllib.parse.SplitResult
-        - https
-        - www.slack.com
-        - /api/channels.info
-        - channel=C5GQNTS07
-        - ''
+    url: https://www.slack.com/api/channels.info?channel=C5GQNTS07
+- request:
+    body: null
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=utf-8
+      User-Agent:
+      - Python/3.8.1 slackclient/2.5.0 Linux/4.19.76-linuxkit
+      authorization:
+      - DUMMY
+    method: GET
+    uri: https://www.slack.com/api/conversations.members?channel=C5GQNTS07
+  response:
+    body:
+      string: '{"ok":true,"members":["U5FTQ3QRZ","UEANVEWMN","UEGGXQ5EF","UFZKG96KD","UGG6065AP","UGLHLEJMT","UKZF9G2SH"],"response_metadata":{"next_cursor":""}}'
+    headers:
+      Access-Control-Allow-Headers: slack-route, x-slack-version-ts, x-b3-traceid,
+        x-b3-spanid, x-b3-parentspanid, x-b3-sampled, x-b3-flags
+      Access-Control-Allow-Origin: '*'
+      Access-Control-Expose-Headers: x-slack-req-id, retry-after
+      Cache-Control: private, no-cache, no-store, must-revalidate
+      Connection: keep-alive
+      Content-Encoding: gzip
+      Content-Length: '147'
+      Content-Type: application/json; charset=utf-8
+      Date: Tue, 11 Feb 2020 01:56:34 GMT
+      Expires: Mon, 26 Jul 1997 05:00:00 GMT
+      Pragma: no-cache
+      Referrer-Policy: no-referrer
+      Server: Apache
+      Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+      Vary: Accept-Encoding
+      Via: 1.1 ce6cbaba4ae4791f264842567fcc912a.cloudfront.net (CloudFront)
+      X-Accepted-OAuth-Scopes: channels:read,groups:read,mpim:read,im:read,read
+      X-Amz-Cf-Id: gqnA0npHLiUUPY8TlHtyqWkc1YPxoJW-rRq3r6y8AzCXc4HSYTmQJA==
+      X-Amz-Cf-Pop: ORD52-C1
+      X-Cache: Miss from cloudfront
+      X-Content-Type-Options: nosniff
+      X-OAuth-Scopes: app_mentions:read,channels:history,channels:join,channels:read,chat:write,commands,emoji:read,groups:read,im:history,im:read,im:write,mpim:history,mpim:read,mpim:write,reactions:read,reactions:write,team:read,usergroups:read,users.profile:read,users:read,users:write,pins:read,pins:write
+      X-Slack-Backend: h
+      X-Slack-Req-Id: 7b6978951c3288ccb9e0db889ec62e91
+      X-Via: haproxy-www-8ijn
+      X-XSS-Protection: '0'
+    status:
+      code: 200
+      message: OK
+    url: https://www.slack.com/api/conversations.members?channel=C5GQNTS07
 version: 1

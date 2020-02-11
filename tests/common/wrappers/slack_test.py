@@ -71,26 +71,6 @@ def test_slack_post_message_without_specifying_channel(slack: SlackClient):
 
 
 @pytest.mark.vcr()
-def test_slack_get_channel_list(slack: SlackClient):
-    result = slack.get_channel_list()
-
-    assert result["ok"] is True
-    channel_info = result["channels"]
-    if channel_info:
-        assert "members" not in channel_info[0]
-
-
-@pytest.mark.vcr()
-def test_slack_get_channel_list_with_members(slack: SlackClient):
-    result = slack.get_channel_list(include_members=True)
-
-    assert result["ok"] is True
-    channel_info = result["channels"]
-    if channel_info:
-        assert "members" in channel_info[0]
-
-
-@pytest.mark.vcr()
 def test_slack_display_app_home(slack: SlackClient):
     result = slack.display_app_home("U5FTQ3QRZ", view=AppHome().to_dict())
 
