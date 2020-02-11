@@ -1,11 +1,7 @@
 from typing import List, NamedTuple
 
 from slack import WebClient
-
-
-class Channel(NamedTuple):
-    name: str
-    members: List[str] = None
+from slack.errors import SlackApiError
 
 
 class TimezoneInfo(NamedTuple):
@@ -24,14 +20,12 @@ class SlackClient:
     def dm(self, message, user_id):
         return self.post_message(message, channel=user_id)
 
-    def get_channel_info(self, channel) -> Channel:
-        channel_info = self.client.channels_info(channel=channel)
-        members = channel_info["channel"]["members"]
-        return Channel(channel, members)
-
-    def get_channel_list(self, *, include_members=False):
-        exclude_members = not include_members
-        return self.client.channels_list(exclude_members=int(exclude_members))
+    def get_channel_members(self, channel) -> List[str]:
+        try:
+            result = self.client.conversations_members(channel=channel)
+        except SlackApiError:
+            raise ValueError("Channel not found")
+        return result["members"]
 
     def get_user_timezone(self, user_id):
         result = self.client.users_info(user=user_id)

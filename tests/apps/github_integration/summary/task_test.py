@@ -8,7 +8,6 @@ from busy_beaver.apps.github_integration.summary.task import (
     fetch_github_summary_post_to_slack,
     start_post_github_summary_task,
 )
-from busy_beaver.common.wrappers.slack import Channel
 from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
 
@@ -55,8 +54,8 @@ def test_start_post_github_summary_task(session, factory, patched_background_tas
 #####################
 @pytest.fixture
 def patched_slack(patcher):
-    def _wrapper(channel_info):
-        obj = FakeSlackClient(channel_info=channel_info)
+    def _wrapper(members):
+        obj = FakeSlackClient(members=members)
         return patcher(MODULE_TO_TEST, namespace="SlackClient", replacement=obj)
 
     return _wrapper
@@ -93,8 +92,7 @@ def test_fetch_github_summary_post_to_slack_with_no_users(
     boundary_dt = t_minus_one_day
     github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
     slack_installation = github_summary_config.slack_installation
-    channel_info = Channel(name="general", members=["user1", "user2"])
-    slack = patched_slack(channel_info=channel_info)
+    slack = patched_slack(members=["user1", "user2"])
     patched_github_user_events(messages=["a", "b"])
 
     # Act
@@ -127,8 +125,7 @@ def test_fetch_github_summary_post_to_slack_with_no_activity(
         github_username="github_user1",
         installation=slack_installation,
     )
-    channel_info = Channel(name="general", members=["user1", "user2"])
-    slack = patched_slack(channel_info=channel_info)
+    slack = patched_slack(members=["user1", "user2"])
     patched_github_user_events(messages=[""])
 
     # Act
@@ -165,8 +162,7 @@ def test_fetch_github_summary_post_to_slack_with_activity(
         github_username="github_user2",
         installation=slack_installation,
     )
-    channel_info = Channel(name="general", members=["user1", "user2"])
-    slack = patched_slack(channel_info=channel_info)
+    slack = patched_slack(members=["user1", "user2"])
     patched_github_user_events(messages=["a", "b"])
 
     # Act
@@ -196,9 +192,7 @@ def test_post_github_summary_task__integration(
     factory.GitHubSummaryUser(
         slack_id="user1", github_username="alysivji", installation=slack_installation
     )
-
-    channel_info = Channel(name="general", members=["user1", "user2"])
-    slack = patched_slack(channel_info=channel_info)
+    slack = patched_slack(members=["user1", "user2"])
 
     # Act
     fetch_github_summary_post_to_slack(

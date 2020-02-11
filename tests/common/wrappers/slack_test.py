@@ -23,13 +23,15 @@ def test_slack_dm(slack: SlackClient):
 
 
 @pytest.mark.vcr()
-def test_slack_get_channel_info(slack: SlackClient):
-    # Act
-    result = slack.get_channel_info("C5GQNTS07")
+def test_slack_get_channel_members(slack: SlackClient):
+    members = slack.get_channel_members("C5GQNTS07")
+    assert len(members) > 0
 
-    # Assert
-    assert result.name == "C5GQNTS07"
-    assert len(result.members) > 0
+
+@pytest.mark.vcr()
+def test_slack_get_channel_members__channel_does_not_exist(slack: SlackClient):
+    with pytest.raises(ValueError):
+        slack.get_channel_members("channel-does-not-exist")
 
 
 @pytest.mark.vcr()
@@ -68,26 +70,6 @@ def test_slack_post_message_success(slack: SlackClient):
 def test_slack_post_message_without_specifying_channel(slack: SlackClient):
     with pytest.raises(ValueError):
         slack.post_message(message="test")
-
-
-@pytest.mark.vcr()
-def test_slack_get_channel_list(slack: SlackClient):
-    result = slack.get_channel_list()
-
-    assert result["ok"] is True
-    channel_info = result["channels"]
-    if channel_info:
-        assert "members" not in channel_info[0]
-
-
-@pytest.mark.vcr()
-def test_slack_get_channel_list_with_members(slack: SlackClient):
-    result = slack.get_channel_list(include_members=True)
-
-    assert result["ok"] is True
-    channel_info = result["channels"]
-    if channel_info:
-        assert "members" in channel_info[0]
 
 
 @pytest.mark.vcr()
