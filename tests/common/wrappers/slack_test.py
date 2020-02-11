@@ -23,9 +23,9 @@ def test_slack_dm(slack: SlackClient):
 
 
 @pytest.mark.vcr()
-def test_slack_get_channel_info(slack: SlackClient):
+def test_slack_get_channel_members(slack: SlackClient):
     # Act
-    result = slack.get_channel_info("C5GQNTS07")
+    result = slack.get_channel_members("C5GQNTS07")
 
     # Assert
     assert result.name == "C5GQNTS07"

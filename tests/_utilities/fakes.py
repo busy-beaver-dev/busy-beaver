@@ -29,7 +29,7 @@ class FakeSlackClient:
         self.mock(*args, **kwargs)
         return
 
-    def get_channel_info(self, *args, **kwargs):
+    def get_channel_members(self, *args, **kwargs):
         self.mock(*args, **kwargs)
         return self.channel_info
 

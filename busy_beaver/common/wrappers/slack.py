@@ -24,7 +24,7 @@ class SlackClient:
     def dm(self, message, user_id):
         return self.post_message(message, channel=user_id)
 
-    def get_channel_info(self, channel) -> Channel:
+    def get_channel_members(self, channel) -> Channel:
         result = self.client.conversations_members(channel=channel)
         return Channel(channel, result["members"])
 
