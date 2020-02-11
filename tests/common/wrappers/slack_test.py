@@ -29,6 +29,12 @@ def test_slack_get_channel_members(slack: SlackClient):
 
 
 @pytest.mark.vcr()
+def test_slack_get_channel_members__channel_does_not_exist(slack: SlackClient):
+    with pytest.raises(ValueError):
+        slack.get_channel_members("channel-does-not-exist")
+
+
+@pytest.mark.vcr()
 def test_slack_get_user_timezone(slack: SlackClient):
     # Act
     result = slack.get_user_timezone("U5FTQ3QRZ")
