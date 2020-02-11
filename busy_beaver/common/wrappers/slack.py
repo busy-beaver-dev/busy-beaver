@@ -3,11 +3,6 @@ from typing import List, NamedTuple
 from slack import WebClient
 
 
-class Channel(NamedTuple):
-    name: str
-    members: List[str] = None
-
-
 class TimezoneInfo(NamedTuple):
     tz: str
     label: str
@@ -24,9 +19,9 @@ class SlackClient:
     def dm(self, message, user_id):
         return self.post_message(message, channel=user_id)
 
-    def get_channel_members(self, channel) -> Channel:
+    def get_channel_members(self, channel) -> List[str]:
         result = self.client.conversations_members(channel=channel)
-        return Channel(channel, result["members"])
+        return result["members"]
 
     def get_user_timezone(self, user_id):
         result = self.client.users_info(user=user_id)
