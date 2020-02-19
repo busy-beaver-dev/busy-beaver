@@ -1,3 +1,4 @@
+from collections import ChainMap
 from json import JSONDecodeError
 import logging
 from typing import Any, Dict, List, NamedTuple, Union
@@ -22,7 +23,7 @@ class RequestsClient:
     """Wrapper around requests to simplify interaction with JSON REST APIs"""
 
     def __init__(self, headers: dict = None):
-        _headers = dict(DEFAULT_HEADERS)
+        _headers = ChainMap(DEFAULT_HEADERS)
         if headers is not None:
             _headers.update(headers)
 
@@ -43,7 +44,7 @@ class RequestsClient:
         return self._request("post", url, **kwargs)
 
     def _request(self, method: str, url: str, **kwargs) -> Response:
-        req_headers = dict(self.headers)
+        req_headers = ChainMap(self.headers)
         if "headers" in kwargs:
             headers_to_add = kwargs.pop("headers")
             req_headers.update(headers_to_add)
