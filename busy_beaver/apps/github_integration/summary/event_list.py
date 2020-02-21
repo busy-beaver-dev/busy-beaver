@@ -53,6 +53,10 @@ class CommitsList(EventList):
         repo_noun = inflector.plural(self.NOUN, num_repos)
 
         num_commits = sum([event["payload"]["distinct_size"] for event in self.events])
+
+        if num_commits == 0:
+            return ""
+
         commit_noun = inflector.plural("commit", num_commits)
         return (
             f">{self.EMOJI} {num_commits} {commit_noun} "
