@@ -69,3 +69,14 @@ def test_issued_open_list_generates_custom_links():
         }
     )
     assert f"<example.com|some_repository#4>" in event_list.generate_summary_text()
+
+
+def test_zero_commits_does_not_produce_a_summary():
+    commits_list = CommitsList()
+    commits_list.append(
+        {
+            "payload": {"distinct_size": 0},
+            "repo": {"name": "some_repository", "url": "api.github.com/repos/"},
+        }
+    )
+    assert not commits_list.generate_summary_text()
