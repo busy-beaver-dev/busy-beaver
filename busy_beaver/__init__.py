@@ -5,14 +5,17 @@ import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
-from .config import IN_PRODUCTION, LOGGING_CONFIG, SENTRY_DSN
+from .config import LOGGING_CONFIG, SENTRY_DSN, SENTRY_ENV_FILTER
 
 # observability
 load_dict_config(LOGGING_CONFIG)
 logger = logging.getLogger(__name__)
-if IN_PRODUCTION and SENTRY_DSN:
-    integrations = [FlaskIntegration(), SqlalchemyIntegration()]
-    sentry_sdk.init(dsn=SENTRY_DSN, integrations=integrations)
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        environment=SENTRY_ENV_FILTER,
+        integrations=[FlaskIntegration(), SqlalchemyIntegration()],
+    )
 
 logger.info("[BusyBeaver] Configure Integrations")
 from . import clients  # noqa isort:skip

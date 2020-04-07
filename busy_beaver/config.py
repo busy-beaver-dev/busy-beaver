@@ -1,6 +1,9 @@
 import os
 
 IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
+# TODO document
+# https://docs.sentry.io/enriching-error-data/environments/?platform=python
+SENTRY_ENV_FILTER = "production" if IN_PRODUCTION else "staging"
 TASK_QUEUE_MAX_RETRIES = 1
 
 SECRET_KEY = os.getenv("SECRET_KEY", "abcdef").encode("utf-8")
