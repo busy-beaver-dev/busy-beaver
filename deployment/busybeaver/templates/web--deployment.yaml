@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "busybeaver.fullname" . }}
+  labels:
+    type: web-deploy
+    {{- include "busybeaver.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.app.webReplicaCount }}
+  selector:
+    matchLabels:
+      type: web
+      {{- include "busybeaver.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        type: web
+        {{- include "busybeaver.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: webapp
+        image: {{ .Values.image.repository }}:{{ .Values.image.version }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args: ["webserver"]
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        env:
+          {{- include "busybeaver.env_vars" . | indent 10 }}
+        ports:
+        - containerPort: {{ .Values.app.port }}
+        livenessProbe:
+          httpGet:
+            path: /healthcheck
+            port: {{ .Values.app.port }}
+          initialDelaySeconds: 3
+          periodSeconds: 5

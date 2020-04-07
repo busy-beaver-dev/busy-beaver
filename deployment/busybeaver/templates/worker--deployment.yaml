@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "busybeaver.fullname" . }}--workers"
+  labels:
+    type: worker-deploy
+    {{- include "busybeaver.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.app.workerReplicaCount }}
+  selector:
+    matchLabels:
+      type: worker
+      {{- include "busybeaver.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        type: worker
+        {{- include "busybeaver.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: webapp-worker
+        image: {{ .Values.image.repository }}:{{ .Values.image.version }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args: ["worker"]
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+        env:
+          {{- include "busybeaver.env_vars" . | indent 10 }}
