@@ -24,7 +24,7 @@ spec:
         args: ["webserver"]
         resources:
           limits:
-            memory: "128Mi"
+            memory: "256Mi"
             cpu: "200m"
         env:
           {{- include "busybeaver.env_vars" . | indent 10 }}
@@ -35,4 +35,4 @@ spec:
             path: /healthcheck
             port: {{ .Values.app.port }}
           initialDelaySeconds: 3
-          periodSeconds: 5
+          periodSeconds: 10
