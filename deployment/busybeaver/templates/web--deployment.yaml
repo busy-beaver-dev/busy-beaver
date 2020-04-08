@@ -30,9 +30,9 @@ spec:
           {{- include "busybeaver.env_vars" . | indent 10 }}
         ports:
         - containerPort: {{ .Values.app.port }}
-        livenessProbe:
+        readinessProbe:
           httpGet:
             path: /healthcheck
             port: {{ .Values.app.port }}
-          initialDelaySeconds: 3
-          periodSeconds: 10
+          initialDelaySeconds: 5
+          periodSeconds: 5
