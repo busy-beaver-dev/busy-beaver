@@ -11,6 +11,8 @@ SECRET_KEY = os.getenv("SECRET_KEY", "abcdef").encode("utf-8")
 # app constraints
 FULL_INSTALLATION_WORKSPACE_IDS = [
     "T093FC1RC",  # ChiPy Workspace -- https://chipy.slack.com -- prod env
+    "TPDB2AV4K",  # Production instance (home workspace)
+    "TKT910ZU0",  # Staging instance (staging workspace)
     "T5G0FCMNW",  # SivBots -- https://sivbots.slack.com -- dev env
 ]
 
