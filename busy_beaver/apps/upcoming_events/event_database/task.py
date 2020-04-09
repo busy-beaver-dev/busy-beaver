@@ -22,7 +22,7 @@ from busy_beaver.models import ApiUser, Event, SyncEventDatabaseTask
 logger = logging.getLogger(__name__)
 
 
-@click.argument("group_name")
+@click.option("--group_name", required=True)
 @events_bp.cli.command("sync_events_database", help="Sync Events Database")
 def sync_events_database_cli(group_name: str):
     sync_database_with_fetched_events(group_name)

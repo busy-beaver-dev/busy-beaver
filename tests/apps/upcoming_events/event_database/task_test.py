@@ -163,7 +163,7 @@ def test_sync_events_database_cli(runner, session, factory, patched_meetup):
     patched_meetup(events=events)
 
     # Act
-    runner.invoke(sync_events_database_cli, ["test_group"])
+    runner.invoke(sync_events_database_cli, ["--group_name", "test_group"])
 
     # Assert
     all_events_in_database = Event.query.all()
