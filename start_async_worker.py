@@ -18,6 +18,6 @@ app = create_app()
 ctx = app.app_context()
 ctx.push()
 
-w = rq.get_worker("default", "failed")
+w = rq.get_worker("busybeaver_default")
 w.push_exc_handler(retry_failed_job)
 w.work()
