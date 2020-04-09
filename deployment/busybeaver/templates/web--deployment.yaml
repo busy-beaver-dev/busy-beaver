@@ -34,5 +34,5 @@ spec:
           httpGet:
             path: /healthcheck
             port: {{ .Values.app.port }}
-          initialDelaySeconds: 5
+          initialDelaySeconds: 10
           periodSeconds: 5
