@@ -1,6 +1,6 @@
 from flask import Flask, request
 
-from .blueprints import github_bp, healthcheck_bp, poller_bp, slack_bp
+from .blueprints import github_bp, healthcheck_bp, poller_bp, slack_bp, twitter_bp
 from .common.oauth import OAuthError
 from .config import DATABASE_URI, REDIS_URI, SECRET_KEY
 from .exceptions import NotAuthorized, ValidationError
@@ -53,6 +53,7 @@ def create_app(*, testing=False):
     app.register_blueprint(github_bp, url_prefix="/github", cli_group=None)
     app.register_blueprint(poller_bp, url_prefix="/poll")
     app.register_blueprint(slack_bp, url_prefix="/slack")
+    app.register_blueprint(twitter_bp, cli_group=None)
 
     @app.before_request
     def add_internal_dictionary():
