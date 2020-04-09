@@ -57,6 +57,12 @@ Environment Variables
   value: .
 - name: FLASK_APP
   value: /app/busy_beaver/__init__.py
+- name: SENTRY_DSN
+  valueFrom:
+    secretKeyRef:
+      name: busybeaver-staging
+      key: sentry-dsn
+# infrastructure
 - name: DATABASE_URI
   valueFrom:
     secretKeyRef:
@@ -67,12 +73,12 @@ Environment Variables
     secretKeyRef:
       name: busybeaver-staging
       key: cache-uri
-- name: SENTRY_DSN
-  valueFrom:
-    secretKeyRef:
-      name: busybeaver-staging
-      key: sentry-dsn
 # integrations
+# oauth lib
+- name: OAUTHLIB_INSECURE_TRANSPORT
+  value: "1"
+- name: OAUTHLIB_RELAX_TOKEN_SCOPE
+  value: "1"
 # slack
 - name: SLACK_CLIENT_ID
   valueFrom:
