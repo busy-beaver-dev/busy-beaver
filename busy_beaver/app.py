@@ -50,7 +50,7 @@ def create_app(*, testing=False):
     app.register_error_handler(ValidationError, handle_validation_error)
 
     app.register_blueprint(healthcheck_bp)
-    app.register_blueprint(github_bp, url_prefix="/github")
+    app.register_blueprint(github_bp, url_prefix="/github", cli_group=None)
     app.register_blueprint(poller_bp, url_prefix="/poll")
     app.register_blueprint(slack_bp, url_prefix="/slack")
 
