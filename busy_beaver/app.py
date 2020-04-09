@@ -1,6 +1,13 @@
 from flask import Flask, request
 
-from .blueprints import github_bp, healthcheck_bp, poller_bp, slack_bp, twitter_bp
+from .blueprints import (
+    events_bp,
+    github_bp,
+    healthcheck_bp,
+    poller_bp,
+    slack_bp,
+    twitter_bp,
+)
 from .common.oauth import OAuthError
 from .config import DATABASE_URI, REDIS_URI, SECRET_KEY
 from .exceptions import NotAuthorized, ValidationError
@@ -49,6 +56,7 @@ def create_app(*, testing=False):
     app.register_error_handler(OAuthError, handle_oauth_error)
     app.register_error_handler(ValidationError, handle_validation_error)
 
+    app.register_blueprint(events_bp, cli_group=None)
     app.register_blueprint(healthcheck_bp)
     app.register_blueprint(github_bp, url_prefix="/github", cli_group=None)
     app.register_blueprint(poller_bp, url_prefix="/poll")
