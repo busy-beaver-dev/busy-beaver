@@ -28,3 +28,10 @@ spec:
             cpu: "200m"
         env:
           {{- include "busybeaver.env_vars" . | indent 10 }}
+        readinessProbe:
+          exec:
+            command:
+              - bash
+              - ./scripts/check_worker_box.sh
+          initialDelaySeconds: 10
+          periodSeconds: 10

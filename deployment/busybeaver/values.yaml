@@ -9,7 +9,7 @@ app:
 
 image:
   repository: alysivji/busy-beaver
-  version: 1.4.0
+  version: 1.4.1
   pullPolicy: Always
 
 ingress:
