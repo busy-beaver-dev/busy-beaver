@@ -8,11 +8,6 @@ TASK_QUEUE_MAX_RETRIES = 1
 
 SECRET_KEY = os.getenv("SECRET_KEY", "abcdef").encode("utf-8")
 
-# app urls
-PROD_BASE_URI = "https://busybeaver.sivji.com"
-DEV_BASE_URI = os.getenv("NGROK_BASE_URI", None)
-APP_URI = PROD_BASE_URI if IN_PRODUCTION else DEV_BASE_URI
-
 # app constraints
 FULL_INSTALLATION_WORKSPACE_IDS = [
     "T093FC1RC",  # ChiPy Workspace -- https://chipy.slack.com -- prod env
