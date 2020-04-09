@@ -19,6 +19,13 @@ def app():
 
 @pytest.fixture(scope="module")
 def client(app):
-    """Create flask test client where we can trigger test requests to app"""
+    """Create Flask test client where we can trigger test requests to app"""
     client = app.test_client()
     yield client
+
+
+@pytest.fixture(scope="module")
+def runner(app):
+    """Create Flask CliRunner that can be used to invoke commands"""
+    runner = app.test_cli_runner()
+    yield runner
