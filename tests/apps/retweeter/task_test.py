@@ -6,6 +6,7 @@ from tests._utilities import FakeSlackClient
 from busy_beaver.apps.retweeter.task import (
     LAST_TWEET_KEY,
     fetch_tweets_post_to_slack,
+    post_new_tweets_to_slack,
     start_post_tweets_to_slack_task,
 )
 from busy_beaver.models import ApiUser
@@ -96,4 +97,35 @@ def test_post_tweets_to_slack(
     assert len(patched_slack.mock.mock_calls) == 1
     args, kwargs = patched_slack.mock.call_args
     assert "test_username/statuses/1" in args[0]
+    assert "test_channel" in kwargs["channel"]
+
+
+##########
+# Test CLI
+##########
+@pytest.mark.end2end
+def test_post_new_tweets_to_slack(
+    mocker, runner, factory, kv_store, patched_twitter, patched_slack
+):
+    """
+    GIVEN: 3 tweets to post (2 within the window)
+    WHEN: post_tweets_to_slack is called
+    THEN: we post one tweet
+    """
+    # Arrange
+    kv_store.put_int(LAST_TWEET_KEY, 0)
+    tweets = [
+        factory.Tweet(id=3, created_at=utc_now_minus(timedelta())),
+        factory.Tweet(id=2, created_at=utc_now_minus(timedelta(days=1))),
+        factory.Tweet(id=1, created_at=utc_now_minus(timedelta(days=1))),
+    ]
+    patched_twitter(tweets)
+
+    # Act
+    runner.invoke(post_new_tweets_to_slack, ["--channel_name", "test_channel"])
+
+    # Assert
+    assert len(patched_slack.mock.mock_calls) == 1
+    args, kwargs = patched_slack.mock.call_args
+    assert "ChicagoPython/statuses/1" in args[0]
     assert "test_channel" in kwargs["channel"]

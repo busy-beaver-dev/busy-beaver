@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 kv_store = KeyValueStoreClient()
 
 
-@click.argument("workspace")  # Slack Workspace ID
+@click.option("--channel_name", required=True)
 @twitter_bp.cli.command("post_tweets_to_slack", help="Find new tweets to post to Slack")
 def post_new_tweets_to_slack(channel_name: str):
     # TODO add logging and times
