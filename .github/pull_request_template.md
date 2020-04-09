@@ -1,14 +1,20 @@
-Closes #
-
-[Context]
+Closes # (if there is a related issue)
 
 ### What does this do
 
-[high-level description of features]
+[high-level description of what this PR does]
 
-### Callouts
+### Why are we doing this
 
-[anything you want to call out]
+[description of why]
+
+### How should this be tested
+
+[what tests have been written, any tests to perform after merging and deploying?]
+
+### Migrations
+
+[post SQL here]
 
 ### Dependencies
 

@@ -10,7 +10,16 @@ BASE_URL = "https://api.github.com"
 def generate_changelog(owner, repo, version):
     github = GitHubClient()
     release_dt = github.get_release_date(owner, repo, version)
-    return github.get_commit_messages(owner, repo, release_dt)
+    messages = github.get_commit_messages(owner, repo, release_dt)
+
+    # generate changelog
+    if not messages:
+        return []
+
+    output = ["### Changes", ""]
+    for message in messages:
+        output.append("- " + message)
+    return output
 
 
 class GitHubClient:
@@ -63,5 +72,4 @@ if __name__ == "__main__":
     repo = "busy-beaver"
 
     changelog = generate_changelog(owner, repo, version)
-    print()
     print("\n".join(changelog))
