@@ -1,21 +1,21 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: "{{ include "busybeaver.fullname" . }}--cron--poll-twitter"
+  name: "{{ include "busybeaver.fullname" . }}--sync-events-database"
   labels:
-    type: poll-twitter
+    type: sync-events-database
     {{- include "busybeaver.labels" . | nindent 4 }}
 spec:
-  schedule: "*/13 * * * *"
+  schedule: "0 0 * * *"
   jobTemplate:
     spec:
       template:
         spec:
-          restartPolicy: Never
+          restartPolicy: OnFailure
           containers:
-          - name: busybeaver--poll-twitter
+          - name: busybeaver--sync-events-database
             image: {{ .Values.image.repository }}:{{ .Values.image.version }}
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             command: ["flask"]
-            args: ["post_tweets_to_slack", "--workspace", "TKT910ZU0", "--channel_name", "at-chicagopython"]
+            args: ["sync_events_database", "--group_name", "_ChiPy_"]
             env: {{- include "busybeaver.env_vars" . | indent 12 }}
