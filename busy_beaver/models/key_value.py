@@ -10,8 +10,8 @@ class KeyValueStore(BaseModel):
     __tablename__ = "key_value_store"
 
     def __repr__(self):  # pragma: no cover
-        workspace_name = {self.slack_installation.workspace_name}
-        return f"<KeyValueStore: {workspace_name} {self.key} {self.value}>"
+        # workspace_name = {self.slack_installation.workspace_name}
+        return f"<KeyValueStore: {self.key} {self.value}>"
 
     # Attributes
     installation_id = db.Column(
