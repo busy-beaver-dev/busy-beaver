@@ -21,3 +21,6 @@ helm upgrade busybeaver-staging ./busybeaver/
 
 - if staging database gets deleted and we have to start again
   - will need to set up app for distribution and install it via OAuth
+- what accounts did we need to create?
+  - what are those accounts?
+  - where do we store credentials?

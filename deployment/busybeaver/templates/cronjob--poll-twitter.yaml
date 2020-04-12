@@ -18,7 +18,7 @@ spec:
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             command: ["flask"]
             args:
-            - "post_tweets_to_slack"
+            - "poll_twitter"
             - "--workspace"
             - {{ .Values.workspace.id | quote }}
             - "--channel_name"
