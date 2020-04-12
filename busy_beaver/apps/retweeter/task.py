@@ -69,6 +69,7 @@ def fetch_tweets_post_to_slack(installation_id, channel_name, username):
     set_task_progress(67)
 
     logger.info("Grabbed {0} tweets".format(len(tweets_to_post)))
+    # post 1 tweet at a time
     _post_to_slack(installation_id, channel_name, tweets_to_post[:1], username)
     set_task_progress(100)
 
