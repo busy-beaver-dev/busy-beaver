@@ -82,7 +82,8 @@ def test_post_tweets_to_slack(
     THEN: we post one tweet
     """
     # Arrange
-    kv_store.put_int(LAST_TWEET_KEY, 0)
+    installation = factory.SlackInstallation(workspace_id="abc")
+    kv_store.put_int(installation.id, LAST_TWEET_KEY, 0)
     tweets = [
         factory.Tweet(id=3, created_at=utc_now_minus(timedelta())),
         factory.Tweet(id=2, created_at=utc_now_minus(timedelta(days=1))),
@@ -91,11 +92,15 @@ def test_post_tweets_to_slack(
     patched_twitter(tweets)
 
     # Act
-    fetch_tweets_post_to_slack("test_channel", "test_username")
+    fetch_tweets_post_to_slack(installation.id, "test_channel", "test_username")
 
     # Assert
-    assert len(patched_slack.mock.mock_calls) == 1
-    args, kwargs = patched_slack.mock.call_args
+    slack_adapter_initalize_args = patched_slack.mock.call_args_list[0]
+    args, kwargs = slack_adapter_initalize_args
+    assert installation.bot_access_token in args
+
+    post_message_args = patched_slack.mock.call_args_list[-1]
+    args, kwargs = post_message_args
     assert "test_username/statuses/1" in args[0]
     assert "test_channel" in kwargs["channel"]
 
