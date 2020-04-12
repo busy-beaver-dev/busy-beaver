@@ -1,7 +1,7 @@
 # Default values for busybeaver.
 
 environment: staging
-secretsName: busybeaver-staging
+secretName: busybeaver-staging
 workspaceId: TKT910ZU0
 
 app:
@@ -10,8 +10,8 @@ app:
   workerReplicaCount: 1
 
 image:
-  repository: alysivji/busy-beaver
-  version: 1.4.3
+  repository: alysivji/bb-test
+  version: "1.0"
   pullPolicy: Always
 
 ingress:
