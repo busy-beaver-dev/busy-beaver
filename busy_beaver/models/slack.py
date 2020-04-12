@@ -39,6 +39,9 @@ class SlackInstallation(BaseModel):
     github_summary_config = db.relationship(
         "GitHubSummaryConfiguration", back_populates="slack_installation", uselist=False
     )
+    key_value_pairs = db.relationship(
+        "KeyValueStore", back_populates="slack_installation"
+    )
 
 
 class SlackAppHomeOpened(BaseModel):
