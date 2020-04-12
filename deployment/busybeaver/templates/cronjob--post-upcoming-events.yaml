@@ -1,0 +1,21 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: "{{ include "busybeaver.fullname" . }}--cron--post-upcoming-events"
+  labels:
+    type: post-upcoming-events
+    {{- include "busybeaver.labels" . | nindent 4 }}
+spec:
+  schedule: "0 14 * * 1"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: Never
+          containers:
+          - name: busybeaver--post-upcoming-events
+            image: {{ .Values.image.repository }}:{{ .Values.image.version }}
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            command: ["flask"]
+            args: ["post_upcoming_events", "--workspace", "TKT910ZU0", "--channel_name", "at-chicagopython"]
+            env: {{- include "busybeaver.env_vars" . | indent 12 }}
