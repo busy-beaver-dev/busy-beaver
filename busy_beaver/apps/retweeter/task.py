@@ -18,8 +18,8 @@ kv_store = KeyValueStoreClient()
 
 @click.option("--channel_name", required=True, help="Slack channel")
 @click.option("--workspace", required=True, help="Slack workspace ID")
-@twitter_bp.cli.command("post_tweets_to_slack", help="Find new tweets to post to Slack")
-def post_new_tweets_to_slack(channel_name: str, workspace: str):
+@twitter_bp.cli.command("poll_twitter", help="Find new tweets to post to Slack")
+def poll_twitter(channel_name: str, workspace: str):
     # TODO add logging and times
     slack_installation = SlackInstallation.query.filter_by(
         workspace_id=workspace

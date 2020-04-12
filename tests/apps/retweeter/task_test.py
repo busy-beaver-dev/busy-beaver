@@ -6,7 +6,7 @@ from tests._utilities import FakeSlackClient
 from busy_beaver.apps.retweeter.task import (
     LAST_TWEET_KEY,
     fetch_tweets_post_to_slack,
-    post_new_tweets_to_slack,
+    poll_twitter,
     start_post_tweets_to_slack_task,
 )
 from busy_beaver.models import ApiUser
@@ -78,7 +78,7 @@ def test_fetch_tweets_post_to_slack(
 ):
     """
     GIVEN: 3 tweets to post (2 within the window)
-    WHEN: post_tweets_to_slack is called
+    WHEN: fetch_tweets_post_to_slack is called
     THEN: we post one tweet
     """
     # Arrange
@@ -109,12 +109,12 @@ def test_fetch_tweets_post_to_slack(
 # Test CLI
 ##########
 @pytest.mark.end2end
-def test_post_new_tweets_to_slack_cli(
+def test_poll_twitter(
     mocker, runner, factory, kv_store, patched_twitter, patched_slack
 ):
     """
     GIVEN: 3 tweets to post (2 within the window)
-    WHEN: post_tweets_to_slack is called
+    WHEN: poll_twitter is called
     THEN: we post one tweet
     """
     # Arrange
@@ -130,7 +130,7 @@ def test_post_new_tweets_to_slack_cli(
 
     # Act
     runner.invoke(
-        post_new_tweets_to_slack,
+        poll_twitter,
         ["--channel_name", "test_channel", "--workspace", installation.workspace_id],
     )
 
