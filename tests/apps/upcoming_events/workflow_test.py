@@ -34,12 +34,13 @@ def test_generate_upcoming_events_message(session, factory):
 @pytest.fixture
 def patched_slack(patcher):
     obj = FakeSlackClient()
-    return patcher(MODULE_TO_TEST, namespace="chipy_slack", replacement=obj)
+    return patcher(MODULE_TO_TEST, namespace="SlackClient", replacement=obj)
 
 
 @pytest.mark.unit
 def test_post_upcoming_events_message_to_slack(mocker, session, factory, patched_slack):
     # Arrange
+    factory.SlackInstallation(workspace_id="T093FC1RC")
     factory.Event.create_batch(size=10)
 
     # Act
@@ -56,12 +57,22 @@ def test_cli_post_upcoming_events_message_to_slack(
     mocker, runner, session, factory, patched_slack
 ):
     # Arrange
+    factory.SlackInstallation(workspace_id="T093FC1RC")
     factory.Event.create_batch(size=10)
 
     # Act
     runner.invoke(
         post_upcoming_events_message_to_slack_cli,
-        ["--channel", "announcements", "--group_name", "ChiPy", "--count", 4],
+        [
+            "--workspace",
+            "T093FC1RC",
+            "--channel",
+            "announcements",
+            "--group_name",
+            "ChiPy",
+            "--count",
+            4,
+        ],
     )
 
     # Assert
