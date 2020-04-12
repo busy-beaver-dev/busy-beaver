@@ -1,6 +1,9 @@
 from datetime import timedelta
 import logging
 
+import click
+
+from .blueprint import twitter_bp
 from busy_beaver.clients import chipy_slack, twitter
 from busy_beaver.common.wrappers import KeyValueStoreClient
 from busy_beaver.config import TWITTER_USERNAME
@@ -11,6 +14,13 @@ from busy_beaver.toolbox import set_task_progress, utc_now_minus
 LAST_TWEET_KEY = "last_posted_tweet_id"
 logger = logging.getLogger(__name__)
 kv_store = KeyValueStoreClient()
+
+
+@click.option("--channel_name", required=True)
+@twitter_bp.cli.command("post_tweets_to_slack", help="Find new tweets to post to Slack")
+def post_new_tweets_to_slack(channel_name: str):
+    # TODO add logging and times
+    fetch_tweets_post_to_slack(channel_name, username=TWITTER_USERNAME)
 
 
 def start_post_tweets_to_slack_task(task_owner: ApiUser, channel_name):

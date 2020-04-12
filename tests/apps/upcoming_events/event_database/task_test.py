@@ -4,6 +4,7 @@ from tests._utilities import FakeMeetupAdapter
 from busy_beaver.apps.upcoming_events.event_database.task import (
     start_sync_event_database_task,
     sync_database_with_fetched_events,
+    sync_events_database_cli,
 )
 from busy_beaver.models import ApiUser, Event
 
@@ -145,3 +146,25 @@ def test_sync_database(session, factory, patched_meetup):
     all_event_ids_in_database = set(event.remote_id for event in all_events_in_database)
     for event in new_events:
         assert event.id in all_event_ids_in_database
+
+
+##########
+# Test CLI
+##########
+@pytest.mark.end2end
+def test_sync_events_database_cli(runner, session, factory, patched_meetup):
+    """
+    GIVEN: Empty database
+    WHEN: add_events_to_database is called
+    THEN: add all events to database
+    """
+    # Arrange
+    events = factory.EventDetails.create_batch(size=20)
+    patched_meetup(events=events)
+
+    # Act
+    runner.invoke(sync_events_database_cli, ["--group_name", "test_group"])
+
+    # Assert
+    all_events_in_database = Event.query.all()
+    assert len(all_events_in_database) == len(events)

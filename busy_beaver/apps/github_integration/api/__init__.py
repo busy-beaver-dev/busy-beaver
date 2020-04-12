@@ -1,9 +1,6 @@
-from flask import blueprints
-
+from ..blueprint import github_bp
 from .event_subscription import GitHubEventSubscriptionResource
 from .oauth import GitHubIdentityVerificationCallbackResource
-
-github_bp = blueprints.Blueprint("github", __name__)
 
 github_bp.add_url_rule(
     "/event-subscription",

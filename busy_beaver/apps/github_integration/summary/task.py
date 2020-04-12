@@ -3,8 +3,10 @@ import logging
 import random
 from typing import List
 
+import click
 from sqlalchemy import and_
 
+from ..blueprint import github_bp
 from .summary import GitHubUserEvents
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import ValidationError
@@ -18,6 +20,22 @@ from busy_beaver.models import (
 from busy_beaver.toolbox import set_task_progress, utc_now_minus
 
 logger = logging.getLogger(__name__)
+
+
+@click.option("--workspace", required=True)  # Slack Workspace ID
+@github_bp.cli.command("post_github_summary", help="Post a GitHub summary")
+def post_github_summary_to_slack_cli(workspace: str):
+    boundary_dt = utc_now_minus(timedelta(days=1))
+    slack_installation = SlackInstallation.query.filter_by(
+        workspace_id=workspace
+    ).first()
+    if not slack_installation:
+        raise ValidationError("workspace not found")
+
+    # we should log that we did something somewhere
+    # also keep track of how long a summary took
+    # TODO once we are migrated over
+    fetch_github_summary_post_to_slack(slack_installation.id, boundary_dt)
 
 
 def start_post_github_summary_task(task_owner: ApiUser, workspace_id: str):
@@ -64,7 +82,7 @@ def fetch_github_summary_post_to_slack(installation_id, boundary_dt):
     message = ""
     num_users = len(users)
     for idx, user in enumerate(users):
-        logger.info("[Busy Beaver] Compiling stats for {0}".format(user))
+        logger.info("Compiling stats for {0}".format(user))
         user_events = GitHubUserEvents(user, boundary_dt)
         message += user_events.generate_summary_text()
         set_task_progress(idx / (num_users + 1) * 100)
