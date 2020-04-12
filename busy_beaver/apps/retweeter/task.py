@@ -30,17 +30,30 @@ def post_new_tweets_to_slack(channel_name: str, workspace: str):
 
 
 def start_post_tweets_to_slack_task(task_owner: ApiUser, channel_name):
+    # This is only used by PROD.
+    # In the middle of a migration, let's not worry about if this breaks
+    # Also hard coding isn't the best practice, but it's helping us get to where
+    # we need to be
     logger.info("[Busy Beaver] Kick off retweeter task")
 
     twitter_handle = TWITTER_USERNAME
-    job = fetch_tweets_post_to_slack.queue(channel_name, twitter_handle)
+    installation_id = SlackInstallation.query.filter_by(
+        workspace_id="T093FC1RC"
+    ).first()
+    job = fetch_tweets_post_to_slack.queue(
+        installation_id, channel_name, twitter_handle
+    )
 
     task = PostTweetTask(
         job_id=job.id,
         name="Poll Twitter",
         description="Poll Twitter for new tweets",
         user=task_owner,
-        data={"channel_name": channel_name, "twitter_handle": twitter_handle},
+        data={
+            "workspace_id": "T093FC1RC",
+            "channel_name": channel_name,
+            "twitter_handle": twitter_handle,
+        },
     )
     db.session.add(task)
     db.session.commit()
