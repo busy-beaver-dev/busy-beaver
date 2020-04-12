@@ -1,0 +1,21 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: "{{ include "busybeaver.fullname" . }}--cron--post-summary"
+  labels:
+    type: post-github-summary
+    {{- include "busybeaver.labels" . | nindent 4 }}
+spec:
+  schedule: "0 19 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: busybeaver--post-github-summary
+            image: {{ .Values.image.repository }}:{{ .Values.image.version }}
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            command: ["flask"]
+            args: ["post_github_summary", "--workspace", "TKT910ZU0"]
+            env: {{- include "busybeaver.env_vars" . | indent 12 }}

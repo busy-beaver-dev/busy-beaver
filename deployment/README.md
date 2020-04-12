@@ -13,8 +13,8 @@ Busy Beaver has been packaged up as a Helm chart.
   - TODO what is the format?
 
 ```console
-helm install bb-staging ./busybeaver/
-helm upgrade bb-staging ./busybeaver/
+helm install busybeaver-staging ./busybeaver/
+helm upgrade busybeaver-staging ./busybeaver/
 ```
 
 ### Notes
