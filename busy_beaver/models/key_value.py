@@ -10,14 +10,14 @@ class KeyValueStore(BaseModel):
     __tablename__ = "key_value_store"
 
     def __repr__(self):  # pragma: no cover
-        # workspace_name = {self.slack_installation.workspace_name}
-        return f"<KeyValueStore: {self.key} {self.value}>"
+        workspace_name = self.slack_installation.workspace_name
+        return f"<KeyValueStore: {workspace_name} {self.key} {self.value}>"
 
     # Attributes
     installation_id = db.Column(
         db.Integer,
         db.ForeignKey("slack_installation.id", name="fk_installation_id"),
-        nullable=True,
+        nullable=False,
     )
     key = db.Column(db.String(255), nullable=False, unique=True)
     value = db.Column(db.LargeBinary(), nullable=False)
