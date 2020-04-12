@@ -20,5 +20,5 @@ spec:
             args:
             - "post_github_summary"
             - "--workspace"
-            - {{ .Values.workspace.id | quote }}
+            - {{ .Values.workspaceId | quote }}
             env: {{- include "busybeaver.env_vars" . | indent 12 }}

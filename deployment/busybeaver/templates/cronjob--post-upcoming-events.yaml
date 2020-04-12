@@ -20,7 +20,7 @@ spec:
             args:
             - "poll_twitter"
             - "--workspace"
-            - {{ .Values.workspace.id | quote }}
+            - {{ .Values.workspaceId | quote }}
             - "--channel"
             - "announcements"
             - "--group_name"

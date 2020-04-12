@@ -60,18 +60,18 @@ Environment Variables
 - name: SENTRY_DSN
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: sentry-dsn
 # infrastructure
 - name: DATABASE_URI
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: db-uri
 - name: REDIS_URI
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: cache-uri
 # integrations
 # oauth lib
@@ -83,69 +83,69 @@ Environment Variables
 - name: SLACK_CLIENT_ID
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: slack-client-id
 - name: SLACK_CLIENT_SECRET
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: slack-client-secret
 - name: SLACK_BOTUSER_OAUTH_TOKEN
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: slack-botuser-oauth-token
 - name: SLACK_SIGNING_SECRET
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: slack-signing-secret
 # meetup
 - name: MEETUP_API_KEY
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: meetup-api-key
 # github
 - name: GITHUB_APP_CLIENT_ID
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: github-client-id
 - name: GITHUB_APP_CLIENT_SECRET
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: github-client-secret
 - name: GITHUB_OAUTH_TOKEN
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: github-oauth-token
 - name: GITHUB_SIGNING_SECRET
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: github-signing-secret
 # twitter
 - name: TWITTER_ACCESS_TOKEN_SECRET
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: twitter-access-token-secret
 - name: TWITTER_ACCESS_TOKEN
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: twitter-access-token
 - name: TWITTER_CONSUMER_KEY
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: twitter-consumer-key
 - name: TWITTER_CONSUMER_SECRET
   valueFrom:
     secretKeyRef:
-      name: busybeaver-staging
+      name: {{ .Values.secretName }}
       key: twitter-consumer-secret
 {{- end }}
