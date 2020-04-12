@@ -17,5 +17,8 @@ spec:
             image: {{ .Values.image.repository }}:{{ .Values.image.version }}
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             command: ["flask"]
-            args: ["post_github_summary", "--workspace", "TKT910ZU0"]
+            args:
+            - "post_github_summary"
+            - "--workspace"
+            - {{ .Values.workspace.id | quote }}
             env: {{- include "busybeaver.env_vars" . | indent 12 }}

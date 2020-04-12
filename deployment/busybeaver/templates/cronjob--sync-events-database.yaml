@@ -17,5 +17,8 @@ spec:
             image: {{ .Values.image.repository }}:{{ .Values.image.version }}
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             command: ["flask"]
-            args: ["sync_events_database", "--group_name", "_ChiPy_"]
+            args:
+            - "sync_events_database"
+            - "--group_name"
+            - "_ChiPy_"
             env: {{- include "busybeaver.env_vars" . | indent 12 }}

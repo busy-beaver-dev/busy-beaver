@@ -17,5 +17,14 @@ spec:
             image: {{ .Values.image.repository }}:{{ .Values.image.version }}
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             command: ["flask"]
-            args: ["poll_twitter", "--workspace", "TKT910ZU0", "--channel", "announcements", "--group_name", "_ChiPy_", "--count", "5"]
+            args:
+            - "poll_twitter"
+            - "--workspace"
+            - {{ .Values.workspace.id | quote }}
+            - "--channel"
+            - "announcements"
+            - "--group_name"
+            - "_ChiPy_"
+            - "--count"
+            - "5"
             env: {{- include "busybeaver.env_vars" . | indent 12 }}
