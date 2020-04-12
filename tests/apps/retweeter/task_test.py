@@ -73,7 +73,7 @@ def patched_slack(patcher):
 # but it's a unit test that should be around a class
 # TODO make the retweeter module into a class
 @pytest.mark.integration
-def test_post_tweets_to_slack(
+def test_fetch_tweets_post_to_slack(
     mocker, factory, kv_store, patched_twitter, patched_slack
 ):
     """
@@ -109,7 +109,7 @@ def test_post_tweets_to_slack(
 # Test CLI
 ##########
 @pytest.mark.end2end
-def test_post_new_tweets_to_slack(
+def test_post_new_tweets_to_slack_cli(
     mocker, runner, factory, kv_store, patched_twitter, patched_slack
 ):
     """
@@ -119,6 +119,7 @@ def test_post_new_tweets_to_slack(
     """
     # Arrange
     installation = factory.SlackInstallation(workspace_id="abc")
+    bot_access_token = installation.bot_access_token
     kv_store.put_int(installation.id, LAST_TWEET_KEY, 0)
     tweets = [
         factory.Tweet(id=3, created_at=utc_now_minus(timedelta())),
@@ -136,7 +137,7 @@ def test_post_new_tweets_to_slack(
     # Assert
     slack_adapter_initalize_args = patched_slack.mock.call_args_list[0]
     args, kwargs = slack_adapter_initalize_args
-    assert installation.bot_access_token in args
+    assert bot_access_token in args
 
     post_message_args = patched_slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
