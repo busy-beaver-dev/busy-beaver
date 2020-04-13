@@ -6,21 +6,54 @@ Material related to deploying Busy Beaver.
 
 Busy Beaver has been packaged up as a Helm chart.
 
-### Instructions
+### Prerequestites
 
-- Set up `cert-manager` and `nginx`
-- Ensure `busybeaver-staging` secrets exists
-  - TODO what is the format?
+- Install Helm
+- Use Helm to set up `nginx`, `cert-manager`, `redis`, fluent-bit
+- Add `busybeaver-staging` Secret to cluster
+
+### Installing Busy Beaver
 
 ```console
 helm install busybeaver-staging ./busybeaver/
 helm upgrade busybeaver-staging ./busybeaver/
 ```
 
+### Secrets Format
+
+All data values need to be `base64` encoded.
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: busybeaver-staging
+type: Opaque
+data:
+  db-uri:
+  cache-uri:
+  sentry-dsn:
+  secret-key:
+  slack-client-id:
+  slack-client-secret:
+  slack-botuser-oauth-token:
+  slack-signing-secret:
+  meetup-api-key:
+  github-client-id:
+  github-client-secret:
+  github-oauth-token:
+  github-signing-secret:
+  twitter-access-token-secret:
+  twitter-access-token:
+  twitter-consumer-key:
+  twitter-consumer-secret:
+```
+
 ### Notes
 
 - if staging database gets deleted and we have to start again
   - will need to set up app for distribution and install it via OAuth
-- what accounts did we need to create?
-  - what are those accounts?
-  - where do we store credentials?
+- TODO (need to clean this up)
+  - [ ] what accounts did we need to create?
+    - [ ] what are those accounts?
+    - [ ] where do we store credentials?
