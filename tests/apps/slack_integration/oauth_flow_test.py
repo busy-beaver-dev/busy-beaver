@@ -14,12 +14,13 @@ def test_slack_oauth_flow_first_time_installation(session):
     # Arrange
     # Step 1 -- User goes to 3rd party website and authenticates app
     # Step 2 -- Create response to send back during token exchange
+    bot_access_token = "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy"
     responses.add(
         responses.POST,
         SlackOAuthFlow.TOKEN_URL,
         json={
             "ok": True,
-            "access_token": "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy",
+            "access_token": bot_access_token,
             "token_type": "bot",
             "scope": "commands,incoming-webhook",
             "bot_user_id": "U0KRQLJ9H",
@@ -39,7 +40,7 @@ def test_slack_oauth_flow_first_time_installation(session):
     state = ""
     code = "1234"
     qs = f"state={state}&code={code}"
-    callback_url = f"https://busybeaver.sivji.com/slack/oauth?{qs}"
+    callback_url = f"https://app.busybeaverbot.com/slack/oauth?{qs}"
     verify_callback_and_save_tokens_in_database(callback_url, state)
 
     # Assert -- confirm info in database is as expected
@@ -50,10 +51,7 @@ def test_slack_oauth_flow_first_time_installation(session):
     assert installation.workspace_id == "T9TK3CUKW"
     assert installation.authorizing_user_id == "U1234"
     assert installation.bot_user_id == "U0KRQLJ9H"
-    assert (
-        installation.bot_access_token
-        == "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy"
-    )
+    assert installation.bot_access_token == bot_access_token
 
 
 @pytest.mark.unit
@@ -68,12 +66,13 @@ def test_slack_oauth_flow_reinstallation(session, factory):
     )
 
     # Create response to send back during token exchange
+    bot_access_token = "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy"
     responses.add(
         responses.POST,
         SlackOAuthFlow.TOKEN_URL,
         json={
             "ok": True,
-            "access_token": "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy",
+            "access_token": bot_access_token,
             "token_type": "bot",
             "scope": "commands,incoming-webhook",
             "bot_user_id": "U0KRQLJ9H",
@@ -93,7 +92,7 @@ def test_slack_oauth_flow_reinstallation(session, factory):
     state = ""
     code = "1234"
     qs = f"state={state}&code={code}"
-    callback_url = f"https://busybeaver.sivji.com/slack/oauth?{qs}"
+    callback_url = f"https://app.busybeaverbot.com/slack/oauth?{qs}"
     verify_callback_and_save_tokens_in_database(callback_url, state)
 
     # Assert -- information in database is as expected
@@ -104,7 +103,4 @@ def test_slack_oauth_flow_reinstallation(session, factory):
     assert installation.workspace_id == workspace_id
     assert installation.authorizing_user_id == "U1234"
     assert installation.bot_user_id == "U0KRQLJ9H"
-    assert (
-        installation.bot_access_token
-        == "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy"
-    )
+    assert installation.bot_access_token == bot_access_token

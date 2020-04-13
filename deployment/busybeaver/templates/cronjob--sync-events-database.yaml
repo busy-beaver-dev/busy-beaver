@@ -1,0 +1,24 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: "{{ include "busybeaver.fullname" . }}--sync-events-database"
+  labels:
+    type: sync-events-database
+    {{- include "busybeaver.labels" . | nindent 4 }}
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: busybeaver--sync-events-database
+            image: {{ .Values.image.repository }}:{{ .Values.image.version }}
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            command: ["flask"]
+            args:
+            - "sync_events_database"
+            - "--group_name"
+            - "_ChiPy_"
+            env: {{- include "busybeaver.env_vars" . | indent 12 }}
