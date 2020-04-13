@@ -10,8 +10,8 @@ app:
   workerReplicaCount: 1
 
 image:
-  repository: alysivji/bb-test
-  version: "1.0"
+  repository: alysivji/busy-beaver
+  version: 1.4.4
   pullPolicy: Always
 
 ingress:
