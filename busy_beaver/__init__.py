@@ -17,9 +17,9 @@ if SENTRY_DSN:
         integrations=[FlaskIntegration(), SqlalchemyIntegration()],
     )
 
-logger.info("[BusyBeaver] Configure Integrations")
+logger.info("Configure Integrations")
 from . import clients  # noqa isort:skip
 
-logger.info("[BusyBeaver] Starting Server")
+logger.info("Starting Server")
 from .app import create_app  # noqa isort:skip
 from . import models  # noqa isort:skip
