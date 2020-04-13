@@ -66,7 +66,7 @@ LOGGING_CONFIG = {
     },
     "loggers": {
         "busy_beaver": {
-            "handlers": ["loggly"] if IN_PRODUCTION else ["console"],
+            "handlers": ["console"] if IN_PRODUCTION else ["console"],
             "level": "INFO" if IN_PRODUCTION else "DEBUG",
         }
     },
