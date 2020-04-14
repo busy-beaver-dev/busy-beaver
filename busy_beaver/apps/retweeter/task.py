@@ -21,12 +21,8 @@ kv_store = KeyValueStoreClient()
 @twitter_bp.cli.command("poll_twitter", help="Find new tweets to post to Slack")
 def poll_twitter(channel_name: str, workspace: str):
     # TODO add logging and times
-    slack_installation = SlackInstallation.query.filter_by(
-        workspace_id=workspace
-    ).first()
-    fetch_tweets_post_to_slack(
-        slack_installation.id, channel_name, username=TWITTER_USERNAME
-    )
+    installation = SlackInstallation.query.filter_by(workspace_id=workspace).first()
+    fetch_tweets_post_to_slack(installation.id, channel_name, username=TWITTER_USERNAME)
 
 
 def start_post_tweets_to_slack_task(task_owner: ApiUser, channel_name):
@@ -37,11 +33,9 @@ def start_post_tweets_to_slack_task(task_owner: ApiUser, channel_name):
     logger.info("[Busy Beaver] Kick off retweeter task")
 
     twitter_handle = TWITTER_USERNAME
-    installation_id = SlackInstallation.query.filter_by(
-        workspace_id="T093FC1RC"
-    ).first()
+    installation = SlackInstallation.query.filter_by(workspace_id="T093FC1RC").first()
     job = fetch_tweets_post_to_slack.queue(
-        installation_id, channel_name, twitter_handle
+        installation.id, channel_name, twitter_handle
     )
 
     task = PostTweetTask(
