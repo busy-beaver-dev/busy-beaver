@@ -33,6 +33,7 @@ def test_poll_twitter_smoke_test(
     caplog, client, session, factory, patched_background_task
 ):
     # Arrange
+    factory.SlackInstallation(workspace_id="T093FC1RC")
     factory.ApiUser(username="test_user", token="abcd", role="admin")
 
     # Act

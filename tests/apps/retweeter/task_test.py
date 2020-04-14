@@ -31,6 +31,7 @@ def patched_background_task(patcher, create_fake_background_task):
 def test_start_post_tweet_task(session, factory, patched_background_task):
     """Test trigger function"""
     # Arrange
+    factory.SlackInstallation(workspace_id="T093FC1RC")
     api_user = factory.ApiUser(username="admin")
     channel_name = "test-channel"
 

@@ -31,10 +31,11 @@ def patched_background_task(patcher, create_fake_background_task):
 
 
 @pytest.mark.integration
-def test_poll_twitter_smoke_test(
+def test_poll_sync_event_database_smoke_test(
     caplog, client, session, factory, patched_background_task
 ):
     # Arrange
+    factory.SlackInstallation(workspace_id="T093FC1RC")
     factory.ApiUser(username="test_user", token="abcd", role="admin")
 
     # Act
