@@ -1,7 +1,0 @@
----
-- name: deploy app to server and setup daily cron job to post summary
-  hosts: all
-  user: "{{ user }}"
-  roles:
-    - common
-    - cron

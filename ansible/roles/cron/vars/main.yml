@@ -1,7 +1,0 @@
----
-run_summary_chipy: "{{ app_dir }}/scripts/prod/run_github_summary_chipy.sh"
-run_summary_belgrade: "{{ app_dir }}/scripts/prod/run_github_summary_belgrade.sh"
-twitter_poller: "{{ app_dir }}/scripts/prod/twitter_poller.sh"
-db_backup: "{{ app_dir }}/scripts/database/backup_db_to_s3.sh"
-events_poller: "{{ app_dir }}/scripts/prod/events_poller.sh"
-upcoming_events: "{{ app_dir }}/scripts/prod/post_upcoming_events.sh"
