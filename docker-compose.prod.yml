@@ -86,12 +86,3 @@ services:
       - local
     labels:
       - traefik.enable=false
-  loggly:  # collect logs
-    image: sendgridlabs/loggly-docker
-    environment:
-      TOKEN: ${BUSYBEAVER_LOGGLY_TOKEN}
-      TAG: PROD
-    networks:
-      - local
-    labels:
-      - traefik.enable=false
