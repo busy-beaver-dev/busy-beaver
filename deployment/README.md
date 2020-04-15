@@ -12,11 +12,18 @@ Busy Beaver has been packaged up as a Helm chart.
 - Use Helm to set up `nginx`, `cert-manager`, `redis`, fluent-bit
 - Add `busybeaver-staging` Secret to cluster
 
-### Installing Busy Beaver
+### Installing Busy Beaver -- Staging
 
 ```console
-helm install busybeaver-staging ./busybeaver/
-helm upgrade busybeaver-staging ./busybeaver/
+helm install busybeaver-staging ./busybeaver/ -f values/staging.yaml
+helm upgrade busybeaver-staging ./busybeaver/ -f values/staging.yaml
+```
+
+### Installing Busy Beaver -- Production
+
+```console
+helm install busybeaver-production ./busybeaver/ -f values/production.yaml
+helm upgrade busybeaver-production ./busybeaver/ -f values/production.yaml
 ```
 
 ### Secrets Format
@@ -27,7 +34,7 @@ All data values need to be `base64` encoded.
 apiVersion: v1
 kind: Secret
 metadata:
-  name: busybeaver-staging
+  name: busybeaver-[staging|production]
 type: Opaque
 data:
   db-uri:

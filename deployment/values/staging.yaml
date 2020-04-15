@@ -1,0 +1,13 @@
+# Default values for busybeaver.
+
+environment: staging
+secretName: busybeaver-staging
+workspaceId: TKT910ZU0
+
+app:
+  port: 5000
+  webReplicaCount: 1
+  workerReplicaCount: 1
+
+ingress:
+  host: staging.busybeaverbot.com
