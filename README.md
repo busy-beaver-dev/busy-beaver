@@ -74,7 +74,6 @@ Busy Beaver is an open source project where all artificats (code, Docker image, 
 - [Docker](https://hub.docker.com/search/?type=edition&offering=community)
 - [Docker-Compose](https://docs.docker.com/compose/) is how we deploy to production
 - [watchtower](https://github.com/v2tec/watchtower) (monitors DockerHub, downloads and deploys latest image)
-- [Ansible](https://www.ansible.com/)
 - [DigitalOcean](https://www.digitalocean.com)
 
 ### Services
@@ -87,7 +86,7 @@ We are grateful to the following organizations for providing free services to op
 
 ### API Docs
 
-Can make requests to REST endpoints to kick off processes. Currently we are using CRON to run repetitive tasks; [this is managed by Ansible](https://github.com/alysivji/busy-beaver/blob/master/ansible/roles/cron/tasks/main.yml) to avoid manual configuration.
+Can make requests to REST endpoints to kick off processes.
 
 #### GitHub Summary Endpoint
 
