@@ -7,47 +7,12 @@ from busy_beaver.apps.retweeter.task import (
     LAST_TWEET_KEY,
     fetch_tweets_post_to_slack,
     poll_twitter,
-    start_post_tweets_to_slack_task,
 )
-from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
 
 MODULE_TO_TEST = "busy_beaver.apps.retweeter.task"
 
 
-#######################
-# Test Trigger Function
-#######################
-@pytest.fixture
-def patched_background_task(patcher, create_fake_background_task):
-    return patcher(
-        MODULE_TO_TEST,
-        namespace=fetch_tweets_post_to_slack.__name__,
-        replacement=create_fake_background_task(),
-    )
-
-
-@pytest.mark.unit
-def test_start_post_tweet_task(session, factory, patched_background_task):
-    """Test trigger function"""
-    # Arrange
-    factory.SlackInstallation(workspace_id="T093FC1RC")
-    api_user = factory.ApiUser(username="admin")
-    channel_name = "test-channel"
-
-    # Act
-    start_post_tweets_to_slack_task(api_user, channel_name)
-
-    # Assert
-    api_user = ApiUser.query.get(api_user.id)
-    task = api_user.tasks[0]
-    assert task.job_id == patched_background_task.id
-    assert task.data["channel_name"] == channel_name
-
-
-#####################
-# Test Background Job
-#####################
 @pytest.fixture
 def patched_twitter(patcher):
     class FakeTwitter:

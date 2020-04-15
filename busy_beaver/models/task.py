@@ -43,6 +43,10 @@ class Task(BaseModel):
 
 
 class PostGitHubSummaryTask(Task):
+    """This is not used...
+
+    Keeping it around as an example of how to do things.
+    """
 
     __tablename__ = "post_github_summary_task"
 
@@ -57,6 +61,10 @@ class PostGitHubSummaryTask(Task):
 
 
 class PostTweetTask(Task):
+    """This is not used...
+
+    Keeping it around as an example of how to do things.
+    """
 
     __tablename__ = "post_tweet_task"
 
@@ -71,6 +79,10 @@ class PostTweetTask(Task):
 
 
 class SyncEventDatabaseTask(Task):
+    """This is not used...
+
+    Keeping it around as an example of how to do things.
+    """
 
     __tablename__ = "sync_event_database_task"
 

@@ -15,9 +15,7 @@ import click
 from ..blueprint import events_bp
 from .sync_database import SyncEventDatabase
 from busy_beaver.clients import meetup
-from busy_beaver.config import MEETUP_GROUP_NAME
-from busy_beaver.extensions import db, rq
-from busy_beaver.models import ApiUser, Event, SyncEventDatabaseTask
+from busy_beaver.models import Event
 
 logger = logging.getLogger(__name__)
 
@@ -28,24 +26,6 @@ def sync_events_database_cli(group_name: str):
     sync_database_with_fetched_events(group_name)
 
 
-def start_sync_event_database_task(task_owner: ApiUser):
-    logger.info("[Busy Beaver] Kick off fetch meetup events task")
-
-    group_name = MEETUP_GROUP_NAME
-    job = sync_database_with_fetched_events.queue(group_name)
-
-    task = SyncEventDatabaseTask(
-        job_id=job.id,
-        name="Poll Meetup",
-        description="Poll Meetup for events",
-        user=task_owner,
-        data={"group_name": group_name},
-    )
-    db.session.add(task)
-    db.session.commit()
-
-
-@rq.job
 def sync_database_with_fetched_events(group_name):
     fetched_events = meetup.get_events(group_name, count=20)
 

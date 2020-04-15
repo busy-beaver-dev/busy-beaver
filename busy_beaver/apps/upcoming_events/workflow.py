@@ -35,15 +35,6 @@ def post_upcoming_events_message_to_slack_cli(
     slack.post_message(blocks=blocks, channel=channel)
 
 
-def post_upcoming_events_message_to_slack(channel: str, group_name: str, count: int):
-    # This is only used in PROD
-    # We are migrating to kubernetes; can leave in for now
-    blocks = generate_upcoming_events_message(group_name, count)
-    installation = SlackInstallation.query.filter_by(workspace_id="T093FC1RC").first()
-    slack = SlackClient(installation.bot_access_token)
-    slack.post_message(blocks=blocks, channel=channel)
-
-
 def _fetch_future_events_from_database(group_name, count):
     # TODO: for multi-tenant we will need use group_name in query
     current_epoch_time = int(time.time())
