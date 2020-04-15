@@ -53,10 +53,19 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Environment Variables
 */}}
 {{- define "busybeaver.env_vars" }}
+{{- if eq .Values.environment "production" }}
+- name: IN_PRODUCTION
+  value: "1"
+{{- end }}
 - name: PYTHONPATH
   value: .
 - name: FLASK_APP
   value: /app/busy_beaver/__init__.py
+- name: SECRET_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secretName }}
+      key: secret-key
 - name: SENTRY_DSN
   valueFrom:
     secretKeyRef:

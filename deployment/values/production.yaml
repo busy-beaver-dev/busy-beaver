@@ -1,0 +1,13 @@
+# Default values for busybeaver.
+
+environment: production
+secretName: busybeaver-production
+workspaceId: T093FC1RC
+
+app:
+  port: 5000
+  webReplicaCount: 1
+  workerReplicaCount: 1
+
+ingress:
+  host: app.busybeaverbot.com

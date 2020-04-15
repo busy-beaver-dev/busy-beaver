@@ -17,7 +17,9 @@ COPY ./ /app
 
 # Switch from root user for security
 RUN groupadd -g 901 -r busybeaverdev \
-    && useradd -g busybeaverdev -r -u 901 busybeaver_user
+    && useradd -g busybeaverdev -r -u 901 busybeaver_user \
+    && mkdir /home/busybeaver_user \
+    && chmod -R 755 /home/busybeaver_user
 USER busybeaver_user
 
 ENTRYPOINT [ "scripts/entrypoint.sh" ]
