@@ -27,8 +27,6 @@ services:
     image: alysivji/busy-beaver:latest
     command: webserver
     restart: always
-    depends_on: &app_depends_on
-      - loggly
     environment: &app_env_vars
       IN_PRODUCTION: 1
       PYTHONPATH: .
@@ -68,7 +66,6 @@ services:
     image: alysivji/busy-beaver:latest
     command: worker
     restart: always
-    depends_on: *app_depends_on
     environment: *app_env_vars
     networks:
       - local
