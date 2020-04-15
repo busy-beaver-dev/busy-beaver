@@ -7,9 +7,7 @@ from tests._utilities import FakeSlackClient
 from busy_beaver.apps.github_integration.summary.task import (
     fetch_github_summary_post_to_slack,
     post_github_summary_to_slack_cli,
-    start_post_github_summary_task,
 )
-from busy_beaver.models import ApiUser
 from busy_beaver.toolbox import utc_now_minus
 
 MODULE_TO_TEST = "busy_beaver.apps.github_integration.summary.task"
@@ -20,39 +18,6 @@ def t_minus_one_day():
     return utc_now_minus(timedelta(days=1))
 
 
-#######################
-# Test Trigger Function
-#######################
-@pytest.fixture
-def patched_background_task(patcher, create_fake_background_task):
-    return patcher(
-        MODULE_TO_TEST,
-        namespace=fetch_github_summary_post_to_slack.__name__,
-        replacement=create_fake_background_task(),
-    )
-
-
-@pytest.mark.unit
-def test_start_post_github_summary_task(session, factory, patched_background_task):
-    """Test trigger function"""
-    # Arrange
-    slack_installation = factory.SlackInstallation(workspace_id="abc")
-    api_user = factory.ApiUser(username="admin")
-
-    # Act
-    start_post_github_summary_task(api_user, slack_installation.workspace_id)
-
-    # Assert
-    api_user = ApiUser.query.get(api_user.id)
-    task = api_user.tasks[0]
-    assert task.job_id == patched_background_task.id
-    assert task.data["slack_installation_id"] == slack_installation.id
-    assert "boundary_dt" in task.data
-
-
-#####################
-# Test Background Job
-#####################
 @pytest.fixture
 def patched_slack(patcher):
     def _wrapper(members):

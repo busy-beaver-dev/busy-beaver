@@ -10,13 +10,7 @@ from ..blueprint import github_bp
 from .summary import GitHubUserEvents
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import ValidationError
-from busy_beaver.extensions import db, rq
-from busy_beaver.models import (
-    ApiUser,
-    GitHubSummaryUser,
-    PostGitHubSummaryTask,
-    SlackInstallation,
-)
+from busy_beaver.models import GitHubSummaryUser, SlackInstallation
 from busy_beaver.toolbox import set_task_progress, utc_now_minus
 
 logger = logging.getLogger(__name__)
@@ -38,32 +32,6 @@ def post_github_summary_to_slack_cli(workspace: str):
     fetch_github_summary_post_to_slack(slack_installation.id, boundary_dt)
 
 
-def start_post_github_summary_task(task_owner: ApiUser, workspace_id: str):
-    boundary_dt = utc_now_minus(timedelta(days=1))
-    slack_installation = SlackInstallation.query.filter_by(
-        workspace_id=workspace_id
-    ).first()
-    if not slack_installation:
-        raise ValidationError("workspace not found")
-
-    job = fetch_github_summary_post_to_slack.queue(slack_installation.id, boundary_dt)
-
-    task = PostGitHubSummaryTask(
-        job_id=job.id,
-        name="Post GitHub Summary",
-        description="Daily task to post GitHub Summary",
-        user=task_owner,
-        data={
-            "workspace_id": workspace_id,
-            "slack_installation_id": slack_installation.id,
-            "boundary_dt": boundary_dt.isoformat(),
-        },
-    )
-    db.session.add(task)
-    db.session.commit()
-
-
-@rq.job
 def fetch_github_summary_post_to_slack(installation_id, boundary_dt):
     slack_installation = SlackInstallation.query.get(installation_id)
     channel = slack_installation.github_summary_config.channel
