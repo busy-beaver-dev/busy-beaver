@@ -62,10 +62,3 @@ services:
     volumes: *app_volumes
     stdin_open: true
     tty: true
-
-  # tools
-  # loggly:
-  #   image: sendgridlabs/loggly-docker
-  #   environment:
-  #     TOKEN: ${BUSYBEAVER_LOGGLY_TOKEN}
-  #     TAG: DEV

@@ -27,8 +27,6 @@ services:
     image: alysivji/busy-beaver:latest
     command: webserver
     restart: always
-    depends_on: &app_depends_on
-      - loggly
     environment: &app_env_vars
       IN_PRODUCTION: 1
       PYTHONPATH: .
@@ -68,7 +66,6 @@ services:
     image: alysivji/busy-beaver:latest
     command: worker
     restart: always
-    depends_on: *app_depends_on
     environment: *app_env_vars
     networks:
       - local
@@ -82,15 +79,6 @@ services:
     command: --label-enable --cleanup
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - local
-    labels:
-      - traefik.enable=false
-  loggly:  # collect logs
-    image: sendgridlabs/loggly-docker
-    environment:
-      TOKEN: ${BUSYBEAVER_LOGGLY_TOKEN}
-      TAG: PROD
     networks:
       - local
     labels:

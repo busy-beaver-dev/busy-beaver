@@ -57,12 +57,7 @@ LOGGING_CONFIG = {
         },
     },
     "handlers": {
-        "console": {"class": "logging.StreamHandler", "formatter": "standard"},
-        "loggly": {
-            "class": "logging.handlers.SysLogHandler",
-            "address": ("loggly", 514) if IN_PRODUCTION else "/dev/log",
-            "formatter": "json",
-        },
+        "console": {"class": "logging.StreamHandler", "formatter": "standard"}
     },
     "loggers": {
         "busy_beaver": {
