@@ -7,8 +7,7 @@ from .blueprint import twitter_bp
 from busy_beaver.clients import twitter
 from busy_beaver.common.wrappers import KeyValueStoreClient, SlackClient
 from busy_beaver.config import TWITTER_USERNAME
-from busy_beaver.extensions import db, rq
-from busy_beaver.models import ApiUser, PostTweetTask, SlackInstallation
+from busy_beaver.models import SlackInstallation
 from busy_beaver.toolbox import set_task_progress, utc_now_minus
 
 LAST_TWEET_KEY = "last_posted_tweet_id"
@@ -25,35 +24,6 @@ def poll_twitter(channel_name: str, workspace: str):
     fetch_tweets_post_to_slack(installation.id, channel_name, username=TWITTER_USERNAME)
 
 
-def start_post_tweets_to_slack_task(task_owner: ApiUser, channel_name):
-    # This is only used by PROD.
-    # In the middle of a migration, let's not worry about if this breaks
-    # Also hard coding isn't the best practice, but it's helping us get to where
-    # we need to be
-    logger.info("[Busy Beaver] Kick off retweeter task")
-
-    twitter_handle = TWITTER_USERNAME
-    installation = SlackInstallation.query.filter_by(workspace_id="T093FC1RC").first()
-    job = fetch_tweets_post_to_slack.queue(
-        installation.id, channel_name, twitter_handle
-    )
-
-    task = PostTweetTask(
-        job_id=job.id,
-        name="Poll Twitter",
-        description="Poll Twitter for new tweets",
-        user=task_owner,
-        data={
-            "workspace_id": "T093FC1RC",
-            "channel_name": channel_name,
-            "twitter_handle": twitter_handle,
-        },
-    )
-    db.session.add(task)
-    db.session.commit()
-
-
-@rq.job
 def fetch_tweets_post_to_slack(installation_id, channel_name, username):
     logger.info("Fetching tweets to post")
     tweets = get_tweets(installation_id, username)
