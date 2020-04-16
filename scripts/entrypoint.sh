@@ -11,7 +11,6 @@ PRODUCTION=${IN_PRODUCTION:-0}
 
 if [ "$SERVER" = "webserver" ]; then
     echo "Starting Flask server"
-    flask db upgrade
     if [ "$PRODUCTION" = 1 ]; then
         gunicorn "busy_beaver:create_app()" -b 0.0.0.0:5000
     elif [ "$PRODUCTION" = 0 ]; then

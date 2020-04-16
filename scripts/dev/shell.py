@@ -45,7 +45,7 @@ meetup = MeetupClient(MEETUP_API_KEY)
 kv = KeyValueStoreClient()
 
 # log to console
-display_text = "busy-beaver Development Shell"
+display_text = "Busy Beaver Development Shell"
 num_char = len(display_text)
 print("*" * num_char)
 print(display_text)
