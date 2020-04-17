@@ -3,6 +3,7 @@ import pytest
 from busy_beaver.apps.slack_integration.blocks import AppHome
 from busy_beaver.common.wrappers.slack import SlackClient
 from busy_beaver.config import SLACK_TOKEN
+from busy_beaver.exceptions import SlackTooManyBlocks
 
 MODULE_TO_TEST = "busy_beaver.common.wrappers.slack"
 
@@ -86,7 +87,6 @@ def test_slack_post_message_without_specifying_channel(slack: SlackClient):
         slack.post_message(message="test")
 
 
-@pytest.mark.vcr()
 def test_slack_post_message_failed_too_many_blocks(slack: SlackClient):
     # Arrange
     block = {
@@ -97,6 +97,22 @@ def test_slack_post_message_failed_too_many_blocks(slack: SlackClient):
         },
     }
     blocks = [block] * 1000
+
+    # Act
+    with pytest.raises(SlackTooManyBlocks):
+        slack.post_message(channel="general", blocks=blocks)
+
+
+@pytest.mark.vcr()
+def test_slack_post_message_failed_invalid_blocks(slack: SlackClient):
+    # Arrange -- missing 'type' key
+    block = {
+        "text": {
+            "type": "mrkdwn",
+            "text": "A message *with some bold text* and _some italicized text_.",
+        }
+    }
+    blocks = [block]
 
     # Act
     with pytest.raises(ValueError, match="Invalid blocks"):

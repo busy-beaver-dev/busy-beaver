@@ -4,6 +4,8 @@ from typing import List, NamedTuple
 from slack import WebClient
 from slack.errors import SlackApiError
 
+from busy_beaver.exceptions import SlackTooManyBlocks
+
 logger = logging.getLogger()
 
 
@@ -56,7 +58,10 @@ class SlackClient:
         if not channel:
             raise ValueError("Must specify channel")
 
-        # check number of blocks
+        # can have a max of 50 blocks
+        if blocks:
+            if len(blocks) >= 50:
+                raise SlackTooManyBlocks()
 
         try:
             result = self.client.chat_postMessage(
