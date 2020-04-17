@@ -78,6 +78,8 @@ class SlackClient:
             error = response.data["error"]
             if error == "channel_not_found":
                 raise ValueError("Channel not found")
+            elif error == "not_in_channel":
+                raise ValueError("Not in channel")
             raise ValueError("Unknown error")
 
         return result
