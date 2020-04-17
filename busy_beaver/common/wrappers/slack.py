@@ -80,6 +80,8 @@ class SlackClient:
                 raise ValueError("Channel not found")
             elif error == "not_in_channel":
                 raise ValueError("Not in channel")
+            elif error == "invalid_blocks":
+                raise ValueError("Invalid blocks")
             raise ValueError("Unknown error")
 
         return result

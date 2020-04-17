@@ -87,6 +87,23 @@ def test_slack_post_message_without_specifying_channel(slack: SlackClient):
 
 
 @pytest.mark.vcr()
+def test_slack_post_message_failed_too_many_blocks(slack: SlackClient):
+    # Arrange
+    block = {
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "A message *with some bold text* and _some italicized text_.",
+        },
+    }
+    blocks = [block] * 1000
+
+    # Act
+    with pytest.raises(ValueError, match="Invalid blocks"):
+        slack.post_message(channel="general", blocks=blocks)
+
+
+@pytest.mark.vcr()
 def test_slack_display_app_home(slack: SlackClient):
     result = slack.display_app_home("U5FTQ3QRZ", view=AppHome().to_dict())
 

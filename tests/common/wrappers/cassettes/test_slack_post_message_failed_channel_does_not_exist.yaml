@@ -23,23 +23,23 @@ interactions:
       Content-Encoding: gzip
       Content-Length: '60'
       Content-Type: application/json; charset=utf-8
-      Date: Fri, 17 Apr 2020 00:26:57 GMT
+      Date: Fri, 17 Apr 2020 01:01:31 GMT
       Expires: Mon, 26 Jul 1997 05:00:00 GMT
       Pragma: no-cache
       Referrer-Policy: no-referrer
       Server: Apache
       Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
       Vary: Accept-Encoding
-      Via: 1.1 0f807046e71299e5fc76e205c26dc9cd.cloudfront.net (CloudFront)
+      Via: 1.1 3d6308952f5f8f8f2fae4edaaa1a76c2.cloudfront.net (CloudFront)
       X-Accepted-OAuth-Scopes: chat:write
-      X-Amz-Cf-Id: sxiqOnXhnPDmnwh6oDb8B527Q_10jwwqkwdynrTrSLO0aCD64pvtgA==
-      X-Amz-Cf-Pop: ORD51-C3
+      X-Amz-Cf-Id: Z5djAs_0JuRePDYojd8-KFZWhu4cjtdzqy3VT16kpwHaJfZ8VKXgSQ==
+      X-Amz-Cf-Pop: ORD50-C1
       X-Cache: Miss from cloudfront
       X-Content-Type-Options: nosniff
       X-OAuth-Scopes: app_mentions:read,channels:history,channels:join,channels:read,chat:write,commands,emoji:read,groups:read,im:history,im:read,im:write,mpim:history,mpim:read,mpim:write,reactions:read,reactions:write,team:read,usergroups:read,users.profile:read,users:read,users:write
       X-Slack-Backend: h
-      X-Slack-Req-Id: ee651073abb820d74e33e9584cd16f4c
-      X-Via: haproxy-www-243e
+      X-Slack-Req-Id: 3d98ee246fbad9b099ec6603378f5a43
+      X-Via: haproxy-www-9k48
       X-XSS-Protection: '0'
     status:
       code: 200
