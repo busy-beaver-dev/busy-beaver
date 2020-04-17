@@ -1,7 +1,10 @@
+import logging
 from typing import List, NamedTuple
 
 from slack import WebClient
 from slack.errors import SlackApiError
+
+logger = logging.getLogger()
 
 
 class TimezoneInfo(NamedTuple):
@@ -53,14 +56,31 @@ class SlackClient:
         if not channel:
             raise ValueError("Must specify channel")
 
-        return self.client.chat_postMessage(
-            channel=channel,
-            text=message,
-            blocks=blocks,
-            attachments=attachments,
-            unfurl_links=unfurl_links,
-            unfurl_media=unfurl_media,
-        )
+        # check number of blocks
+
+        try:
+            result = self.client.chat_postMessage(
+                channel=channel,
+                text=message,
+                blocks=blocks,
+                attachments=attachments,
+                unfurl_links=unfurl_links,
+                unfurl_media=unfurl_media,
+            )
+        except SlackApiError as exc:
+            response = exc.response
+            extra = {
+                "status_code": response.status_code,
+                "response_body": response.data,
+            }
+            logger.exception("FAILED posting message to slack", extra=extra)
+
+            error = response.data["error"]
+            if error == "channel_not_found":
+                raise ValueError("Channel not found")
+            raise ValueError("Unknown error")
+
+        return result
 
     def display_app_home(self, user_id, view):
         return self.client.views_publish(user_id=user_id, view=view)

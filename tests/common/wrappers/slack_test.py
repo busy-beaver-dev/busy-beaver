@@ -67,8 +67,15 @@ def test_slack_post_message_success(slack: SlackClient):
 
 
 @pytest.mark.vcr()
+def test_slack_post_message_failed_channel_does_not_exist(slack: SlackClient):
+    # Act
+    with pytest.raises(ValueError, match="Channel not found"):
+        slack.post_message("test", channel="d03s_n0t_3x1s7")
+
+
+@pytest.mark.vcr()
 def test_slack_post_message_without_specifying_channel(slack: SlackClient):
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Must specify channel"):
         slack.post_message(message="test")
 
 
