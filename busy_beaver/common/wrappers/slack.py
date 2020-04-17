@@ -58,9 +58,10 @@ class SlackClient:
         if not channel:
             raise ValueError("Must specify channel")
 
-        # can have a max of 50 blocks
+        # can have a max of 50 blocks for message
+        # can have a max of 100 blocks in modal and home tab
         if blocks:
-            if len(blocks) >= 50:
+            if len(blocks) > 50:
                 raise SlackTooManyBlocks()
 
         try:
@@ -92,4 +93,5 @@ class SlackClient:
         return result
 
     def display_app_home(self, user_id, view):
+        # TODO check size of view
         return self.client.views_publish(user_id=user_id, view=view)
