@@ -2,7 +2,8 @@ import os
 
 from busy_beaver import create_app
 from busy_beaver.extensions import db
-from busy_beaver.models import SlackInstallation
+from busy_beaver.models import Event, SlackInstallation
+from tests._utilities.factories.event import Event as EventFactory
 
 # load config
 workspace_id = os.getenv("SLACK_DEV_WORKSPACE_ID", None)
@@ -39,6 +40,11 @@ else:
         workspace_name="Development Environment",
         state="active",
     )
-
 db.session.add(installation)
 db.session.commit()
+
+# update events database
+events = Event.query.all()
+if not events:
+    create_event = EventFactory(db.session)
+    create_event()
