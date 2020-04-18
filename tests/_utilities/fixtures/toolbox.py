@@ -4,6 +4,7 @@ from collections import namedtuple
 import uuid
 
 import pytest
+
 from tests._utilities import FactoryManager
 
 

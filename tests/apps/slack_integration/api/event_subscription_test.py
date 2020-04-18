@@ -1,6 +1,5 @@
 import pytest
 import responses
-from tests._utilities import FakeSlackClient
 
 from busy_beaver.apps.slack_integration.blocks import AppHome
 from busy_beaver.apps.slack_integration.event_subscription import app_home_handler
@@ -11,6 +10,7 @@ from busy_beaver.models import (
     SlackAppHomeOpened,
     SlackInstallation,
 )
+from tests._utilities import FakeSlackClient
 
 pytest_plugins = ("tests._utilities.fixtures.slack",)
 
