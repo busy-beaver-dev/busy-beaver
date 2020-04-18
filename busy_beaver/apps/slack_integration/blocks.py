@@ -1,5 +1,6 @@
 from busy_beaver.apps.upcoming_events.workflow import generate_upcoming_events_message
-from busy_beaver.toolbox.slack_block_kit import Block, Divider, Section
+from busy_beaver.toolbox.slack_block_kit import Divider, Section
+from busy_beaver.toolbox.slack_block_kit.blocks import Block
 
 APP_HOME_HEADER_INSTALLED = (
     "*Welcome!* Busy Beaver is a community engagement bot.\n\n"
