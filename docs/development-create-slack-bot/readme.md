@@ -103,10 +103,6 @@ This will be used for the **slack/event-subscription endpoint** by the local Bus
 6. Click **Change** in the **Request URL** field for the **Slack API** to verify the endpoint responds.
 7. **Save Changes**.
 
-<table><tr><td>
-:link: Update the <strong>.env</strong> config - <strong>NGROK_BASE_URI</strong> value to <strong>Slack Event Subscription - Request URL</strong> as defined in  <a href=../../CONTRIBUTING.md#Setting-up-Development-Environment>Setting up Development Environment</a>.
-</td></tr></table>
-
 ### Enable Slash Commands
 
 1. Create new **Slash Command**.</br>

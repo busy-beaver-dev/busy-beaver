@@ -78,6 +78,9 @@ shell-db:  ## log into database container -- psql
 devshell:  ## open ipython shell with application context
 	docker-compose exec app ipython -i scripts/dev/shell.py
 
+flaskcli:  ## use flask cli to run commands args='args'te
+	docker-compose exec app flask $(args)
+
 ngrok: ## start ngrok to forward port
 	ngrok http 5000
 
@@ -115,4 +118,3 @@ prod-shell-db:  ## shell into prodution postgres instance
 
 prod-logs: ## attach to logs in production container
 	docker-compose -f docker-compose.prod.yml logs
-

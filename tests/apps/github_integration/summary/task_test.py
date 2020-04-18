@@ -1,14 +1,15 @@
 from datetime import timedelta
+import json
 from typing import List
 
 import pytest
-from tests._utilities import FakeSlackClient
 
 from busy_beaver.apps.github_integration.summary.task import (
     fetch_github_summary_post_to_slack,
     post_github_summary_to_slack_cli,
 )
 from busy_beaver.toolbox import utc_now_minus
+from tests._utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.apps.github_integration.summary.task"
 
@@ -31,6 +32,7 @@ def patched_slack(patcher):
 def patched_github_user_events(mocker, patcher):
     class FakeGitHubUserEvents:
         def __init__(self, *, summary_messages: List[str]):
+            self.summary_messages = summary_messages
             self.mock = mocker.MagicMock(side_effect=list(summary_messages))
 
         def generate_summary_text(self, *args, **kwargs):
@@ -42,9 +44,16 @@ def patched_github_user_events(mocker, patcher):
         def __repr__(self):
             return "<FakeGitHubUserEvents>"
 
+        def __len__(self):
+            return len(self.summary_messages)
+
     def _wrapper(*, messages=None):
         obj = FakeGitHubUserEvents(summary_messages=messages)
-        return patcher(MODULE_TO_TEST, namespace="GitHubUserEvents", replacement=obj)
+        return patcher(
+            "busy_beaver.apps.github_integration.summary.blocks",
+            namespace="GitHubUserEvents",
+            replacement=obj,
+        )
 
     return _wrapper
 
@@ -73,7 +82,7 @@ def test_fetch_github_summary_post_to_slack_with_no_users(
 
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
-    assert "does it make a sound" in kwargs["message"]
+    assert "No activity to report" in json.dumps(kwargs["blocks"])
     assert "general" in kwargs["channel"]
 
 
@@ -92,7 +101,7 @@ def test_fetch_github_summary_post_to_slack_with_no_activity(
         installation=slack_installation,
     )
     slack = patched_slack(members=["user1", "user2"])
-    patched_github_user_events(messages=[""])
+    patched_github_user_events(messages=[])
 
     # Act
     fetch_github_summary_post_to_slack(
@@ -106,7 +115,7 @@ def test_fetch_github_summary_post_to_slack_with_no_activity(
 
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
-    assert "does it make a sound" in kwargs["message"]
+    assert "No activity to report" in json.dumps(kwargs["blocks"])
 
 
 @pytest.mark.unit
@@ -143,13 +152,13 @@ def test_fetch_github_summary_post_to_slack_with_activity(
 
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
-    assert "ab" in kwargs["message"]
+    assert len(kwargs["blocks"]) == 6
 
 
 @pytest.mark.vcr()
 @pytest.mark.freeze_time("2019-03-31")
 @pytest.mark.integration
-def test_post_github_summary_task__integration(
+def test_fetch_github_summary_post_to_slack(
     session, factory, t_minus_one_day, patched_slack
 ):
     channel = "general"
@@ -172,7 +181,7 @@ def test_post_github_summary_task__integration(
 
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
-    assert "<@user1>" in kwargs["message"]
+    assert "<@user1>" in json.dumps(kwargs["blocks"])
 
 
 ##########
@@ -202,5 +211,5 @@ def test_post_github_summary_to_slack_cli(
 
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
-    assert "does it make a sound" in kwargs["message"]
+    assert "No activity to report" in json.dumps(kwargs["blocks"])
     assert "general" in kwargs["channel"]

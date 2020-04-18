@@ -1,0 +1,48 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Content-Type:
+      - application/json;charset=utf-8
+      User-Agent:
+      - Python/3.8.1 slackclient/2.5.0 Linux/4.19.76-linuxkit
+      authorization:
+      - DUMMY
+    method: POST
+    uri: https://www.slack.com/api/chat.postMessage
+  response:
+    body:
+      string: '{"ok":false,"error":"channel_not_found"}'
+    headers:
+      Access-Control-Allow-Headers: slack-route, x-slack-version-ts, x-b3-traceid,
+        x-b3-spanid, x-b3-parentspanid, x-b3-sampled, x-b3-flags
+      Access-Control-Allow-Origin: '*'
+      Access-Control-Expose-Headers: x-slack-req-id, retry-after
+      Cache-Control: private, no-cache, no-store, must-revalidate
+      Connection: keep-alive
+      Content-Encoding: gzip
+      Content-Length: '60'
+      Content-Type: application/json; charset=utf-8
+      Date: Fri, 17 Apr 2020 01:01:31 GMT
+      Expires: Mon, 26 Jul 1997 05:00:00 GMT
+      Pragma: no-cache
+      Referrer-Policy: no-referrer
+      Server: Apache
+      Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+      Vary: Accept-Encoding
+      Via: 1.1 3d6308952f5f8f8f2fae4edaaa1a76c2.cloudfront.net (CloudFront)
+      X-Accepted-OAuth-Scopes: chat:write
+      X-Amz-Cf-Id: Z5djAs_0JuRePDYojd8-KFZWhu4cjtdzqy3VT16kpwHaJfZ8VKXgSQ==
+      X-Amz-Cf-Pop: ORD50-C1
+      X-Cache: Miss from cloudfront
+      X-Content-Type-Options: nosniff
+      X-OAuth-Scopes: app_mentions:read,channels:history,channels:join,channels:read,chat:write,commands,emoji:read,groups:read,im:history,im:read,im:write,mpim:history,mpim:read,mpim:write,reactions:read,reactions:write,team:read,usergroups:read,users.profile:read,users:read,users:write
+      X-Slack-Backend: h
+      X-Slack-Req-Id: 3d98ee246fbad9b099ec6603378f5a43
+      X-Via: haproxy-www-9k48
+      X-XSS-Protection: '0'
+    status:
+      code: 200
+      message: OK
+    url: https://www.slack.com/api/chat.postMessage
+version: 1

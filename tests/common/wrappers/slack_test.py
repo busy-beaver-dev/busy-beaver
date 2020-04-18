@@ -3,6 +3,7 @@ import pytest
 from busy_beaver.apps.slack_integration.blocks import AppHome
 from busy_beaver.common.wrappers.slack import SlackClient
 from busy_beaver.config import SLACK_TOKEN
+from busy_beaver.exceptions import SlackTooManyBlocks
 
 MODULE_TO_TEST = "busy_beaver.common.wrappers.slack"
 
@@ -67,9 +68,55 @@ def test_slack_post_message_success(slack: SlackClient):
 
 
 @pytest.mark.vcr()
+def test_slack_post_message_failed_channel_does_not_exist(slack: SlackClient):
+    # Act
+    with pytest.raises(ValueError, match="Channel not found"):
+        slack.post_message("test", channel="d03s_n0t_3x1s7")
+
+
+@pytest.mark.vcr()
+def test_slack_post_message_failed_not_in_channel(slack: SlackClient):
+    # Act
+    with pytest.raises(ValueError, match="Not in channel"):
+        slack.post_message(message="hello follow human", channel="humans-only")
+
+
+@pytest.mark.vcr()
 def test_slack_post_message_without_specifying_channel(slack: SlackClient):
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="Must specify channel"):
         slack.post_message(message="test")
+
+
+def test_slack_post_message_failed_too_many_blocks(slack: SlackClient):
+    # Arrange
+    block = {
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "A message *with some bold text* and _some italicized text_.",
+        },
+    }
+    blocks = [block] * 1000
+
+    # Act
+    with pytest.raises(SlackTooManyBlocks):
+        slack.post_message(channel="general", blocks=blocks)
+
+
+@pytest.mark.vcr()
+def test_slack_post_message_failed_invalid_blocks(slack: SlackClient):
+    # Arrange -- missing 'type' key
+    block = {
+        "text": {
+            "type": "mrkdwn",
+            "text": "A message *with some bold text* and _some italicized text_.",
+        }
+    }
+    blocks = [block]
+
+    # Act
+    with pytest.raises(ValueError, match="Invalid blocks"):
+        slack.post_message(channel="general", blocks=blocks)
 
 
 @pytest.mark.vcr()

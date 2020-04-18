@@ -8,7 +8,7 @@ from busy_beaver.clients import twitter
 from busy_beaver.common.wrappers import KeyValueStoreClient, SlackClient
 from busy_beaver.config import TWITTER_USERNAME
 from busy_beaver.models import SlackInstallation
-from busy_beaver.toolbox import set_task_progress, utc_now_minus
+from busy_beaver.toolbox import utc_now_minus
 
 LAST_TWEET_KEY = "last_posted_tweet_id"
 logger = logging.getLogger(__name__)
@@ -27,15 +27,12 @@ def poll_twitter(channel_name: str, workspace: str):
 def fetch_tweets_post_to_slack(installation_id, channel_name, username):
     logger.info("Fetching tweets to post")
     tweets = get_tweets(installation_id, username)
-    set_task_progress(33)
 
     tweets_to_post = _exclude_tweets_inside_window(tweets, window=timedelta(minutes=30))
-    set_task_progress(67)
 
     logger.info("Grabbed {0} tweets".format(len(tweets_to_post)))
     # post 1 tweet at a time
     _post_to_slack(installation_id, channel_name, tweets_to_post[:1], username)
-    set_task_progress(100)
 
 
 def get_tweets(installation_id, username):

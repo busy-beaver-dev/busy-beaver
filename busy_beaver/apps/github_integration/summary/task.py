@@ -7,11 +7,11 @@ import click
 from sqlalchemy import and_
 
 from ..blueprint import github_bp
-from .summary import GitHubUserEvents
+from .blocks import GitHubSummaryPost
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import ValidationError
 from busy_beaver.models import GitHubSummaryUser, SlackInstallation
-from busy_beaver.toolbox import set_task_progress, utc_now_minus
+from busy_beaver.toolbox import utc_now_minus
 
 logger = logging.getLogger(__name__)
 
@@ -47,21 +47,12 @@ def fetch_github_summary_post_to_slack(installation_id, boundary_dt):
     ).all()
     random.shuffle(users)
 
-    message = ""
-    num_users = len(users)
-    for idx, user in enumerate(users):
-        logger.info("Compiling stats for {0}".format(user))
-        user_events = GitHubUserEvents(user, boundary_dt)
-        message += user_events.generate_summary_text()
-        set_task_progress(idx / (num_users + 1) * 100)
-
-    if not message:
-        message = (
-            '"If code falls outside version control, and no one is around to read it, '
-            'does it make a sound?" - Zax Rosenberg'
-        )
+    github_summary_post = GitHubSummaryPost(users, boundary_dt)
+    github_summary_post.create()
 
     slack.post_message(
-        message=message, channel=channel, unfurl_links=False, unfurl_media=False
+        blocks=github_summary_post.as_blocks(),
+        channel=channel,
+        unfurl_links=False,
+        unfurl_media=False,
     )
-    set_task_progress(100)

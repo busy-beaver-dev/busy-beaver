@@ -2,14 +2,16 @@ import os
 
 from busy_beaver import create_app
 from busy_beaver.extensions import db
-from busy_beaver.models import SlackInstallation
+from busy_beaver.models import Event, GitHubSummaryConfiguration, SlackInstallation
+from tests._utilities.factories.event import Event as EventFactory
 
 # load config
 workspace_id = os.getenv("SLACK_DEV_WORKSPACE_ID", None)
+channel_id = os.getenv("SLACK_DEV_WORKSPACE_CHANNEL_ID", None)
 bot_token = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN", None)
 authorizing_user_id = os.getenv("SLACK_DEV_AUTHORIZING_USER_ID", "U5FTQ3QRZ")
 bot_user_id = os.getenv("SLACK_DEV_BOT_USER_ID", "UEGGXQ5EF")
-if not bot_token or not workspace_id:
+if not channel_id or not bot_token or not workspace_id:
     exit
 
 # create flask application context
@@ -39,6 +41,18 @@ else:
         workspace_name="Development Environment",
         state="active",
     )
-
 db.session.add(installation)
 db.session.commit()
+
+if not installation.github_summary_config:
+    config = GitHubSummaryConfiguration(
+        slack_installation=installation, channel=channel_id
+    )
+    db.session.add(config)
+    db.session.commit()
+
+# update events database
+events = Event.query.all()
+if not events:
+    create_event = EventFactory(db.session)
+    create_event()

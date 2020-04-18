@@ -38,6 +38,10 @@ class NotAuthorized(BusyBeaverException):
         self.message = error
 
 
+class SlackTooManyBlocks(BusyBeaverException):
+    pass
+
+
 class UnverifiedWebhookRequest(NotAuthorized):
     pass
 
