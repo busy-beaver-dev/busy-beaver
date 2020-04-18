@@ -46,8 +46,11 @@ class GitHubSummaryPost:
             Divider(),
         ]
 
+        if not self.all_user_events:
+            output.append(Section(text=no_activity_default))
+            return [block.to_dict() for block in output]
+
         for user, events in self.all_user_events:
             output.append(Section(text=events.generate_summary_text()))
             output.append(Divider())
-
         return [block.to_dict() for block in output]

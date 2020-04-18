@@ -50,18 +50,6 @@ def fetch_github_summary_post_to_slack(installation_id, boundary_dt):
     github_summary_post = GitHubSummaryPost(users, boundary_dt)
     github_summary_post.create()
 
-    # message = ""
-    # for idx, user in enumerate(users):
-    #     logger.info("Compiling stats for {0}".format(user))
-    #     user_events = GitHubUserEvents(user, boundary_dt)
-    #     message += user_events.generate_summary_text()
-
-    # if not message:
-    #     message = (
-    #         '"If code falls outside version control, and no one is around to read it, '
-    #         'does it make a sound?" - Zax Rosenberg'
-    #     )
-
     slack.post_message(
         blocks=github_summary_post.as_blocks(),
         channel=channel,
