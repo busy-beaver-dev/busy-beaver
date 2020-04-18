@@ -11,7 +11,7 @@ from .summary import GitHubUserEvents
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import ValidationError
 from busy_beaver.models import GitHubSummaryUser, SlackInstallation
-from busy_beaver.toolbox import set_task_progress, utc_now_minus
+from busy_beaver.toolbox import utc_now_minus
 
 logger = logging.getLogger(__name__)
 
@@ -48,12 +48,10 @@ def fetch_github_summary_post_to_slack(installation_id, boundary_dt):
     random.shuffle(users)
 
     message = ""
-    num_users = len(users)
     for idx, user in enumerate(users):
         logger.info("Compiling stats for {0}".format(user))
         user_events = GitHubUserEvents(user, boundary_dt)
         message += user_events.generate_summary_text()
-        set_task_progress(idx / (num_users + 1) * 100)
 
     if not message:
         message = (
@@ -64,4 +62,3 @@ def fetch_github_summary_post_to_slack(installation_id, boundary_dt):
     slack.post_message(
         message=message, channel=channel, unfurl_links=False, unfurl_media=False
     )
-    set_task_progress(100)
