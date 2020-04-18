@@ -14,7 +14,7 @@ class Block:
 
     Can use `block_id` to track user integration asynchronously.
 
-    https://api.slack.com/reference/messaging/blocks
+    https://api.slack.com/reference/block-kit/blocks
     """
 
     type = None
@@ -32,12 +32,27 @@ class Block:
         return self.output
 
 
+class Action(Block):
+    """Opinionated Divider block wrapper
+
+    A content divider, like an <hr>, to split up different blocks inside of a message.
+    The divider block is nice and neat, requiring only a type.
+
+    https://api.slack.com/reference/block-kit/blocks#actions
+    """
+
+    type = "action"
+
+    def __init__(self, block_id: str = ""):
+        raise NotImplementedError
+
+
 class Context(Block):
     """Opinionated Context block wrapper
 
     Displays message context, which can include both images and text.
 
-    https://api.slack.com/reference/messaging/blocks#context
+    https://api.slack.com/reference/block-kit/blocks#context
     """
 
     type = "context"
@@ -54,7 +69,7 @@ class Divider(Block):
     A content divider, like an <hr>, to split up different blocks inside of a message.
     The divider block is nice and neat, requiring only a type.
 
-    https://api.slack.com/reference/messaging/blocks#divider
+    https://api.slack.com/reference/block-kit/blocks#divider
     """
 
     type = "divider"
@@ -64,12 +79,28 @@ class Divider(Block):
         self.output["type"] = self.type
 
 
+class File(Block):
+    """Opinionated Image block wrapper
+
+    Displays a remote file.
+
+    https://api.slack.com/reference/block-kit/blocks#file
+    """
+
+    type = "file"
+
+    def __init__(self, external_id: str, block_id: str = ""):
+        self.output["type"] = self.type
+        self.output["external_id"] = external_id
+        self.output["source"] = "remote"
+
+
 class Image(Block):
     """Opinionated Image block wrapper
 
     A simple image block, designed to make those cat photos really pop.
 
-    https://api.slack.com/reference/messaging/blocks#image
+    https://api.slack.com/reference/block-kit/blocks#image
     """
 
     type = "image"
@@ -81,6 +112,21 @@ class Image(Block):
         self.output["alt_text"] = alt_text
 
 
+class Input(Block):
+    """Opinionated Image block wrapper
+
+    A block that collects information from users - it can hold a plain-text input
+    element, a select menu element, a multi-select menu element, or a datepicker.
+
+    https://api.slack.com/reference/block-kit/blocks#file
+    """
+
+    type = "input"
+
+    def __init__(self, block_id: str = ""):
+        raise NotImplementedError
+
+
 class Section(Block):
     """Opinionated Section block wrapper
 
@@ -88,7 +134,7 @@ class Section(Block):
     text block, in combination with text fields, or side-by-side with any of the
     available block elements.
 
-    https://api.slack.com/reference/messaging/blocks#section
+    https://api.slack.com/reference/block-kit/blocks#section
     """
 
     type = "section"
