@@ -34,7 +34,6 @@ class GitHubSummaryPost:
             logger.info("Compiling stats for {0}".format(user))
             user_events = GitHubUserEvents(user, self.boundary_dt)
 
-            # does user have events?
             if len(user_events) > 0:
                 all_user_events.append(UserEvents(user, user_events))
 
@@ -47,7 +46,8 @@ class GitHubSummaryPost:
         ]
 
         if not self.all_user_events:
-            output.append(Section(text=no_activity_default))
+            output.append(Section(text="No activity to report."))
+            output.append(Divider())
             return [block.to_dict() for block in output]
 
         for user, events in self.all_user_events:
