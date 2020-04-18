@@ -38,6 +38,9 @@ class GitHubUserEvents:
                 if event_list.matches_event(event):
                     event_list.append(event)
 
+    def __len__(self):
+        return sum(len(events) for events in self.event_lists)
+
     def generate_summary_text(self):
         summary = ""
         for event_list in self.event_lists:

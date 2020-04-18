@@ -13,6 +13,9 @@ class EventList:
     def __repr__(self):  # pragma: no cover
         return repr(self.events)
 
+    def __len__(self):
+        return len(self.events)
+
     def append(self, item):
         self.events.append(item)
 
