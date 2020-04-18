@@ -50,7 +50,7 @@ class CommitsList(EventList):
 
     def _format_text(self, links):
         num_repos = len(links)
-        repo_noun = inflector.plural(self.NOUN, num_repos)
+        repo_noun = "repo" if num_repos == 1 else "repos"
 
         num_commits = sum([event["payload"]["distinct_size"] for event in self.events])
 
@@ -158,3 +158,9 @@ class StarredReposList(EventList):
             event.get("type") == "WatchEvent"
             and event.get("payload", {}).get("action") == "started"
         )
+
+    def _format_text(self, links):
+        num = len(links)
+        noun = "repo" if num == 1 else "repos"
+        link_output = ", ".join(links)
+        return f">{self.EMOJI} {num} {noun} {link_output}\n"
