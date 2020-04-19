@@ -98,7 +98,7 @@ def test_fetch_github_summary_post_to_slack_with_no_activity(
     factory.GitHubSummaryUser(
         slack_id="user1",
         github_username="github_user1",
-        installation=slack_installation,
+        configuration=slack_installation.github_summary_config,
     )
     slack = patched_slack(members=["user1", "user2"])
     patched_github_user_events(messages=[])
@@ -130,12 +130,12 @@ def test_fetch_github_summary_post_to_slack_with_activity(
     factory.GitHubSummaryUser(
         slack_id="user1",
         github_username="github_user1",
-        installation=slack_installation,
+        configuration=slack_installation.github_summary_config,
     )
     factory.GitHubSummaryUser(
         slack_id="user2",
         github_username="github_user2",
-        installation=slack_installation,
+        configuration=slack_installation.github_summary_config,
     )
     slack = patched_slack(members=["user1", "user2"])
     patched_github_user_events(messages=["a", "b"])
@@ -165,7 +165,9 @@ def test_fetch_github_summary_post_to_slack(
     github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
     slack_installation = github_summary_config.slack_installation
     factory.GitHubSummaryUser(
-        slack_id="user1", github_username="alysivji", installation=slack_installation
+        slack_id="user1",
+        github_username="alysivji",
+        configuration=slack_installation.github_summary_config,
     )
     slack = patched_slack(members=["user1", "user2"])
 

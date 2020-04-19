@@ -33,11 +33,11 @@ class SlackInstallation(BaseModel):
     auth_response = db.Column("auth_response", db.JSON)
 
     # Relationships
-    github_summary_users = db.relationship(
-        "GitHubSummaryUser", back_populates="installation"
-    )
     github_summary_config = db.relationship(
-        "GitHubSummaryConfiguration", back_populates="slack_installation", uselist=False
+        "GitHubSummaryConfiguration",
+        back_populates="slack_installation",
+        uselist=False,
+        lazy="joined",
     )
     key_value_pairs = db.relationship(
         "KeyValueStore", back_populates="slack_installation"
