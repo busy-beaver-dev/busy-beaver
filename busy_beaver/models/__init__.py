@@ -1,11 +1,5 @@
-from busy_beaver.common.models import BaseModel, KeyValueStore  # noqa isort:skip
+from busy_beaver.common.models import BaseModel, KeyValueStore, Task  # noqa isort:skip
 
-from .task import (  # noqa
-    PostGitHubSummaryTask,
-    PostTweetTask,
-    SyncEventDatabaseTask,
-    Task,
-)
 from busy_beaver.apps.github_integration.models import (  # noqa
     GitHubSummaryConfiguration,
     GitHubSummaryUser,

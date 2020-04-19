@@ -1,6 +1,9 @@
+from redis.exceptions import RedisError
+from rq.exceptions import NoSuchJobError
+from rq.job import Job
 from sqlalchemy.ext.declarative import declared_attr
 
-from busy_beaver.extensions import db
+from busy_beaver.extensions import db, rq
 
 
 class BaseModel(db.Model):
@@ -47,3 +50,33 @@ class KeyValueStore(BaseModel):
     slack_installation = db.relationship(
         "SlackInstallation", back_populates="key_value_pairs"
     )
+
+
+class Task(BaseModel):
+    """Task Base Table"""
+
+    __tablename__ = "task"
+
+    # Attributes
+    job_id = db.Column(db.String(36), index=True)
+    name = db.Column(db.String(128), index=True)
+    description = db.Column(db.String(128))
+    failed = db.Column(db.Boolean, default=False)
+    complete = db.Column(db.Boolean, default=False)
+    type = db.Column(db.String(55))
+
+    __mapper_args__ = {"polymorphic_identity": "task", "polymorphic_on": "type"}
+
+    def get_rq_job(self):
+        try:
+            rq_job = Job.fetch(self.job_id, rq.connection)
+        except (RedisError, NoSuchJobError):
+            return None
+        return rq_job
+
+    def get_progress(self):
+        job = self.get_rq_job()
+        return job.meta.get("progress", 0) if job is not None else 100
+
+    def __repr__(self):  # pragma: no cover
+        return f"<Task: {self.job_id}-{self.name}>"
