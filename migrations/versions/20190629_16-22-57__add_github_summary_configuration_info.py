@@ -1,4 +1,5 @@
 """add github summary configuration information table
+
 Revision ID: 655741e212e9
 Revises: 9bd99c734716
 Create Date: 2019-06-29 16:22:57.204498
@@ -6,7 +7,6 @@ Create Date: 2019-06-29 16:22:57.204498
 """
 from alembic import op
 import sqlalchemy as sa
-
 
 # revision identifiers, used by Alembic.
 revision = "655741e212e9"
