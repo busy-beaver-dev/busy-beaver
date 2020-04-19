@@ -4,7 +4,7 @@ import logging
 import click
 
 from .blueprint import github_bp
-from .summary.task import fetch_github_summary_post_to_slack
+from .summary.workflow import fetch_github_summary_post_to_slack
 from busy_beaver.exceptions import ValidationError
 from busy_beaver.models import SlackInstallation
 from busy_beaver.toolbox import utc_now_minus

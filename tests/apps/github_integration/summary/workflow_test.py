@@ -5,13 +5,13 @@ from typing import List
 import pytest
 
 from busy_beaver.apps.github_integration.cli import post_github_summary_to_slack_cli
-from busy_beaver.apps.github_integration.summary.task import (
+from busy_beaver.apps.github_integration.summary.workflow import (
     fetch_github_summary_post_to_slack,
 )
 from busy_beaver.toolbox import utc_now_minus
 from tests._utilities import FakeSlackClient
 
-MODULE_TO_TEST = "busy_beaver.apps.github_integration.summary.task"
+MODULE_TO_TEST = "busy_beaver.apps.github_integration.summary.workflow"
 
 
 @pytest.fixture
