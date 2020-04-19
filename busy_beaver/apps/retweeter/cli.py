@@ -3,7 +3,7 @@ import logging
 import click
 
 from .blueprint import twitter_bp
-from .task import fetch_tweets_post_to_slack
+from .workflow import fetch_tweets_post_to_slack
 from busy_beaver.config import TWITTER_USERNAME
 from busy_beaver.models import SlackInstallation
 

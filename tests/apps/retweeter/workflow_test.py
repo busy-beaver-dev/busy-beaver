@@ -3,11 +3,14 @@ from datetime import timedelta
 import pytest
 
 from busy_beaver.apps.retweeter.cli import poll_twitter
-from busy_beaver.apps.retweeter.task import LAST_TWEET_KEY, fetch_tweets_post_to_slack
+from busy_beaver.apps.retweeter.workflow import (
+    LAST_TWEET_KEY,
+    fetch_tweets_post_to_slack,
+)
 from busy_beaver.toolbox import utc_now_minus
 from tests._utilities import FakeSlackClient
 
-MODULE_TO_TEST = "busy_beaver.apps.retweeter.task"
+MODULE_TO_TEST = "busy_beaver.apps.retweeter.workflow"
 
 
 @pytest.fixture
