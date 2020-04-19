@@ -3,12 +3,10 @@ from .event_details import EventDetails
 from .github_summary_user import GitHubSummaryConfiguration, GitHubSummaryUser
 from .slack import SlackAppHomeOpened, SlackInstallation
 from .tweet import Tweet
-from .user import ApiUser
 
 
 class FactoryManager:
     known_factories = [
-        ApiUser,
         Event,
         EventDetails,
         GitHubSummaryConfiguration,

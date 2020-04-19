@@ -107,11 +107,3 @@ Can make requests to REST endpoints to kick off processes.
   "channel": "at-chicagopython"
 }
 ```
-
-#### Creating API Account and Token
-
-```python
-admin = ApiUser(username="admin", token="abc123!")
-db.session.add(admin)
-db.session.commit()
-```

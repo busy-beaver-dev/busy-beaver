@@ -17,15 +17,9 @@ class Task(BaseModel):
     description = db.Column(db.String(128))
     failed = db.Column(db.Boolean, default=False)
     complete = db.Column(db.Boolean, default=False)
-    user_id = db.Column(
-        db.Integer, db.ForeignKey("api_user.id", name="fk_task_user_id")
-    )
     type = db.Column(db.String(55))
 
     __mapper_args__ = {"polymorphic_identity": "task", "polymorphic_on": "type"}
-
-    # Relationships
-    user = db.relationship("ApiUser", back_populates="tasks")
 
     def get_rq_job(self):
         try:
