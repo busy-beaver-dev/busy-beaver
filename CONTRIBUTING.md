@@ -13,9 +13,11 @@ Busy Beaver welcomes any, and all, contributions. Every little bit helps!
   - [Setting up Development Environment](#setting-up-development-environment)
   - [Verify Installation](#verify-installation)
   - [Running Tests](#running-tests)
-- [Adding New Requirements](#adding-new-requirements)
-- [Modifying Third-Party Integrations](#modifying-third-party-integrations)
-- [Adding New Third-Party Integrations](#adding-new-third-party-integrations)
+- [Developer Documentation](#developer-documentation)
+  - [Adding New Requirements](#adding-new-requirements)
+  - [Modifying Third-Party Integrations](#modifying-third-party-integrations)
+  - [Adding New Third-Party Integrations](#adding-new-third-party-integrations)
+  - [Creating new CLI Command](#creating-new-cli-command)
 - [Slack Slash Commands](#slack-slash-commands)
 - [Task Queues](#task-queues)
   - [Creating a New Task](#creating-a-new-task)
@@ -124,7 +126,9 @@ run pytest with:
 $ make test
 ```
 
-## Adding New Requirements
+## Developer Documentation
+
+### Adding New Requirements
 
 Busy Beaver uses [`pip-tools`](https://github.com/jazzband/pip-tools) to
 manage `pip` dependencies.
@@ -137,13 +141,35 @@ run the following command:
 You will need to have `pip-tools` installed on your local machine to
 perform this actin.
 
-## Modifying Third-Party Integrations
+### Modifying Third-Party Integrations
 
 As each integration requires API credentials, it is recommended that contributors create apps for integration connect to their personal accounts.
 
-## Adding New Third-Party Integrations
+### Adding New Third-Party Integrations
 
 Provide detailed instructions on how to set up the integration so we can roll the feature out to the production instance of Busy Beaver with correct credentials.
+
+### Creating new CLI Command
+
+Create a `cli.py` module. Place this in your application folder next to `blueprint.py`.
+
+```python
+# cli.py
+
+import logging
+
+import click
+
+from .blueprint import bp
+
+logger = logging.getLogger(__name__)
+
+
+@click.option("--workspace", required=True)
+@bp.cli.command("function_name", help="Help prompt")
+def function_name(*args, **kwargs)):
+    pass
+```
 
 ## Slack Slash Commands
 

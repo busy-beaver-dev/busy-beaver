@@ -1,5 +1,5 @@
 from flask import blueprints
 
-twitter_bp = blueprints.Blueprint("twitter", __name__)
+events_bp = blueprints.Blueprint("events", __name__)
 
 from . import cli  # noqa isort:skip

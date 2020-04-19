@@ -1,12 +1,8 @@
 import time
 
-import click
-
-from .blueprint import events_bp
-from busy_beaver.apps.upcoming_events.cards import UpcomingEventList
-from busy_beaver.clients import SlackClient
+from busy_beaver.apps.events.cards import UpcomingEventList
 from busy_beaver.common.wrappers.meetup import EventDetails
-from busy_beaver.models import Event, SlackInstallation
+from busy_beaver.models import Event
 
 
 def generate_upcoming_events_message(group_name: str, count: int):
@@ -19,20 +15,6 @@ def generate_upcoming_events_message(group_name: str, count: int):
 def generate_next_event_message(group_name: str):
     event = _fetch_future_events_from_database(group_name, count=1)[0]
     return _next_event_attachment(event)
-
-
-@click.option("--count", default=5, required=True)
-@click.option("--group_name", required=True)
-@click.option("--channel", required=True)
-@click.option("--workspace", required=True)
-@events_bp.cli.command("post_upcoming_events", help="Post Upcoming Events Summary")
-def post_upcoming_events_message_to_slack_cli(
-    workspace: str, channel: str, group_name: str, count: int
-):
-    blocks = generate_upcoming_events_message(group_name, count)
-    installation = SlackInstallation.query.filter_by(workspace_id=workspace).first()
-    slack = SlackClient(installation.bot_access_token)
-    slack.post_message(blocks=blocks, channel=channel)
 
 
 def _fetch_future_events_from_database(group_name, count):

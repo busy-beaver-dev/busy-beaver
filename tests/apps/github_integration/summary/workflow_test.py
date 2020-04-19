@@ -4,14 +4,14 @@ from typing import List
 
 import pytest
 
-from busy_beaver.apps.github_integration.summary.task import (
+from busy_beaver.apps.github_integration.cli import post_github_summary_to_slack_cli
+from busy_beaver.apps.github_integration.summary.workflow import (
     fetch_github_summary_post_to_slack,
-    post_github_summary_to_slack_cli,
 )
 from busy_beaver.toolbox import utc_now_minus
 from tests._utilities import FakeSlackClient
 
-MODULE_TO_TEST = "busy_beaver.apps.github_integration.summary.task"
+MODULE_TO_TEST = "busy_beaver.apps.github_integration.summary.workflow"
 
 
 @pytest.fixture
@@ -72,7 +72,7 @@ def test_fetch_github_summary_post_to_slack_with_no_users(
 
     # Act
     fetch_github_summary_post_to_slack(
-        installation_id=slack_installation.id, boundary_dt=boundary_dt
+        installation=slack_installation, boundary_dt=boundary_dt
     )
 
     # Assert
@@ -105,7 +105,7 @@ def test_fetch_github_summary_post_to_slack_with_no_activity(
 
     # Act
     fetch_github_summary_post_to_slack(
-        installation_id=slack_installation.id, boundary_dt=boundary_dt
+        installation=slack_installation, boundary_dt=boundary_dt
     )
 
     # Assert
@@ -142,7 +142,7 @@ def test_fetch_github_summary_post_to_slack_with_activity(
 
     # Act
     fetch_github_summary_post_to_slack(
-        installation_id=slack_installation.id, boundary_dt=boundary_dt
+        installation=slack_installation, boundary_dt=boundary_dt
     )
 
     # Assert
@@ -173,7 +173,7 @@ def test_fetch_github_summary_post_to_slack(
 
     # Act
     fetch_github_summary_post_to_slack(
-        installation_id=slack_installation.id, boundary_dt=t_minus_one_day
+        installation=slack_installation, boundary_dt=t_minus_one_day
     )
 
     # Assert

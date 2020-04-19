@@ -2,15 +2,15 @@ from datetime import timedelta
 
 import pytest
 
-from busy_beaver.apps.retweeter.task import (
+from busy_beaver.apps.retweeter.cli import poll_twitter
+from busy_beaver.apps.retweeter.workflow import (
     LAST_TWEET_KEY,
     fetch_tweets_post_to_slack,
-    poll_twitter,
 )
 from busy_beaver.toolbox import utc_now_minus
 from tests._utilities import FakeSlackClient
 
-MODULE_TO_TEST = "busy_beaver.apps.retweeter.task"
+MODULE_TO_TEST = "busy_beaver.apps.retweeter.workflow"
 
 
 @pytest.fixture
@@ -58,7 +58,7 @@ def test_fetch_tweets_post_to_slack(
     patched_twitter(tweets)
 
     # Act
-    fetch_tweets_post_to_slack(installation.id, "test_channel", "test_username")
+    fetch_tweets_post_to_slack(installation, "test_channel", "test_username")
 
     # Assert
     slack_adapter_initalize_args = patched_slack.mock.call_args_list[0]
