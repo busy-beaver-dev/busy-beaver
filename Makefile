@@ -10,6 +10,9 @@ pull-upstream: ## pull from upstream master
 build: ## rebuild containers
 	docker-compose build
 
+changelog:  ## create changelog since release v="version"
+	python scripts/generate_changelog.py --version $(v)
+
 up: ## start local dev environment; run migrations; populate database
 	docker-compose up -d
 	make migrate-up

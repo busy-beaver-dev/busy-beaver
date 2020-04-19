@@ -53,7 +53,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Environment Variables
 */}}
 {{- define "busybeaver.env_vars" }}
-{{- if eq .Values.environment "production" }}\
+{{- if eq .Values.environment "production" }}
 - name: ENVIRONMENT
   value: {{ .Values.environment }}
 - name: IN_PRODUCTION
