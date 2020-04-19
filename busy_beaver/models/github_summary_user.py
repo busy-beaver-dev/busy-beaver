@@ -55,7 +55,7 @@ class GitHubSummaryUser(BaseModel):
         db.ForeignKey(
             "github_summary_configuration.id", name="fk_github_summary_configuration_id"
         ),
-        nullable=True,
+        nullable=False,
     )
 
     # Relationships

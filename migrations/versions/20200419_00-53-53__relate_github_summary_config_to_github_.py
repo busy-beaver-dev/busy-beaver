@@ -32,6 +32,8 @@ def upgrade():
     )
     # ### end Alembic commands ###
 
+    # Step 2: Data migration
+    # Given Slack installatoin configuration, set the config_id foreign key
     session = Session(bind=op.get_bind())
 
     users = session.query(GitHubSummaryUser).all()
@@ -39,6 +41,12 @@ def upgrade():
         user.configuration = user.installation.github_summary_config
         session.add(user)
     session.commit()
+
+    # Step 3: Schema migration
+    # Ensure config_id foreign_key cannot be empty
+    op.alter_column(
+        "github_summary_user", "config_id", existing_type=sa.INTEGER(), nullable=False
+    )
 
 
 def downgrade():
