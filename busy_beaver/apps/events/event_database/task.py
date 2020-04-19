@@ -10,20 +10,11 @@ the set of future events in the database:
 import logging
 import time
 
-import click
-
-from ..blueprint import events_bp
 from .sync_database import SyncEventDatabase
 from busy_beaver.clients import meetup
 from busy_beaver.models import Event
 
 logger = logging.getLogger(__name__)
-
-
-@click.option("--group_name", required=True)
-@events_bp.cli.command("sync_events_database", help="Sync Events Database")
-def sync_events_database_cli(group_name: str):
-    sync_database_with_fetched_events(group_name)
 
 
 def sync_database_with_fetched_events(group_name):

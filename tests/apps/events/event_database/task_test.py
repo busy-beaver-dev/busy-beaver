@@ -1,8 +1,8 @@
 import pytest
 
+from busy_beaver.apps.events.cli import sync_events_database_cli
 from busy_beaver.apps.events.event_database.task import (
     sync_database_with_fetched_events,
-    sync_events_database_cli,
 )
 from busy_beaver.models import Event
 from tests._utilities import FakeMeetupAdapter
