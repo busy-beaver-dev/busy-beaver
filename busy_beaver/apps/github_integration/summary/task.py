@@ -40,7 +40,7 @@ def fetch_github_summary_post_to_slack(installation_id, boundary_dt):
     channel_members = slack.get_channel_members(channel)
     users: List[GitHubSummaryUser] = GitHubSummaryUser.query.filter(
         and_(
-            GitHubSummaryUser.config_id == slack_installation.configuration,
+            GitHubSummaryUser.config_id == slack_installation.github_summary_config.id,
             GitHubSummaryUser.slack_id.in_(channel_members),
             GitHubSummaryUser.github_username.isnot(None),
         )
