@@ -19,7 +19,7 @@ def GitHubSummaryUser(session):
         github_username = "github_user"
         github_state = ""
         github_access_token = factory.Faker("uuid4")
-        installation = factory.SubFactory(SlackInstallation(session))
+        configuration = factory.SubFactory(GitHubSummaryConfiguration(session))
 
     return _GitHubSummaryUserFactory
 
