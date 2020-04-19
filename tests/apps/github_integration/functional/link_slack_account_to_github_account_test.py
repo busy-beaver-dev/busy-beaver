@@ -64,7 +64,8 @@ def test_link_slack_to_github__invalid_state(
 ):
     # Arrange
     slack_id = "new_user"
-    install = factory.SlackInstallation()
+    github_summary_config = factory.GitHubSummaryConfiguration()
+    install = github_summary_config.slack_installation
 
     # Create response to send back during token exchange
     responses.add(
