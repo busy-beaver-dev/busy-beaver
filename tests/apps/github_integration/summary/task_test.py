@@ -98,7 +98,7 @@ def test_fetch_github_summary_post_to_slack_with_no_activity(
     factory.GitHubSummaryUser(
         slack_id="user1",
         github_username="github_user1",
-        installation=slack_installation,
+        configuration=slack_installation.github_summary_config,
     )
     slack = patched_slack(members=["user1", "user2"])
     patched_github_user_events(messages=[])
