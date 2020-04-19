@@ -1,8 +1,5 @@
-# Helpers
-from busy_beaver.common.models import BaseModel  # noqa isort:skip
+from busy_beaver.common.models import BaseModel, KeyValueStore  # noqa isort:skip
 
-# Models
-from .key_value import KeyValueStore  # noqa
 from .task import (  # noqa
     PostGitHubSummaryTask,
     PostTweetTask,
