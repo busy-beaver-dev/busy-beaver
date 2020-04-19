@@ -28,11 +28,11 @@ class GitHubUserEvents:
             StarredReposList(),
         ]
 
-        username = user.github_username
+        self.username = user.github_username
         start_dt = boundary_dt
-        end_dt = start_dt + timedelta(days=1)  # TODO depends on cadence
+        end_dt = start_dt + timedelta(days=1)
 
-        timeline = github.user_activity_during_range(username, start_dt, end_dt)
+        timeline = github.user_activity_during_range(self.username, start_dt, end_dt)
         for event in timeline:
             for event_list in self.event_lists:
                 if event_list.matches_event(event):
