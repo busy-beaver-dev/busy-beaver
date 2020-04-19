@@ -1,7 +1,7 @@
 from sqlalchemy_utils import EncryptedType
 from sqlalchemy_utils.types.encrypted.encrypted_type import AesEngine
 
-from . import BaseModel
+from busy_beaver.common.models import BaseModel
 from busy_beaver.config import SECRET_KEY
 from busy_beaver.extensions import db
 

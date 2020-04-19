@@ -2,14 +2,9 @@ import pytest
 from redis.exceptions import RedisError
 from rq.exceptions import NoSuchJobError
 
-from busy_beaver.models import (
-    PostGitHubSummaryTask,
-    PostTweetTask,
-    SyncEventDatabaseTask,
-    Task,
-)
+from busy_beaver.models import Task
 
-MODULE_TO_TEST = "busy_beaver.models.task"
+MODULE_TO_TEST = "busy_beaver.common.models"
 
 
 ###########
@@ -101,74 +96,3 @@ def test_task_model_get_job_raises_exception(app, rq, session, patched_rq, raise
 
     # Assert
     assert retrieved_job is None
-
-
-#####################
-# GitHub Summary Task
-#####################
-def test_post_github_summary_task(session):
-    # Arrange
-    channel_name = "test-channel"
-    task = PostGitHubSummaryTask(
-        job_id="abcd",
-        name="task_created_for_test",
-        description="Task created for testing purposes",
-        data={"channel_name": channel_name},
-    )
-
-    # Act
-    session.add(task)
-    session.commit()
-
-    # Assert
-    assert task.job_id == "abcd"
-    assert task.complete is False
-    assert task.failed is False
-    assert task.data["channel_name"] == channel_name
-
-
-#################
-# Post Tweet Task
-#################
-def test_post_tweet_task(session):
-    # Arrange
-    channel_name = "test-channel"
-    task = PostTweetTask(
-        job_id="abcd",
-        name="task_created_for_test",
-        description="Task created for testing purposes",
-        data={"channel_name": channel_name},
-    )
-
-    # Act
-    session.add(task)
-    session.commit()
-
-    # Assert
-    assert task.job_id == "abcd"
-    assert task.complete is False
-    assert task.failed is False
-    assert task.data["channel_name"] == channel_name
-
-
-#############################
-# Update Events Database Task
-#############################
-def test_update_events_database_task(session):
-    # Arrange
-    task = SyncEventDatabaseTask(
-        job_id="abcd",
-        name="task_created_for_test",
-        description="Task created for testing purposes",
-        data={"group_name": "_ChiPy_"},
-    )
-
-    # Act
-    session.add(task)
-    session.commit()
-
-    # Assert
-    assert task.job_id == "abcd"
-    assert task.complete is False
-    assert task.failed is False
-    assert task.data["group_name"] == "_ChiPy_"
