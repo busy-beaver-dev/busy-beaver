@@ -1,5 +1,5 @@
 # Helpers
-from .base import BaseModel  # noqa isort:skip
+from busy_beaver.common.models import BaseModel  # noqa isort:skip
 
 # Models
 from .event import Event  # noqa
