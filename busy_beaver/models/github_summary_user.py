@@ -27,11 +27,6 @@ class GitHubSummaryConfiguration(BaseModel):
 
 
 class GitHubSummaryUser(BaseModel):
-    """GitHub Summary User table
-
-    TODO: GitHubSummaryUser should really be related to
-    GitHubSummaryConfiguration versus SlackInstallation
-    """
 
     __tablename__ = "github_summary_user"
 
