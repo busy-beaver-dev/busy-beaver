@@ -59,7 +59,9 @@ def test_connect_command_existing_user(
 ):
     user = factory.GitHubSummaryUser(slack_id="existing_user")
     data = generate_slash_command_request(
-        "connect", user_id=user.slack_id, team_id=user.installation.workspace_id
+        "connect",
+        user_id=user.slack_id,
+        team_id=user.configuration.slack_installation.workspace_id,
     )
 
     result = link_github(**data)
@@ -87,7 +89,9 @@ def test_reconnect_command_existing_user(
 ):
     user = factory.GitHubSummaryUser(slack_id="existing_user")
     data = generate_slash_command_request(
-        "reconnect", user_id=user.slack_id, team_id=user.installation.workspace_id
+        "reconnect",
+        user_id=user.slack_id,
+        team_id=user.configuration.slack_installation.workspace_id,
     )
 
     result = relink_github(**data)
@@ -115,7 +119,9 @@ def test_disconnect_command_registered_user(
 ):
     user = factory.GitHubSummaryUser(slack_id="existing_user")
     data = generate_slash_command_request(
-        "disconnect", user_id=user.slack_id, team_id=user.installation.workspace_id
+        "disconnect",
+        user_id=user.slack_id,
+        team_id=user.configuration.slack_installation.workspace_id,
     )
 
     result = disconnect_github(**data)
