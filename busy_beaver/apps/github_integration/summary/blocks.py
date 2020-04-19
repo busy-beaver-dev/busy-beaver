@@ -51,7 +51,7 @@ class GitHubSummaryPost:
 
         for user, events in self.all_user_events:
             profile_pic = (
-                f"https://avatars.githubusercontent.com/u/" f"{user.github_id}?size=75"
+                f"https://avatars.githubusercontent.com/u/{user.github_id}?size=75"
             )
             img = Image(image_url=profile_pic, alt_text=f"{user.github_username}")
             output.append(Section(text=events.generate_summary_text(), accessory=img))
