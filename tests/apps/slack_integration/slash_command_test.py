@@ -41,7 +41,8 @@ def test_command_not_found(generate_slash_command_request):
 ##########################################
 @pytest.mark.unit
 def test_connect_command_new_user(session, factory, generate_slash_command_request):
-    install = factory.SlackInstallation()
+    github_summary_config = factory.GitHubSummaryConfiguration()
+    install = github_summary_config.slack_installation
     data = generate_slash_command_request(
         "connect", user_id="new_user", team_id=install.workspace_id
     )
@@ -68,7 +69,8 @@ def test_connect_command_existing_user(
 
 @pytest.mark.unit
 def test_reconnect_command_new_user(session, factory, generate_slash_command_request):
-    install = factory.SlackInstallation()
+    github_summary_config = factory.GitHubSummaryConfiguration()
+    install = github_summary_config.slack_installation
     data = generate_slash_command_request(
         "reconnect", user_id="new_user", team_id=install.workspace_id
     )
@@ -98,7 +100,8 @@ def test_reconnect_command_existing_user(
 def test_disconnect_command_unregistered_user(
     session, factory, generate_slash_command_request
 ):
-    install = factory.SlackInstallation()
+    github_summary_config = factory.GitHubSummaryConfiguration()
+    install = github_summary_config.slack_installation
     data = generate_slash_command_request("disconnect", team_id=install.workspace_id)
 
     result = disconnect_github(**data)
