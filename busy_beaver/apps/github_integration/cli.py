@@ -12,7 +12,7 @@ from busy_beaver.toolbox import utc_now_minus
 logger = logging.getLogger(__name__)
 
 
-@click.option("--workspace", required=True)  # Slack Workspace ID
+@click.option("--workspace", required=True, prompt="Slack workspace ID")
 @github_bp.cli.command("post_github_summary", help="Post a GitHub summary")
 def post_github_summary_to_slack_cli(workspace: str):
     boundary_dt = utc_now_minus(timedelta(days=1))

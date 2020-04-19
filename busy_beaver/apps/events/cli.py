@@ -11,11 +11,13 @@ from busy_beaver.models import SlackInstallation
 logger = logging.getLogger(__name__)
 
 
-@click.option("--count", default=5, required=True)
-@click.option("--group_name", required=True)
-@click.option("--channel", required=True)
-@click.option("--workspace", required=True)
-@events_bp.cli.command("post_upcoming_events", help="Post Upcoming Events Summary")
+@click.option("--count", default=5, required=True, help="Number of events to post")
+@click.option("--group_name", required=True, help="Meetup group name")
+@click.option("--channel", required=True, help="Slack channel")
+@click.option("--workspace", required=True, help="Slack workspace ID")
+@events_bp.cli.command(
+    "post_upcoming_events", help="Post Upcoming Events Summary to Slack channel"
+)
 def post_upcoming_events_message_to_slack_cli(
     workspace: str, channel: str, group_name: str, count: int
 ):
@@ -25,7 +27,7 @@ def post_upcoming_events_message_to_slack_cli(
     slack.post_message(blocks=blocks, channel=channel)
 
 
-@click.option("--group_name", required=True)
+@click.option("--group_name", required=True, help="Meetup group name")
 @events_bp.cli.command("sync_events_database", help="Sync Events Database")
 def sync_events_database_cli(group_name: str):
     sync_database_with_fetched_events(group_name)
