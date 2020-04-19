@@ -55,6 +55,7 @@ transitions==0.7.2
 tweepy==3.8.0
 urllib3==1.24.3           # via requests, sentry-sdk
 werkzeug==0.16.0
+whitenoise==5.0.1
 yarl==1.3.0               # via aiohttp
 
 # The following packages are considered to be unsafe in a requirements file:
