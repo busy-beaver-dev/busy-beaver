@@ -2,7 +2,6 @@
 from busy_beaver.common.models import BaseModel  # noqa isort:skip
 
 # Models
-from .event import Event  # noqa
 from .key_value import KeyValueStore  # noqa
 from .task import (  # noqa
     PostGitHubSummaryTask,
@@ -19,3 +18,4 @@ from busy_beaver.apps.slack_integration.models import (  # noqa
     SlackAppHomeOpened,
     SlackInstallation,
 )
+from busy_beaver.apps.upcoming_events.models import Event  # noqa
