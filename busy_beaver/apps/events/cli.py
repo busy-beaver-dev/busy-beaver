@@ -3,7 +3,7 @@ import logging
 import click
 
 from .blueprint import events_bp
-from .event_database.task import sync_database_with_fetched_events
+from .event_database.workflow import sync_database_with_fetched_events
 from .workflow import generate_upcoming_events_message
 from busy_beaver.clients import SlackClient
 from busy_beaver.models import SlackInstallation
