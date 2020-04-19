@@ -6,7 +6,7 @@ class GitHubSummaryConfiguration(BaseModel):
     __tablename__ = "github_summary_configuration"
 
     def __repr__(self):  # pragma: no cover
-        return f"<GitHubSummaryConfiguration>"
+        return f"<GitHubSummaryConfiguration: {self.slack_installation.workspace_name}>"
 
     installation_id = db.Column(
         db.Integer,
@@ -20,6 +20,9 @@ class GitHubSummaryConfiguration(BaseModel):
     # Relationships
     slack_installation = db.relationship(
         "SlackInstallation", back_populates="github_summary_config"
+    )
+    github_summary_users = db.relationship(
+        "GitHubSummaryUser", back_populates="configuration"
     )
 
 
@@ -47,7 +50,18 @@ class GitHubSummaryUser(BaseModel):
     github_state = db.Column(db.String(36), nullable=True)
     github_access_token = db.Column(db.String(100), nullable=True)
 
+    config_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "github_summary_configuration.id", name="fk_github_summary_configuration_id"
+        ),
+        nullable=True,
+    )
+
     # Relationships
     installation = db.relationship(
         "SlackInstallation", back_populates="github_summary_users"
+    )
+    configuration = db.relationship(
+        "GitHubSummaryConfiguration", back_populates="github_summary_users"
     )
