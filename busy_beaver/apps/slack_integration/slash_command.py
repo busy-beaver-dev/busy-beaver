@@ -3,7 +3,7 @@ from typing import List, NamedTuple
 
 from .decorators import limit_to
 from .toolbox import make_slack_response
-from busy_beaver.apps.events.workflow import (
+from busy_beaver.apps.events.upcoming_events import (
     generate_next_event_message,
     generate_upcoming_events_message,
 )

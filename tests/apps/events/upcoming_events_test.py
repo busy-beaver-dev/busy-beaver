@@ -1,7 +1,7 @@
 import pytest
 
 from busy_beaver.apps.events.cli import post_upcoming_events_message_to_slack_cli
-from busy_beaver.apps.events.workflow import (
+from busy_beaver.apps.events.upcoming_events import (
     generate_next_event_message,
     generate_upcoming_events_message,
 )
