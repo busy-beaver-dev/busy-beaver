@@ -6,7 +6,6 @@ from .task import (  # noqa
     SyncEventDatabaseTask,
     Task,
 )
-from .youtube_video import YouTubeVideo  # noqa
 from busy_beaver.apps.github_integration.models import (  # noqa
     GitHubSummaryConfiguration,
     GitHubSummaryUser,
@@ -16,3 +15,4 @@ from busy_beaver.apps.slack_integration.models import (  # noqa
     SlackInstallation,
 )
 from busy_beaver.apps.upcoming_events.models import Event  # noqa
+from busy_beaver.apps.youtube_integration.models import YouTubeVideo  # noqa
