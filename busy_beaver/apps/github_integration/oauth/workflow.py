@@ -30,7 +30,7 @@ def connect_github_to_slack(slack_id, workspace_id):
     ).first()
 
     user_record = GitHubSummaryUser.query.filter_by(
-        slack_id=slack_id, installation_id=slack_installation.id
+        slack_id=slack_id, config_id=slack_installation.github_summary_config.id
     ).first()
     if user_record:
         logger.info("GitHub account already linked")
@@ -39,7 +39,7 @@ def connect_github_to_slack(slack_id, workspace_id):
     logger.info("Creating new account. Attemping GitHub link")
     user = GitHubSummaryUser()
     user.slack_id = slack_id
-    user.installation_id = slack_installation.id
+    user.config_id = slack_installation.github_summary_config.id
 
     auth = github_oauth.generate_authentication_tuple()
     user.github_state = auth.state
@@ -55,7 +55,7 @@ def relink_github_to_slack(slack_id, workspace_id):
     ).first()
 
     user = GitHubSummaryUser.query.filter_by(
-        slack_id=slack_id, installation_id=slack_installation.id
+        slack_id=slack_id, config_id=slack_installation.github_summary_config.id
     ).first()
     if not user:
         logger.info("User has not registered before; kick off a new connect")
@@ -74,7 +74,7 @@ def disconnect_github_from_slack(slack_id, workspace_id):
     ).first()
 
     user = GitHubSummaryUser.query.filter_by(
-        slack_id=slack_id, installation_id=slack_installation.id
+        slack_id=slack_id, config_id=slack_installation.github_summary_config.id
     ).first()
     if not user:
         logger.info("Slack acount does not have associated GitHub")
