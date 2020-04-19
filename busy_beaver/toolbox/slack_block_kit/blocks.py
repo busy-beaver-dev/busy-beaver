@@ -7,6 +7,7 @@ you can customize the order and appearance of information delivered by your app 
 - https://api.slack.com/block-kit
 - https://api.slack.com/tools/block-kit-builder
 """
+from .elements import Element
 
 
 class Block:
@@ -139,7 +140,10 @@ class Section(Block):
 
     type = "section"
 
-    def __init__(self, text: str, block_id: str = ""):
+    def __init__(self, text: str, *, block_id: str = "", accessory: Element = None):
         super().__init__(block_id)
         self.output["type"] = self.type
         self.output["text"] = {"type": "mrkdwn", "text": text}
+
+        if accessory:
+            self.output["accessory"] = accessory.to_dict()
