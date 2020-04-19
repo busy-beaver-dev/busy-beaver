@@ -2,7 +2,7 @@ from redis.exceptions import RedisError
 from rq.exceptions import NoSuchJobError
 from rq.job import Job
 
-from . import BaseModel
+from busy_beaver.common.models import BaseModel
 from busy_beaver.extensions import db, rq
 
 
