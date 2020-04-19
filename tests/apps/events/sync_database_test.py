@@ -1,13 +1,14 @@
 import pytest
 
 from busy_beaver.apps.events.cli import sync_events_database_cli
-from busy_beaver.apps.events.sync_database.workflow import (
+from busy_beaver.apps.events.sync_database import (
+    classify_transaction_type,
     sync_database_with_fetched_events,
 )
 from busy_beaver.models import Event
 from tests._utilities import FakeMeetupAdapter
 
-MODULE_TO_TEST = "busy_beaver.apps.events.sync_database.workflow"
+MODULE_TO_TEST = "busy_beaver.apps.events.sync_database"
 
 
 @pytest.fixture
@@ -115,6 +116,18 @@ def test_sync_database(session, factory, patched_meetup):
     all_event_ids_in_database = set(event.remote_id for event in all_events_in_database)
     for event in new_events:
         assert event.id in all_event_ids_in_database
+
+
+@pytest.mark.unit
+def test_classify_transaction_type():
+    fetched_ids = [3, 4, 5, 6, 7, 10]
+    database_ids = [3, 4, 5, 6, 7, 8, 9]
+
+    result = classify_transaction_type(fetched_ids, database_ids)
+
+    result.create == [10]
+    result.delete == [8, 9]
+    result.update == [3, 4, 5, 6, 7]
 
 
 ##########
