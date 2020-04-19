@@ -39,9 +39,11 @@ class GitHubSummaryUser(BaseModel):
         return f"<User slack: {self.slack_id} github: {self.github_username}>"
 
     # Attributes
-    installation_id = db.Column(
+    config_id = db.Column(
         db.Integer,
-        db.ForeignKey("slack_installation.id", name="fk_installation_id"),
+        db.ForeignKey(
+            "github_summary_configuration.id", name="fk_github_summary_configuration_id"
+        ),
         nullable=False,
     )
     slack_id = db.Column(db.String(300), nullable=False)
@@ -50,18 +52,7 @@ class GitHubSummaryUser(BaseModel):
     github_state = db.Column(db.String(36), nullable=True)
     github_access_token = db.Column(db.String(100), nullable=True)
 
-    config_id = db.Column(
-        db.Integer,
-        db.ForeignKey(
-            "github_summary_configuration.id", name="fk_github_summary_configuration_id"
-        ),
-        nullable=False,
-    )
-
     # Relationships
-    installation = db.relationship(
-        "SlackInstallation", back_populates="github_summary_users"
-    )
     configuration = db.relationship(
         "GitHubSummaryConfiguration", back_populates="github_summary_users"
     )

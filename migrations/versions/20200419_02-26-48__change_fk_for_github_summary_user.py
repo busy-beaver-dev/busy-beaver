@@ -7,9 +7,6 @@ Create Date: 2020-04-19 00:53:53.206962
 """
 from alembic import op
 import sqlalchemy as sa
-from sqlalchemy.orm.session import Session
-
-from busy_beaver.models import GitHubSummaryUser
 
 # revision identifiers, used by Alembic.
 revision = "8906cc54f4cd"
@@ -33,14 +30,30 @@ def upgrade():
     )
 
     # Step 2: Data migration
-    # Given Slack installation, set the config_id foreign key
-    session = Session(bind=op.get_bind())
+    # Given installation_id, update config_id
+    engine = engine = op.get_bind()
+    meta = sa.MetaData(bind=engine)
+    slack_installation = sa.Table("slack_installation", meta, autoload=True)
+    github_summary_config = sa.Table(
+        "github_summary_configuration", meta, autoload=True
+    )
+    stmt = sa.select([slack_installation.c.id, github_summary_config.c.id]).select_from(
+        sa.join(
+            slack_installation,
+            github_summary_config,
+            slack_installation.c.id == github_summary_config.c.installation_id,
+        )
+    )
+    result = engine.execute(stmt).fetchall()
 
-    users = session.query(GitHubSummaryUser).all()
-    for user in users:
-        user.configuration = user.installation.github_summary_config
-        session.add(user)
-    session.commit()
+    github_summary_user = sa.Table("github_summary_user", meta, autoload=True)
+    for installation_id, config_id in result:
+        stmt = (
+            github_summary_user.update()
+            .values(config_id=config_id)
+            .where(github_summary_user.c.installation_id == installation_id)
+        )
+        engine.execute(stmt)
 
     # Step 3: Schema migration
     # Ensure config_id foreign_key cannot be empty
@@ -73,16 +86,25 @@ def downgrade():
     # Given GitHub configuration, set the installation_id foreign key
     engine = engine = op.get_bind()
     meta = sa.MetaData(bind=engine)
+    slack_installation = sa.Table("slack_installation", meta, autoload=True)
+    github_summary_config = sa.Table(
+        "github_summary_configuration", meta, autoload=True
+    )
+    stmt = sa.select([slack_installation.c.id, github_summary_config.c.id]).select_from(
+        sa.join(
+            slack_installation,
+            github_summary_config,
+            slack_installation.c.id == github_summary_config.c.installation_id,
+        )
+    )
+    result = engine.execute(stmt).fetchall()
+
     github_summary_user = sa.Table("github_summary_user", meta, autoload=True)
-
-    session = Session(bind=engine)
-
-    users = session.query(GitHubSummaryUser).all()
-    for user in users:
+    for installation_id, config_id in result:
         stmt = (
             github_summary_user.update()
-            .values(installation_id=user.configuration.installation_id)
-            .where(github_summary_user.c.id == user.id)
+            .values(installation_id=installation_id)
+            .where(github_summary_user.c.config_id == config_id)
         )
         engine.execute(stmt)
 
