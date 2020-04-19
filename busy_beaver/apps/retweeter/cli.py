@@ -16,4 +16,4 @@ logger = logging.getLogger(__name__)
 def poll_twitter(channel_name: str, workspace: str):
     # TODO add logging and times
     installation = SlackInstallation.query.filter_by(workspace_id=workspace).first()
-    fetch_tweets_post_to_slack(installation.id, channel_name, username=TWITTER_USERNAME)
+    fetch_tweets_post_to_slack(installation, channel_name, username=TWITTER_USERNAME)

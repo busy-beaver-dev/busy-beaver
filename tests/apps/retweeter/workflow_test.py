@@ -58,7 +58,7 @@ def test_fetch_tweets_post_to_slack(
     patched_twitter(tweets)
 
     # Act
-    fetch_tweets_post_to_slack(installation.id, "test_channel", "test_username")
+    fetch_tweets_post_to_slack(installation, "test_channel", "test_username")
 
     # Assert
     slack_adapter_initalize_args = patched_slack.mock.call_args_list[0]
