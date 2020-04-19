@@ -30,13 +30,3 @@ class Image(Element):
         super().__init__()
         self.output["image_url"] = image_url
         self.output["alt_text"] = alt_text
-
-
-class Mrkdwn(Element):
-    type = "mrkdwn"
-
-    def __init__(self, text):
-        super().__init__()
-        self.output["text"] = text
-        self.output["emoji"] = False
-        self.output["verbatim"] = False
