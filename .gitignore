@@ -115,6 +115,7 @@ docker-compose.override.yml
 *.retry
 tags
 .idea
+data_dump.sql
 
 # Vim
 *.sw*

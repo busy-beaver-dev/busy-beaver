@@ -31,7 +31,7 @@ def upgrade():
 
     # Step 2: Data migration
     # Given installation_id, update config_id
-    engine = engine = op.get_bind()
+    engine = op.get_bind()
     meta = sa.MetaData(bind=engine)
     slack_installation = sa.Table("slack_installation", meta, autoload=True)
     github_summary_config = sa.Table(
@@ -84,7 +84,7 @@ def downgrade():
 
     # Step 2: Data migration
     # Given GitHub configuration, set the installation_id foreign key
-    engine = engine = op.get_bind()
+    engine = op.get_bind()
     meta = sa.MetaData(bind=engine)
     slack_installation = sa.Table("slack_installation", meta, autoload=True)
     github_summary_config = sa.Table(

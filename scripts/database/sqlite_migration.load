@@ -1,7 +1,0 @@
-load database
-    from sqlite:///home/alysivji/busy-beaver/busy_beaver.db
-    into postgresql://sivdev_user:sivdev_password@0.0.0.0:9432/busy-beaver
-
-with include drop, create tables, create indexes, reset sequences
-
-set work_mem to '16MB', maintenance_work_mem to '512 MB';

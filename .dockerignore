@@ -18,3 +18,4 @@ htmlcov/
 Makefile
 busy_beaver.db
 tests/
+data_dump.sql
