@@ -68,7 +68,7 @@ def test_issued_open_list_generates_custom_links():
             "repo": {"name": "some_repository"},
         }
     )
-    assert f"<example.com|some_repository#4>" in event_list.generate_summary_text()
+    assert "<example.com|some_repository#4>" in event_list.generate_summary_text()
 
 
 def test_zero_commits_does_not_produce_a_summary():
