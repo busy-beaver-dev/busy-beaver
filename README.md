@@ -2,7 +2,7 @@
 
 <p align="center"><img src="assets/logo.png" alt="Busy Beaver Logo" width=300 /></p>
 
-[![Build Status](https://travis-ci.org/busy-beaver-dev/busy-beaver.svg?branch=master)](https://travis-ci.org/busy-beaver-dev/busy-beaver)
+![build status](https://github.com/busy-beaver-dev/busy-beaver/workflows/build/badge.svg?branch=master&event=push)
 [![codecov](https://codecov.io/gh/busy-beaver-dev/busy-beaver/branch/master/graph/badge.svg)](https://codecov.io/gh/busy-beaver-dev/busy-beaver)
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
