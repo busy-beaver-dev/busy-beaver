@@ -1,5 +1,5 @@
 name: build-tag-and-push-image
-on: [push]
+on: [pull_request]
 jobs:
   test-app-build-and-push-image:
     runs-on: ubuntu-latest
