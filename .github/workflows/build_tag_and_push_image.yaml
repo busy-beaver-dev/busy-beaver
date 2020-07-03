@@ -7,7 +7,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Pull image
-        uses: docker pull alysivji/busy-beaver:latest
+        run: docker pull alysivji/busy-beaver:latest
       - name: Build and push Docker image
         uses: docker/build-push-action@v1.1.0
         with:
