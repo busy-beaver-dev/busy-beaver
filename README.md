@@ -52,7 +52,6 @@ Busy Beaver is an open source project where all artificats (code, Docker image, 
 
 ### Web Application Stack
 
-- [traefik](https://traefik.io) - reverse proxy and load balancer
 - [PostgreSQL](https://www.postgresql.org/)
 - [SQLAlchemy](https://www.sqlalchemy.org/)
 - [Flask](http://flask.pocoo.org/)
@@ -69,17 +68,16 @@ Busy Beaver is an open source project where all artificats (code, Docker image, 
 
 `vcr.py` records cassettes of requests and responses for new tests, and replays them for previously written tests. Make sure to [filter credentials](https://vcrpy.readthedocs.io/en/latest/advanced.html#filter-information-from-http-headers)
 
-### DevOps
+### Deployment
 
+- [Helm](https://helm.sh/)
+- [Kubernetes](https://kubernetes.io/)
 - [Docker](https://hub.docker.com/search/?type=edition&offering=community)
-- [Docker-Compose](https://docs.docker.com/compose/) is how we deploy to production
-- [watchtower](https://github.com/v2tec/watchtower) (monitors DockerHub, downloads and deploys latest image)
 - [DigitalOcean](https://www.digitalocean.com)
 
 ### Services
 
 We are grateful to the following organizations for providing free services to open source projects:
 
-- [GitHub](https://github.com) (code repo, issues)
-- [DockerHub](https://hub.docker.com) (hosting Docker images)
-- [Travis CI](https://travis-ci.org/) (continuous integration platform)
+- [GitHub](https://github.com)
+- [DockerHub](https://hub.docker.com)
