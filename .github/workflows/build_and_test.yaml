@@ -54,7 +54,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements_dev.txt
-          codecov
+          pip install codecov
       - name: Run migrations
         run: flask db upgrade
       - name: Test application
