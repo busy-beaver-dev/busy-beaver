@@ -6,6 +6,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Pull image
+        uses: docker pull alysivji/busy-beaver:latest
       - name: Build and push Docker image
         uses: docker/build-push-action@v1.1.0
         with:
@@ -14,4 +16,4 @@ jobs:
           repository: alysivji/busy-beaver
           always_pull: true
           dockerfile: docker/prod/Dockerfile
-          tag_with_sha: true
+          tags: test-tag
