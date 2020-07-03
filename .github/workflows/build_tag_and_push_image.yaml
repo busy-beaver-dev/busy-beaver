@@ -43,4 +43,4 @@ jobs:
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
           repository: alysivji/busy-beaver
           tag_with_ref: true
-          tags: latest, $GITHUB_SHA
+          tags: $GITHUB_SHA
