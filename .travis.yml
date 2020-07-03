@@ -20,7 +20,6 @@ env:
 
 install:
   - pip install -r requirements_dev.txt
-  - pip install codecov
 
 before_script:
   - psql -c 'create database busy_beaver_test;' -U postgres
@@ -31,7 +30,6 @@ script:
   - isort --check -rc ./busy_beaver ./tests scripts
   - flake8
   - black --check .
-  - codecov
 
 before_deploy:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
