@@ -3,7 +3,7 @@ on:
   release:
     types: [published]
 jobs:
-  test-app-build-and-push-image:
+  build-and-push-image:
     runs-on: ubuntu-latest
 
     env:
