@@ -8,6 +8,7 @@ jobs:
 
     env:
       IMAGE_NAME: alysivji/busy-beaver
+      RELEASE_TAG: ${{ github.event.release.tag_name }}
     steps:
       - uses: actions/checkout@v2
       - name: Login to DockerHub
@@ -18,8 +19,8 @@ jobs:
       - name: Pull latest image
         run: docker pull $IMAGE_NAME || true
       - name: Build image
-        run: docker build -f docker/prod/Dockerfile --pull --cache-from $IMAGE_NAME --tag $IMAGE_NAME --tag $IMAGE_NAME:$GITHUB_REF .
+        run: docker build -f docker/prod/Dockerfile --pull --cache-from $IMAGE_NAME --tag $IMAGE_NAME --tag $IMAGE_NAME:$RELEASE_TAG .
       - name: Push image
         run: |
           docker push $IMAGE_NAME
-          docker push $IMAGE_NAME:$GITHUB_REF
+          docker push $IMAGE_NAME:$RELEASE_TAG
