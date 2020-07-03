@@ -13,7 +13,7 @@ Chicago Python's Community Engagement Slack bot.
 
 With over four thousand members, the [Chicago Python Users Group](https://www.chipy.org/) (ChiPy) is one of the largest Python communities in the world. Slack has become the primary method of communication amongst our members in-between events. We developed an open-source Slack bot, codename: Busy Beaver, to increase community engagement.
 
-We released Busy Beaver on January 10th at the ChiPy monthly meeting. [Slides](http://bit.ly/busy-beaver) and [video recording](https://www.youtube.com/watch?v=7dBESR_x7Kc) from the release announcement are available online.
+We released Busy Beaver on Jan 10th, 2019 at the Chicago Python `__main__` Meeting. [Slides](http://bit.ly/busy-beaver) and [video recording](https://www.youtube.com/watch?v=7dBESR_x7Kc) from the release announcement are available online.
 
 ## Features
 
