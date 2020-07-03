@@ -30,6 +30,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Build the stack
-        run: make up
+        run: flask db upgrade
       - name: Test application
-        run: make test
+        run: pytest
