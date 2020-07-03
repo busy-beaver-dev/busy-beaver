@@ -1,0 +1,46 @@
+name: build-tag-and-push-image
+on: [push]
+jobs:
+  test-app-build-and-push-image:
+    runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:10.3-alpine
+        env:
+          POSTGRES_DB: busy-beaver
+          POSTGRES_USER: bbdev_user
+          POSTGRES_PASSWORD: bbdev_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:4.0-alpine
+
+    container: python:3.8.1-buster
+    env:
+      PYTHONPATH: .
+      FLASK_APP: /app/busy_beaver/__init__.py
+      FLASK_ENV: development
+      DATABASE_URI: postgresql://bbdev_user:bbdev_password@db:5432/busy-beaver
+      REDIS_URI: redis://redis:6379
+      OAUTHLIB_INSECURE_TRANSPORT: 1
+      OAUTHLIB_RELAX_TOKEN_SCOPE: 1
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          pip install -r requirements_dev.txt
+      - name: Run migrations
+        run: flask db upgrade
+      - name: Test application
+        run: pytest
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v1.1.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+          repository: alysivji/busy-beaver
+          tag_with_ref: true
+          tags: latest, $GITHUB_SHA
