@@ -1,6 +1,28 @@
-name: Build and Test Busy Beaver
-on: [pull_request]
+name: build
+on:
+  pull_request:
+    branches:
+      - '**'
+  push:
+    branches:
+      - master
 jobs:
+  lint-n-style:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install dependencies
+      run: pip install flake8 black isort
+    - name: Sort imports
+      run: isort --check -rc ./busy_beaver ./tests scripts
+    - name: Lint with Flake8
+      run: flake8 .
+    - name: Format code with black
+      run: black --check --diff .
   build-and-test-app:
     runs-on: ubuntu-latest
     services:
@@ -29,7 +51,12 @@ jobs:
       OAUTHLIB_RELAX_TOKEN_SCOPE: 1
     steps:
       - uses: actions/checkout@v2
-      - name: Build the stack
-        run: make up
+      - name: Install dependencies
+        run: |
+          pip install -r requirements_dev.txt
+          pip install codecov
+      - name: Run migrations
+        run: flask db upgrade
       - name: Test application
-        run: make test
+        run: pytest --cov=./busy_beaver
+      - uses: codecov/codecov-action@v1
