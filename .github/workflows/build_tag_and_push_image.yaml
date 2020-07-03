@@ -14,4 +14,4 @@ jobs:
           repository: alysivji/busy-beaver
           always_pull: true
           dockerfile: docker/prod/Dockerfile
-          tags: $GITHUB_SHA
+          tag_with_sha: true
