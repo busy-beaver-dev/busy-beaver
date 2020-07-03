@@ -6,12 +6,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v2
       - name: Build and push Docker image
         uses: docker/build-push-action@v1.1.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
           repository: alysivji/busy-beaver
-          always_pull: true
           dockerfile: docker/prod/Dockerfile
           tags: test-tag
