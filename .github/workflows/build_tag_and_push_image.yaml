@@ -6,12 +6,13 @@ jobs:
 
     env:
       IMAGE_NAME: alysivji/busy-beaver
+      DOCKERHUB_ACCESS_TOKEN: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
     steps:
       - uses: actions/checkout@v2
+      - name: Debugging with tmate
+        uses: mxschmitt/action-tmate@v2
       - name: Login to DockerHub
-        env:
-          DOCKERHUB_ACCESS_TOKEN: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: echo "$DOCKERHUB_ACCESS_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
       - name: Pull latest image
         run: docker pull $IMAGE_NAME || true
