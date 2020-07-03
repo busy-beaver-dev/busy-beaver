@@ -1,0 +1,25 @@
+name: release
+on:
+  release:
+    types: [published]
+jobs:
+  test-app-build-and-push-image:
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: alysivji/busy-beaver
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login to DockerHub
+        run: echo "$DOCKERHUB_ACCESS_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+        env:
+          DOCKERHUB_ACCESS_TOKEN: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      - name: Pull latest image
+        run: docker pull $IMAGE_NAME || true
+      - name: Build image
+        run: docker build -f docker/prod/Dockerfile --pull --cache-from $IMAGE_NAME --tag $IMAGE_NAME --tag $IMAGE_NAME:$GITHUB_REF .
+      - name: Push image
+        run: |
+          docker push $IMAGE_NAME
+          docker push $IMAGE_NAME:$GITHUB_REF
