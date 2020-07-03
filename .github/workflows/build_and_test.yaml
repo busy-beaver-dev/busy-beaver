@@ -1,5 +1,11 @@
 name: Build and Test Busy Beaver
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - **
+  push:
+    branches:
+      - master
 jobs:
   build-and-test-app:
     runs-on: ubuntu-latest
@@ -32,7 +38,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements_dev.txt
-      - name: Build the stack
+      - name: Run migrations
         run: flask db upgrade
       - name: Test application
         run: pytest
