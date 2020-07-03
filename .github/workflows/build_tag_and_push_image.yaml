@@ -9,12 +9,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Login to DockerHub
-        run: echo "${{ secrets.DOCKERHUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+        env:
+          DOCKERHUB_ACCESS_TOKEN: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+        run: echo "$DOCKERHUB_ACCESS_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
       - name: Pull latest image
-        run: docker pull ${{ env.IMAGE_NAME }} || true
+        run: docker pull $IMAGE_NAME || true
       - name: Build and push Docker image
-        run: docker build -f docker/prod/Dockerfile --pull --cache-from ${{ env.IMAGE_NAME }} --tag ${{ env.IMAGE_NAME }} --tag ${{ env.IMAGE_NAME }}:${{ env.GITHUB_SHA }} .
+        run: docker build -f docker/prod/Dockerfile --pull --cache-from $IMAGE_NAME --tag $IMAGE_NAME --tag $IMAGE_NAME:$GITHUB_SHA .
       - name: Push images
         run: |
-          docker push ${{ env.IMAGE_NAME }}
-          docker push ${{ env.IMAGE_NAME }}:${{ env.GITHUB_SHA }}
+          docker push $IMAGE_NAME
+          docker push $IMAGE_NAME:$GITHUB_SHA
