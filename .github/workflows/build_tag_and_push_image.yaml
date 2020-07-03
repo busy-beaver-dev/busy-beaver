@@ -4,15 +4,17 @@ jobs:
   test-app-build-and-push-image:
     runs-on: ubuntu-latest
 
+    env:
+      IMAGE_NAME: alysivji/busy-beaver
     steps:
       - uses: actions/checkout@v2
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v2
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_ACCESS_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+      - name: Pull latest image
+        run: docker pull ${{ env.IMAGE_NAME }} || true
       - name: Build and push Docker image
-        uses: docker/build-push-action@v1.1.0
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_ACCESS_TOKEN }}
-          repository: alysivji/busy-beaver
-          dockerfile: docker/prod/Dockerfile
-          tags: test-tag
+        run: docker build -f docker/prod/Dockerfile --pull --cache-from ${{ env.IMAGE_NAME }} --tag ${{ env.IMAGE_NAME }} --tag ${{ env.IMAGE_NAME }}:${{ env.GITHUB_SHA }} .
+      - name: Push images
+        run: |
+          docker push ${{ env.IMAGE_NAME }}
+          docker push ${{ env.IMAGE_NAME }}:${{ env.GITHUB_SHA }}
