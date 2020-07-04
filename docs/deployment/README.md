@@ -9,7 +9,7 @@ Material related to deploying Busy Beaver.
 - [Stack](#stack)
   - [Deploying App](#deploying-app)
   - [Deployment Notes](#deployment-notes)
-- [Integration Checklist](#integration-checklist)
+- [Integration Notes](#integration-notes)
   - [GitHub](#github)
   - [Twitter](#twitter)
   - [Meetup](#meetup)
@@ -43,7 +43,9 @@ There is a GitHub workflow that can be triggered to deploy the BusyBeaver using 
   - current in my personal account
   - KMS? LastPass?
 
-## Integration Checklist
+## Integration Notes
+
+- [Slack](notes/slack_integration.md)
 
 ### GitHub
 
