@@ -18,7 +18,7 @@ jobs:
     - name: Install dependencies
       run: pip install flake8 black isort
     - name: Sort imports
-      run: isort --check -rc ./busy_beaver ./tests scripts
+      run: isort --check -c ./busy_beaver ./tests scripts
     - name: Lint with Flake8
       run: flake8 .
     - name: Format code with black
