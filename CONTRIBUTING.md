@@ -249,8 +249,8 @@ git config --global core.eol lf
 1. Configure Docker for Windows:
     - Expose daemon on tcp://localhost without TLS
     - Add Shared Drive<br />
-    <img src="docs/windows-dev/docker-windows-expose.png" alt="Docker" width=300 /><br />
-    <img src="docs/windows-dev/docker-windows-shared.png" alt="Docker" width=300 />
+    <img src="docs/diagrams/docker-windows-expose.png" alt="Docker" width=300 /><br />
+    <img src="docs/diagrams/docker-windows-shared.png" alt="Docker" width=300 />
 1. [Proceed with Setting up Development Environment](#setting-up-development-environment)
 
 #### Windows Troubleshooting
