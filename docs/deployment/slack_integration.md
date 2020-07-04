@@ -18,3 +18,11 @@ For both staging and production apps
 ## Notes
 
 - Workspace needs Twitter integration to expand Tweets
+
+### App Details
+
+|Environment|Name|Workspace|workspace_id
+|---|---|---|---|
+|Production|Busy Beaver|[BusyBeaverDev](https://busybeaverdev.slack.com/)|`TPDB2AV4K`
+|Staging|Busy Beaver Staging|[Busy Beaver Staging](https://busybeaverbot.slack.com/)|`TKT910ZU0`
+|Development|Busy Beaver Development|[SivBots](https://sivbots.slack.com/)|`T5G0FCMNW`
