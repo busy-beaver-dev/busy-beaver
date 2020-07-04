@@ -2,116 +2,70 @@
 
 Material related to deploying Busy Beaver.
 
-## Current Deployment Workflow
+#### Table of Contents
 
-Busy Beaver is deployed as a Helm chart.
-Currently we are manually running tasks and installing software,
-will automate this with Ansible
-as we get more familiar with Kubernetes and Helm.
+<!-- TOC -->
 
-### Prerequestites
+- [Stack](#stack)
+  - [Deploying App](#deploying-app)
+  - [Deployment Notes](#deployment-notes)
+- [Integration Checklist](#integration-checklist)
+  - [GitHub](#github)
+  - [Twitter](#twitter)
+  - [Meetup](#meetup)
+  - [Sentry](#sentry)
 
-The code for this is in my private Cloud Configuration repo.
+<!-- /TOC -->
 
-- Install Helm
-- Use Helm to set up `nginx`, `cert-manager`, `redis` (staging and prod), `fluent-bit`
-- Add `busybeaver-staging` Secret to cluster
-- Add `busybeaver-production` Secret to cluster
+## Stack
 
-### Setting up Staging Environment
+- Deployment has been packaged up as a Helm chart
+- Deployed out to DigitalOcean-managed Kubernete
+- Database is DO-managed postgres
+- see [DO deployment](digitalocean_deployment.md) for more details
 
-```console
-helm install busybeaver-staging ./busybeaver/ -f values/staging.yaml
-helm upgrade busybeaver-staging ./busybeaver/ -f values/staging.yaml --set image.version=[version]
-```
+### Deploying App
 
-### Setting up Production Environment
+There is a GitHub workflow that can be triggered to deploy the BusyBeaver using `helm upgrade`. Hit https://api.github.com/repos/busy-beaver-dev/busy-beaver/deployments with a POST request:
 
-```console
-helm install busybeaver-production ./busybeaver/ -f values/production.yaml
-helm upgrade busybeaver-production ./busybeaver/ -f values/production.yaml --set image.version=[version]
-```
+- body: `{"ref": "VERSION"}`
+- headers
+  - `Authorization`: `Token {}`
+  - `Accept`: `application/vnd.github.v3+json`
 
 ### Deployment Notes
-
-#### Developer Documentation
 
 - Production URL: `https://app.busybeaverbot.com`
 - Staging URL: `https://staging.busybeaverbot.com`
 - if staging database gets deleted and we have to start again
   - will need to set up app for distribution and install it via OAuth
 - Need to find a place to store information about accounts and credentials
-  - KMS?
+  - current in my personal account
+  - KMS? LastPass?
 
-#### Secrets Format
+## Integration Checklist
 
-All data values need to be `base64` encoded.
-
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: busybeaver-[staging|production]
-type: Opaque
-data:
-  db-uri:
-  cache-uri:
-  sentry-dsn:
-  secret-key:
-  slack-client-id:
-  slack-client-secret:
-  slack-botuser-oauth-token:
-  slack-signing-secret:
-  meetup-api-key:
-  github-client-id:
-  github-client-secret:
-  github-oauth-token:
-  github-signing-secret:
-  twitter-access-token-secret:
-  twitter-access-token:
-  twitter-consumer-key:
-  twitter-consumer-secret:
-```
-
-### Integration Checklist
-
-#### Slack
-
-For both staging and production apps
-
-- [ ] Update URL in App Home Screen
-- [ ] Name Bot: `Busy Beaver` with the username `@busybeaver`
-- [ ] Slash Command: Enable `/busybeaver` and set up URL
-- [ ] Update app permission
-  - [ ] NEED TO DOCUMENT ALL OF THIS SOMEWHERE
-- [ ] Update Auth Callback URL for installation
-- [ ] Set up event subscriptions and put them to the URL
-  - [ ] WHAT EVENT SUBSCRIPTIONS DO WE NEED TO ENABLE
-
-#### GitHub
+### GitHub
 
 For both staging and production apps in the `busy-beaver-dev` organization
 
 - [ ] update the callback URL
 
-#### Twitter
+### Twitter
 
 For both staging and production app
 
 - [ ] fetch application credentials and make into environment variables
 
-#### Meetup
+### Meetup
 
 Currently using an API token generated
 by an application in my personal account
 for both staging and production.
 
-#### Sentry
+### Sentry
 
 Have a `busybeaverbot` Project with 2 environments:
+
 - `staging`
 - `production`
-
-#### Slack Requirements
-
-- Workspace needs Twitter integration to expand Tweets
