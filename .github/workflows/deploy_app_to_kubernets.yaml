@@ -18,6 +18,8 @@ jobs:
           clusterName: trapper
           version: 1.6.6
           expirationTime: 300  # seconds
+      - name: Debugging with tmate
+        uses: mxschmitt/action-tmate@v2
       - name: Use helm to deploy
         run: helm upgrade $RELEASE_NAME $CHART_LOCATION -f $VALUES_FILE --set image.version=$RELEASE_TAG
 
@@ -34,5 +36,5 @@ jobs:
         uses: chrnorm/deployment-status@releases/v1
         with:
           token: "${{ github.token }}"
-          state: "success"
+          state: "failure"
           deployment_id: ${{ github.event.deployment.id }}
