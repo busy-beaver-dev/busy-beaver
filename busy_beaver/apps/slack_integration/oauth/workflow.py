@@ -6,7 +6,8 @@ from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation
 
 
-def verify_callback_and_save_tokens_in_database(callback_url, state):
+def process_slack_installation_callback(callback_url, state):
+    """Verify callback and save tokens in the database"""
     oauth_details = slack_oauth.process_callback(callback_url, state)
     oauth_dict = oauth_details._asdict()
 
