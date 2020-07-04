@@ -1,0 +1,38 @@
+name: deploy
+on: [deployment]
+jobs:
+  helm-upgrade:
+    runs-on: ubuntu-latest
+
+    env:
+      CHART_LOCATION: ./deployment/busybeaver
+      VALUES_FILES: ./deployment/values/production.yaml
+      RELEASE_NAME: busybeaver-production
+      RELEASE_TAG: ${{ github.event.deployment.ref }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate k8s config for DO
+        uses: matootie/dokube@v1.3.2
+        with:
+          personalAccessToken: ${{ secrets.DIGITALOCEAN_TOKEN }}
+          clusterName: trapper
+          version: 1.6.6
+          expirationTime: 300  # seconds
+      - name: Use helm to deploy
+        run: helm upgrade $RELEASE_NAME $CHART_LOCATION -f $VALUES_FILE --set image.version=$RELEASE_TAG
+
+      - name: Update deployment status (success)
+        if: success()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          state: "success"
+          deployment_id: ${{ github.event.deployment.id }}
+
+      - name: Update deployment status (failure)
+        if: failure()
+        uses: chrnorm/deployment-status@releases/v1
+        with:
+          token: "${{ github.token }}"
+          state: "success"
+          deployment_id: ${{ github.event.deployment.id }}
