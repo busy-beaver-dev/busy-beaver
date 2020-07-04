@@ -43,7 +43,7 @@ class StateToOAuthResponse:
         return response
 
 
-class SlackOAuthFlow(OAuthFlow):
+class SlackInstallationOAuthFlow(OAuthFlow):
     AUTHORIZATION_BASE_URL = "https://slack.com/oauth/authorize"
     TOKEN_URL = "https://slack.com/api/oauth.v2.access"
     SCOPES = [  # https://api.slack.com/scopes

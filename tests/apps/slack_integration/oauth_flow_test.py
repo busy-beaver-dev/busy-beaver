@@ -1,7 +1,9 @@
 import pytest
 import responses
 
-from busy_beaver.apps.slack_integration.oauth.oauth_flow import SlackOAuthFlow
+from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
+    SlackInstallationOAuthFlow,
+)
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     verify_callback_and_save_tokens_in_database,
 )
@@ -17,7 +19,7 @@ def test_slack_oauth_flow_first_time_installation(session):
     bot_access_token = "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy"
     responses.add(
         responses.POST,
-        SlackOAuthFlow.TOKEN_URL,
+        SlackInstallationOAuthFlow.TOKEN_URL,
         json={
             "ok": True,
             "access_token": bot_access_token,
@@ -69,7 +71,7 @@ def test_slack_oauth_flow_reinstallation(session, factory):
     bot_access_token = "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy"
     responses.add(
         responses.POST,
-        SlackOAuthFlow.TOKEN_URL,
+        SlackInstallationOAuthFlow.TOKEN_URL,
         json={
             "ok": True,
             "access_token": bot_access_token,
