@@ -6,7 +6,7 @@ jobs:
 
     env:
       CHART_LOCATION: ./deployment/busybeaver
-      VALUES_FILES: ./deployment/values/production.yaml
+      VALUES_FILE: ./deployment/values/production.yaml
       RELEASE_NAME: busybeaver-production
       RELEASE_TAG: ${{ github.event.deployment.ref }}
     steps:
@@ -32,7 +32,7 @@ jobs:
           deployment_id: ${{ github.event.deployment.id }}
 
       - name: Update deployment status (failure)
-        if: failure()
+        if: ${{ ! success() }}
         uses: chrnorm/deployment-status@releases/v1
         with:
           token: "${{ github.token }}"
