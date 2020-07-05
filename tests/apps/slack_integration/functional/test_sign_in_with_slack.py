@@ -22,8 +22,18 @@ def patched_slack(patcher):
 
 @pytest.mark.end2end
 @responses.activate
+@pytest.mark.parametrize(
+    "is_admin, message",
+    [(True, "You are the admin!"), (False, "You are not the admin!")],
+)
 def test_slack_sign_in__happy_path(
-    client, factory, generate_slash_command_request, create_slack_headers, patched_slack
+    is_admin,  # parameter
+    message,  # parameter
+    client,
+    factory,
+    generate_slash_command_request,
+    create_slack_headers,
+    patched_slack,
 ):
     # Step 1 -- User enters `/busybeaver settings`
     # Arrange
@@ -74,7 +84,7 @@ def test_slack_sign_in__happy_path(
     )
 
     # Stub out Slack client
-    patched_slack(is_admin=True)
+    patched_slack(is_admin=is_admin)
 
     # Act
     params = {"code": "issued_code", "state": state}
@@ -82,7 +92,7 @@ def test_slack_sign_in__happy_path(
 
     # Assert
     assert response.status_code == 200
-    assert "You are the admin" in response.get_json()["message"]
+    assert message in response.get_json()["message"]
 
 
 # fails
