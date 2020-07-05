@@ -16,6 +16,8 @@ from busy_beaver.apps.slack_integration.oauth.workflow import (
     create_link_to_login_to_settings,
 )
 from busy_beaver.config import FULL_INSTALLATION_WORKSPACE_IDS, MEETUP_GROUP_NAME
+from busy_beaver.extensions import db
+from busy_beaver.models import SlackInstallation, SlackUser
 from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
@@ -38,6 +40,25 @@ class Command(NamedTuple):
 
 def process_slash_command(data):
     command = _parse_command(data["text"])
+    workspace = data["team_id"]
+    user_id = data["user_id"]
+
+    installation = SlackInstallation.query.filter_by(workspace_id=workspace).first()
+    if not installation:
+        raise ValueError("workspace not found")
+
+    user = SlackUser.query.filter_by(
+        slack_id=user_id, installation=installation
+    ).first()
+    if not user:
+        user = SlackUser()
+        user.slack_id = user_id
+        user.installation = installation
+        db.session.add(user)
+        db.session.commit()
+
+    data["installation"] = installation
+    data["user"] = user
     return slash_command_dispatcher.emit(command.type, default="not_found", **data)
 
 
