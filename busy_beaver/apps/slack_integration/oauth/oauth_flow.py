@@ -196,22 +196,3 @@ class SlackSignInOAuthFlow(OAuthFlow):
             logger.error("Slack Sign-in OAuth -- Flow Failed", extra={"error": error})
             raise OAuthError(error)
         return data
-
-
-# TODO make test
-# https://api.slack.com/docs/sign-in-with-slack
-# {
-#     "ok": true,
-#     "app_id": "A0118NQPZZC",
-#     "authed_user": {
-#         "id": "U065VRX1T0",
-#         "scope": "identity.basic,identity.email,identity.avatar,identity.team",
-#         "access_token": "xoxp-yoda-yoda-yoda",
-#         "token_type": "user"
-#     },
-#     "team": {
-#         "id": "T024BE7LD"
-#     },
-#     "enterprise": null,
-#     "is_enterprise_install": false
-# }
