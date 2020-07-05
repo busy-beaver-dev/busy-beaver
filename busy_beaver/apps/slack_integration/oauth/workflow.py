@@ -1,9 +1,77 @@
 from datetime import time
+import logging
+from typing import NamedTuple
 
-from busy_beaver.clients import slack_install_oauth
+from busy_beaver.clients import slack_install_oauth, slack_signin_oauth
+from busy_beaver.common.oauth import OAuthError
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.extensions import db
-from busy_beaver.models import SlackInstallation
+from busy_beaver.models import SlackInstallation, SlackUser
+
+logger = logging.getLogger(__name__)
+
+SIGN_IN_TO_SLACK = (
+    "Follow the link below to access Busy Beaver settings. "
+    "You will be required to sign-in with your Slack account."
+)
+
+
+class Output(NamedTuple):
+    text: str
+    url: str
+
+
+####################
+# Sign-in with Slack
+####################
+class UserDetails(NamedTuple):
+    is_admin: bool
+    details: tuple
+
+
+def create_link_to_login_to_settings(slack_id, workspace_id):
+    slack_installation = SlackInstallation.query.filter_by(
+        workspace_id=workspace_id
+    ).first()
+
+    user = SlackUser.query.filter_by(
+        slack_id=slack_id, installation=slack_installation
+    ).first()
+    if not user:
+        logger.info("Creating new account.")
+        user = SlackUser()
+        user.slack_id = slack_id
+        user.installation = slack_installation
+
+    auth = slack_signin_oauth.generate_authentication_tuple()
+    user.slack_oauth_state = auth.state
+    db.session.add(user)
+    db.session.commit()
+
+    return Output(SIGN_IN_TO_SLACK, auth.url)
+
+
+def process_slack_sign_in_callback(callback_url, state):
+    user = SlackUser.query.filter_by(slack_oauth_state=state).first()
+    if not user:
+        logger.error("Sign-in with Slack state does not match")
+        raise OAuthError("Sign-in with Slack failed. Please try again.")
+
+    user_details = slack_signin_oauth.process_callback(callback_url, state)
+    installation = SlackInstallation.query.filter_by(
+        workspace_id=user_details.workspace_id
+    ).first()
+    slack = SlackClient(installation.bot_access_token)
+    is_admin = slack.is_admin(user_details.user_id)
+
+    extra = {
+        "user_id": user_details.user_id,
+        "workspace_id": user_details.workspace_id,
+        "is_admin": is_admin,
+    }
+    logger.info("User logged into Busy Beaver", extra=extra)
+
+    return UserDetails(is_admin, user_details)
 
 
 ##############

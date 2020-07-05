@@ -25,6 +25,7 @@ from .config import (
 from busy_beaver.apps.github_integration.oauth.oauth_flow import GitHubOAuthFlow
 from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
     SlackInstallationOAuthFlow,
+    SlackSignInOAuthFlow,
 )
 
 chipy_slack = SlackClient(SLACK_TOKEN)  # Default Workspace -- this is being phased out
@@ -38,4 +39,5 @@ twitter = TwitterClient(
 )
 
 slack_install_oauth = SlackInstallationOAuthFlow(SLACK_CLIENT_ID, SLACK_CLIENT_SECRET)
+slack_signin_oauth = SlackSignInOAuthFlow(SLACK_CLIENT_ID, SLACK_CLIENT_SECRET)
 github_oauth = GitHubOAuthFlow(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)

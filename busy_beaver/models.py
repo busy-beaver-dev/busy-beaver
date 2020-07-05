@@ -8,5 +8,6 @@ from busy_beaver.apps.github_integration.models import (  # noqa
 from busy_beaver.apps.slack_integration.models import (  # noqa
     SlackAppHomeOpened,
     SlackInstallation,
+    SlackUser,
 )
 from busy_beaver.apps.youtube_integration.models import YouTubeVideo  # noqa

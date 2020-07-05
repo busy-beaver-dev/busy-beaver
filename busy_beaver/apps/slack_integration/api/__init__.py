@@ -1,7 +1,7 @@
 from flask import blueprints
 
 from .event_subscription import SlackEventSubscriptionResource
-from .oauth import SlackAppInstallationCallbackResource
+from .oauth import SlackAppInstallationCallbackResource, SlackSignInCallbackResource
 from .slash_command import SlackSlashCommandDispatchResource
 
 slack_bp = blueprints.Blueprint("slack", __name__)
@@ -19,4 +19,9 @@ slack_bp.add_url_rule(
 slack_bp.add_url_rule(
     "/oauth",
     view_func=SlackAppInstallationCallbackResource.as_view("slack_install_callback"),
+)
+
+slack_bp.add_url_rule(
+    "/sign-in-callback",
+    view_func=SlackSignInCallbackResource.as_view("slack_signin_callback"),
 )

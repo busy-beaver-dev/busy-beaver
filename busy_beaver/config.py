@@ -6,6 +6,8 @@ TASK_QUEUE_MAX_RETRIES = 1
 
 SECRET_KEY = os.getenv("SECRET_KEY", "abcdef").encode("utf-8")
 
+BASE_URL = os.getenv("BASE_URL")
+
 # app constraints
 FULL_INSTALLATION_WORKSPACE_IDS = [
     "T093FC1RC",  # ChiPy Workspace -- https://chipy.slack.com -- prod env
