@@ -1,7 +1,7 @@
 from .event import Event
 from .event_details import EventDetails
 from .github_summary_user import GitHubSummaryConfiguration, GitHubSummaryUser
-from .slack import SlackAppHomeOpened, SlackInstallation, SlackUser
+from .slack import SlackInstallation, SlackUser
 from .tweet import Tweet
 
 
@@ -11,7 +11,6 @@ class FactoryManager:
         EventDetails,
         GitHubSummaryConfiguration,
         GitHubSummaryUser,
-        SlackAppHomeOpened,
         SlackInstallation,
         SlackUser,
         Tweet,

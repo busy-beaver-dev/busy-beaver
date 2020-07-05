@@ -7,11 +7,7 @@ from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
     SlackInstallationOAuthFlow,
 )
 from busy_beaver.common.wrappers.slack import TimezoneInfo
-from busy_beaver.models import (
-    GitHubSummaryConfiguration,
-    SlackAppHomeOpened,
-    SlackInstallation,
-)
+from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation, SlackUser
 from tests._utilities import FakeSlackClient
 
 pytest_plugins = ("tests._utilities.fixtures.slack",)
@@ -322,9 +318,9 @@ def test_user_opens_app_home_for_first_time__shown_app_home(
     assert kwargs.get("view", {}) == AppHome().to_dict()
 
     params = {"installation_id": installation.id, "slack_id": user_id}
-    user = SlackAppHomeOpened.query.filter_by(**params).first()
+    user = SlackUser.query.filter_by(**params).first()
     assert user
-    assert user.count == 1
+    assert user.app_home_opened_count == 1
 
 
 @pytest.mark.unit
@@ -335,8 +331,8 @@ def test_user_opens_app_home_for_greater_than_first_time__shown_app_home(
     workspace_id = "TXXXXXXXXX"
     user_id = "U5FTQ3QRZ"
     installation = factory.SlackInstallation(workspace_id=workspace_id)
-    user = factory.SlackAppHomeOpened(slack_id=user_id, installation=installation)
-    original_user_count = user.count
+    user = factory.SlackUser(slack_id=user_id, installation=installation)
+    original_user_count = user.app_home_opened_count
     patched_slack = patch_slack("busy_beaver.apps.slack_integration.event_subscription")
 
     # Act
@@ -353,9 +349,9 @@ def test_user_opens_app_home_for_greater_than_first_time__shown_app_home(
     assert kwargs.get("view", {}) == AppHome().to_dict()
 
     params = {"installation_id": installation.id, "slack_id": user_id}
-    user = SlackAppHomeOpened.query.filter_by(**params).first()
+    user = SlackUser.query.filter_by(**params).first()
     assert user
-    assert user.count == original_user_count + 1
+    assert user.app_home_opened_count == original_user_count + 1
 
 
 @pytest.mark.unit
