@@ -63,3 +63,22 @@ class SlackAppHomeOpened(BaseModel):
 
     # Relationships
     installation = db.relationship("SlackInstallation")
+
+
+class SlackUser(BaseModel):
+    """Track users that have interacted with Busy Beaver on Slack"""
+
+    __tablename__ = "slack_user"
+
+    installation_id = db.Column(
+        db.Integer,
+        db.ForeignKey("slack_installation.id", name="fk_installation_id"),
+        index=True,
+        nullable=False,
+    )
+    slack_id = db.Column(db.String(30), index=True, nullable=False)
+    slack_oauth_state = db.Column(db.String(36), nullable=True)
+    # TODO add num_times app_home opened here
+
+    # Relationships
+    installation = db.relationship("SlackInstallation")
