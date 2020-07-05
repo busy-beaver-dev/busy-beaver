@@ -1,14 +1,17 @@
 from datetime import time
 
-from busy_beaver.clients import slack_oauth
+from busy_beaver.clients import slack_install_oauth
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation
 
 
+##############
+# Installation
+##############
 def process_slack_installation_callback(callback_url, state):
     """Verify callback and save tokens in the database"""
-    oauth_details = slack_oauth.process_callback(callback_url, state)
+    oauth_details = slack_install_oauth.process_callback(callback_url, state)
     oauth_dict = oauth_details._asdict()
 
     # TODO update or create seems like a useful helper function

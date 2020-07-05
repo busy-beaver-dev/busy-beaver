@@ -37,5 +37,5 @@ twitter = TwitterClient(
     TWITTER_ACCESS_TOKEN_SECRET,
 )
 
-slack_oauth = SlackInstallationOAuthFlow(SLACK_CLIENT_ID, SLACK_CLIENT_SECRET)
+slack_install_oauth = SlackInstallationOAuthFlow(SLACK_CLIENT_ID, SLACK_CLIENT_SECRET)
 github_oauth = GitHubOAuthFlow(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
