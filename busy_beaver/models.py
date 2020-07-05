@@ -6,7 +6,6 @@ from busy_beaver.apps.github_integration.models import (  # noqa
     GitHubSummaryUser,
 )
 from busy_beaver.apps.slack_integration.models import (  # noqa
-    SlackAppHomeOpened,
     SlackInstallation,
     SlackUser,
 )

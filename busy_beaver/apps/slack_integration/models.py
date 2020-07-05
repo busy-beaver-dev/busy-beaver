@@ -44,27 +44,6 @@ class SlackInstallation(BaseModel):
     )
 
 
-class SlackAppHomeOpened(BaseModel):
-    """Track number of times App Home is opened
-
-    For bot onboarding
-    """
-
-    __tablename__ = "slack_app_home_opened"
-
-    installation_id = db.Column(
-        db.Integer,
-        db.ForeignKey("slack_installation.id", name="fk_installation_id"),
-        index=True,
-        nullable=False,
-    )
-    slack_id = db.Column(db.String(30), index=True, nullable=False)
-    count = db.Column(db.Integer, nullable=False, default=1)
-
-    # Relationships
-    installation = db.relationship("SlackInstallation")
-
-
 class SlackUser(BaseModel):
     """Track users that have interacted with Busy Beaver on Slack"""
 
