@@ -1,0 +1,43 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=utf-8
+      User-Agent:
+      - Python/3.8.1 slackclient/2.5.0 Linux/4.19.76-linuxkit
+      authorization:
+      - DUMMY
+    method: GET
+    uri: https://www.slack.com/api/users.info?user=not-real-id
+  response:
+    body:
+      string: '{"ok":false,"error":"user_not_found"}'
+    headers:
+      Access-Control-Allow-Headers: slack-route, x-slack-version-ts, x-b3-traceid,
+        x-b3-spanid, x-b3-parentspanid, x-b3-sampled, x-b3-flags
+      Access-Control-Allow-Origin: '*'
+      Access-Control-Expose-Headers: x-slack-req-id, retry-after
+      Cache-Control: private, no-cache, no-store, must-revalidate
+      Content-Encoding: gzip
+      Content-Length: '57'
+      Content-Type: application/json; charset=utf-8
+      Date: Sun, 05 Jul 2020 19:04:38 GMT
+      Expires: Mon, 26 Jul 1997 05:00:00 GMT
+      Pragma: no-cache
+      Server: Apache
+      Vary: Accept-Encoding
+      referrer-policy: no-referrer
+      strict-transport-security: max-age=31536000; includeSubDomains; preload
+      x-accepted-oauth-scopes: users:read
+      x-content-type-options: nosniff
+      x-oauth-scopes: app_mentions:read,channels:history,channels:join,channels:read,chat:write,commands,emoji:read,groups:read,im:history,im:read,im:write,mpim:history,mpim:read,mpim:write,reactions:read,reactions:write,team:read,usergroups:read,users.profile:read,users:read,users:write
+      x-slack-backend: r
+      x-slack-req-id: 48da14f97825feca3bd07207807fc2b4
+      x-via: haproxy-www-75m7,haproxy-edge-iad-qqch
+      x-xss-protection: '0'
+    status:
+      code: 200
+      message: OK
+    url: https://www.slack.com/api/users.info?user=not-real-id
+version: 1

@@ -58,6 +58,24 @@ def test_slack_post_ephemeral_message_success(slack: SlackClient):
 
 
 @pytest.mark.vcr()
+def test_slack_user_is_admin(slack: SlackClient):
+    result = slack.is_admin(user_id="U5FTQ3QRZ")
+    assert result is True
+
+
+@pytest.mark.vcr()
+def test_slack_user_is_not_admin(slack: SlackClient):
+    result = slack.is_admin(user_id="UGG6065AP")
+    assert result is False
+
+
+@pytest.mark.vcr()
+def test_slack_user_does_not_exist(slack: SlackClient):
+    with pytest.raises(ValueError):
+        slack.is_admin(user_id="not-real-id")
+
+
+@pytest.mark.vcr()
 def test_slack_post_message_success(slack: SlackClient):
     # Act
     result = slack.post_message("test", channel="general")
