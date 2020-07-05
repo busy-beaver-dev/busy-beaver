@@ -43,9 +43,13 @@ def test_command_not_found(generate_slash_command_request):
 def test_connect_command_new_user(session, factory, generate_slash_command_request):
     github_summary_config = factory.GitHubSummaryConfiguration()
     install = github_summary_config.slack_installation
+    new_user = "new_user"
+    slack_user = factory.SlackUser(slack_id=new_user, installation=install)
     data = generate_slash_command_request(
-        "connect", user_id="new_user", team_id=install.workspace_id
+        "connect", user_id=new_user, team_id=install.workspace_id
     )
+    data["user"] = slack_user
+    data["installation"] = install
 
     result = link_github(**data)
 
@@ -57,12 +61,15 @@ def test_connect_command_new_user(session, factory, generate_slash_command_reque
 def test_connect_command_existing_user(
     session, factory, generate_slash_command_request
 ):
-    user = factory.GitHubSummaryUser(slack_id="existing_user")
+    existing_user = "existing_user"
+    github_user = factory.GitHubSummaryUser(slack_id=existing_user)
+    install = github_user.configuration.slack_installation
+    slack_user = factory.SlackUser(slack_id=existing_user, installation=install)
     data = generate_slash_command_request(
-        "connect",
-        user_id=user.slack_id,
-        team_id=user.configuration.slack_installation.workspace_id,
+        "connect", user_id=github_user.slack_id, team_id=install.workspace_id
     )
+    data["user"] = slack_user
+    data["installation"] = install
 
     result = link_github(**data)
 
@@ -73,9 +80,13 @@ def test_connect_command_existing_user(
 def test_reconnect_command_new_user(session, factory, generate_slash_command_request):
     github_summary_config = factory.GitHubSummaryConfiguration()
     install = github_summary_config.slack_installation
+    new_user = "new_user"
+    slack_user = factory.SlackUser(slack_id=new_user, installation=install)
     data = generate_slash_command_request(
-        "reconnect", user_id="new_user", team_id=install.workspace_id
+        "reconnect", user_id=new_user, team_id=install.workspace_id
     )
+    data["user"] = slack_user
+    data["installation"] = install
 
     result = relink_github(**data)
 
@@ -87,12 +98,15 @@ def test_reconnect_command_new_user(session, factory, generate_slash_command_req
 def test_reconnect_command_existing_user(
     session, factory, generate_slash_command_request
 ):
-    user = factory.GitHubSummaryUser(slack_id="existing_user")
+    existing_user = "existing_user"
+    github_user = factory.GitHubSummaryUser(slack_id=existing_user)
+    install = github_user.configuration.slack_installation
+    slack_user = factory.SlackUser(slack_id=existing_user, installation=install)
     data = generate_slash_command_request(
-        "reconnect",
-        user_id=user.slack_id,
-        team_id=user.configuration.slack_installation.workspace_id,
+        "reconnect", user_id=existing_user, team_id=install.workspace_id
     )
+    data["user"] = slack_user
+    data["installation"] = install
 
     result = relink_github(**data)
 
@@ -106,7 +120,10 @@ def test_disconnect_command_unregistered_user(
 ):
     github_summary_config = factory.GitHubSummaryConfiguration()
     install = github_summary_config.slack_installation
+    slack_user = factory.SlackUser(slack_id="new_user", installation=install)
     data = generate_slash_command_request("disconnect", team_id=install.workspace_id)
+    data["user"] = slack_user
+    data["installation"] = install
 
     result = disconnect_github(**data)
 
@@ -117,17 +134,20 @@ def test_disconnect_command_unregistered_user(
 def test_disconnect_command_registered_user(
     session, factory, generate_slash_command_request
 ):
-    user = factory.GitHubSummaryUser(slack_id="existing_user")
+    existing_user = "existing_user"
+    github_user = factory.GitHubSummaryUser(slack_id=existing_user)
+    install = github_user.configuration.slack_installation
+    slack_user = factory.SlackUser(slack_id=existing_user, installation=install)
     data = generate_slash_command_request(
-        "disconnect",
-        user_id=user.slack_id,
-        team_id=user.configuration.slack_installation.workspace_id,
+        "disconnect", user_id=github_user.slack_id, team_id=install.workspace_id
     )
+    data["user"] = slack_user
+    data["installation"] = install
 
     result = disconnect_github(**data)
 
     assert "Account has been deleted" in result["text"]
-    assert not GitHubSummaryUser.query.get(user.id)
+    assert not GitHubSummaryUser.query.get(github_user.id)
 
 
 #########################

@@ -16,6 +16,8 @@ from busy_beaver.apps.slack_integration.oauth.workflow import (
     create_link_to_login_to_settings,
 )
 from busy_beaver.config import FULL_INSTALLATION_WORKSPACE_IDS, MEETUP_GROUP_NAME
+from busy_beaver.extensions import db
+from busy_beaver.models import SlackInstallation, SlackUser
 from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
@@ -38,6 +40,25 @@ class Command(NamedTuple):
 
 def process_slash_command(data):
     command = _parse_command(data["text"])
+    workspace = data["team_id"]
+    user_id = data["user_id"]
+
+    installation = SlackInstallation.query.filter_by(workspace_id=workspace).first()
+    if not installation:
+        raise ValueError("workspace not found")
+
+    user = SlackUser.query.filter_by(
+        slack_id=user_id, installation=installation
+    ).first()
+    if not user:
+        user = SlackUser()
+        user.slack_id = user_id
+        user.installation = installation
+        db.session.add(user)
+        db.session.commit()
+
+    data["installation"] = installation
+    data["user"] = user
     return slash_command_dispatcher.emit(command.type, default="not_found", **data)
 
 
@@ -95,10 +116,10 @@ def command_not_found(**data):
 @slash_command_dispatcher.on("connect")
 def link_github(**data):
     logger.info("Linking GitHub account for new user", extra=data)
-    slack_id = data["user_id"]
-    workspace_id = data["team_id"]
+    slack_user = data["user"]
+    installation = data["installation"]
 
-    text, url = connect_github_to_slack(slack_id, workspace_id)
+    text, url = connect_github_to_slack(installation, slack_user)
     attachment = create_url_attachment(url, text="Associate GitHub Profile")
     return make_slack_response(text=text, attachments=attachment)
 
@@ -106,10 +127,10 @@ def link_github(**data):
 @slash_command_dispatcher.on("reconnect")
 def relink_github(**data):
     logger.info("Relinking GitHub account", extra=data)
-    slack_id = data["user_id"]
-    workspace_id = data["team_id"]
+    slack_user = data["user"]
+    installation = data["installation"]
 
-    text, url = relink_github_to_slack(slack_id, workspace_id)
+    text, url = relink_github_to_slack(installation, slack_user)
     attachment = create_url_attachment(url, text="Associate GitHub Profile")
     return make_slack_response(text=text, attachments=attachment)
 
@@ -117,10 +138,10 @@ def relink_github(**data):
 @slash_command_dispatcher.on("disconnect")
 def disconnect_github(**data):
     logger.info("Disconnecting GitHub account.")
-    slack_id = data["user_id"]
-    workspace_id = data["team_id"]
+    slack_user = data["user"]
+    installation = data["installation"]
 
-    text, _ = disconnect_github_from_slack(slack_id, workspace_id)
+    text, _ = disconnect_github_from_slack(installation, slack_user)
     return make_slack_response(text=text)
 
 
@@ -130,9 +151,8 @@ def disconnect_github(**data):
 @slash_command_dispatcher.on("settings")
 def login_to_busy_beaver_settings(**data):
     logger.info("Requested settings url", extra=data)
-    slack_id = data["user_id"]
-    workspace_id = data["team_id"]
+    slack_user = data["user"]
 
-    text, url = create_link_to_login_to_settings(slack_id, workspace_id)
+    text, url = create_link_to_login_to_settings(slack_user)
     attachment = create_url_attachment(url, text="Login to Access Settings")
     return make_slack_response(text=text, attachments=attachment)
