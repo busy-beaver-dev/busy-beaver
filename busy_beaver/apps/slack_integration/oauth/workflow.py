@@ -29,23 +29,10 @@ class UserDetails(NamedTuple):
     details: tuple
 
 
-def create_link_to_login_to_settings(slack_id, workspace_id):
-    slack_installation = SlackInstallation.query.filter_by(
-        workspace_id=workspace_id
-    ).first()
-
-    user = SlackUser.query.filter_by(
-        slack_id=slack_id, installation=slack_installation
-    ).first()
-    if not user:
-        logger.info("Creating new account.")
-        user = SlackUser()
-        user.slack_id = slack_id
-        user.installation = slack_installation
-
+def create_link_to_login_to_settings(slack_user):
     auth = slack_signin_oauth.generate_authentication_tuple()
-    user.slack_oauth_state = auth.state
-    db.session.add(user)
+    slack_user.slack_oauth_state = auth.state
+    db.session.add(slack_user)
     db.session.commit()
 
     return Output(SIGN_IN_TO_SLACK, auth.url)

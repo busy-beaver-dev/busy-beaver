@@ -57,12 +57,17 @@ def test_connect_command_new_user(session, factory, generate_slash_command_reque
 def test_connect_command_existing_user(
     session, factory, generate_slash_command_request
 ):
-    user = factory.GitHubSummaryUser(slack_id="existing_user")
+    existing_user = "existing_user"
+    github_user = factory.GitHubSummaryUser(slack_id=existing_user)
+    installation = github_user.configuration.slack_installation
+    slack_user = factory.SlackUser(slack_id=existing_user, installation=installation)
     data = generate_slash_command_request(
         "connect",
-        user_id=user.slack_id,
-        team_id=user.configuration.slack_installation.workspace_id,
+        user_id=github_user.slack_id,
+        team_id=github_user.configuration.slack_installation.workspace_id,
     )
+    data["user"] = slack_user
+    data["installation"] = slack_user.installation
 
     result = link_github(**data)
 

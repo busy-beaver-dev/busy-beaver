@@ -116,10 +116,10 @@ def command_not_found(**data):
 @slash_command_dispatcher.on("connect")
 def link_github(**data):
     logger.info("Linking GitHub account for new user", extra=data)
-    slack_id = data["user_id"]
-    workspace_id = data["team_id"]
+    slack_user = data["user"]
+    installation = data["installation"]
 
-    text, url = connect_github_to_slack(slack_id, workspace_id)
+    text, url = connect_github_to_slack(installation, slack_user)
     attachment = create_url_attachment(url, text="Associate GitHub Profile")
     return make_slack_response(text=text, attachments=attachment)
 
@@ -127,10 +127,10 @@ def link_github(**data):
 @slash_command_dispatcher.on("reconnect")
 def relink_github(**data):
     logger.info("Relinking GitHub account", extra=data)
-    slack_id = data["user_id"]
-    workspace_id = data["team_id"]
+    slack_user = data["user"]
+    installation = data["installation"]
 
-    text, url = relink_github_to_slack(slack_id, workspace_id)
+    text, url = relink_github_to_slack(installation, slack_user)
     attachment = create_url_attachment(url, text="Associate GitHub Profile")
     return make_slack_response(text=text, attachments=attachment)
 
@@ -138,10 +138,10 @@ def relink_github(**data):
 @slash_command_dispatcher.on("disconnect")
 def disconnect_github(**data):
     logger.info("Disconnecting GitHub account.")
-    slack_id = data["user_id"]
-    workspace_id = data["team_id"]
+    slack_user = data["user"]
+    installation = data["installation"]
 
-    text, _ = disconnect_github_from_slack(slack_id, workspace_id)
+    text, _ = disconnect_github_from_slack(installation, slack_user)
     return make_slack_response(text=text)
 
 
@@ -151,9 +151,8 @@ def disconnect_github(**data):
 @slash_command_dispatcher.on("settings")
 def login_to_busy_beaver_settings(**data):
     logger.info("Requested settings url", extra=data)
-    slack_id = data["user_id"]
-    workspace_id = data["team_id"]
+    slack_user = data["user"]
 
-    text, url = create_link_to_login_to_settings(slack_id, workspace_id)
+    text, url = create_link_to_login_to_settings(slack_user)
     attachment = create_url_attachment(url, text="Login to Access Settings")
     return make_slack_response(text=text, attachments=attachment)
