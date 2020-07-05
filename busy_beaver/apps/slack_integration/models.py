@@ -78,7 +78,7 @@ class SlackUser(BaseModel):
     )
     slack_id = db.Column(db.String(30), index=True, nullable=False)
     slack_oauth_state = db.Column(db.String(36), nullable=True)
-    # TODO add num_times app_home opened here
+    app_home_opened_count = db.Column(db.Integer, nullable=False, default=0)
 
     # Relationships
     installation = db.relationship("SlackInstallation")

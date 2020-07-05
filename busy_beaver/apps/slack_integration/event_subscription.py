@@ -11,11 +11,7 @@ from busy_beaver.apps.slack_integration.oauth.workflow import (
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.config import FULL_INSTALLATION_WORKSPACE_IDS, MEETUP_GROUP_NAME
 from busy_beaver.extensions import db
-from busy_beaver.models import (
-    GitHubSummaryConfiguration,
-    SlackAppHomeOpened,
-    SlackInstallation,
-)
+from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation, SlackUser
 from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
@@ -140,11 +136,11 @@ def app_home_handler(data):
 
     installation = SlackInstallation.query.filter_by(workspace_id=workspace_id).first()
     params = {"installation_id": installation.id, "slack_id": user_id}
-    user = SlackAppHomeOpened.query.filter_by(**params).first()
+    user = SlackUser.query.filter_by(**params).first()
     if user:
-        user.count += 1
+        user.app_home_opened_count += 1
     else:
-        user = SlackAppHomeOpened(**params)
+        user = SlackUser(**params)
     db.session.add(user)
     db.session.commit()
 
