@@ -1,0 +1,45 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=utf-8
+      User-Agent:
+      - Python/3.8.1 slackclient/2.5.0 Linux/4.19.76-linuxkit
+      authorization:
+      - DUMMY
+    method: GET
+    uri: https://www.slack.com/api/users.info?user=U5FTQ3QRZ
+  response:
+    body:
+      string: '{"ok":true,"user":{"id":"U5FTQ3QRZ","team_id":"T5G0FCMNW","name":"alysivji","deleted":false,"color":"9f69e7","real_name":"Aly
+        Sivji","tz":"America\/Chicago","tz_label":"Central Daylight Time","tz_offset":-18000,"profile":{"title":"","phone":"","skype":"","real_name":"Aly
+        Sivji","real_name_normalized":"Aly Sivji","display_name":"alysivji","display_name_normalized":"alysivji","fields":null,"status_text":"","status_emoji":"","status_expiration":0,"avatar_hash":"gda59cfe1d18","first_name":"Aly","last_name":"Sivji","image_24":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=24&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0010-24.png","image_32":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=32&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0010-32.png","image_48":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0010-48.png","image_72":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=72&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0010-72.png","image_192":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=192&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0010-192.png","image_512":"https:\/\/secure.gravatar.com\/avatar\/bda59cfe1d182d477357b206420e4118.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0010-512.png","status_text_canonical":"","team":"T5G0FCMNW"},"is_admin":true,"is_owner":true,"is_primary_owner":true,"is_restricted":false,"is_ultra_restricted":false,"is_bot":false,"is_app_user":false,"updated":1569090915}}'
+    headers:
+      Access-Control-Allow-Headers: slack-route, x-slack-version-ts, x-b3-traceid,
+        x-b3-spanid, x-b3-parentspanid, x-b3-sampled, x-b3-flags
+      Access-Control-Allow-Origin: '*'
+      Access-Control-Expose-Headers: x-slack-req-id, retry-after
+      Cache-Control: private, no-cache, no-store, must-revalidate
+      Content-Encoding: gzip
+      Content-Length: '560'
+      Content-Type: application/json; charset=utf-8
+      Date: Sun, 05 Jul 2020 19:05:49 GMT
+      Expires: Mon, 26 Jul 1997 05:00:00 GMT
+      Pragma: no-cache
+      Server: Apache
+      Vary: Accept-Encoding
+      referrer-policy: no-referrer
+      strict-transport-security: max-age=31536000; includeSubDomains; preload
+      x-accepted-oauth-scopes: users:read
+      x-content-type-options: nosniff
+      x-oauth-scopes: app_mentions:read,channels:history,channels:join,channels:read,chat:write,commands,emoji:read,groups:read,im:history,im:read,im:write,mpim:history,mpim:read,mpim:write,reactions:read,reactions:write,team:read,usergroups:read,users.profile:read,users:read,users:write
+      x-slack-backend: r
+      x-slack-req-id: 3218c815e2f3b5ad892eea203e60804c
+      x-via: haproxy-www-oppt,haproxy-edge-iad-mcut
+      x-xss-protection: '0'
+    status:
+      code: 200
+      message: OK
+    url: https://www.slack.com/api/users.info?user=U5FTQ3QRZ
+version: 1

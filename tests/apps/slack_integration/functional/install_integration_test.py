@@ -1,9 +1,11 @@
 import pytest
 import responses
 
-from busy_beaver.apps.slack_integration.oauth.oauth_flow import SlackOAuthFlow
+from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
+    SlackInstallationOAuthFlow,
+)
 from busy_beaver.apps.slack_integration.oauth.workflow import (
-    verify_callback_and_save_tokens_in_database,
+    process_slack_installation_callback,
 )
 from busy_beaver.models import SlackInstallation
 
@@ -17,7 +19,7 @@ def test_slack_oauth_flow_first_time_installation(session):
     bot_access_token = "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy"
     responses.add(
         responses.POST,
-        SlackOAuthFlow.TOKEN_URL,
+        SlackInstallationOAuthFlow.TOKEN_URL,
         json={
             "ok": True,
             "access_token": bot_access_token,
@@ -41,7 +43,7 @@ def test_slack_oauth_flow_first_time_installation(session):
     code = "1234"
     qs = f"state={state}&code={code}"
     callback_url = f"https://app.busybeaverbot.com/slack/oauth?{qs}"
-    verify_callback_and_save_tokens_in_database(callback_url, state)
+    process_slack_installation_callback(callback_url, state)
 
     # Assert -- confirm info in database is as expected
     installation = SlackInstallation.query.first()
@@ -69,7 +71,7 @@ def test_slack_oauth_flow_reinstallation(session, factory):
     bot_access_token = "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy"
     responses.add(
         responses.POST,
-        SlackOAuthFlow.TOKEN_URL,
+        SlackInstallationOAuthFlow.TOKEN_URL,
         json={
             "ok": True,
             "access_token": bot_access_token,
@@ -93,7 +95,7 @@ def test_slack_oauth_flow_reinstallation(session, factory):
     code = "1234"
     qs = f"state={state}&code={code}"
     callback_url = f"https://app.busybeaverbot.com/slack/oauth?{qs}"
-    verify_callback_and_save_tokens_in_database(callback_url, state)
+    process_slack_installation_callback(callback_url, state)
 
     # Assert -- information in database is as expected
     installation = SlackInstallation.query.first()

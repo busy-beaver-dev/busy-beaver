@@ -1,7 +1,9 @@
 import pytest
 import responses
 
-from busy_beaver.apps.slack_integration.oauth.oauth_flow import SlackOAuthFlow
+from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
+    SlackInstallationOAuthFlow,
+)
 from busy_beaver.models import SlackInstallation
 from tests._utilities import FakeSlackClient
 
@@ -16,13 +18,13 @@ def patched_slack(patcher):
 
 @pytest.mark.end2end
 @responses.activate
-def test_slack_oauth_endpoints(client, session, patched_slack):
+def test_slack_installation_workflow(client, session, patched_slack):
     # Arrange
     # Step 1 -- User goes to 3rd party website and authenticates us
     # Step 2 -- create response to send back during token exchange
     responses.add(
         responses.POST,
-        SlackOAuthFlow.TOKEN_URL,
+        SlackInstallationOAuthFlow.TOKEN_URL,
         json={
             "ok": True,
             "access_token": "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy",

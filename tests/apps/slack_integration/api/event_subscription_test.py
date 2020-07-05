@@ -3,7 +3,9 @@ import responses
 
 from busy_beaver.apps.slack_integration.blocks import AppHome
 from busy_beaver.apps.slack_integration.event_subscription import app_home_handler
-from busy_beaver.apps.slack_integration.oauth.oauth_flow import SlackOAuthFlow
+from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
+    SlackInstallationOAuthFlow,
+)
 from busy_beaver.common.wrappers.slack import TimezoneInfo
 from busy_beaver.models import (
     GitHubSummaryConfiguration,
@@ -107,7 +109,7 @@ def test_slack_onboarding_install(client, session, patch_slack):
     patched_slack = patch_slack("busy_beaver.apps.slack_integration.oauth.workflow")
     responses.add(
         responses.POST,
-        SlackOAuthFlow.TOKEN_URL,
+        SlackInstallationOAuthFlow.TOKEN_URL,
         json={
             "ok": True,
             "access_token": "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy",

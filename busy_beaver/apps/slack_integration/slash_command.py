@@ -12,6 +12,9 @@ from busy_beaver.apps.github_integration.oauth.workflow import (
     disconnect_github_from_slack,
     relink_github_to_slack,
 )
+from busy_beaver.apps.slack_integration.oauth.workflow import (
+    create_link_to_login_to_settings,
+)
 from busy_beaver.config import FULL_INSTALLATION_WORKSPACE_IDS, MEETUP_GROUP_NAME
 from busy_beaver.toolbox import EventEmitter
 
@@ -43,6 +46,16 @@ def _parse_command(command_text: str) -> Command:
     if not command_parts:
         return Command(type="not_found", args=[])
     return Command(command_parts[0].lower(), args=command_parts[1:])
+
+
+def create_url_attachment(url, text):
+    if url:
+        return {
+            "fallback": url,
+            "attachment_type": "default",
+            "actions": [{"text": text, "type": "button", "url": url}],
+        }
+    return None
 
 
 #########################
@@ -86,7 +99,7 @@ def link_github(**data):
     workspace_id = data["team_id"]
 
     text, url = connect_github_to_slack(slack_id, workspace_id)
-    attachment = create_github_account_attachment(url)
+    attachment = create_url_attachment(url, text="Associate GitHub Profile")
     return make_slack_response(text=text, attachments=attachment)
 
 
@@ -97,7 +110,7 @@ def relink_github(**data):
     workspace_id = data["team_id"]
 
     text, url = relink_github_to_slack(slack_id, workspace_id)
-    attachment = create_github_account_attachment(url)
+    attachment = create_url_attachment(url, text="Associate GitHub Profile")
     return make_slack_response(text=text, attachments=attachment)
 
 
@@ -111,13 +124,15 @@ def disconnect_github(**data):
     return make_slack_response(text=text)
 
 
-def create_github_account_attachment(url=None):
-    if url:
-        return {
-            "fallback": url,
-            "attachment_type": "default",
-            "actions": [
-                {"text": "Associate GitHub Profile", "type": "button", "url": url}
-            ],
-        }
-    return None
+#############################
+# Access Busy Beaver Settings
+#############################
+@slash_command_dispatcher.on("settings")
+def login_to_busy_beaver_settings(**data):
+    logger.info("Requested settings url", extra=data)
+    slack_id = data["user_id"]
+    workspace_id = data["team_id"]
+
+    text, url = create_link_to_login_to_settings(slack_id, workspace_id)
+    attachment = create_url_attachment(url, text="Login to Access Settings")
+    return make_slack_response(text=text, attachments=attachment)

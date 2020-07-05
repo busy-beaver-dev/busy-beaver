@@ -40,6 +40,13 @@ class SlackClient:
             offset=result["user"]["tz_offset"],
         )
 
+    def is_admin(self, user_id):
+        try:
+            result = self.client.users_info(user=user_id)
+        except SlackApiError:
+            raise ValueError("Channel not found")
+        return result["user"]["is_admin"]
+
     def post_ephemeral_message(self, message, channel, user_id):
         return self.client.chat_postEphemeral(
             text=message, channel=channel, user=user_id, attachments=None

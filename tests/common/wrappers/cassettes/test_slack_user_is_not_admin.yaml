@@ -1,0 +1,46 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=utf-8
+      User-Agent:
+      - Python/3.8.1 slackclient/2.5.0 Linux/4.19.76-linuxkit
+      authorization:
+      - DUMMY
+    method: GET
+    uri: https://www.slack.com/api/users.info?user=UGG6065AP
+  response:
+    body:
+      string: '{"ok":true,"user":{"id":"UGG6065AP","team_id":"T5G0FCMNW","name":"codyfh","deleted":false,"color":"e96699","real_name":"Cody
+        Hiar","tz":"America\/Denver","tz_label":"Mountain Daylight Time","tz_offset":-21600,"profile":{"title":"","phone":"","skype":"","real_name":"Cody
+        Hiar","real_name_normalized":"Cody Hiar","display_name":"Cody Hiar","display_name_normalized":"Cody
+        Hiar","fields":null,"status_text":"","status_emoji":"","status_expiration":0,"avatar_hash":"g806223f8a57","image_24":"https:\/\/secure.gravatar.com\/avatar\/4b67806223f8a57a29580aa93bbc5c9a.jpg?s=24&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0005-24.png","image_32":"https:\/\/secure.gravatar.com\/avatar\/4b67806223f8a57a29580aa93bbc5c9a.jpg?s=32&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0005-32.png","image_48":"https:\/\/secure.gravatar.com\/avatar\/4b67806223f8a57a29580aa93bbc5c9a.jpg?s=48&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0005-48.png","image_72":"https:\/\/secure.gravatar.com\/avatar\/4b67806223f8a57a29580aa93bbc5c9a.jpg?s=72&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0005-72.png","image_192":"https:\/\/secure.gravatar.com\/avatar\/4b67806223f8a57a29580aa93bbc5c9a.jpg?s=192&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0005-192.png","image_512":"https:\/\/secure.gravatar.com\/avatar\/4b67806223f8a57a29580aa93bbc5c9a.jpg?s=512&d=https%3A%2F%2Fa.slack-edge.com%2Fdf10d%2Fimg%2Favatars%2Fava_0005-512.png","status_text_canonical":"","team":"T5G0FCMNW"},"is_admin":false,"is_owner":false,"is_primary_owner":false,"is_restricted":false,"is_ultra_restricted":false,"is_bot":false,"is_app_user":false,"updated":1569090915}}'
+    headers:
+      Access-Control-Allow-Headers: slack-route, x-slack-version-ts, x-b3-traceid,
+        x-b3-spanid, x-b3-parentspanid, x-b3-sampled, x-b3-flags
+      Access-Control-Allow-Origin: '*'
+      Access-Control-Expose-Headers: x-slack-req-id, retry-after
+      Cache-Control: private, no-cache, no-store, must-revalidate
+      Content-Encoding: gzip
+      Content-Length: '544'
+      Content-Type: application/json; charset=utf-8
+      Date: Sun, 05 Jul 2020 19:05:50 GMT
+      Expires: Mon, 26 Jul 1997 05:00:00 GMT
+      Pragma: no-cache
+      Server: Apache
+      Vary: Accept-Encoding
+      referrer-policy: no-referrer
+      strict-transport-security: max-age=31536000; includeSubDomains; preload
+      x-accepted-oauth-scopes: users:read
+      x-content-type-options: nosniff
+      x-oauth-scopes: app_mentions:read,channels:history,channels:join,channels:read,chat:write,commands,emoji:read,groups:read,im:history,im:read,im:write,mpim:history,mpim:read,mpim:write,reactions:read,reactions:write,team:read,usergroups:read,users.profile:read,users:read,users:write
+      x-slack-backend: r
+      x-slack-req-id: 739b67456810598ea7597e171cef7350
+      x-via: haproxy-www-vlt7,haproxy-edge-iad-1kyv
+      x-xss-protection: '0'
+    status:
+      code: 200
+      message: OK
+    url: https://www.slack.com/api/users.info?user=UGG6065AP
+version: 1
