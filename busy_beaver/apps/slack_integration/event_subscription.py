@@ -137,10 +137,12 @@ def app_home_handler(data):
     installation = SlackInstallation.query.filter_by(workspace_id=workspace_id).first()
     params = {"installation_id": installation.id, "slack_id": user_id}
     user = SlackUser.query.filter_by(**params).first()
-    if user:
-        user.app_home_opened_count += 1
-    else:
+    if not user:
+        logger.info("First app_home_opened for user", extra=data)
         user = SlackUser(**params)
+        user.app_home_opened_count = 0
+
+    user.app_home_opened_count += 1
     db.session.add(user)
     db.session.commit()
 

@@ -351,7 +351,7 @@ def test_user_opens_app_home_for_greater_than_first_time__shown_app_home(
     params = {"installation_id": installation.id, "slack_id": user_id}
     user = SlackUser.query.filter_by(**params).first()
     assert user
-    assert user.count == original_user_count + 1
+    assert user.app_home_opened_count == original_user_count + 1
 
 
 @pytest.mark.unit
