@@ -95,4 +95,55 @@ def test_slack_sign_in__happy_path(
     assert message in response.get_json()["message"]
 
 
-# fails
+@pytest.mark.end2end
+@responses.activate
+def test_slack_sign_in__slack_token_exchange_fails(
+    client, factory, generate_slash_command_request, create_slack_headers, patched_slack
+):
+    # Step 1 -- User enters `/busybeaver settings`
+    # Arrange
+    slack_id = "new_user"
+    install = factory.SlackInstallation()
+
+    data = generate_slash_command_request(
+        "settings", user_id=slack_id, team_id=install.workspace_id
+    )
+    headers = create_slack_headers(100_000_000, data, is_json_data=False)
+
+    # Act
+    response = client.post("/slack/slash-command", headers=headers, data=data)
+
+    # Assert -- response is as expected
+    assert response.status_code == 200
+    auth_url = response.json["attachments"][0]["actions"][0]["url"]
+    assert "user_scope=identity.basic" in auth_url
+    assert "/oauth/v2/authorize" in auth_url
+    assert "slack%2Fsign-in-callback" in auth_url
+
+    # ---
+    # Step 2 -- Confirm identity
+    # Arrange
+    # Grab state from response
+    parsed_auth_url = urlparse(auth_url)
+    qs = parse_qs(parsed_auth_url.query)
+    state = qs["state"][0]
+
+    # Create response to send back during token exchange
+    responses.add(
+        responses.GET,
+        SlackSignInOAuthFlow.TOKEN_URL,
+        match_querystring=False,
+        status=400,
+        json={},
+    )
+
+    # Stub out Slack client
+    patched_slack(is_admin=True)
+
+    # Act
+    params = {"code": "issued_code", "state": state}
+    response = client.get("/slack/sign-in-callback", query_string=params)
+
+    # Assert
+    assert response.status_code == 403
+    assert "Server error." in response.get_json()["error"]["message"]
