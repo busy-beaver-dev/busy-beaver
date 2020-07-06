@@ -1,5 +1,3 @@
-from urllib.parse import parse_qs, urlparse
-
 import pytest
 import responses
 
@@ -58,11 +56,6 @@ def test_slack_sign_in__happy_path(
     # ---
     # Step 2 -- Confirm identity
     # Arrange
-    # Grab state from response
-    parsed_auth_url = urlparse(auth_url)
-    qs = parse_qs(parsed_auth_url.query)
-    state = qs["state"][0]
-
     # Create response to send back during token exchange
     responses.add(
         responses.GET,
@@ -87,7 +80,7 @@ def test_slack_sign_in__happy_path(
     patched_slack(is_admin=is_admin)
 
     # Act
-    params = {"code": "issued_code", "state": state}
+    params = {"code": "issued_code", "state": ""}
     response = client.get("/slack/sign-in-callback", query_string=params)
 
     # Assert
@@ -123,11 +116,6 @@ def test_slack_sign_in__slack_token_exchange_fails__server_error(
     # ---
     # Step 2 -- Confirm identity
     # Arrange
-    # Grab state from response
-    parsed_auth_url = urlparse(auth_url)
-    qs = parse_qs(parsed_auth_url.query)
-    state = qs["state"][0]
-
     # Create error response to send back during token exchange
     responses.add(
         responses.GET,
@@ -141,7 +129,7 @@ def test_slack_sign_in__slack_token_exchange_fails__server_error(
     patched_slack(is_admin=True)
 
     # Act
-    params = {"code": "issued_code", "state": state}
+    params = {"code": "issued_code", "state": ""}
     response = client.get("/slack/sign-in-callback", query_string=params)
 
     # Assert
@@ -177,11 +165,6 @@ def test_slack_sign_in__slack_token_exchange_fails__code_error(
     # ---
     # Step 2 -- Confirm identity
     # Arrange
-    # Grab state from response
-    parsed_auth_url = urlparse(auth_url)
-    qs = parse_qs(parsed_auth_url.query)
-    state = qs["state"][0]
-
     # Create error response to send back during token exchange
     responses.add(
         responses.GET,
@@ -195,7 +178,7 @@ def test_slack_sign_in__slack_token_exchange_fails__code_error(
     patched_slack(is_admin=True)
 
     # Act
-    params = {"code": "issued_code", "state": state}
+    params = {"code": "issued_code", "state": ""}
     response = client.get("/slack/sign-in-callback", query_string=params)
 
     # Assert
