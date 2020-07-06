@@ -25,6 +25,13 @@ class SlackClient:
     def dm(self, message, user_id):
         return self.post_message(message, channel=user_id)
 
+    def channel_details(self, channel):
+        try:
+            result = self.client.conversations_info(channel=channel)
+        except SlackApiError:
+            raise ValueError("Channel not found")
+        return result["channel"]
+
     def get_channel_members(self, channel) -> List[str]:
         try:
             result = self.client.conversations_members(channel=channel)

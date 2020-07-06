@@ -24,6 +24,12 @@ def test_slack_dm(slack: SlackClient):
 
 
 @pytest.mark.vcr()
+def test_slack_get_channel_details(slack: SlackClient):
+    details = slack.channel_details("C5GQNTS07")
+    assert details["name"] == "general"
+
+
+@pytest.mark.vcr()
 def test_slack_get_channel_members(slack: SlackClient):
     members = slack.get_channel_members("C5GQNTS07")
     assert len(members) > 0
