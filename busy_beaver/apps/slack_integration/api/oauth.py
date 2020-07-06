@@ -5,12 +5,13 @@ from flask.views import MethodView
 from flask_login import login_user
 
 from busy_beaver.apps.slack_integration.oauth.state_machine import (
-    SlackInstallationOnboardUserWorkflow,
+    SlackInstallationOnboardUserStateMachine,
 )
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     process_slack_installation_callback,
     process_slack_sign_in_callback,
 )
+from busy_beaver.extensions import db
 
 logger = logging.getLogger(__name__)
 
@@ -26,8 +27,14 @@ class SlackAppInstallationCallbackResource(MethodView):
         state = request.args.get("state")
         callback_url = request.url
         installation = process_slack_installation_callback(callback_url, state)
-        onboard_user_workflow = SlackInstallationOnboardUserWorkflow(installation)
-        onboard_user_workflow.advance()
+
+        # try catch on transition error
+        slack_installation_fsm = SlackInstallationOnboardUserStateMachine(installation)
+        slack_installation_fsm.welcome_user()
+        installation.state = slack_installation_fsm.state
+        db.session.add(installation)
+        db.session.commit()
+
         # TODO take them an actual page
         return jsonify({"Installation": "successful"})
 
