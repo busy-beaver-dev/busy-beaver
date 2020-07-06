@@ -37,10 +37,6 @@ class SlackSignInCallbackResource(MethodView):
 
     def get(self):
         logger.info("Slack Signing OAuth Callback")
-        params = request.args
-        state = params.get("state")
-        callback_url = request.url
-
-        user = process_slack_sign_in_callback(callback_url, state)
+        user = process_slack_sign_in_callback(request.url)
         login_user(user)
         return redirect(url_for("web.settings_view"))

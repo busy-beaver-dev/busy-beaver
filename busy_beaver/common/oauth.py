@@ -35,6 +35,6 @@ class OAuthFlow(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def process_callback(self, authorization_response_url, state):  # pragma: no cover
+    def process_callback(self, authorization_response_url):  # pragma: no cover
         """Handles callback made by authentication service servers to verify users"""
         pass

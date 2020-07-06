@@ -25,17 +25,16 @@ class GitHubOAuthFlow(OAuthFlow):
         authorization_url, state = self.session.authorization_url(url)
         return ExternalOAuthDetails(url=authorization_url, state=state)
 
-    def process_callback(self, authorization_response_url, state) -> GitHubOAuthInfo:
-        access_token = self._fetch_token(authorization_response_url, state)
+    def process_callback(self, authorization_response_url) -> GitHubOAuthInfo:
+        access_token = self._fetch_token(authorization_response_url)
         github_id, github_username = self._fetch_github_account_details(access_token)
         return GitHubOAuthInfo(access_token, github_id, github_username)
 
-    def _fetch_token(self, authorization_response_url, state):
+    def _fetch_token(self, authorization_response_url):
         user_credentials = self.session.fetch_token(
             self.TOKEN_URL,
             authorization_response=authorization_response_url,
             client_secret=self.client_secret,
-            state=state,
         )
         return user_credentials["access_token"]
 

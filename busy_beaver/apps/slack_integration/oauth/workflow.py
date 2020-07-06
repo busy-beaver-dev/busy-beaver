@@ -3,7 +3,6 @@ import logging
 from typing import NamedTuple
 
 from busy_beaver.clients import slack_install_oauth, slack_signin_oauth
-from busy_beaver.common.oauth import OAuthError
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation, SlackUser
@@ -31,26 +30,23 @@ class UserDetails(NamedTuple):
 
 def create_link_to_login_to_settings(slack_user):
     auth = slack_signin_oauth.generate_authentication_tuple()
-    slack_user.slack_oauth_state = auth.state
-    db.session.add(slack_user)
-    db.session.commit()
-
     return Output(SIGN_IN_TO_SLACK, auth.url)
 
 
-def process_slack_sign_in_callback(callback_url, state):
-    user = SlackUser.query.filter_by(slack_oauth_state=state).first()
-    if not user:
-        logger.error("Sign-in with Slack state does not match")
-        raise OAuthError("Sign-in with Slack failed. Please try again.")
-
-    user_details = slack_signin_oauth.process_callback(callback_url, state)
+def process_slack_sign_in_callback(callback_url):
+    user_details = slack_signin_oauth.process_callback(callback_url)
     installation = SlackInstallation.query.filter_by(
         workspace_id=user_details.workspace_id
     ).first()
     slack_user = SlackUser.query.filter_by(
         slack_id=user_details.slack_id, installation=installation
     ).first()
+    if not slack_user:
+        slack_user = SlackUser()
+        slack_user.slack_id = user_details.slack_id
+        slack_user.installation = installation
+        db.session.add(slack_user)
+        db.session.commit()
 
     extra = {"user_id": slack_user.slack_id, "workspace_id": installation.workspace_id}
     logger.info("User logged into Busy Beaver", extra=extra)
@@ -62,7 +58,7 @@ def process_slack_sign_in_callback(callback_url, state):
 ##############
 def process_slack_installation_callback(callback_url, state):
     """Verify callback and save tokens in the database"""
-    oauth_details = slack_install_oauth.process_callback(callback_url, state)
+    oauth_details = slack_install_oauth.process_callback(callback_url)
     oauth_dict = oauth_details._asdict()
 
     # TODO update or create seems like a useful helper function
