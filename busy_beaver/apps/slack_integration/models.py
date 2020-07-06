@@ -1,9 +1,10 @@
+from flask_login import UserMixin
 from sqlalchemy_utils import EncryptedType
 from sqlalchemy_utils.types.encrypted.encrypted_type import AesEngine
 
 from busy_beaver.common.models import BaseModel
 from busy_beaver.config import SECRET_KEY
-from busy_beaver.extensions import db
+from busy_beaver.extensions import db, login_manager
 
 
 class SlackInstallation(BaseModel):
@@ -44,7 +45,7 @@ class SlackInstallation(BaseModel):
     )
 
 
-class SlackUser(BaseModel):
+class SlackUser(UserMixin, BaseModel):
     """Track users that have interacted with Busy Beaver on Slack"""
 
     __tablename__ = "slack_user"
@@ -61,3 +62,8 @@ class SlackUser(BaseModel):
 
     # Relationships
     installation = db.relationship("SlackInstallation")
+
+
+@login_manager.user_loader
+def load_user(id):
+    return SlackUser.query.get(int(id))

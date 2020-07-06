@@ -1,7 +1,8 @@
 import logging
 
-from flask import jsonify, request
+from flask import jsonify, redirect, request, url_for
 from flask.views import MethodView
+from flask_login import login_user
 
 from busy_beaver.apps.slack_integration.oauth.state_machine import (
     SlackInstallationOnboardUserWorkflow,
@@ -41,8 +42,5 @@ class SlackSignInCallbackResource(MethodView):
         callback_url = request.url
 
         user = process_slack_sign_in_callback(callback_url, state)
-
-        if user.is_admin:
-            return jsonify({"message": "You are the admin!"})
-        else:
-            return jsonify({"message": "You are not the admin!"})
+        login_user(user)
+        return redirect(url_for("web.settings_view"))

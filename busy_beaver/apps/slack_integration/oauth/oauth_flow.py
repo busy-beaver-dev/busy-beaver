@@ -131,7 +131,7 @@ class SlackInstallationOAuthFlow(OAuthFlow):
 # Slack Sign-in
 ###############
 class SlackSignInDetails(NamedTuple):
-    user_id: str
+    slack_id: str
     workspace_id: str
     scope: str
     access_token: str
@@ -170,7 +170,7 @@ class SlackSignInOAuthFlow(OAuthFlow):
     def process_callback(self, authorization_response_url, state) -> SlackSignInDetails:
         user_credentials = self._fetch_token(authorization_response_url)
         return SlackSignInDetails(
-            user_id=user_credentials["authed_user"]["id"],
+            slack_id=user_credentials["authed_user"]["id"],
             workspace_id=user_credentials["team"]["id"],
             scope=user_credentials["authed_user"]["scope"],
             access_token=user_credentials["authed_user"]["access_token"],

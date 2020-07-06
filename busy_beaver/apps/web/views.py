@@ -2,6 +2,7 @@ import logging
 
 from flask import render_template
 from flask.views import View
+from flask_login import login_required
 
 from .blueprint import web_bp
 
@@ -25,3 +26,9 @@ class RenderTemplateView(View):
 web_bp.add_url_rule(
     "/", view_func=RenderTemplateView.as_view("home", template_name="index.html")
 )
+
+
+@web_bp.route("/settings")
+@login_required
+def settings_view():
+    return "Hello, World!"
