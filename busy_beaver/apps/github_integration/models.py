@@ -1,3 +1,5 @@
+from sqlalchemy_utils import TimezoneType
+
 from busy_beaver.common.models import BaseModel
 from busy_beaver.extensions import db
 
@@ -16,6 +18,8 @@ class GitHubSummaryConfiguration(BaseModel):
     channel = db.Column(db.String(20), nullable=False)
     time_to_post = db.Column(db.String(20), nullable=True)
     timezone_info = db.Column(db.JSON)
+    summary_post_time = db.Column(db.Time, nullable=True)
+    summary_post_timezone = db.Column(TimezoneType(backend="pytz"), nullable=True)
 
     # Relationships
     slack_installation = db.relationship(
