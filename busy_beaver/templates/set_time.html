@@ -1,0 +1,10 @@
+
+<form method="POST" action="{{ url_for('web.github_summary_settings') }}">
+  {{ form.csrf_token }}
+  <br>
+  {{ form.summary_post_time.label }} {{ form.summary_post_time(size=20) }}
+  <br>
+  {{ form.summary_post_timezone.label }} {{ form.summary_post_timezone() }}
+  <br>
+  <input type="submit" value="Go">
+</form>

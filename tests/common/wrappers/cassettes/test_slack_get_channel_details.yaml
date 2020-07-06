@@ -1,0 +1,46 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=utf-8
+      User-Agent:
+      - Python/3.8.1 slackclient/2.5.0 Linux/4.19.76-linuxkit
+      authorization:
+      - DUMMY
+    method: GET
+    uri: https://www.slack.com/api/conversations.info?channel=C5GQNTS07
+  response:
+    body:
+      string: '{"ok":true,"channel":{"id":"C5GQNTS07","name":"general","is_channel":true,"is_group":false,"is_im":false,"created":1495325664,"is_archived":false,"is_general":true,"unlinked":0,"name_normalized":"general","is_shared":false,"parent_conversation":null,"creator":"U5FTQ3QRZ","is_read_only":false,"is_thread_only":false,"is_non_threadable":false,"is_ext_shared":false,"is_org_shared":false,"shared_team_ids":["T5G0FCMNW"],"pending_shared":[],"pending_connected_team_ids":[],"is_pending_ext_shared":false,"is_member":true,"is_private":false,"is_mpim":false,"last_read":"1579899726.000100","topic":{"value":"Company-wide
+        announcements and work-based matters","creator":"","last_set":0},"purpose":{"value":"This
+        channel is for team-wide communication and announcements. All team members
+        are in this channel.","creator":"","last_set":0},"previous_names":[]}}'
+    headers:
+      Access-Control-Allow-Headers: slack-route, x-slack-version-ts, x-b3-traceid,
+        x-b3-spanid, x-b3-parentspanid, x-b3-sampled, x-b3-flags
+      Access-Control-Allow-Origin: '*'
+      Access-Control-Expose-Headers: x-slack-req-id, retry-after
+      Cache-Control: private, no-cache, no-store, must-revalidate
+      Content-Encoding: gzip
+      Content-Length: '434'
+      Content-Type: application/json; charset=utf-8
+      Date: Mon, 06 Jul 2020 16:09:36 GMT
+      Expires: Mon, 26 Jul 1997 05:00:00 GMT
+      Pragma: no-cache
+      Server: Apache
+      Vary: Accept-Encoding
+      referrer-policy: no-referrer
+      strict-transport-security: max-age=31536000; includeSubDomains; preload
+      x-accepted-oauth-scopes: channels:read,groups:read,mpim:read,im:read,read
+      x-content-type-options: nosniff
+      x-oauth-scopes: app_mentions:read,channels:history,channels:join,channels:read,chat:write,commands,emoji:read,groups:read,im:history,im:read,im:write,mpim:history,mpim:read,mpim:write,reactions:read,reactions:write,team:read,usergroups:read,users.profile:read,users:read,users:write
+      x-slack-backend: r
+      x-slack-req-id: 6703374b6fc33d7138c84e288f07aa12
+      x-via: haproxy-www-pynl,haproxy-edge-iad-lzez
+      x-xss-protection: '0'
+    status:
+      code: 200
+      message: OK
+    url: https://www.slack.com/api/conversations.info?channel=C5GQNTS07
+version: 1
