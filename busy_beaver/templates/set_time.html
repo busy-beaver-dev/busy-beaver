@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block container %}
 <form method="POST" action="{{ url_for('web.github_summary_settings') }}">
   {{ form.csrf_token }}
   <br>
