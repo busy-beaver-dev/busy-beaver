@@ -1,5 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
 Hello world!<br><br>
 
 {{ is_admin }}<br>
 
 <p>Channel: {{ github_summary["channel"] }}</p>
+
+{% endblock %}

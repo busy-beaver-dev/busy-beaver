@@ -10,6 +10,7 @@ asn1crypto==0.24.0        # via cryptography
 async-timeout==3.0.1      # via aiohttp
 attrs==19.1.0             # via aiohttp
 blinker==1.4              # via sentry-sdk
+bootstrap-flask==1.4      # via -r requirements.in
 certifi==2019.3.9         # via requests, sentry-sdk
 cffi==1.12.3              # via cryptography
 chardet==3.0.4            # via aiohttp, requests
@@ -25,7 +26,7 @@ flask-rq2==18.3           # via -r requirements.in
 flask-sqlalchemy==2.4.1   # via -r requirements.in, flask-migrate
 flask-talisman==0.7.0     # via -r requirements.in
 flask-wtf==0.14.3         # via -r requirements.in
-flask==1.1.1              # via -r requirements.in, flask-login, flask-migrate, flask-rq2, flask-sqlalchemy, flask-wtf, sentry-sdk
+flask==1.1.1              # via -r requirements.in, bootstrap-flask, flask-login, flask-migrate, flask-rq2, flask-sqlalchemy, flask-wtf, sentry-sdk
 gunicorn==20.0.4          # via -r requirements.in
 idna==2.7                 # via requests, yarl
 infinity==1.5             # via intervals

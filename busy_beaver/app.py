@@ -12,7 +12,7 @@ from .blueprints import (
 from .common.oauth import OAuthError
 from .config import DATABASE_URI, REDIS_URI, SECRET_KEY
 from .exceptions import NotAuthorized, ValidationError
-from .extensions import db, login_manager, migrate, rq, talisman
+from .extensions import bootstrap, db, login_manager, migrate, rq, talisman
 from .toolbox import make_response
 
 
@@ -51,6 +51,7 @@ def create_app(*, testing=False):
     app.config["RQ_QUEUES"] = ["default"]
     rq.init_app(app)
 
+    bootstrap.init_app(app)
     login_manager.init_app(app)
     talisman.init_app(app)
 
