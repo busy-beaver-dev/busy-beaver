@@ -35,7 +35,6 @@ class GitHubOAuthFlow(OAuthFlow):
             self.TOKEN_URL,
             authorization_response=authorization_response_url,
             client_secret=self.client_secret,
-            state=state,
         )
         return user_credentials["access_token"]
 
