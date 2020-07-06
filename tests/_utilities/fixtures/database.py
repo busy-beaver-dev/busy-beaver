@@ -1,6 +1,7 @@
 import pytest
 
 from busy_beaver.extensions import db as db
+from tests._utilities import FactoryManager
 
 
 @pytest.fixture(name="db", scope="module")
@@ -27,3 +28,8 @@ def create_sqlalchemy_scoped_session(db):
     transaction.rollback()
     connection.close()
     session.remove()
+
+
+@pytest.fixture(name="factory")
+def factory_manager(session):
+    yield FactoryManager(session)

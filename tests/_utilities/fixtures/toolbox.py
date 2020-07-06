@@ -5,8 +5,6 @@ import uuid
 
 import pytest
 
-from tests._utilities import FactoryManager
-
 
 @pytest.fixture
 def patcher(monkeypatch):
@@ -50,8 +48,3 @@ def create_fake_background_task():
         return FakeBackgroundTask()
 
     yield _create_fake_background_task
-
-
-@pytest.fixture(name="factory")
-def factory_manager(session):
-    yield FactoryManager(session)
