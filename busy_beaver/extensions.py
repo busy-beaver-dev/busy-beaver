@@ -5,7 +5,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_talisman import Talisman
 
 db = SQLAlchemy()
-login_manager = LoginManager()
 migrate = Migrate()
 rq = RQ()
 talisman = Talisman()
+
+login_manager = LoginManager()
+login_manager.login_view = "web.login"

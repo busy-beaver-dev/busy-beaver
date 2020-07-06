@@ -1,8 +1,8 @@
 import logging
 
-from flask import render_template
+from flask import redirect, render_template, url_for
 from flask.views import View
-from flask_login import login_required
+from flask_login import login_required, logout_user
 
 from .blueprint import web_bp
 
@@ -29,8 +29,18 @@ class RenderTemplateLoggedInView(RenderTemplateView):
     decorators = [login_required]
 
 
+@web_bp.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("web.home"))
+
+
 web_bp.add_url_rule(
     "/", view_func=RenderTemplateView.as_view("home", template_name="index.html")
+)
+web_bp.add_url_rule(
+    "/login", view_func=RenderTemplateView.as_view("login", template_name="login.html")
 )
 web_bp.add_url_rule(
     "/settings",
