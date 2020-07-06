@@ -45,7 +45,7 @@ class SlackInstallationOnboardUserStateMachine(StateMachine):
     def save_configuration_to_database(self):
         pass
 
-    @transition(source="active", target="active", condition="bot_in_channel")
+    @transition(source="active", target="active", conditions=[_bot_in_channel])
     def update_state_in_database(self):
         pass
 
