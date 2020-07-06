@@ -48,17 +48,13 @@ def process_slack_sign_in_callback(callback_url, state):
     installation = SlackInstallation.query.filter_by(
         workspace_id=user_details.workspace_id
     ).first()
-    slack = SlackClient(installation.bot_access_token)
-    is_admin = slack.is_admin(user_details.user_id)
+    slack_user = SlackUser.query.filter_by(
+        slack_id=user_details.slack_id, installation=installation
+    ).first()
 
-    extra = {
-        "user_id": user_details.user_id,
-        "workspace_id": user_details.workspace_id,
-        "is_admin": is_admin,
-    }
+    extra = {"user_id": slack_user.slack_id, "workspace_id": installation.workspace_id}
     logger.info("User logged into Busy Beaver", extra=extra)
-
-    return UserDetails(is_admin, user_details)
+    return slack_user
 
 
 ##############

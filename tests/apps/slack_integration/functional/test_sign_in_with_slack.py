@@ -91,8 +91,8 @@ def test_slack_sign_in__happy_path(
     response = client.get("/slack/sign-in-callback", query_string=params)
 
     # Assert
-    assert response.status_code == 200
-    assert message in response.get_json()["message"]
+    assert response.status_code == 302
+    assert "/settings" in response.headers["Location"]
 
 
 @pytest.mark.end2end
