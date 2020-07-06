@@ -87,7 +87,7 @@ class SlackInstallationOAuthFlow(OAuthFlow):
     def generate_authentication_tuple(self) -> ExternalOAuthDetails:  # pragma: no cover
         raise NotImplementedError
 
-    def process_callback(self, authorization_response_url, state) -> SlackOAuthInfo:
+    def process_callback(self, authorization_response_url) -> SlackOAuthInfo:
         """Slack OAuth for workspace installation adds params to response
 
         Code is a unique identifer; use it as a unique identifer
@@ -96,17 +96,16 @@ class SlackInstallationOAuthFlow(OAuthFlow):
         Additional Resources
             - https://api.slack.com/methods/oauth.v2.access
         """
-        self._fetch_token(authorization_response_url, state)
+        self._fetch_token(authorization_response_url)
         code = parse_qs(urlparse(authorization_response_url).query)["code"][0]
         oauth_response = self._parse_json_response(code)
         return SlackOAuthInfo(**oauth_response)
 
-    def _fetch_token(self, authorization_response_url, state):
+    def _fetch_token(self, authorization_response_url):
         workspace_credentials = self.session.fetch_token(
             self.TOKEN_URL,
             authorization_response=authorization_response_url,
             client_secret=self.client_secret,
-            state=state,
             scope=None,
         )
         return workspace_credentials["access_token"]
@@ -167,7 +166,7 @@ class SlackSignInOAuthFlow(OAuthFlow):
         authorization_url = authorization_url.replace("scope=", "user_scope=")
         return ExternalOAuthDetails(url=authorization_url, state=state)
 
-    def process_callback(self, authorization_response_url, state) -> SlackSignInDetails:
+    def process_callback(self, authorization_response_url) -> SlackSignInDetails:
         user_credentials = self._fetch_token(authorization_response_url)
         return SlackSignInDetails(
             slack_id=user_credentials["authed_user"]["id"],

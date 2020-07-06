@@ -44,7 +44,7 @@ def process_slack_sign_in_callback(callback_url, state):
         logger.error("Sign-in with Slack state does not match")
         raise OAuthError("Sign-in with Slack failed. Please try again.")
 
-    user_details = slack_signin_oauth.process_callback(callback_url, state)
+    user_details = slack_signin_oauth.process_callback(callback_url)
     installation = SlackInstallation.query.filter_by(
         workspace_id=user_details.workspace_id
     ).first()
@@ -62,7 +62,7 @@ def process_slack_sign_in_callback(callback_url, state):
 ##############
 def process_slack_installation_callback(callback_url, state):
     """Verify callback and save tokens in the database"""
-    oauth_details = slack_install_oauth.process_callback(callback_url, state)
+    oauth_details = slack_install_oauth.process_callback(callback_url)
     oauth_dict = oauth_details._asdict()
 
     # TODO update or create seems like a useful helper function

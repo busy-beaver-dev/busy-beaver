@@ -82,7 +82,7 @@ def process_github_oauth_callback(callback_url, state, code):
         logger.error("GitHub state does not match")
         raise OAuthError("GitHub verification failed. Please try again.")
 
-    oauth_details = github_oauth.process_callback(callback_url, state)
+    oauth_details = github_oauth.process_callback(callback_url)
     _save_github_user_information_to_database(user, oauth_details)
 
     logger.info("Account is linked to GitHub")
