@@ -1,6 +1,13 @@
 {% extends "base.html" %}
 
 {% block container %}
+<h1>Configure GitHub Summary</h1>
+
+
+<h2>Configuration Settings</h2>
+<p>Channel: {{ channel }}</p>
+
+<h3>Update Settings</h3>
 <form method="POST" action="{{ url_for('web.github_summary_settings') }}">
   {{ form.csrf_token }}
   <br>

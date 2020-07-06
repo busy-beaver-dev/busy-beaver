@@ -6,7 +6,6 @@ from flask_login import current_user, login_required, logout_user
 
 from .blueprint import web_bp
 from .forms import GitHubSummaryConfigurationForm
-from .workflows import generate_settings_context
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import NotAuthorized
 from busy_beaver.extensions import db
@@ -36,18 +35,24 @@ web_bp.add_url_rule(
 )
 
 
+class RenderTemplateLoginRequiredView(RenderTemplateView):
+
+    decorators = [login_required]
+
+
+web_bp.add_url_rule(
+    "/settings",
+    view_func=RenderTemplateLoginRequiredView.as_view(
+        "settings_view", template_name="settings.html"
+    ),
+)
+
+
 @web_bp.route("/logout")
 @login_required
 def logout():
     logout_user()
     return redirect(url_for("web.home"))
-
-
-@web_bp.route("/settings")
-@login_required
-def settings_view():
-    context = generate_settings_context(current_user)
-    return render_template("settings.html", **context)
 
 
 @web_bp.route("/settings/github-summary", methods=("GET", "POST"))
@@ -76,4 +81,7 @@ def github_summary_settings():
     # load default
     form.summary_post_time.data = config.summary_post_time
     form.summary_post_timezone.data = config.summary_post_timezone.zone
-    return render_template("set_time.html", form=form)
+
+    channel = config.channel
+    channel_info = slack.channel_details(channel)
+    return render_template("set_time.html", form=form, channel=channel_info["name"])
