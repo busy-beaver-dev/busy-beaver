@@ -1,5 +1,9 @@
-Hello world!<br><br>
+{% extends "base.html" %}
 
-{{ is_admin }}<br>
+{% block container %}
+<h1>Busy Beaver Settings</h1>
 
-<p>Channel: {{ github_summary["channel"] }}</p>
+<p>Customnize application configuration.</p>
+
+<p><a href="/settings/github-summary">GitHub Summary Settings</a></p>
+{% endblock %}
