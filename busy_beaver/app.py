@@ -53,6 +53,7 @@ def create_app(*, testing=False):
 
     bootstrap.init_app(app)
     login_manager.init_app(app)
+    # TODO figure out CSP headers and re-enable
     # talisman.init_app(app)
 
     app.register_error_handler(NotAuthorized, handle_http_error)
