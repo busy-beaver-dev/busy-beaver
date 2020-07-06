@@ -1,4 +1,5 @@
 from dateutil.parser import parse
+from finite_state_machine import StateMachine, transition
 from transitions import Machine
 
 from busy_beaver.apps.slack_integration.oauth.workflow import (
@@ -8,6 +9,45 @@ from busy_beaver.apps.slack_integration.oauth.workflow import (
 )
 from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation
+
+
+def _bot_in_channel(instance):
+    pass
+
+
+def _validate_configuration(instance):
+    pass
+
+
+class SlackInstallationOnboardUserStateMachine(StateMachine):
+    initial_state = "installed"
+
+    def __init__(self, slack_installation):
+        self.state = self.initial_state
+        self.slack_installation = slack_installation
+        super().__init__()
+
+    @transition(source="installed", target="user_welcomed")
+    def welcome_user(self):
+        send_welcome_message(self.slack_installation)
+
+    @transition(
+        source="user_welcomed", target="config_requested", conditions=[_bot_in_channel]
+    )
+    def send_initial_configuration_request(self):
+        send_configuration_message(self.slack_installation)
+
+    @transition(
+        source="config_requested",
+        target="active",
+        conditions=[_bot_in_channel, _validate_configuration],
+    )
+    def save_configuration_to_database(self):
+        pass
+
+    @transition(source="active", target="active", condition="bot_in_channel")
+    def update_state_in_database(self):
+        pass
 
 
 class SlackInstallationOnboardUserWorkflow:
