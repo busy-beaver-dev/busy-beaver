@@ -30,10 +30,6 @@ class UserDetails(NamedTuple):
 
 def create_link_to_login_to_settings(slack_user):
     auth = slack_signin_oauth.generate_authentication_tuple()
-    slack_user.slack_oauth_state = auth.state
-    db.session.add(slack_user)
-    db.session.commit()
-
     return Output(SIGN_IN_TO_SLACK, auth.url)
 
 
