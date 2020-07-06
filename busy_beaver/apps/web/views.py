@@ -23,12 +23,18 @@ class RenderTemplateView(View):
         return render_template(self.template_name)
 
 
+class RenderTemplateLoggedInView(RenderTemplateView):
+    """Template View requiring logged in user"""
+
+    decorators = [login_required]
+
+
 web_bp.add_url_rule(
     "/", view_func=RenderTemplateView.as_view("home", template_name="index.html")
 )
-
-
-@web_bp.route("/settings")
-@login_required
-def settings_view():
-    return "Hello, World!"
+web_bp.add_url_rule(
+    "/settings",
+    view_func=RenderTemplateLoggedInView.as_view(
+        "settings_view", template_name="settings.html"
+    ),
+)
