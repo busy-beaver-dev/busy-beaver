@@ -52,6 +52,7 @@ class StateToOAuthResponse:
 
 
 class SlackInstallationOAuthFlow(OAuthFlow):
+    # TODO update to v2/oauth/authorize and remove hook (write up direct token exchange)
     AUTHORIZATION_BASE_URL = "https://slack.com/oauth/authorize"
     TOKEN_URL = "https://slack.com/api/oauth.v2.access"
     SCOPES = [  # https://api.slack.com/scopes
