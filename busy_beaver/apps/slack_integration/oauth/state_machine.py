@@ -11,8 +11,8 @@ from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation
 
 
-def _bot_in_channel(instance):
-    pass
+def no_github_summary_configuration(self):
+    return self.slack_installation.github_summary_config is None
 
 
 def _validate_configuration(instance):
@@ -23,7 +23,7 @@ class SlackInstallationOnboardUserStateMachine(StateMachine):
     initial_state = "installed"
 
     def __init__(self, slack_installation):
-        self.state = self.initial_state
+        self.state = slack_installation.state
         self.slack_installation = slack_installation
         super().__init__()
 
@@ -32,20 +32,22 @@ class SlackInstallationOnboardUserStateMachine(StateMachine):
         send_welcome_message(self.slack_installation)
 
     @transition(
-        source="user_welcomed", target="config_requested", conditions=[_bot_in_channel]
+        source="user_welcomed",
+        target="config_requested",
+        conditions=[no_github_summary_configuration],
     )
-    def send_initial_configuration_request(self):
-        send_configuration_message(self.slack_installation)
+    def send_initial_configuration_request(self, channel):
+        send_configuration_message(self.slack_installation, channel)
 
     @transition(
         source="config_requested",
         target="active",
-        conditions=[_bot_in_channel, _validate_configuration],
+        # conditions=[_bot_in_channel, _validate_configuration],
     )
     def save_configuration_to_database(self):
         pass
 
-    @transition(source="active", target="active", conditions=[_bot_in_channel])
+    @transition(source="active", target="active")
     def update_state_in_database(self):
         pass
 

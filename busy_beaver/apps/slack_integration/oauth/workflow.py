@@ -4,6 +4,7 @@ from typing import NamedTuple
 
 from busy_beaver.clients import slack_install_oauth, slack_signin_oauth
 from busy_beaver.common.wrappers import SlackClient
+from busy_beaver.config import BASE_URL
 from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation, SlackUser
 
@@ -93,14 +94,13 @@ def send_welcome_message(installation: SlackInstallation):
 
 CONFIRMED_MESSAGE = (
     "Thanks for the invite! I will post daily summaries in <#{channel}>\n\n"
-    "What time should I post the daily GitHub summary?"
+    f"<{BASE_URL}/settings/github-summary|Configure when to post messages>"
 )
 
 
-def send_configuration_message(installation: SlackInstallation):
+def send_configuration_message(installation: SlackInstallation, channel):
     slack = SlackClient(installation.bot_access_token)
     user_id = installation.authorizing_user_id
-    channel = installation.github_summary_config.channel
     slack.dm(CONFIRMED_MESSAGE.format(channel=channel), user_id=user_id)
 
 
