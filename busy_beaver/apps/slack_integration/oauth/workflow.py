@@ -56,7 +56,7 @@ def process_slack_sign_in_callback(callback_url):
 ##############
 # Installation
 ##############
-def process_slack_installation_callback(callback_url, state):
+def process_slack_installation_callback(callback_url):
     """Verify callback and save tokens in the database"""
     oauth_details = slack_install_oauth.process_callback(callback_url)
     oauth_dict = oauth_details._asdict()

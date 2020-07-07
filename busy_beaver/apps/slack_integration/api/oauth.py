@@ -22,10 +22,8 @@ class SlackAppInstallationCallbackResource(MethodView):
 
     def get(self):
         logger.info("Slack Workspace Installation")
-        # state is not used but it fits OAuth interface
-        state = request.args.get("state")
         callback_url = request.url
-        installation = process_slack_installation_callback(callback_url, state)
+        installation = process_slack_installation_callback(callback_url)
 
         slack_installation_fsm = SlackInstallationOnboardUserStateMachine(installation)
         try:
