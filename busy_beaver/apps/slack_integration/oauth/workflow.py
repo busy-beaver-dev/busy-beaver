@@ -1,4 +1,3 @@
-from datetime import time
 import logging
 from typing import NamedTuple
 
@@ -114,20 +113,17 @@ ACTIVE_MESSAGE = (
 )
 
 
-def save_configuration(installation: SlackInstallation, time_to_post: time):
-    slack = SlackClient(installation.bot_access_token)
-    user_id = installation.authorizing_user_id
-    tz = slack.get_user_timezone(user_id)
-
-    github_summary_config = installation.github_summary_config
-    github_summary_config.time_to_post = str(time_to_post)
-    github_summary_config.timezone_info = tz._asdict()
-    db.session.add(github_summary_config)
+def save_configuration(installation, time_to_post, timezone_to_post, slack_id):
+    config = installation.github_summary_config
+    config.summary_post_time = time_to_post
+    config.summary_post_timezone = timezone_to_post
+    db.session.add(config)
     db.session.commit()
 
-    channel = github_summary_config.channel
+    channel = config.channel
+    slack = SlackClient(installation.bot_access_token)
     slack.dm(
-        ACTIVE_MESSAGE.format(time=str(time_to_post), channel=channel), user_id=user_id
+        ACTIVE_MESSAGE.format(time=str(time_to_post), channel=channel), user_id=slack_id
     )
 
 

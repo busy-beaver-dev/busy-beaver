@@ -15,8 +15,8 @@ def no_github_summary_configuration(self):
     return self.slack_installation.github_summary_config is None
 
 
-def _validate_configuration(instance):
-    pass
+def has_github_summary_configuration(self):
+    return self.slack_installation.github_summary_config is not None
 
 
 class SlackInstallationOnboardUserStateMachine(StateMachine):
@@ -40,12 +40,19 @@ class SlackInstallationOnboardUserStateMachine(StateMachine):
         send_configuration_message(self.slack_installation, channel)
 
     @transition(
-        source="config_requested",
+        source=["config_requested", "active"],
         target="active",
-        # conditions=[_bot_in_channel, _validate_configuration],
+        conditions=[has_github_summary_configuration],
     )
-    def save_configuration_to_database(self):
-        pass
+    def save_configuration_to_database(
+        self, summary_post_time, summary_post_timezone, slack_id
+    ):
+        save_configuration(
+            self.slack_installation,
+            time_to_post=summary_post_time,
+            timezone_to_post=summary_post_timezone,
+            slack_id=slack_id,
+        )
 
     @transition(source="active", target="active")
     def update_state_in_database(self):
@@ -65,21 +72,6 @@ class SlackInstallationOnboardUserWorkflow:
 
         self.machine.add_transition(
             trigger="advance",
-            source="installed",
-            dest="user_welcomed",
-            before="send_installing_user_welcome_message",
-            after="update_state_in_database",
-        )
-        self.machine.add_transition(
-            trigger="advance",
-            source="user_welcomed",
-            dest="config_requested",
-            before="send_initial_configuration_request",
-            after="update_state_in_database",
-            conditions="check_channel_membership",
-        )
-        self.machine.add_transition(
-            trigger="advance",
             source="config_requested",
             dest="active",
             before="save_configuration_to_database",
@@ -92,12 +84,6 @@ class SlackInstallationOnboardUserWorkflow:
             dest="active",
             after="update_state_in_database",
         )
-
-    def send_installing_user_welcome_message(self):
-        send_welcome_message(self.slack_installation)
-
-    def send_initial_configuration_request(self):
-        send_configuration_message(self.slack_installation)
 
     def save_configuration_to_database(self):
         save_configuration(self.slack_installation, time_to_post=self.payload)

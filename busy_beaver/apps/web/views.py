@@ -6,9 +6,11 @@ from flask_login import current_user, login_required, logout_user
 
 from .blueprint import web_bp
 from .forms import GitHubSummaryConfigurationForm
+from busy_beaver.apps.slack_integration.oauth.state_machine import (
+    SlackInstallationOnboardUserStateMachine,
+)
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import NotAuthorized
-from busy_beaver.extensions import db
 
 logger = logging.getLogger(__name__)
 
@@ -70,17 +72,23 @@ def github_summary_settings():
     form = GitHubSummaryConfigurationForm()
     if form.validate_on_submit():
         logger.info("Trying to change config settings")
-        config.summary_post_time = form.data["summary_post_time"]
-        config.summary_post_timezone = form.data["summary_post_timezone"]
-        db.session.add(config)
-        db.session.commit()
+
+        installation_fsm = SlackInstallationOnboardUserStateMachine(installation)
+        installation_fsm.save_configuration_to_database(
+            summary_post_time=form.data["summary_post_time"],
+            summary_post_timezone=form.data["summary_post_timezone"],
+            slack_id=current_user.slack_id,
+        )
 
         logger.info("Changed successfully")
         return jsonify({"message": "Settings changed successfully"})
 
     # load default
-    form.summary_post_time.data = config.summary_post_time
-    form.summary_post_timezone.data = config.summary_post_timezone.zone
+    try:
+        form.summary_post_time.data = config.summary_post_time
+        form.summary_post_timezone.data = config.summary_post_timezone.zone
+    except AttributeError:
+        pass
 
     channel = config.channel
     channel_info = slack.channel_details(channel)
