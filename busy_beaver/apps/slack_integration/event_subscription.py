@@ -6,7 +6,6 @@ from .blocks import AppHome
 from .slash_command import HELP_TEXT
 from busy_beaver.apps.slack_integration.oauth.state_machine import (
     SlackInstallationOnboardUserStateMachine,
-    SlackInstallationOnboardUserWorkflow,
 )
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE,
@@ -62,18 +61,6 @@ def message_handler(data):
     if user_messages_bot:
         params = {"workspace_id": data["team_id"]}
         installation = SlackInstallation.query.filter_by(**params).first()
-
-        bot_recieves_configuration_information = (
-            installation.state == "config_requested"
-            and installation.authorizing_user_id == event["user"]
-        )
-        if bot_recieves_configuration_information:
-            entered_time = event["text"]
-            workflow = SlackInstallationOnboardUserWorkflow(
-                installation, payload=entered_time
-            )
-            workflow.advance()
-            return None
 
         logger.info("[Busy Beaver] Slack -- Unknown command")
         slack = SlackClient(installation.bot_access_token)
