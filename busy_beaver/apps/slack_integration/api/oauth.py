@@ -20,8 +20,6 @@ logger = logging.getLogger(__name__)
 class SlackAppInstallationCallbackResource(MethodView):
     """Callback endpoint for installing app into Slack workspace"""
 
-    # TODO add redirect URI
-
     def get(self):
         logger.info("Slack Workspace Installation")
         # state is not used but it fits OAuth interface

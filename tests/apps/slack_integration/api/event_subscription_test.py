@@ -194,7 +194,7 @@ def test_slack_onboarding_invite_bot_to_channel(
 
     # Assert -- check if config request set
     args, kwargs = patched_slack.mock.call_args
-    assert "What time should I post" in args[0]
+    assert "settings/github-summary|Configure when to post messages" in args[0]
     assert kwargs["user_id"] == authorizing_user_id
 
 
