@@ -1,5 +1,4 @@
 from finite_state_machine import StateMachine, transition
-from transitions import Machine
 
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     reinstallation,
@@ -7,8 +6,6 @@ from busy_beaver.apps.slack_integration.oauth.workflow import (
     send_configuration_message,
     send_welcome_message,
 )
-from busy_beaver.extensions import db
-from busy_beaver.models import SlackInstallation
 
 
 def no_github_summary_configuration(self):
@@ -57,27 +54,3 @@ class SlackInstallationOnboardUserStateMachine(StateMachine):
     @transition(source="active", target="active")
     def save_new_slack_installation_information(self):
         reinstallation(self.slack_installation)
-
-
-class SlackInstallationOnboardUserWorkflow:
-
-    STATES = ["installed", "user_welcomed", "config_requested", "active"]
-
-    def __init__(self, slack_installation: SlackInstallation, payload: dict = None):
-        self.payload = payload
-        self.slack_installation = slack_installation
-        self.machine = Machine(
-            model=self, states=self.__class__.STATES, initial=slack_installation.state
-        )
-
-        self.machine.add_transition(
-            trigger="advance",
-            source="active",
-            dest="active",
-            after="update_state_in_database",
-        )
-
-    def update_state_in_database(self):
-        self.slack_installation.state = self.state
-        db.session.add(self.slack_installation)
-        db.session.commit()
