@@ -2,6 +2,7 @@ version: '3.6'
 
 volumes:
   pgdata:
+  redis-data:
 
 services:
   db:
@@ -22,13 +23,19 @@ services:
     ports:
       - "9432:5432"
   redis:
-    image: redis:4.0-alpine
+    image: redis:6.0.5-alpine
+    command: redis-server /usr/local/etc/redis/redis.conf
     healthcheck:
       test: ["CMD-SHELL", "redis-cli","ping"]
       interval: 10s
       timeout: 3s
       retries: 3
       start_period: 10s
+    volumes:
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - redis-data:/data
+    ports:
+      - "9379:6379"
 
   # busy-beaver business logic
   app:
