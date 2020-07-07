@@ -1,3 +1,5 @@
+from datetime import time
+
 import factory
 
 from .slack import SlackInstallation
@@ -32,8 +34,8 @@ def GitHubSummaryConfiguration(session):
             sqlalchemy_session = session
 
         channel = "busy-beaver"
-        time_to_post = "2:00pm"  # TODO remove
-        timezone_info = {}
+        summary_post_time = time(14, 00)
+        timezone_info = "America/Chicago"
         slack_installation = factory.SubFactory(SlackInstallation(session))
 
     return _GitHubSummaryConfiguration
