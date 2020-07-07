@@ -1,3 +1,5 @@
+from datetime import time
+
 import pytest
 import responses
 
@@ -13,8 +15,8 @@ from tests._utilities import FakeSlackClient
 
 @pytest.fixture
 def patch_slack(patcher):
-    def _patch_slack(module_to_patch_slack, *, timezone_info=None):
-        obj = FakeSlackClient(timezone_info=timezone_info)
+    def _patch_slack(module_to_patch_slack, *, is_admin=None, details=None):
+        obj = FakeSlackClient(is_admin=is_admin, details=details)
         patcher(module_to_patch_slack, namespace="SlackClient", replacement=obj)
         return obj
 
@@ -24,14 +26,15 @@ def patch_slack(patcher):
 @pytest.mark.end2end
 @responses.activate
 def test_slack_oauth_flow_first_time_installation(
-    client, session, patch_slack, create_slack_headers
+    client, login_client, session, factory, patch_slack, create_slack_headers
 ):
     patched_slack = patch_slack("busy_beaver.apps.slack_integration.oauth.workflow")
+    authorizing_user_id = "abc"
+    workspace_id = "T9TK3CUKW"
 
     # Step 1 -- User installs app user Slack install link
     # Arrange
     bot_access_token = "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy"
-    authorizing_user_id = "U1234"
     responses.add(
         responses.POST,
         SlackInstallationOAuthFlow.TOKEN_URL,
@@ -43,7 +46,7 @@ def test_slack_oauth_flow_first_time_installation(
             "scope": "commands,incoming-webhook",
             "bot_user_id": "U0KRQLJ9H",
             "app_id": "A0KRD7HC3",
-            "team": {"name": "Slack Softball Team", "id": "T9TK3CUKW"},
+            "team": {"name": "Slack Softball Team", "id": workspace_id},
             "enterprise": {"name": "slack-sports", "id": "E12345678"},
             "authed_user": {
                 "id": authorizing_user_id,
@@ -64,8 +67,8 @@ def test_slack_oauth_flow_first_time_installation(
     assert installation.access_token == "xoxp-1234"
     assert installation.scope == "commands,incoming-webhook"
     assert installation.workspace_name == "Slack Softball Team"
-    assert installation.workspace_id == "T9TK3CUKW"
-    assert installation.authorizing_user_id == "U1234"
+    assert installation.workspace_id == workspace_id
+    assert installation.authorizing_user_id == authorizing_user_id
     assert installation.bot_user_id == "U0KRQLJ9H"
     assert installation.bot_access_token == bot_access_token
 
@@ -103,6 +106,30 @@ def test_slack_oauth_flow_first_time_installation(
     # ---
     # Step 3 -- Update GitHub Summary configuration
     # Arrange
+    slack_user = factory.SlackUser(installation=installation)
+    logged_in_client = login_client(slack_user)
+    patched_slack = patch_slack(
+        "busy_beaver.apps.web.views", is_admin=True, details={"name": "busy_beaver"}
+    )
+
+    # Act
+    data = {
+        "summary_post_time": "14:00",
+        "summary_post_timezone": "America/Chicago",
+        "csrf_token": "token",
+    }
+    result = logged_in_client.post("/settings/github-summary", data=data)
+
+    # Assert
+    assert result.status_code
+
+    installation = SlackInstallation.query.first()
+    assert installation.state == "active"
+    assert installation.github_summary_config.summary_post_time == time(14, 00)
+    assert (
+        installation.github_summary_config.summary_post_timezone.zone
+        == "America/Chicago"
+    )
 
 
 @pytest.mark.unit
@@ -144,7 +171,7 @@ def test_slack_oauth_flow_reinstallation(session, factory):
     code = "1234"
     qs = f"state={state}&code={code}"
     callback_url = f"https://app.busybeaverbot.com/slack/oauth?{qs}"
-    process_slack_installation_callback(callback_url, state)
+    process_slack_installation_callback(callback_url)
 
     # Assert -- information in database is as expected
     installation = SlackInstallation.query.first()
