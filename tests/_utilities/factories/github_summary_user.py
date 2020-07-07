@@ -35,7 +35,7 @@ def GitHubSummaryConfiguration(session):
 
         channel = "busy-beaver"
         summary_post_time = time(14, 00)
-        timezone_info = "America/Chicago"
+        summary_post_timezone = "America/Chicago"
         slack_installation = factory.SubFactory(SlackInstallation(session))
 
     return _GitHubSummaryConfiguration

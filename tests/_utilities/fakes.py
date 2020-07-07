@@ -14,9 +14,7 @@ class FakeMeetupAdapter:
 
 
 class FakeSlackClient:
-    def __init__(
-        self, *, is_admin=None, details=None, members=None, timezone_info=None
-    ):
+    def __init__(self, *, is_admin=None, details=None, members=None):
         self.mock = mock.MagicMock()
         if is_admin is not None:
             self._is_admin = is_admin
@@ -24,8 +22,6 @@ class FakeSlackClient:
             self.details = details
         if members:
             self.members = members
-        if timezone_info:
-            self.timezone_info = timezone_info
 
     def __call__(self, *args, **kwargs):
         self.mock(*args, **kwargs)
