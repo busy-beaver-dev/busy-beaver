@@ -39,14 +39,6 @@ class SlackClient:
             raise ValueError("Channel not found")
         return result["members"]
 
-    def get_user_timezone(self, user_id):
-        result = self.client.users_info(user=user_id)
-        return TimezoneInfo(
-            tz=result["user"]["tz"],
-            label=result["user"]["tz_label"],
-            offset=result["user"]["tz_offset"],
-        )
-
     def is_admin(self, user_id):
         try:
             result = self.client.users_info(user=user_id)
