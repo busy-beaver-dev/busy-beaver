@@ -2,6 +2,7 @@ from finite_state_machine import StateMachine, transition
 from transitions import Machine
 
 from busy_beaver.apps.slack_integration.oauth.workflow import (
+    reinstallation,
     save_configuration,
     send_configuration_message,
     send_welcome_message,
@@ -54,8 +55,8 @@ class SlackInstallationOnboardUserStateMachine(StateMachine):
         )
 
     @transition(source="active", target="active")
-    def update_state_in_database(self):
-        pass
+    def save_new_slack_installation_information(self):
+        reinstallation(self.slack_installation)
 
 
 class SlackInstallationOnboardUserWorkflow:

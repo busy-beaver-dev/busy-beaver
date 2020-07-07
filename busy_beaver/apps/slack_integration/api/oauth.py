@@ -1,5 +1,6 @@
 import logging
 
+from finite_state_machine.exceptions import InvalidStartState
 from flask import jsonify, redirect, request, url_for
 from flask.views import MethodView
 from flask_login import login_user
@@ -28,12 +29,24 @@ class SlackAppInstallationCallbackResource(MethodView):
         callback_url = request.url
         installation = process_slack_installation_callback(callback_url, state)
 
-        # try catch on transition error
         slack_installation_fsm = SlackInstallationOnboardUserStateMachine(installation)
-        slack_installation_fsm.welcome_user()
-        installation.state = slack_installation_fsm.state
-        db.session.add(installation)
-        db.session.commit()
+        try:
+            slack_installation_fsm.welcome_user()
+        except InvalidStartState:
+            pass
+        else:
+            installation.state = slack_installation_fsm.state
+            db.session.add(installation)
+            db.session.commit()
+
+        try:
+            slack_installation_fsm.save_new_slack_installation_information()
+        except InvalidStartState:
+            pass
+        else:
+            installation.state = slack_installation_fsm.state
+            db.session.add(installation)
+            db.session.commit()
 
         # TODO take them an actual page
         return jsonify({"Installation": "successful"})

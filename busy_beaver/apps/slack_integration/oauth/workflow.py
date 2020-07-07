@@ -127,6 +127,19 @@ def save_configuration(installation, time_to_post, timezone_to_post, slack_id):
     )
 
 
+REINSTALL_MESSAGE = (
+    "Thank you for reinstalling! I will post daily summaries in <#{channel}>\n\n"
+    f"<{BASE_URL}/settings/github-summary|Configure when to post messages>"
+)
+
+
+def reinstallation(installation):
+    slack = SlackClient(installation.bot_access_token)
+    channel = installation.github_summary_config.channel
+    slack_id = installation.authorizing_user_id
+    slack.dm(REINSTALL_MESSAGE.format(channel=channel), user_id=slack_id)
+
+
 GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE = (
     "Welcome to <#{channel}>! I'm Busy Beaver. "
     "I post daily summaries of public GitHub activity "
