@@ -6,7 +6,6 @@ from busy_beaver.apps.slack_integration.event_subscription import app_home_handl
 from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
     SlackInstallationOAuthFlow,
 )
-from busy_beaver.common.wrappers.slack import TimezoneInfo
 from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation, SlackUser
 from tests._utilities import FakeSlackClient
 
@@ -195,63 +194,6 @@ def test_slack_onboarding_invite_bot_to_channel(
     # Assert -- check if config request set
     args, kwargs = patched_slack.mock.call_args
     assert "settings/github-summary|Configure when to post messages" in args[0]
-    assert kwargs["user_id"] == authorizing_user_id
-
-
-@pytest.mark.end2end
-def test_slack_onboarding_send_bot_configuration(
-    client, session, factory, patch_slack, create_slack_headers
-):
-    """TODO deal with situation where bad input is sent"""
-    # Arrange
-    tz = TimezoneInfo(
-        tz="America/Chicago", label="Central Daylight Time", offset=-18000
-    )
-    patched_slack = patch_slack(
-        "busy_beaver.apps.slack_integration.oauth.workflow", timezone_info=tz
-    )
-    # Create installation in database
-    workspace_id = "TXXXXXXXXX"
-    authorizing_user_id = "alysivji"
-    bot_id = "test_bot"
-    channel = "busy-beaver"
-    time_to_post = "2:00pm"
-    installation = factory.SlackInstallation(
-        authorizing_user_id=authorizing_user_id,
-        state="config_requested",
-        workspace_id=workspace_id,
-        workspace_name="Test",
-        bot_user_id=bot_id,
-    )
-    github_summary_config = factory.GitHubSummaryConfiguration(
-        channel=channel, slack_installation=installation
-    )
-
-    # Act -- event_subscription callback
-    data = {
-        "type": "event_callback",
-        "team_id": workspace_id,
-        "event": {
-            "type": "message",
-            "channel_type": "im",
-            "text": time_to_post,
-            "user": authorizing_user_id,
-            "channel": channel,
-        },
-    }
-    headers = create_slack_headers(100_000_000, data)
-    client.post("/slack/event-subscription", headers=headers, json=data)
-
-    # Assert -- confirm info in database is as expected
-    installation = SlackInstallation.query.first()
-    assert installation.state == "active"
-
-    github_summary_config = GitHubSummaryConfiguration.query.first()
-    assert github_summary_config.channel == channel
-
-    # Assert -- check if config request set
-    args, kwargs = patched_slack.mock.call_args
-    assert "Busy Beaver is now active!" in args[0]
     assert kwargs["user_id"] == authorizing_user_id
 
 
