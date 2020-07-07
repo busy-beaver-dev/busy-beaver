@@ -11,6 +11,7 @@ from busy_beaver.apps.slack_integration.oauth.state_machine import (
 )
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import NotAuthorized
+from busy_beaver.extensions import db
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +80,9 @@ def github_summary_settings():
             summary_post_timezone=form.data["summary_post_timezone"],
             slack_id=current_user.slack_id,
         )
+        installation.state = installation_fsm.state
+        db.session.add(installation)
+        db.session.commit()
 
         logger.info("Changed successfully")
         return jsonify({"message": "Settings changed successfully"})

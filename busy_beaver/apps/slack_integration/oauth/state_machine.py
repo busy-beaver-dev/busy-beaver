@@ -1,4 +1,3 @@
-from dateutil.parser import parse
 from finite_state_machine import StateMachine, transition
 from transitions import Machine
 
@@ -72,37 +71,12 @@ class SlackInstallationOnboardUserWorkflow:
 
         self.machine.add_transition(
             trigger="advance",
-            source="config_requested",
-            dest="active",
-            before="save_configuration_to_database",
-            after="update_state_in_database",
-            conditions="validate_configuration",
-        )
-        self.machine.add_transition(
-            trigger="advance",
             source="active",
             dest="active",
             after="update_state_in_database",
         )
 
-    def save_configuration_to_database(self):
-        save_configuration(self.slack_installation, time_to_post=self.payload)
-
     def update_state_in_database(self):
         self.slack_installation.state = self.state
         db.session.add(self.slack_installation)
         db.session.commit()
-
-    def check_channel_membership(self):
-        if not self.slack_installation.github_summary_config:
-            send_welcome_message(self.slack_installation)
-            return False
-        return True
-
-    def validate_configuration(self):
-        try:
-            self.payload = parse(self.payload).time()
-        except (ValueError, TypeError):
-            send_configuration_message(self.slack_installation)
-            return False
-        return True
