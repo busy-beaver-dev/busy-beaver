@@ -56,7 +56,7 @@ def test_slack_oauth_flow_first_time_installation(
 
     # Act -- oauth callback and token exchange
     params = {"code": "issued_code", "state": ""}
-    response = client.get("/slack/oauth", query_string=params)
+    response = client.get("/slack/installation-callback", query_string=params)
 
     # Assert -- confirm info in database is as expected
     assert response.status_code == 200
@@ -168,7 +168,7 @@ def test_slack_oauth_flow_reinstallation(client, session, factory, patch_slack):
 
     # Act -- oauth callback and token exchange
     params = {"code": "issued_code", "state": ""}
-    response = client.get("/slack/oauth", query_string=params)
+    response = client.get("/slack/installation-callback", query_string=params)
 
     # Assert -- information in database is as expected
     assert response.status_code == 200

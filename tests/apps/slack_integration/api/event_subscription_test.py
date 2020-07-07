@@ -127,7 +127,7 @@ def test_slack_onboarding_install(client, session, patch_slack):
     state = ""
     code = "1234"
     qs = f"state={state}&code={code}"
-    callback_url = f"/slack/oauth?{qs}"
+    callback_url = f"/slack/installation-callback?{qs}"
     client.get(callback_url)
 
     # Assert -- confirm info in database is as expected

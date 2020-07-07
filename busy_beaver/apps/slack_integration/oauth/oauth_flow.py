@@ -81,7 +81,7 @@ class SlackInstallationOAuthFlow(OAuthFlow):
 
     @staticmethod
     def _generate_redirect_uri():
-        return f"{BASE_URL}/slack/oauth"
+        return f"{BASE_URL}/slack/installation-callback"
 
     def __init__(self, client_id, client_secret):
         self.redirect_uri = self._generate_redirect_uri()
