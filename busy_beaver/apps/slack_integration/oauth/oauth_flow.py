@@ -79,13 +79,21 @@ class SlackInstallationOAuthFlow(OAuthFlow):
         "users:write",
     ]
 
+    @staticmethod
+    def _generate_redirect_uri():
+        return f"{BASE_URL}/slack/installation-callback"
+
     def __init__(self, client_id, client_secret):
-        self.session = OAuth2Session(client_id, scope=self.SCOPES)
+        self.redirect_uri = self._generate_redirect_uri()
+        self.session = OAuth2Session(
+            client_id, scope=self.SCOPES, redirect_uri=self.redirect_uri
+        )
         self.state_to_auth_response = hook = StateToOAuthResponse()
         self.session.register_compliance_hook("access_token_response", hook)
         self.client_secret = client_secret
 
     def generate_authentication_tuple(self) -> ExternalOAuthDetails:  # pragma: no cover
+        # TODO have this on the installation page
         raise NotImplementedError
 
     def process_callback(self, authorization_response_url) -> SlackOAuthInfo:

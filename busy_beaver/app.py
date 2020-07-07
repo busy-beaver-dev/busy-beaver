@@ -39,6 +39,7 @@ def create_app(*, testing=False):
         app.config["TESTING"] = True
         database_uri = "sqlite:///:memory:"
         app.config["RQ_ASYNC"] = False
+        app.config["WTF_CSRF_ENABLED"] = False
     else:
         database_uri = DATABASE_URI
 

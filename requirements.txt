@@ -20,6 +20,7 @@ cryptography==2.7         # via -r requirements.in
 decorator==4.4.2          # via validators
 factory_boy==2.12.0       # via -r requirements.in
 faker==1.0.7              # via factory-boy
+finite-state-machine==0.1.1  # via -r requirements.in
 flask-login==0.5.0        # via -r requirements.in
 flask-migrate==2.5.2      # via -r requirements.in
 flask-rq2==18.3           # via -r requirements.in
@@ -52,12 +53,11 @@ requests==2.22.0          # via -r requirements.in, requests-oauthlib, tweepy
 rq-scheduler==0.9         # via flask-rq2
 rq==1.0                   # via flask-rq2, rq-scheduler
 sentry-sdk[flask]==0.14.0  # via -r requirements.in
-six==1.12.0               # via cryptography, faker, flask-talisman, python-dateutil, sqlalchemy-utils, transitions, tweepy, validators, wtforms-components
+six==1.12.0               # via cryptography, faker, flask-talisman, python-dateutil, sqlalchemy-utils, tweepy, validators, wtforms-components
 slackclient==2.5.0        # via -r requirements.in
 sqlalchemy-utils==0.36.1  # via -r requirements.in
 sqlalchemy==1.3.12        # via -r requirements.in, alembic, flask-sqlalchemy, sqlalchemy-utils
 text-unidecode==1.2       # via faker
-transitions==0.7.2        # via -r requirements.in
 tweepy==3.8.0             # via -r requirements.in
 urllib3==1.24.3           # via requests, sentry-sdk
 validators==0.15.0        # via wtforms-components

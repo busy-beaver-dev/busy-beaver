@@ -17,7 +17,7 @@ slack_bp.add_url_rule(
 )
 
 slack_bp.add_url_rule(
-    "/oauth",
+    "/installation-callback",
     view_func=SlackAppInstallationCallbackResource.as_view("slack_install_callback"),
 )
 

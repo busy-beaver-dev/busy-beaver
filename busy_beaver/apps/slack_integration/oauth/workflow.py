@@ -1,9 +1,9 @@
-from datetime import time
 import logging
 from typing import NamedTuple
 
 from busy_beaver.clients import slack_install_oauth, slack_signin_oauth
 from busy_beaver.common.wrappers import SlackClient
+from busy_beaver.config import BASE_URL
 from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation, SlackUser
 
@@ -56,7 +56,7 @@ def process_slack_sign_in_callback(callback_url):
 ##############
 # Installation
 ##############
-def process_slack_installation_callback(callback_url, state):
+def process_slack_installation_callback(callback_url):
     """Verify callback and save tokens in the database"""
     oauth_details = slack_install_oauth.process_callback(callback_url)
     oauth_dict = oauth_details._asdict()
@@ -93,14 +93,13 @@ def send_welcome_message(installation: SlackInstallation):
 
 CONFIRMED_MESSAGE = (
     "Thanks for the invite! I will post daily summaries in <#{channel}>\n\n"
-    "What time should I post the daily GitHub summary?"
+    f"<{BASE_URL}/settings/github-summary|Configure when to post messages>"
 )
 
 
-def send_configuration_message(installation: SlackInstallation):
+def send_configuration_message(installation: SlackInstallation, channel):
     slack = SlackClient(installation.bot_access_token)
     user_id = installation.authorizing_user_id
-    channel = installation.github_summary_config.channel
     slack.dm(CONFIRMED_MESSAGE.format(channel=channel), user_id=user_id)
 
 
@@ -114,21 +113,31 @@ ACTIVE_MESSAGE = (
 )
 
 
-def save_configuration(installation: SlackInstallation, time_to_post: time):
-    slack = SlackClient(installation.bot_access_token)
-    user_id = installation.authorizing_user_id
-    tz = slack.get_user_timezone(user_id)
-
-    github_summary_config = installation.github_summary_config
-    github_summary_config.time_to_post = str(time_to_post)
-    github_summary_config.timezone_info = tz._asdict()
-    db.session.add(github_summary_config)
+def save_configuration(installation, time_to_post, timezone_to_post, slack_id):
+    config = installation.github_summary_config
+    config.summary_post_time = time_to_post
+    config.summary_post_timezone = timezone_to_post
+    db.session.add(config)
     db.session.commit()
 
-    channel = github_summary_config.channel
+    channel = config.channel
+    slack = SlackClient(installation.bot_access_token)
     slack.dm(
-        ACTIVE_MESSAGE.format(time=str(time_to_post), channel=channel), user_id=user_id
+        ACTIVE_MESSAGE.format(time=str(time_to_post), channel=channel), user_id=slack_id
     )
+
+
+REINSTALL_MESSAGE = (
+    "Thank you for reinstalling! I will post daily summaries in <#{channel}>\n\n"
+    f"<{BASE_URL}/settings/github-summary|Configure when to post messages>"
+)
+
+
+def reinstallation(installation):
+    slack = SlackClient(installation.bot_access_token)
+    channel = installation.github_summary_config.channel
+    slack_id = installation.authorizing_user_id
+    slack.dm(REINSTALL_MESSAGE.format(channel=channel), user_id=slack_id)
 
 
 GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE = (

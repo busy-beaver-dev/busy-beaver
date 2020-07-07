@@ -42,17 +42,6 @@ def test_slack_get_channel_members__channel_does_not_exist(slack: SlackClient):
 
 
 @pytest.mark.vcr()
-def test_slack_get_user_timezone(slack: SlackClient):
-    # Act
-    result = slack.get_user_timezone("U5FTQ3QRZ")
-
-    # Assert
-    assert result.tz == "America/Chicago"
-    assert result.label == "Central Daylight Time"
-    assert result.offset == -18000
-
-
-@pytest.mark.vcr()
 def test_slack_post_ephemeral_message_success(slack: SlackClient):
     # Act
     result = slack.post_ephemeral_message(

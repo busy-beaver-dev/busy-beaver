@@ -1,9 +1,11 @@
 import logging
 
+from finite_state_machine.exceptions import TransitionNotAllowed
+
 from .blocks import AppHome
 from .slash_command import HELP_TEXT
 from busy_beaver.apps.slack_integration.oauth.state_machine import (
-    SlackInstallationOnboardUserWorkflow,
+    SlackInstallationOnboardUserStateMachine,
 )
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE,
@@ -60,18 +62,6 @@ def message_handler(data):
         params = {"workspace_id": data["team_id"]}
         installation = SlackInstallation.query.filter_by(**params).first()
 
-        bot_recieves_configuration_information = (
-            installation.state == "config_requested"
-            and installation.authorizing_user_id == event["user"]
-        )
-        if bot_recieves_configuration_information:
-            entered_time = event["text"]
-            workflow = SlackInstallationOnboardUserWorkflow(
-                installation, payload=entered_time
-            )
-            workflow.advance()
-            return None
-
         logger.info("[Busy Beaver] Slack -- Unknown command")
         slack = SlackClient(installation.bot_access_token)
         slack.post_message(HELP_TEXT, channel=data["event"]["channel"])
@@ -86,25 +76,29 @@ def member_joined_channel_handler(data):
     channel = data["event"]["channel"]
 
     installation = SlackInstallation.query.filter_by(workspace_id=workspace_id).first()
+
+    # handle when bot is invited to channel
     bot_invited_to_channel = user_id == installation.bot_user_id
     if bot_invited_to_channel:
-        github_summary_configured = installation.github_summary_config
-        if not github_summary_configured:
-            github_summary_config = GitHubSummaryConfiguration(channel=channel)
-            github_summary_config.slack_installation = installation
-            db.session.add(github_summary_config)
-            db.session.commit()
+        try:
+            installation_fsm = SlackInstallationOnboardUserStateMachine(installation)
+            installation_fsm.send_initial_configuration_request(channel)
+        except TransitionNotAllowed:
+            # bot invited to channel when there is already a record
+            # invalid start state
+            # TODO always store new channels somewhere
+            return None
 
-            db.session.refresh(installation)
-            workflow = SlackInstallationOnboardUserWorkflow(installation)
-            workflow.advance()
-        else:
-            # bot was invited to a different channel
-            # TODO add to table of channels for that workspace
-            pass
+        github_summary_config = GitHubSummaryConfiguration(channel=channel)
+        github_summary_config.slack_installation = installation
+        db.session.add(github_summary_config)
 
+        installation.state = installation_fsm.state
+        db.session.add(installation)
+        db.session.commit()
         return None
 
+    # Handle if new user joins channel
     user_joins_github_summary_channel = (
         installation.github_summary_config.channel == channel
         and installation.state == "active"

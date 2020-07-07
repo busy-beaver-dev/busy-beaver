@@ -48,7 +48,7 @@ def test_slack_installation_workflow(client, session, patched_slack):
     state = ""
     code = "1234"
     qs = f"state={state}&code={code}"
-    resp = client.get(f"/slack/oauth?{qs}")
+    resp = client.get(f"/slack/installation-callback?{qs}")
     assert resp.status_code == 200
 
     # Assert -- information in database is as expected

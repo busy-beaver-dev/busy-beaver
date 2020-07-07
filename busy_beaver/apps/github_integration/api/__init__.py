@@ -8,6 +8,6 @@ github_bp.add_url_rule(
 )
 
 github_bp.add_url_rule(
-    "/oauth",
+    "/installation-callback",
     view_func=GitHubIdentityVerificationCallbackResource.as_view("github_verification"),
 )
