@@ -100,6 +100,10 @@ def test_slack_oauth_flow_first_time_installation(
     assert "settings/github-summary|Configure when to post messages" in args[0]
     assert kwargs["user_id"] == authorizing_user_id
 
+    # ---
+    # Step 3 -- Update GitHub Summary configuration
+    # Arrange
+
 
 @pytest.mark.unit
 @responses.activate

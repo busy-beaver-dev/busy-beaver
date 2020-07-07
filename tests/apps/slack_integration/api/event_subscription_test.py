@@ -6,7 +6,7 @@ from busy_beaver.apps.slack_integration.event_subscription import app_home_handl
 from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
     SlackInstallationOAuthFlow,
 )
-from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation, SlackUser
+from busy_beaver.models import SlackInstallation, SlackUser
 from tests._utilities import FakeSlackClient
 
 pytest_plugins = ("tests._utilities.fixtures.slack",)
@@ -148,53 +148,6 @@ def test_slack_onboarding_install(client, session, patch_slack):
     args, kwargs = patched_slack.mock.call_args
     assert "I recommend creating `#busy-beaver`" in args[0]
     assert "U1234" in kwargs["user_id"]
-
-
-@pytest.mark.end2end
-def test_slack_onboarding_invite_bot_to_channel(
-    client, session, factory, patch_slack, create_slack_headers
-):
-    """TODO deal with situation where bot is invited to multiple channels"""
-    # Arrange
-    patched_slack = patch_slack("busy_beaver.apps.slack_integration.oauth.workflow")
-    # Create installation in database
-    workspace_id = "TXXXXXXXXX"
-    authorizing_user_id = "alysivji"
-    bot_id = "test_bot"
-    channel = "busy-beaver"
-    installation = factory.SlackInstallation(
-        authorizing_user_id=authorizing_user_id,
-        state="user_welcomed",
-        workspace_id=workspace_id,
-        workspace_name="Test",
-        bot_user_id=bot_id,
-    )
-
-    # Act -- event_subscription callback
-    data = {
-        "type": "event_callback",
-        "team_id": workspace_id,
-        "event": {
-            "type": "member_joined_channel",
-            "channel_type": "im",
-            "user": bot_id,
-            "channel": channel,
-        },
-    }
-    headers = create_slack_headers(100_000_000, data)
-    client.post("/slack/event-subscription", headers=headers, json=data)
-
-    # Assert -- confirm info in database is as expected
-    installation = SlackInstallation.query.first()
-    assert installation.state == "config_requested"
-
-    github_summary_config = GitHubSummaryConfiguration.query.first()
-    assert github_summary_config.channel == channel
-
-    # Assert -- check if config request set
-    args, kwargs = patched_slack.mock.call_args
-    assert "settings/github-summary|Configure when to post messages" in args[0]
-    assert kwargs["user_id"] == authorizing_user_id
 
 
 @pytest.mark.end2end
