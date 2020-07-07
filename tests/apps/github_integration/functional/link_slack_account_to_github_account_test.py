@@ -50,7 +50,7 @@ def test_link_slack_to_github__happy_path(
 
     # Step 2 -- Click GitHub Link, confirm identity, success
     params = {"code": "issued_code", "state": state}
-    response = client.get("/github/oauth", query_string=params)
+    response = client.get("/github/installation-callback", query_string=params)
 
     # Assert
     assert response.status_code == 200
@@ -100,7 +100,7 @@ def test_link_slack_to_github__invalid_state(
     # confirms identify, and fails
     modified_state = state + state
     params = {"code": "issued_code", "state": modified_state}
-    response = client.get("/github/oauth", query_string=params)
+    response = client.get("/github/installation-callback", query_string=params)
 
     # Assert
     assert response.status_code == 403
