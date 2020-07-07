@@ -6,9 +6,6 @@ import responses
 from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
     SlackInstallationOAuthFlow,
 )
-from busy_beaver.apps.slack_integration.oauth.workflow import (
-    process_slack_installation_callback,
-)
 from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation
 from tests._utilities import FakeSlackClient
 
@@ -132,16 +129,19 @@ def test_slack_oauth_flow_first_time_installation(
     )
 
 
-@pytest.mark.unit
+@pytest.mark.end2end
 @responses.activate
-def test_slack_oauth_flow_reinstallation(session, factory):
+def test_slack_oauth_flow_reinstallation(client, session, factory, patch_slack):
     # Arrange
+    patch_slack("busy_beaver.apps.slack_integration.oauth.workflow")
+
     # Create installation in database
     workspace_id = "T9TK3CUKW"
     workspace_name = "Slack Softball Team"
     installation = factory.SlackInstallation(
         workspace_id=workspace_id, workspace_name=workspace_name
     )
+    factory.GitHubSummaryConfiguration(slack_installation=installation)
 
     # Create response to send back during token exchange
     bot_access_token = "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy"
@@ -167,13 +167,11 @@ def test_slack_oauth_flow_reinstallation(session, factory):
     )
 
     # Act -- oauth callback and token exchange
-    state = ""
-    code = "1234"
-    qs = f"state={state}&code={code}"
-    callback_url = f"https://app.busybeaverbot.com/slack/oauth?{qs}"
-    process_slack_installation_callback(callback_url)
+    params = {"code": "issued_code", "state": ""}
+    response = client.get("/slack/oauth", query_string=params)
 
     # Assert -- information in database is as expected
+    assert response.status_code == 200
     installation = SlackInstallation.query.first()
     assert installation.access_token == "xoxp-1234"
     assert installation.scope == "commands,incoming-webhook"

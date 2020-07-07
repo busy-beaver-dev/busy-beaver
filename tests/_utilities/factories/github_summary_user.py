@@ -32,7 +32,7 @@ def GitHubSummaryConfiguration(session):
             sqlalchemy_session = session
 
         channel = "busy-beaver"
-        time_to_post = "2:00pm"
+        time_to_post = "2:00pm"  # TODO remove
         timezone_info = {}
         slack_installation = factory.SubFactory(SlackInstallation(session))
 
