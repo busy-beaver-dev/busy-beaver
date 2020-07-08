@@ -21,7 +21,10 @@ if [ "$SERVER" = "webserver" ]; then
     fi
 elif [ "$SERVER" = "worker" ]; then
     echo "Starting RQ worker"
-    python start_async_worker.py
+    python scripts/start_async_worker.py
+elif [ "$SERVER" = "scheduler" ]; then
+    echo "Starting RQ scehduler"
+    python scripts/start_rq_scheduler.py
 else
     echo "Unrecognized option for server: '$SERVER'"
     exit 1

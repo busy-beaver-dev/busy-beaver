@@ -36,6 +36,7 @@ def retry_failed_job(job, *exc_info):
     num_failures = job.meta["failures"]
     if num_failures >= MAX_FAILURES:
         task = Task.query.filter_by(job_id=job.id).first()
+        # TODO update this
         task.failed = True
         db.session.add(task)
         db.session.commit()

@@ -24,8 +24,11 @@ down: ## stop local dev environment
 restart: ## restart local dev environment
 	docker-compose restart $(args)
 
-attach: ## attach to process for debugging purposes
+attach: ## attach to webserver process for debugging purposes
 	docker attach `docker-compose ps -q app`
+
+attach-worker: ## attach to worker process for debugging purposes
+	docker attach `docker-compose ps -q worker`
 
 migration: ## create migration m="message"
 	docker-compose exec app flask db migrate -m "$(m)"
