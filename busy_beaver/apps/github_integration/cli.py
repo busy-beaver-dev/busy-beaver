@@ -5,24 +5,11 @@ import click
 import pytz
 
 from .blueprint import github_bp
-from .summary.workflow import fetch_github_summary_post_to_slack
-from busy_beaver.exceptions import ValidationError
-from busy_beaver.extensions import db, rq
+from .summary.workflow import post_github_summary_message
+from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation, Task
-from busy_beaver.toolbox import set_task_progress, utc_now_minus
 
 logger = logging.getLogger(__name__)
-
-
-@rq.job
-def post_github_summary_message(workspace: str):
-    installation = SlackInstallation.query.filter_by(workspace_id=workspace).first()
-    if not installation:
-        raise ValidationError("workspace not found")
-
-    boundary_dt = utc_now_minus(timedelta(days=1))
-    fetch_github_summary_post_to_slack(installation, boundary_dt)
-    set_task_progress(100)
 
 
 # currently we will only kick off one task, check which rows are active
