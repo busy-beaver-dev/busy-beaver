@@ -4,7 +4,6 @@ from typing import List
 
 import pytest
 
-from busy_beaver.apps.github_integration.cli import post_github_summary_to_slack_cli
 from busy_beaver.apps.github_integration.summary.workflow import (
     fetch_github_summary_post_to_slack,
 )
@@ -184,34 +183,3 @@ def test_fetch_github_summary_post_to_slack(
     post_message_args = slack.mock.call_args_list[-1]
     args, kwargs = post_message_args
     assert "<@user1>" in json.dumps(kwargs["blocks"])
-
-
-##########
-# Test CLI
-##########
-@pytest.mark.end2end
-def test_post_github_summary_to_slack_cli(
-    runner, session, factory, t_minus_one_day, patched_slack, patched_github_user_events
-):
-    # Arrange
-    slack_installation = factory.SlackInstallation(workspace_id="abc")
-    channel = "general"
-    github_summary_config = factory.GitHubSummaryConfiguration(
-        channel=channel, slack_installation=slack_installation
-    )
-    slack_installation = github_summary_config.slack_installation
-    slack = patched_slack(members=["user1", "user2"])
-    patched_github_user_events(messages=["a", "b"])
-
-    # Act
-    runner.invoke(post_github_summary_to_slack_cli, ["--workspace", "abc"])
-
-    # Assert
-    slack_adapter_initalize_args = slack.mock.call_args_list[0]
-    args, kwargs = slack_adapter_initalize_args
-    assert slack_installation.bot_access_token in args
-
-    post_message_args = slack.mock.call_args_list[-1]
-    args, kwargs = post_message_args
-    assert "No activity to report" in json.dumps(kwargs["blocks"])
-    assert "general" in kwargs["channel"]

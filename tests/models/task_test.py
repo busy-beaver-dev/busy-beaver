@@ -12,11 +12,7 @@ MODULE_TO_TEST = "busy_beaver.common.models"
 ###########
 def test_create_task(session):
     # Arrange
-    task = Task(
-        job_id="abcd",
-        name="task_created_for_test",
-        description="Task created for testing purposes",
-    )
+    task = Task(job_id="abcd", name="task_created_for_test")
 
     # Act
     session.add(task)
@@ -24,8 +20,7 @@ def test_create_task(session):
 
     # Assert
     assert task.job_id == "abcd"
-    assert task.complete is False
-    assert task.failed is False
+    assert task.task_state == Task.TaskState.SCHEDULED
 
 
 def add(x, y):
@@ -40,12 +35,13 @@ def test_run_async_task_update_progress(app, rq, session):
     job.save_meta()
 
     # Act
-    queued_task = Task(job_id=job.id, name="Add", description="Add task")
+    queued_task = Task(job_id=job.id, name="Add")
     session.add(queued_task)
     session.commit()
 
     # Assert
     assert queued_task.get_progress() == 100
+    assert queued_task.task_state == Task.TaskState.COMPLETED
 
 
 def test_run_async_task_get_job_from_task(app, rq, session):
@@ -53,7 +49,7 @@ def test_run_async_task_get_job_from_task(app, rq, session):
     rq.job(add)
     job = add.queue(5, 2)
 
-    queued_task = Task(job_id=job.id, name="Add", description="Add task")
+    queued_task = Task(job_id=job.id, name="Add")
     session.add(queued_task)
     session.commit()
 

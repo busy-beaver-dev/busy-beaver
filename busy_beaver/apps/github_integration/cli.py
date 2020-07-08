@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 # name this cli option, queue_github_summary_jobs_for_tomorrow
 @click.option("--workspace", required=True, prompt="Slack workspace ID")
 @github_bp.cli.command("post_github_summary", help="Post a GitHub summary")
-def queue_post_github_summary_task(workspace: str):
+def queue_post_github_summary_tasks(workspace: str):
     installation = SlackInstallation.query.filter_by(workspace_id=workspace).first()
     time_to_post = _get_time_to_post(installation.github_summary_config)
     job = post_github_summary_message.schedule(time_to_post, workspace=workspace)
@@ -37,6 +37,5 @@ def _get_time_to_post(config):
     # TODO UNIT TEST THIS
     tomorrow = date.today() + timedelta(days=1)
     dt_to_post = datetime.combine(tomorrow, config.summary_post_time)
-    tz = pytz.timezone(config.summary_post_timezone)
-    localized_dt = tz.localize(dt_to_post)
+    localized_dt = config.summary_post_timezone.localize(dt_to_post)
     return localized_dt.astimezone(pytz.utc)
