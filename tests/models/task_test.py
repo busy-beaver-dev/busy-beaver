@@ -20,7 +20,7 @@ def test_create_task(session):
 
     # Assert
     assert task.job_id == "abcd"
-    assert task.task_state == Task.TaskState.SCHEDULED
+    assert task.task_state.value == Task.TaskState.SCHEDULED
 
 
 def add(x, y):
@@ -41,7 +41,6 @@ def test_run_async_task_update_progress(app, rq, session):
 
     # Assert
     assert queued_task.get_progress() == 100
-    assert queued_task.task_state == Task.TaskState.COMPLETED
 
 
 def test_run_async_task_get_job_from_task(app, rq, session):
@@ -83,7 +82,7 @@ def test_task_model_get_job_raises_exception(app, rq, session, patched_rq, raise
     rq.job(add)
     job = add.queue(5, 2)
 
-    queued_task = Task(job_id=job.id, name="Add", description="Add task")
+    queued_task = Task(job_id=job.id, name="Add")
     session.add(queued_task)
     session.commit()
 
