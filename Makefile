@@ -89,38 +89,3 @@ flaskcli:  ## use flask cli to run commands args='args'te
 
 ngrok: ## start ngrok to forward port
 	ngrok http 5000
-
-prod-build-image:
-	docker build -f docker/prod/Dockerfile --tag alysivji/busy-beaver .
-
-prod-build: ## build production images
-	docker-compose -f docker-compose.prod.yml build
-
-prod-migrate-up:
-	docker-compose -f docker-compose.prod.yml exec app flask db upgrade
-
-prod-migrate-down:
-	docker-compose -f docker-compose.prod.yml exec app flask db downgrade
-
-prod-up: ## start prod environment
-	docker-compose -f docker-compose.prod.yml up -d
-	make prod-migrate-up
-
-prod-down: ## stop prod environment
-	docker-compose -f docker-compose.prod.yml down
-
-prod-pull-image: ## pull latest deployment image
-	docker pull alysivji/busy-beaver:latest
-
-prod-deploy: prod-pull-image ## redeploy application
-	make prod-down
-	make prod-up
-
-prod-shell:  ## shell into production container
-	docker-compose -f docker-compose.prod.yml exec app bash
-
-prod-shell-db:  ## shell into prodution postgres instance
-	psql -d "${DATABASE_URI}"
-
-prod-logs: ## attach to logs in production container
-	docker-compose -f docker-compose.prod.yml logs
