@@ -31,8 +31,7 @@ def post_github_summary_message(workspace: str):
 @github_bp.cli.command("post_github_summary", help="Post a GitHub summary")
 def queue_post_github_summary_task(workspace: str):
     installation = SlackInstallation.query.filter_by(workspace_id=workspace).first()
-    config = installation.github_summary_config
-    time_to_post = _get_time_to_post(config)
+    time_to_post = _get_time_to_post(installation.github_summary_config)
     job = post_github_summary_message.schedule(time_to_post, workspace=workspace)
 
     task = Task(
@@ -45,9 +44,10 @@ def queue_post_github_summary_task(workspace: str):
     db.session.commit()
 
 
-# TODO end-to-end test
+# TODO end-to-end test notes
 # mock this out with a datetime now and make sure task runs
 def _get_time_to_post(config):
+    # TODO UNIT TEST THIS
     tomorrow = date.today() + timedelta(days=1)
     dt_to_post = datetime.combine(tomorrow, config.summary_post_time)
     tz = pytz.timezone(config.summary_post_timezone)
