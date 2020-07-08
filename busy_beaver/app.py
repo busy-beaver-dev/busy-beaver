@@ -49,7 +49,7 @@ def create_app(*, testing=False):
     migrate.init_app(app, db)
 
     app.config["RQ_REDIS_URL"] = REDIS_URI
-    app.config["RQ_QUEUES"] = ["default"]
+    app.config["RQ_QUEUES"] = ["default", "failed"]
     rq.init_app(app)
 
     bootstrap.init_app(app)
