@@ -31,8 +31,6 @@ def queue_post_github_summary_tasks(workspace: str):
     db.session.commit()
 
 
-# TODO end-to-end test notes
-# mock this out with a datetime now and make sure task runs
 def _get_time_to_post(config):
     # TODO UNIT TEST THIS
     tomorrow = date.today() + timedelta(days=1)
