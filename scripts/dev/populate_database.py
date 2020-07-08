@@ -1,3 +1,4 @@
+from datetime import time
 import os
 
 from busy_beaver import create_app
@@ -46,7 +47,10 @@ db.session.commit()
 
 if not installation.github_summary_config:
     config = GitHubSummaryConfiguration(
-        slack_installation=installation, channel=channel_id
+        slack_installation=installation,
+        channel=channel_id,
+        summary_post_time=time(14, 00),
+        summary_post_timezone="America/Chicago",
     )
     db.session.add(config)
     db.session.commit()

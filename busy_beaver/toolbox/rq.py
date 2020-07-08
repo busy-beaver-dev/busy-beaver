@@ -20,7 +20,7 @@ def set_task_progress(progress):
         if progress >= 100:
             task = Task.query.filter_by(job_id=job.get_id()).first()
             if task:
-                task.complete = True
+                task.task_state = Task.TaskState.COMPLETED
                 db.session.commit()
 
 
@@ -36,8 +36,7 @@ def retry_failed_job(job, *exc_info):
     num_failures = job.meta["failures"]
     if num_failures >= MAX_FAILURES:
         task = Task.query.filter_by(job_id=job.id).first()
-        # TODO update this
-        task.failed = True
+        task.task_state = Task.TaskState.FAILED
         db.session.add(task)
         db.session.commit()
         raise AsyncException(f"Job failed {num_failures} times")
