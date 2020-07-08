@@ -19,7 +19,7 @@ def patcher(monkeypatch):
 
 
 @pytest.fixture
-def create_fake_background_task():
+def create_fake_background_task(mocker):
     """This fixture creates fake background jobs.
 
     When `.queue` is called on a function decorated with `@rq.job`, it creates a
@@ -36,12 +36,18 @@ def create_fake_background_task():
 
     class FakeBackgroundTask:
         def __init__(self):
+            self.mock = mocker.MagicMock()
             self.id = str(uuid.uuid4())
 
         def __repr__(self):
             return f"<FakeBackgroundTask: {self.id}>"
 
         def queue(self, *args, **kwargs):
+            self.mock("queue", *args, **kwargs)
+            return JobDetails(self.id)
+
+        def schedule(self, *args, **kwargs):
+            self.mock("schedule", *args, **kwargs)
             return JobDetails(self.id)
 
     def _create_fake_background_task():

@@ -2,6 +2,7 @@ from redis.exceptions import RedisError
 from rq.exceptions import NoSuchJobError
 from rq.job import Job
 from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy_utils import ChoiceType
 
 from busy_beaver.extensions import db, rq
 
@@ -57,15 +58,22 @@ class Task(BaseModel):
 
     __tablename__ = "task"
 
+    class TaskState:
+        COMPLETED = "completed"
+        SCHEDULED = "scheduled"
+        FAILED = "failed"
+        CANCELLED = "cancelled"
+
+        STATES = [(COMPLETED,) * 2, (SCHEDULED,) * 2, (FAILED,) * 2, (CANCELLED,) * 2]
+        INITIAL_STATE = SCHEDULED
+
     # Attributes
     job_id = db.Column(db.String(36), index=True)
     name = db.Column(db.String(128), index=True)
-    description = db.Column(db.String(128))
-    failed = db.Column(db.Boolean, default=False)
-    complete = db.Column(db.Boolean, default=False)
-    type = db.Column(db.String(55))
-
-    __mapper_args__ = {"polymorphic_identity": "task", "polymorphic_on": "type"}
+    task_state = db.Column(
+        ChoiceType(TaskState.STATES), default=TaskState.INITIAL_STATE, index=True
+    )
+    data = db.Column(db.JSON)
 
     def get_rq_job(self):
         try:

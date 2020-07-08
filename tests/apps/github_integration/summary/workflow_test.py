@@ -4,9 +4,9 @@ from typing import List
 
 import pytest
 
-from busy_beaver.apps.github_integration.cli import post_github_summary_to_slack_cli
 from busy_beaver.apps.github_integration.summary.workflow import (
     fetch_github_summary_post_to_slack,
+    post_github_summary_message,
 )
 from busy_beaver.toolbox import utc_now_minus
 from tests._utilities import FakeSlackClient
@@ -186,25 +186,19 @@ def test_fetch_github_summary_post_to_slack(
     assert "<@user1>" in json.dumps(kwargs["blocks"])
 
 
-##########
-# Test CLI
-##########
 @pytest.mark.end2end
-def test_post_github_summary_to_slack_cli(
-    runner, session, factory, t_minus_one_day, patched_slack, patched_github_user_events
+def test_post_github_summary_message(
+    session, factory, t_minus_one_day, patched_slack, patched_github_user_events
 ):
     # Arrange
-    slack_installation = factory.SlackInstallation(workspace_id="abc")
     channel = "general"
-    github_summary_config = factory.GitHubSummaryConfiguration(
-        channel=channel, slack_installation=slack_installation
-    )
+    github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
     slack_installation = github_summary_config.slack_installation
     slack = patched_slack(members=["user1", "user2"])
     patched_github_user_events(messages=["a", "b"])
 
     # Act
-    runner.invoke(post_github_summary_to_slack_cli, ["--workspace", "abc"])
+    post_github_summary_message(workspace=slack_installation.workspace_id)
 
     # Assert
     slack_adapter_initalize_args = slack.mock.call_args_list[0]
