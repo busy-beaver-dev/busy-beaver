@@ -5,8 +5,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      CHART_LOCATION: ./helm-chart/busybeaver
-      VALUES_FILE: ./helm-chart/values/production.yaml
+      CHART_LOCATION: ./helm/charts/busybeaver
+      VALUES_FILE: ./helm/values/production.yaml
       RELEASE_NAME: busybeaver-production
       RELEASE_TAG: ${{ github.event.deployment.ref }}
     steps:
