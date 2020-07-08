@@ -60,10 +60,10 @@ class Task(BaseModel):
     # Attributes
     job_id = db.Column(db.String(36), index=True)
     name = db.Column(db.String(128), index=True)
-    type = db.Column(db.String(55), index=True)
-    # TODO state should be a choice
-    state = db.Column(db.String(36), index=True)
-    data = db.Column(db.JSON)
+    description = db.Column(db.String(128))
+    failed = db.Column(db.Boolean, default=False)
+    complete = db.Column(db.Boolean, default=False)
+    type = db.Column(db.String(55))
 
     __mapper_args__ = {"polymorphic_identity": "task", "polymorphic_on": "type"}
 
