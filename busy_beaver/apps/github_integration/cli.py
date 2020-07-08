@@ -32,7 +32,6 @@ def queue_post_github_summary_tasks(workspace: str):
 
 
 def _get_time_to_post(config):
-    # TODO UNIT TEST THIS
     tomorrow = date.today() + timedelta(days=1)
     dt_to_post = datetime.combine(tomorrow, config.summary_post_time)
     localized_dt = config.summary_post_timezone.localize(dt_to_post)
