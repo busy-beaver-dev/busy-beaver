@@ -69,3 +69,12 @@ services:
     volumes: *app_volumes
     stdin_open: true
     tty: true
+  scheduler:
+    build: *app_build
+    command: scheduler
+    env_file: .env
+    depends_on: *app_depends_on
+    environment: *app_env_vars
+    volumes: *app_volumes
+    stdin_open: true
+    tty: true
