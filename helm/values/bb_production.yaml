@@ -11,3 +11,7 @@ app:
 
 ingress:
   host: app.busybeaverbot.com
+
+queue:
+  name: bb-queue-production
+  dns: bb-queue-production-redis-master.default.svc.cluster.local

@@ -11,3 +11,7 @@ app:
 
 ingress:
   host: staging.busybeaverbot.com
+
+queue:
+  name: bb-queue-staging
+  dns: bb-queue-staging-redis-master.default.svc.cluster.local
