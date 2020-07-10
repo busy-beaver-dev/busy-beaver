@@ -1,9 +1,10 @@
-# Helm Chart
+# Helm
 
-Helm chart to deploy the Busy Beaver app.
+Helm configurations to deploy and support the Busy Beaver app.
 
-## Supported Environments
+## Directory Contents
 
-- production
-- staging
-  - create as needed
+|Item|Description
+|---|---|
+|`charts`|Contains custom Helm charts used to deploy Busy Beaver|
+|`values`|[Values files](https://helm.sh/docs/chart_template_guide/values_files/) used by Helm|

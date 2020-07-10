@@ -1,0 +1,13 @@
+usePassword: false
+
+cluster:
+  enabled: false
+
+master:
+  persistence:
+    enabled: true
+    size: 1Gi
+
+configmap: |-
+  save 60 1000
+  appendonly yes
