@@ -14,10 +14,11 @@ logger = logging.getLogger(__name__)
 
 
 # currently we will only kick off one task, check which rows are active
-# name this cli option, queue_github_summary_jobs_for_tomorrow
 @click.option("--workspace", required=True, prompt="Slack workspace ID")
-@github_bp.cli.command("post_github_summary", help="Post a GitHub summary")
-def queue_post_github_summary_tasks(workspace: str):
+@github_bp.cli.command(
+    "queue_github_summary_jobs", help="Queue GitHub summary jobs for tomorrow"
+)
+def queue_github_summary_jobs_for_tomorrow(workspace: str):
     installation = SlackInstallation.query.filter_by(workspace_id=workspace).first()
     time_to_post = _get_time_to_post(installation.github_summary_config)
     job = post_github_summary_message.schedule(time_to_post, workspace=workspace)

@@ -1,24 +1,24 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: "{{ include "busybeaver.fullname" . }}--cron--post-github-summary"
+  name: "{{ include "busybeaver.fullname" . }}--cron--queue-github-summary-jobs"
   labels:
     type: post-github-summary
     {{- include "busybeaver.labels" . | nindent 4 }}
 spec:
-  schedule: "0 19 * * *"
+  schedule: "50 23 * * *"
   jobTemplate:
     spec:
       template:
         spec:
           restartPolicy: OnFailure
           containers:
-          - name: busybeaver--post-github-summary
+          - name: busybeaver--queue-github-summary-jobs
             image: {{ .Values.image.repository }}:{{ .Values.image.version }}
             imagePullPolicy: {{ .Values.image.pullPolicy }}
             command: ["flask"]
             args:
-            - "post_github_summary"
+            - "queue_github_summary_jobs"
             - "--workspace"
             - {{ .Values.workspaceId | quote }}
             env: {{- include "busybeaver.env_vars" . | indent 12 }}

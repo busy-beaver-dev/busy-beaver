@@ -4,7 +4,7 @@ import pytest
 
 from busy_beaver.apps.github_integration.cli import (
     _get_time_to_post,
-    queue_post_github_summary_tasks,
+    queue_github_summary_jobs_for_tomorrow,
 )
 from busy_beaver.apps.github_integration.summary.workflow import (
     post_github_summary_message,
@@ -49,7 +49,7 @@ def test_start_post_github_summary_task(
     )
 
     # Act
-    runner.invoke(queue_post_github_summary_tasks, ["--workspace", "abc"])
+    runner.invoke(queue_github_summary_jobs_for_tomorrow, ["--workspace", "abc"])
 
     # Assert
     task = Task.query.first()
