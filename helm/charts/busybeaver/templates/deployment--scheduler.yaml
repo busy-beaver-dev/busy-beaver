@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ include "busybeaver.fullname" . }}--scheduler"
+  labels:
+    type: scheduler-deploy
+    {{- include "busybeaver.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      type: scheduler
+      {{- include "busybeaver.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        type: scheduler
+        {{- include "busybeaver.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: webapp-scheduler
+        image: {{ .Values.image.repository }}:{{ .Values.image.version }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args: ["scheduler"]
+        resources:
+          limits:
+            memory: "64Mi"
+            cpu: "100m"
+        env:
+          {{- include "busybeaver.env_vars" . | indent 10 }}

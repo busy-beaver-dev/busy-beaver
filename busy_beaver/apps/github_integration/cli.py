@@ -6,6 +6,7 @@ import pytz
 
 from .blueprint import github_bp
 from .summary.workflow import post_github_summary_message
+from busy_beaver.exceptions import GitHubSummaryException
 from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation, Task
 
@@ -32,6 +33,9 @@ def queue_post_github_summary_tasks(workspace: str):
 
 
 def _get_time_to_post(config):
+    if not config.summary_post_time or not config.summary_post_timezone:
+        extra = {"workspace": config.workspace}
+        raise GitHubSummaryException("Time to post configuration ", extra=extra)
     tomorrow = date.today() + timedelta(days=1)
     dt_to_post = datetime.combine(tomorrow, config.summary_post_time)
     localized_dt = config.summary_post_timezone.localize(dt_to_post)
