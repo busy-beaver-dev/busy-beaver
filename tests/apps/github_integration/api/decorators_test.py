@@ -3,7 +3,7 @@ import os
 from flask import Flask, jsonify
 import pytest
 
-from busy_beaver.app import handle_http_error
+from busy_beaver.app import handle_error
 from busy_beaver.apps.github_integration.api.decorators import verify_github_signature
 from busy_beaver.exceptions import UnverifiedWebhookRequest
 
@@ -22,7 +22,7 @@ def github_verification_app(app):
     def unlocked_endpoint():
         return jsonify({"authorization": "all_users"})
 
-    app.register_error_handler(UnverifiedWebhookRequest, handle_http_error)
+    app.register_error_handler(UnverifiedWebhookRequest, handle_error)
     yield app
 
 

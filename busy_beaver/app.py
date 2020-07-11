@@ -16,22 +16,7 @@ from .extensions import bootstrap, db, login_manager, migrate, rq
 from .toolbox import make_response
 
 
-def handle_http_error(error):
-    data = {"message": error.message}
-    return make_response(error.status_code, error=data)
-
-
-def handle_oauth_error(error):
-    data = {"message": error.message}
-    return make_response(error.status_code, error=data)
-
-
-def handle_validation_error(error):
-    data = {"message": error.message}
-    return make_response(error.status_code, error=data)
-
-
-def handle_state_machine_error(error):
+def handle_error(error):
     data = {"message": error.message}
     return make_response(error.status_code, error=data)
 
@@ -62,10 +47,10 @@ def create_app(*, testing=False):
     # TODO figure out CSP headers and re-enable
     # talisman.init_app(app)
 
-    app.register_error_handler(NotAuthorized, handle_http_error)
-    app.register_error_handler(OAuthError, handle_oauth_error)
-    app.register_error_handler(ValidationError, handle_validation_error)
-    app.register_error_handler(StateMachineError, handle_state_machine_error)
+    app.register_error_handler(NotAuthorized, handle_error)
+    app.register_error_handler(OAuthError, handle_error)
+    app.register_error_handler(ValidationError, handle_error)
+    app.register_error_handler(StateMachineError, handle_error)
 
     app.register_blueprint(events_bp, cli_group=None)
     app.register_blueprint(healthcheck_bp)
