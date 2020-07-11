@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "{{ include "busybeaver.fullname" . }}--workers"
+  name: "{{ include "busybeaver.fullname" . }}-workers"
   labels:
     type: worker-deploy
     {{- include "busybeaver.labels" . | nindent 4 }}

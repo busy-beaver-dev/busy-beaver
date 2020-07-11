@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: "{{ include "busybeaver.fullname" . }}--scheduler"
+  name: "{{ include "busybeaver.fullname" . }}-scheduler"
   labels:
     type: scheduler-deploy
     {{- include "busybeaver.labels" . | nindent 4 }}

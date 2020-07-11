@@ -6,8 +6,9 @@
 
 |Filename|Description|
 |---|---|
-|production.yaml|Production file for Busy Beaver chart|
-|staging.yaml|Staging file for Busy Beaver chart|
+|`bb_production.yaml`|Production file for Busy Beaver chart|
+|`bb_staging.yaml`|Staging file for Busy Beaver chart|
+|`redis.yaml`|Values for [bitnmai/redis](https://github.com/bitnami/charts/tree/master/bitnami/redis)|
 
 ## Commands
 
@@ -19,6 +20,8 @@ We will need to install Redis and copy the service DNS into the `bb_[environment
 helm repo add bitnami https://charts.bitnami.com/bitnami
 
 helm install bb-queue-staging bitnami/redis -f ./helm/values/redis.yaml
+
+helm upgrade bb-queue-production bitnami/redis -f ./helm/values/redis.yaml
 ```
 
 ### Busy Beaver App

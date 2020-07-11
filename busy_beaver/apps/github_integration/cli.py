@@ -20,22 +20,23 @@ logger = logging.getLogger(__name__)
 )
 def queue_github_summary_jobs_for_tomorrow(workspace: str):
     installation = SlackInstallation.query.filter_by(workspace_id=workspace).first()
-    time_to_post = _get_time_to_post(installation.github_summary_config)
+    time_to_post = _get_time_to_post(installation)
     job = post_github_summary_message.schedule(time_to_post, workspace=workspace)
 
     task = Task(
         job_id=job.id,
         name="post_github_summary_message",
         task_state=Task.TaskState.SCHEDULED,
-        data={"workspace_id": workspace},
+        data={"workspace_id": workspace, "time_to_post": time_to_post},
     )
     db.session.add(task)
     db.session.commit()
 
 
-def _get_time_to_post(config):
+def _get_time_to_post(installation):
+    config = installation.github_summary_config
     if not config.summary_post_time or not config.summary_post_timezone:
-        extra = {"workspace": config.workspace}
+        extra = {"workspace_id": installation.workspace_id}
         raise GitHubSummaryException("Time to post configuration ", extra=extra)
     tomorrow = date.today() + timedelta(days=1)
     dt_to_post = datetime.combine(tomorrow, config.summary_post_time)
