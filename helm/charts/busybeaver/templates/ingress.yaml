@@ -15,5 +15,5 @@ spec:
     http:
       paths:
       - backend:
-          serviceName: {{ include "busybeaver.fullname" . }}
+          serviceName: {{ include "busybeaver.fullname" . }}-web
           servicePort: 80

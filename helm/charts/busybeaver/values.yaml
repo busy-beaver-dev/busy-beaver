@@ -9,5 +9,14 @@ app:
   webReplicaCount: 1
   workerReplicaCount: 1
 
+image:
+  repository: alysivji/busy-beaver
+  version: 1.4.7
+  pullPolicy: Always
+
 ingress:
   host: staging.busybeaverbot.com
+
+queue:
+  name: bb-queue-staging
+  dns: bb-queue-staging-redis-master.default.svc.cluster.local

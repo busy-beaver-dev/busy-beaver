@@ -1,0 +1,7 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.queue.name }}
+spec:
+  type: ExternalName
+  externalName: {{ .Values.queue.dns }}
