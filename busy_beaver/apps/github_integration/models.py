@@ -10,6 +10,7 @@ class GitHubSummaryConfiguration(BaseModel):
     def __repr__(self):  # pragma: no cover
         return f"<GitHubSummaryConfiguration: {self.slack_installation.workspace_name}>"
 
+    enabled = db.Column(db.Boolean, default=False, nullable=False)
     installation_id = db.Column(
         db.Integer,
         db.ForeignKey("slack_installation.id", name="fk_installation_id"),
