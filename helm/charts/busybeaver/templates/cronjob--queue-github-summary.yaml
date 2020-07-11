@@ -19,6 +19,4 @@ spec:
             command: ["flask"]
             args:
             - "queue_github_summary_jobs"
-            - "--workspace"
-            - {{ .Values.workspaceId | quote }}
             env: {{- include "busybeaver.env_vars" . | indent 12 }}
