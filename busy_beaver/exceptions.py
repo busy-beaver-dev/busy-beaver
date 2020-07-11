@@ -18,10 +18,6 @@ class EventEmitterEventNotRegistered(EventEmitterException):
     pass
 
 
-class GitHubSummaryException(BusyBeaverException):
-    pass
-
-
 class NoMeetupEventsFound(BusyBeaverException):
     pass
 

@@ -6,7 +6,6 @@ import pytz
 from .blueprint import github_bp
 from .models import GitHubSummaryConfiguration
 from .summary.workflow import post_github_summary_message
-from busy_beaver.exceptions import GitHubSummaryException
 from busy_beaver.extensions import db
 from busy_beaver.models import Task
 
@@ -22,6 +21,9 @@ def queue_github_summary_jobs_for_tomorrow():
     for config in all_active_configs:
         workspace_id = config.slack_installation.workspace_id
         time_to_post = _get_time_to_post(config)
+        if not time_to_post:
+            continue
+
         job = post_github_summary_message.schedule(
             time_to_post, workspace_id=workspace_id
         )
@@ -42,7 +44,8 @@ def _get_time_to_post(config):
     # TODO state machine can remove this
     if not config.summary_post_time or not config.summary_post_timezone:
         extra = {"workspace_id": config.slack_installation.workspace_id}
-        raise GitHubSummaryException("Time to post configuration ", extra=extra)
+        logger.error("No time to post configuration", extra=extra)
+        return None
     tomorrow = date.today() + timedelta(days=1)
     dt_to_post = datetime.combine(tomorrow, config.summary_post_time)
     localized_dt = config.summary_post_timezone.localize(dt_to_post)

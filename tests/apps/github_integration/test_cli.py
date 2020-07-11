@@ -36,7 +36,7 @@ def patched_background_task(patcher, create_fake_background_task):
 
 
 @pytest.mark.unit
-def test_start_post_github_summary_task(
+def test_queue_github_summary_jobs_for_tomorrow_task(
     runner, session, factory, patched_background_task
 ):
     """Test trigger function"""
@@ -49,11 +49,47 @@ def test_start_post_github_summary_task(
         slack_installation=slack_installation,
     )
 
+    slack_installation = factory.SlackInstallation(workspace_id="second_workspace")
+    factory.GitHubSummaryConfiguration(
+        enabled=False,
+        summary_post_time=time(14, 00),
+        summary_post_timezone="America/Chicago",
+        slack_installation=slack_installation,
+    )
+
     # Act
     runner.invoke(queue_github_summary_jobs_for_tomorrow)
 
     # Assert
-    task = Task.query.first()
+    tasks = Task.query.all()
+    assert len(tasks) == 1
+
+    task = tasks[0]
     assert task is not None
     assert task.job_id == patched_background_task.id
     assert task.data["workspace_id"] == "abc"
+
+
+@pytest.mark.unit
+def test_queue_github_summary_jobs_for_tomorrow_task__does_not_have_time_set(
+    runner, session, factory, patched_background_task, caplog
+):
+    """Test trigger function"""
+    # Arrange
+    slack_installation = factory.SlackInstallation(workspace_id="abc")
+    factory.GitHubSummaryConfiguration(
+        enabled=True,
+        summary_post_time=None,
+        summary_post_timezone="America/Chicago",
+        slack_installation=slack_installation,
+    )
+
+    # Act
+    runner.invoke(queue_github_summary_jobs_for_tomorrow)
+
+    # Assert
+    tasks = Task.query.all()
+    assert len(tasks) == 0
+
+    assert "ERROR" in caplog.text
+    assert "No time to post configuration" in caplog.text

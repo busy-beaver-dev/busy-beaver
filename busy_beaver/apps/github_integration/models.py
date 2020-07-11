@@ -54,7 +54,7 @@ class GitHubSummaryConfiguration(BaseModel):
 
     # Relationships
     slack_installation = db.relationship(
-        "SlackInstallation", back_populates="github_summary_config"  # , lazy="joined"
+        "SlackInstallation", back_populates="github_summary_config"
     )
     github_summary_users = db.relationship(
         "GitHubSummaryUser", back_populates="configuration"
