@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: "{{ include "busybeaver.fullname" . }}--cron--queue-github-summary-jobs"
+  name: "{{ include "busybeaver.fullname" . }}--cron--queue-github-summary"
   labels:
     type: post-github-summary
     {{- include "busybeaver.labels" . | nindent 4 }}
