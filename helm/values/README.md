@@ -26,7 +26,7 @@ helm install bb-queue-staging bitnami/redis -f ./helm/values/redis.yaml
 The staging environment is brought up as needed.
 
 ```console
-helm install busybeaver-production ./helm/charts/busybeaver/ -f ./helm/values/bb_production.yaml --set image.version=[version]
+helm install busybeaver-staging ./helm/charts/busybeaver/ -f ./helm/values/bb_staging.yaml --set image.version=[version]
 
-helm upgrade busybeaver-staging ./helm/charts/busybeaver/ -f ./helm/values/bb_staging.yaml --set image.version=[version]
+helm upgrade busybeaver-production ./helm/charts/busybeaver/ -f ./helm/values/bb_production.yaml --set image.version=[version]
 ```
