@@ -43,15 +43,17 @@ def test_start_post_github_summary_task(
     # Arrange
     slack_installation = factory.SlackInstallation(workspace_id="abc")
     factory.GitHubSummaryConfiguration(
+        enabled=True,
         summary_post_time=time(14, 00),
         summary_post_timezone="America/Chicago",
         slack_installation=slack_installation,
     )
 
     # Act
-    runner.invoke(queue_github_summary_jobs_for_tomorrow, ["--workspace", "abc"])
+    runner.invoke(queue_github_summary_jobs_for_tomorrow)
 
     # Assert
     task = Task.query.first()
+    assert task is not None
     assert task.job_id == patched_background_task.id
     assert task.data["workspace_id"] == "abc"
