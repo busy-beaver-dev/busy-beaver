@@ -6,7 +6,7 @@ jobs:
 
     env:
       CHART_LOCATION: ./helm/charts/busybeaver
-      VALUES_FILE: ./helm/values/production.yaml
+      VALUES_FILE: ./helm/values/bb_production.yaml
       RELEASE_NAME: busybeaver-production
       RELEASE_TAG: ${{ github.event.deployment.ref }}
     steps:
