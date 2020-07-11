@@ -16,8 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 @rq.job
-def post_github_summary_message(workspace: str):
-    installation = SlackInstallation.query.filter_by(workspace_id=workspace).first()
+def post_github_summary_message(workspace_id: str):
+    installation = SlackInstallation.query.filter_by(workspace_id=workspace_id).first()
     if not installation:
         raise ValidationError("workspace not found")
 

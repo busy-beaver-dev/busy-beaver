@@ -18,10 +18,6 @@ class EventEmitterEventNotRegistered(EventEmitterException):
     pass
 
 
-class GitHubSummaryException(BusyBeaverException):
-    pass
-
-
 class NoMeetupEventsFound(BusyBeaverException):
     pass
 
@@ -44,6 +40,14 @@ class NotAuthorized(BusyBeaverException):
 
 class SlackTooManyBlocks(BusyBeaverException):
     pass
+
+
+class StateMachineError(BusyBeaverException):
+    status_code = 500
+
+    def __init__(self, error):
+        super().__init__()
+        self.message = error
 
 
 class UnverifiedWebhookRequest(NotAuthorized):

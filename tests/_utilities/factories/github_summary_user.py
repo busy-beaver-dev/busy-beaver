@@ -33,6 +33,7 @@ def GitHubSummaryConfiguration(session):
             sqlalchemy_session_persistence = "commit"
             sqlalchemy_session = session
 
+        enabled = True
         channel = "busy-beaver"
         summary_post_time = time(14, 00)
         summary_post_timezone = "America/Chicago"

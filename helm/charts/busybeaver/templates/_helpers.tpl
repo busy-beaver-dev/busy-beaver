@@ -53,12 +53,14 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 Environment Variables
 */}}
 {{- define "busybeaver.env_vars" }}
-{{- if eq .Values.environment "production" }}
 - name: ENVIRONMENT
   value: {{ .Values.environment }}
+{{- if eq .Values.environment "production" }}
 - name: IN_PRODUCTION
   value: "1"
 {{- end }}
+- name: BASE_URL
+  value: "https://{{ .Values.ingress.host }}"
 - name: PYTHONPATH
   value: .
 - name: FLASK_APP

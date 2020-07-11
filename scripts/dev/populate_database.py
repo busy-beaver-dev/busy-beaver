@@ -47,6 +47,7 @@ db.session.commit()
 
 if not installation.github_summary_config:
     config = GitHubSummaryConfiguration(
+        enabled=True,
         slack_installation=installation,
         channel=channel_id,
         summary_post_time=time(14, 00),
