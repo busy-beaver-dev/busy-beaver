@@ -198,7 +198,7 @@ def test_post_github_summary_message(
     patched_github_user_events(messages=["a", "b"])
 
     # Act
-    post_github_summary_message(workspace=slack_installation.workspace_id)
+    post_github_summary_message(workspace_id=slack_installation.workspace_id)
 
     # Assert
     slack_adapter_initalize_args = slack.mock.call_args_list[0]

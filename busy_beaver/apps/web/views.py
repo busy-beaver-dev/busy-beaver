@@ -96,4 +96,24 @@ def github_summary_settings():
 
     channel = config.channel
     channel_info = slack.channel_details(channel)
-    return render_template("set_time.html", form=form, channel=channel_info["name"])
+    return render_template(
+        "set_time.html", form=form, channel=channel_info["name"], enabled=config.enabled
+    )
+
+
+@web_bp.route("/settings/github-summary/toggle")
+@login_required
+def toggle_github_summary_config_view():
+    logger.info("Hit GitHub Summary Settings page")
+    installation = current_user.installation
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    config = installation.github_summary_config
+    config.toggle_configuration_enabled_status()
+    db.session.add(config)
+    db.session.commit()
+    return redirect(url_for("web.github_summary_settings"))

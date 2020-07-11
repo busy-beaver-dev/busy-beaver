@@ -1,7 +1,39 @@
+from finite_state_machine import StateMachine, transition
+from finite_state_machine.exceptions import ConditionNotMet
 from sqlalchemy_utils import TimezoneType
 
 from busy_beaver.common.models import BaseModel
+from busy_beaver.exceptions import StateMachineError
 from busy_beaver.extensions import db
+
+
+def time_to_post_has_been_configured(self):
+    return self.config.summary_post_time and self.config.summary_post_timezone
+
+
+class GitHubConfigEnabledStateMachine(StateMachine):
+    initial_state = False
+
+    def __init__(self, config):
+        self.config = config
+        self.state = config.enabled
+        super().__init__()
+
+    @transition(
+        source=False, target=True, conditions=[time_to_post_has_been_configured]
+    )
+    def enable_github_summary_feature(self):
+        pass
+
+    @transition(source=True, target=False)
+    def disable_github_summary_feature(self):
+        pass
+
+    def toggle(self):
+        if self.state:
+            self.disable_github_summary_feature()
+        else:
+            self.enable_github_summary_feature()
 
 
 class GitHubSummaryConfiguration(BaseModel):
@@ -22,11 +54,19 @@ class GitHubSummaryConfiguration(BaseModel):
 
     # Relationships
     slack_installation = db.relationship(
-        "SlackInstallation", back_populates="github_summary_config"
+        "SlackInstallation", back_populates="github_summary_config"  # , lazy="joined"
     )
     github_summary_users = db.relationship(
         "GitHubSummaryUser", back_populates="configuration"
     )
+
+    def toggle_configuration_enabled_status(self):
+        machine = GitHubConfigEnabledStateMachine(self)
+        try:
+            machine.toggle()
+        except ConditionNotMet as e:
+            raise StateMachineError(f"Condition failed: {e.condition.__name__}")
+        self.enabled = machine.state
 
 
 class GitHubSummaryUser(BaseModel):

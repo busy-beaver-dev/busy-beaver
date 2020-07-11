@@ -39,6 +39,7 @@ def queue_github_summary_jobs_for_tomorrow():
 
 
 def _get_time_to_post(config):
+    # TODO state machine can remove this
     if not config.summary_post_time or not config.summary_post_timezone:
         extra = {"workspace_id": config.slack_installation.workspace_id}
         raise GitHubSummaryException("Time to post configuration ", extra=extra)
