@@ -46,9 +46,9 @@ class UpdateRecord(NamedTuple):
 
 class SyncEventDatabase:
     def __init__(
-        self, fetched_events: List[EventDetails], database_events: List[Event]
+        self, group, fetched_events: List[EventDetails], database_events: List[Event]
     ):
-        self.group = self.group
+        self.group = group
         self.fetched_events_map = {event.id: event for event in fetched_events}
         self.database_events_map = {event.remote_id: event for event in database_events}
         self.transactions = classify_transaction_type(

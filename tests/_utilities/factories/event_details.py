@@ -6,6 +6,8 @@ from busy_beaver.common.wrappers.meetup import EventDetails as model
 
 
 def EventDetails(session):
+    """Meetup Event Details Factory"""
+
     class _EventDetailsFactory(factory.Factory):
         class Meta:
             model = model

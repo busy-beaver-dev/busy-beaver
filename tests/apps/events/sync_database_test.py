@@ -28,11 +28,12 @@ def test_add_all_events_to_database(session, factory, patched_meetup):
     THEN: add all events to database
     """
     # Arrange
+    group = factory.UpcomingEventsGroup()
     events = factory.EventDetails.create_batch(size=20)
     patched_meetup(events=events)
 
     # Act
-    sync_database_with_fetched_events("test_group")
+    sync_database_with_fetched_events(group)
 
     # Assert
     all_events_in_database = Event.query.all()
@@ -47,8 +48,9 @@ def test_update_all_events_in_database(session, factory, patched_meetup):
     THEN: update event information in database
     """
     # Arrange
+    group = factory.UpcomingEventsGroup()
     num_events = 20
-    database_events = factory.Event.create_batch(size=num_events)
+    database_events = factory.Event.create_batch(size=num_events, group=group)
 
     fetched_events = []
     for event in database_events:
@@ -56,7 +58,7 @@ def test_update_all_events_in_database(session, factory, patched_meetup):
     patched_meetup(events=fetched_events)
 
     # Act
-    sync_database_with_fetched_events("test_group")
+    sync_database_with_fetched_events(group)
 
     # Assert
     all_database_events = Event.query.all()
@@ -73,13 +75,14 @@ def test_delete_all_events_in_database(session, factory, patched_meetup):
     THEN: all events are removed fromd atabase
     """
     # Arrange
+    group = factory.UpcomingEventsGroup()
     num_events = 20
-    factory.Event.create_batch(size=num_events)
+    factory.Event.create_batch(size=num_events, group=group)
 
     patched_meetup(events=[])
 
     # Act
-    sync_database_with_fetched_events("test_group")
+    sync_database_with_fetched_events(group)
 
     # Assert
     all_database_events = Event.query.all()
@@ -95,8 +98,9 @@ def test_sync_database(session, factory, patched_meetup):
     THEN: table is synced with fetched event
     """
     # Arrange
-    event_to_update = factory.Event()
-    event_to_delete = factory.Event()
+    group = factory.UpcomingEventsGroup()
+    event_to_update = factory.Event(group=group)
+    event_to_delete = factory.Event(group=group)
 
     updated_event = factory.EventDetails(id=event_to_update.remote_id, venue="TBD")
     new_events = factory.EventDetails.create_batch(size=5)
@@ -104,7 +108,7 @@ def test_sync_database(session, factory, patched_meetup):
     patched_meetup(events=fetched_events)
 
     # Act
-    sync_database_with_fetched_events("test_group")
+    sync_database_with_fetched_events(group)
 
     # Assert
     assert not Event.query.get(event_to_delete.id)
@@ -136,17 +140,21 @@ def test_classify_transaction_type():
 @pytest.mark.end2end
 def test_sync_events_database_cli(runner, session, factory, patched_meetup):
     """
-    GIVEN: Empty database
+    GIVEN: Empty database with a single events database installation
     WHEN: add_events_to_database is called
     THEN: add all events to database
     """
     # Arrange
+    group = factory.UpcomingEventsGroup()
     events = factory.EventDetails.create_batch(size=20)
     patched_meetup(events=events)
 
     # Act
-    runner.invoke(sync_events_database_cli, ["--group_name", "test_group"])
+    runner.invoke(sync_events_database_cli)
 
     # Assert
     all_events_in_database = Event.query.all()
     assert len(all_events_in_database) == len(events)
+
+    event = all_events_in_database[0]
+    assert event.group == group
