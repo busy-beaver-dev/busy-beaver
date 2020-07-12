@@ -140,12 +140,12 @@ def test_classify_transaction_type():
 @pytest.mark.end2end
 def test_sync_events_database_cli(runner, session, factory, patched_meetup):
     """
-    GIVEN: Empty database with a single events database installation
-    WHEN: add_events_to_database is called
+    GIVEN: Empty database with a single active upcoming events configuration
+    WHEN: sync_events_database is called from the CLI
     THEN: add all events to database
     """
     # Arrange
-    factory.UpcomingEventsGroup(meetup_urlname="GroupName")
+    factory.UpcomingEventsGroup(meetup_urlname="GroupName", events=[])
     events = factory.EventDetails.create_batch(size=20)
     patched_meetup(events=events)
 
@@ -160,6 +160,55 @@ def test_sync_events_database_cli(runner, session, factory, patched_meetup):
     assert event.group.meetup_urlname == "GroupName"
 
 
-# TODO add test for multiple accounts
+@pytest.mark.end2end
+def test_sync_events_database_no_active_config(
+    runner, session, factory, patched_meetup
+):
+    """
+    GIVEN: Empty database with no upcoming events configuration
+    WHEN: sync_events_database is called from the CLI
+    THEN: add all events to database
+    """
+    # Arrange
+    config = factory.UpcomingEventsConfiguration(enabled=False)
+    factory.UpcomingEventsGroup(
+        configuration=config, meetup_urlname="GroupName", events=[]
+    )
+    events = factory.EventDetails.create_batch(size=20)
+    patched_meetup(events=events)
 
-# inactive accounts, nothing happens
+    # Act
+    runner.invoke(sync_events_database_cli)
+
+    # Assert
+    all_events_in_database = Event.query.all()
+    assert len(all_events_in_database) == 0
+
+
+@pytest.mark.end2end
+def test_sync_events_database_for_multiple_active_configuration(
+    runner, session, factory, patched_meetup
+):
+    """
+    GIVEN: Empty database with multiple active events configuration
+    WHEN: sync_events_database is called from the CLI
+    THEN: add all events to database
+    """
+    # Arrange
+    config = factory.UpcomingEventsConfiguration(enabled=True)
+    factory.UpcomingEventsGroup(
+        configuration=config, meetup_urlname="GroupName", events=[]
+    )
+    second_config = factory.UpcomingEventsConfiguration(enabled=True)
+    factory.UpcomingEventsGroup(
+        configuration=second_config, meetup_urlname="GroupName", events=[]
+    )
+    events = factory.EventDetails.create_batch(size=20)
+    patched_meetup(events=events)
+
+    # Act
+    runner.invoke(sync_events_database_cli)
+
+    # Assert
+    all_events_in_database = Event.query.all()
+    assert len(all_events_in_database) == len(events) * 2
