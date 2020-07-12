@@ -6,23 +6,6 @@ from busy_beaver.exceptions import StateMachineError
 from busy_beaver.extensions import db
 
 
-class Event(BaseModel):
-    """Event table for storing information about past and future meetups"""
-
-    __tablename__ = "event"
-
-    def __repr__(self):  # pragma: no cover
-        return f"<Event: {self.name}>"
-
-    # Attributes
-    remote_id = db.Column(db.String(255), nullable=False, index=True)
-    name = db.Column(db.String(255), nullable=False)
-    url = db.Column(db.String(500), nullable=False)
-    venue = db.Column(db.String(255), nullable=False)
-    start_epoch = db.Column(db.Integer, nullable=False)
-    end_epoch = db.Column(db.Integer, nullable=False)
-
-
 class UpcomingEventsEnabledStateMachine(StateMachine):
     initial_state = False
 
@@ -66,9 +49,7 @@ class UpcomingEventsConfiguration(BaseModel):
     slack_installation = db.relationship(
         "SlackInstallation", back_populates="upcoming_events_config"
     )
-    # meetup_groups = db.relationship(
-    #     "GitHubSummaryUser", back_populates="configuration"
-    # )
+    groups = db.relationship("UpcomingEventsGroup", back_populates="configuration")
 
     def toggle_enabled(self):
         machine = UpcomingEventsEnabledStateMachine(self)
@@ -77,3 +58,59 @@ class UpcomingEventsConfiguration(BaseModel):
         except ConditionNotMet as e:
             raise StateMachineError(f"Condition failed: {e.condition.__name__}")
         self.enabled = machine.state
+
+
+class UpcomingEventsGroup(BaseModel):
+    """Meetup Groups associated with the Upcoming Events Configuration
+
+    - each Slack workspace can have 0/1 Upcoming Events configurations
+    - each event configuration can be set for 1+ meetup groups
+    """
+
+    __tablename__ = "upcoming_events_group"
+
+    def __repr__(self):  # pragma: no cover
+        return f"<UpcomingEventsGroup: {self.slack_installation.workspace_name}>"
+
+    config_id = db.Column(
+        db.Integer,
+        db.ForeignKey(
+            "upcoming_events_configuration.id",
+            name="fk_upcoming_events_configuration_id",
+        ),
+        nullable=False,
+    )
+    meetup_urlname = db.Column(db.String(100), nullable=False)
+
+    # Relationships
+    configuration = db.relationship(
+        "UpcomingEventsConfiguration", back_populates="groups"
+    )
+    events = db.relationship("Event", back_populates="group")
+
+
+class Event(BaseModel):
+    """Event table for storing information about past and future meetups"""
+
+    __tablename__ = "event"
+
+    def __repr__(self):  # pragma: no cover
+        return f"<Event: {self.name}>"
+
+    # Attributes
+    # TODO make this null after doing a data migration
+    group_id = db.Column(
+        db.Integer,
+        db.ForeignKey("upcoming_events_group.id", name="fk_upcoming_events_group_id"),
+        nullable=True,
+    )
+
+    remote_id = db.Column(db.String(255), nullable=False, index=True)
+    name = db.Column(db.String(255), nullable=False)
+    url = db.Column(db.String(500), nullable=False)
+    venue = db.Column(db.String(255), nullable=False)
+    start_epoch = db.Column(db.Integer, nullable=False)
+    end_epoch = db.Column(db.Integer, nullable=False)
+
+    # Relationships
+    group = db.relationship("UpcomingEventsGroup", back_populates="events")
