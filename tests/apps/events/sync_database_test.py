@@ -145,7 +145,7 @@ def test_sync_events_database_cli(runner, session, factory, patched_meetup):
     THEN: add all events to database
     """
     # Arrange
-    group = factory.UpcomingEventsGroup()
+    factory.UpcomingEventsGroup(meetup_urlname="GroupName")
     events = factory.EventDetails.create_batch(size=20)
     patched_meetup(events=events)
 
@@ -157,4 +157,9 @@ def test_sync_events_database_cli(runner, session, factory, patched_meetup):
     assert len(all_events_in_database) == len(events)
 
     event = all_events_in_database[0]
-    assert event.group == group
+    assert event.group.meetup_urlname == "GroupName"
+
+
+# TODO add test for multiple accounts
+
+# inactive accounts, nothing happens

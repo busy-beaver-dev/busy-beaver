@@ -16,7 +16,7 @@ def test_generate_next_event(session, factory):
 
     assert "ChiPy" in result["title"]
     assert "http://meetup.com/_ChiPy_/event/blah" in result["title_link"]
-    assert "Numerator" in result["text"]
+    assert "Braintree" in result["text"]
 
 
 @pytest.mark.unit

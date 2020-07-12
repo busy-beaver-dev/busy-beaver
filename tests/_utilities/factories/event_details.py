@@ -17,6 +17,6 @@ def EventDetails(session):
         url = "http://meetup.com/_ChiPy_/event/blah"
         start_epoch = int((datetime.now() + timedelta(days=1)).timestamp())
         end_epoch = start_epoch + 60 * 60 * 2
-        venue = "Numerator"
+        venue = "Braintree"
 
     return _EventDetailsFactory
