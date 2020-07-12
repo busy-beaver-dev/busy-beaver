@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 def post_upcoming_events_message_to_slack_cli(
     workspace: str, channel: str, group_name: str, count: int
 ):
+    # get config
     blocks = generate_upcoming_events_message(group_name, count)
     installation = SlackInstallation.query.filter_by(workspace_id=workspace).first()
     slack = SlackClient(installation.bot_access_token)
