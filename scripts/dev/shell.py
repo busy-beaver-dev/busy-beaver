@@ -39,7 +39,6 @@ YOUTUBE_API_KEY = os.getenv("YOUTUBE_API_KEY")
 youtube = YouTubeClient(api_key=YOUTUBE_API_KEY)
 
 MEETUP_API_KEY = os.getenv("MEETUP_API_KEY")
-MEETUP_GROUP_NAME = "_ChiPy_"
 meetup = MeetupClient(MEETUP_API_KEY)
 
 kv = KeyValueStoreClient()

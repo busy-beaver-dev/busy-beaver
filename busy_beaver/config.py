@@ -8,20 +8,11 @@ SECRET_KEY = os.getenv("SECRET_KEY", "abcdef").encode("utf-8")
 
 BASE_URL = os.getenv("BASE_URL")
 
-# app constraints
-FULL_INSTALLATION_WORKSPACE_IDS = [
-    "T093FC1RC",  # ChiPy Workspace -- https://chipy.slack.com -- prod env
-    "TPDB2AV4K",  # Production instance (home workspace)
-    "TKT910ZU0",  # Staging instance (staging workspace)
-    "T5G0FCMNW",  # SivBots -- https://sivbots.slack.com -- dev env
-]
-
 # infrastructure
 DATABASE_URI = os.getenv("DATABASE_URI")
 REDIS_URI = os.getenv("REDIS_URI")
 
 # social media details
-MEETUP_GROUP_NAME = "_ChiPy_"
 TWITTER_USERNAME = "ChicagoPython"
 YOUTUBE_CHANNEL = "UCT372EAC1orBOSUd2fsA8WA"
 
