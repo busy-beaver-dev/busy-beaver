@@ -2,10 +2,6 @@ import logging
 from typing import List, NamedTuple
 
 from .toolbox import make_slack_response
-from busy_beaver.apps.events.upcoming_events import (
-    generate_next_event_message,
-    generate_upcoming_events_message,
-)
 from busy_beaver.apps.github_integration.oauth.workflow import (
     connect_github_to_slack,
     disconnect_github_from_slack,
@@ -13,6 +9,10 @@ from busy_beaver.apps.github_integration.oauth.workflow import (
 )
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     create_link_to_login_to_settings,
+)
+from busy_beaver.apps.upcoming_events.upcoming_events import (
+    generate_next_event_message,
+    generate_upcoming_events_message,
 )
 from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation, SlackUser

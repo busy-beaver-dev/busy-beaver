@@ -1,4 +1,4 @@
-from busy_beaver.apps.events.cards import UpcomingEvent, UpcomingEventList
+from busy_beaver.apps.upcoming_events.cards import UpcomingEvent, UpcomingEventList
 from busy_beaver.toolbox.slack_block_kit import Context, Divider, Image, Section
 
 

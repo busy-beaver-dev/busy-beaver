@@ -1,7 +1,9 @@
 import pytest
 
-from busy_beaver.apps.events.cli import post_upcoming_events_message_to_slack_cli
-from busy_beaver.apps.events.upcoming_events import (
+from busy_beaver.apps.upcoming_events.cli import (
+    post_upcoming_events_message_to_slack_cli,
+)
+from busy_beaver.apps.upcoming_events.upcoming_events import (
     generate_next_event_message,
     generate_upcoming_events_message,
 )
@@ -34,7 +36,7 @@ def test_generate_upcoming_events_message(session, factory):
 def patched_slack(patcher):
     obj = FakeSlackClient()
     return patcher(
-        "busy_beaver.apps.events.cli", namespace="SlackClient", replacement=obj
+        "busy_beaver.apps.upcoming_events.cli", namespace="SlackClient", replacement=obj
     )
 
 

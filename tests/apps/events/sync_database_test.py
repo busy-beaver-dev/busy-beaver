@@ -1,14 +1,14 @@
 import pytest
 
-from busy_beaver.apps.events.cli import sync_events_database_cli
-from busy_beaver.apps.events.sync_database import (
+from busy_beaver.apps.upcoming_events.cli import sync_events_database_cli
+from busy_beaver.apps.upcoming_events.sync_database import (
     classify_transaction_type,
     sync_database_with_fetched_events,
 )
 from busy_beaver.models import Event
 from tests._utilities import FakeMeetupAdapter
 
-MODULE_TO_TEST = "busy_beaver.apps.events.sync_database"
+MODULE_TO_TEST = "busy_beaver.apps.upcoming_events.sync_database"
 
 
 @pytest.fixture

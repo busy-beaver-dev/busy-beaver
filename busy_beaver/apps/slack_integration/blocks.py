@@ -1,4 +1,6 @@
-from busy_beaver.apps.events.upcoming_events import generate_upcoming_events_message
+from busy_beaver.apps.upcoming_events.upcoming_events import (
+    generate_upcoming_events_message,
+)
 from busy_beaver.toolbox.slack_block_kit import Divider, Section
 from busy_beaver.toolbox.slack_block_kit.blocks import Block
 
