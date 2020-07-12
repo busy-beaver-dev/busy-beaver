@@ -98,11 +98,10 @@ class Event(BaseModel):
         return f"<Event: {self.name}>"
 
     # Attributes
-    # TODO make this null after doing a data migration
     group_id = db.Column(
         db.Integer,
         db.ForeignKey("upcoming_events_group.id", name="fk_upcoming_events_group_id"),
-        nullable=True,
+        nullable=False,
     )
 
     remote_id = db.Column(db.String(255), nullable=False, index=True)
