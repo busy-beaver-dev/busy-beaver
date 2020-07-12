@@ -40,6 +40,12 @@ class SlackInstallation(BaseModel):
         uselist=False,
         lazy="joined",
     )
+    upcoming_events_config = db.relationship(
+        "UpcomingEventsConfiguration",
+        back_populates="slack_installation",
+        uselist=False,
+        lazy="joined",
+    )
     key_value_pairs = db.relationship(
         "KeyValueStore", back_populates="slack_installation"
     )

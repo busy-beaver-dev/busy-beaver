@@ -19,6 +19,4 @@ spec:
             command: ["flask"]
             args:
             - "sync_events_database"
-            - "--group_name"
-            - "_ChiPy_"
             env: {{- include "busybeaver.env_vars" . | indent 12 }}

@@ -1,6 +1,10 @@
 from busy_beaver.common.models import BaseModel, KeyValueStore, Task  # noqa isort:skip
 
-from busy_beaver.apps.events.models import Event  # noqa
+from busy_beaver.apps.events.models import (  # noqa
+    Event,
+    UpcomingEventsConfiguration,
+    UpcomingEventsGroup,
+)
 from busy_beaver.apps.github_integration.models import (  # noqa
     GitHubSummaryConfiguration,
     GitHubSummaryUser,

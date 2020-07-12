@@ -3,16 +3,27 @@ import os
 
 from busy_beaver import create_app
 from busy_beaver.extensions import db
-from busy_beaver.models import Event, GitHubSummaryConfiguration, SlackInstallation
+from busy_beaver.models import (
+    GitHubSummaryConfiguration,
+    SlackInstallation,
+    UpcomingEventsConfiguration,
+    UpcomingEventsGroup,
+)
 from tests._utilities.factories.event import Event as EventFactory
 
 # load config
 workspace_id = os.getenv("SLACK_DEV_WORKSPACE_ID", None)
-channel_id = os.getenv("SLACK_DEV_WORKSPACE_CHANNEL_ID", None)
+github_summary_channel = os.getenv("SLACK_DEV_WORKSPACE_GITHUB_SUMMARY_CHANNEL", None)
+upcoming_events_channel = os.getenv("SLACK_DEV_WORKSPACE_UPCOMING_EVENTS_CHANNEL", None)
 bot_token = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN", None)
 authorizing_user_id = os.getenv("SLACK_DEV_AUTHORIZING_USER_ID", "U5FTQ3QRZ")
 bot_user_id = os.getenv("SLACK_DEV_BOT_USER_ID", "UEGGXQ5EF")
-if not channel_id or not bot_token or not workspace_id:
+if (
+    not github_summary_channel
+    or not upcoming_events_channel
+    or not bot_token
+    or not workspace_id
+):
     exit
 
 # create flask application context
@@ -49,7 +60,7 @@ if not installation.github_summary_config:
     config = GitHubSummaryConfiguration(
         enabled=True,
         slack_installation=installation,
-        channel=channel_id,
+        channel=github_summary_channel,
         summary_post_time=time(14, 00),
         summary_post_timezone="America/Chicago",
     )
@@ -57,7 +68,14 @@ if not installation.github_summary_config:
     db.session.commit()
 
 # update events database
-events = Event.query.all()
-if not events:
+if not installation.upcoming_events_config:
+    config = UpcomingEventsConfiguration(
+        enabled=True, slack_installation=installation, channel=upcoming_events_channel
+    )
+    group = UpcomingEventsGroup(meetup_urlname="_ChiPy_", configuration=config)
+
     create_event = EventFactory(db.session)
-    create_event()
+    create_event(name="_ChiPy_", group=group)
+
+    db.session.add(config)
+    db.session.commit()

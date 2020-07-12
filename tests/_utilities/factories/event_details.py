@@ -6,6 +6,8 @@ from busy_beaver.common.wrappers.meetup import EventDetails as model
 
 
 def EventDetails(session):
+    """Meetup Event Details Factory"""
+
     class _EventDetailsFactory(factory.Factory):
         class Meta:
             model = model
@@ -15,6 +17,6 @@ def EventDetails(session):
         url = "http://meetup.com/_ChiPy_/event/blah"
         start_epoch = int((datetime.now() + timedelta(days=1)).timestamp())
         end_epoch = start_epoch + 60 * 60 * 2
-        venue = "Numerator"
+        venue = "Braintree"
 
     return _EventDetailsFactory

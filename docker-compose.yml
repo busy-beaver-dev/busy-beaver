@@ -48,6 +48,7 @@ services:
       - db
     environment: &app_env_vars
       PYTHONPATH: .
+      BASE_URL: http://0.0.0.0:5000
       FLASK_APP: /app/busy_beaver/__init__.py
       FLASK_ENV: development
       DATABASE_URI: postgresql://bbdev_user:bbdev_password@db:5432/busy-beaver

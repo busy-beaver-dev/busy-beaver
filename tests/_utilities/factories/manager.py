@@ -1,4 +1,4 @@
-from .event import Event
+from .event import Event, UpcomingEventsConfiguration, UpcomingEventsGroup
 from .event_details import EventDetails
 from .github_summary_user import GitHubSummaryConfiguration, GitHubSummaryUser
 from .slack import SlackInstallation, SlackUser
@@ -14,6 +14,8 @@ class FactoryManager:
         SlackInstallation,
         SlackUser,
         Tweet,
+        UpcomingEventsConfiguration,
+        UpcomingEventsGroup,
     ]
 
     def __init__(self, session):
