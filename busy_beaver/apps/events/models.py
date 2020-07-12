@@ -70,7 +70,7 @@ class UpcomingEventsGroup(BaseModel):
     __tablename__ = "upcoming_events_group"
 
     def __repr__(self):  # pragma: no cover
-        return f"<UpcomingEventsGroup: {self.slack_installation.workspace_name}>"
+        return f"<UpcomingEventsGroup: {self.meetup_urlname}>"
 
     config_id = db.Column(
         db.Integer,

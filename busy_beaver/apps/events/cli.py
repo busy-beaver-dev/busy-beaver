@@ -6,7 +6,7 @@ from .blueprint import events_bp
 from .sync_database import sync_database_with_fetched_events
 from .upcoming_events import generate_upcoming_events_message
 from busy_beaver.clients import SlackClient
-from busy_beaver.models import SlackInstallation
+from busy_beaver.models import SlackInstallation, UpcomingEventsConfiguration
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,9 @@ def post_upcoming_events_message_to_slack_cli(
     slack.post_message(blocks=blocks, channel=channel)
 
 
-@click.option("--group_name", required=True, help="Meetup group name")
 @events_bp.cli.command("sync_events_database", help="Sync Events Database")
-def sync_events_database_cli(group_name: str):
-    sync_database_with_fetched_events(group_name)
+def sync_events_database_cli():
+    all_active_configs = UpcomingEventsConfiguration.query.filter_by(enabled=True)
+    for config in all_active_configs:
+        for group in config.groups:
+            sync_database_with_fetched_events(group)

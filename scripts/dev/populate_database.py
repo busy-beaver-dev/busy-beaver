@@ -4,10 +4,10 @@ import os
 from busy_beaver import create_app
 from busy_beaver.extensions import db
 from busy_beaver.models import (
-    Event,
     GitHubSummaryConfiguration,
     SlackInstallation,
     UpcomingEventsConfiguration,
+    UpcomingEventsGroup,
 )
 from tests._utilities.factories.event import Event as EventFactory
 
@@ -68,14 +68,14 @@ if not installation.github_summary_config:
     db.session.commit()
 
 # update events database
-events = Event.query.all()
-if not events:
-    create_event = EventFactory(db.session)
-    create_event()
-
 if not installation.upcoming_events_config:
     config = UpcomingEventsConfiguration(
         enabled=True, slack_installation=installation, channel=upcoming_events_channel
     )
+    group = UpcomingEventsGroup(meetup_urlname="_ChiPy_", configuration=config)
+
+    create_event = EventFactory(db.session)
+    create_event(name="_ChiPy_", group=group)
+
     db.session.add(config)
     db.session.commit()

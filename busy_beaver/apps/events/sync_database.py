@@ -14,18 +14,22 @@ from typing import List, NamedTuple
 from busy_beaver.clients import meetup
 from busy_beaver.common.wrappers.meetup import EventDetails
 from busy_beaver.extensions import db
-from busy_beaver.models import Event
+from busy_beaver.models import Event, UpcomingEventsGroup
 
 logger = logging.getLogger(__name__)
 
 
-def sync_database_with_fetched_events(group_name):
-    fetched_events = meetup.get_events(group_name, count=20)
+def sync_database_with_fetched_events(group: UpcomingEventsGroup):
+    fetched_events = meetup.get_events(group.meetup_urlname, count=20)
 
     current_epoch_time = int(time.time())
-    database_events = Event.query.filter(Event.start_epoch > current_epoch_time).all()
+    database_events = (
+        Event.query.filter_by(group=group)
+        .filter(Event.start_epoch > current_epoch_time)
+        .all()
+    )
 
-    sync_database = SyncEventDatabase(fetched_events, database_events)
+    sync_database = SyncEventDatabase(group, fetched_events, database_events)
     sync_database.perform()
 
 
@@ -44,6 +48,7 @@ class SyncEventDatabase:
     def __init__(
         self, fetched_events: List[EventDetails], database_events: List[Event]
     ):
+        self.group = self.group
         self.fetched_events_map = {event.id: event for event in fetched_events}
         self.database_events_map = {event.remote_id: event for event in database_events}
         self.transactions = classify_transaction_type(
@@ -62,6 +67,7 @@ class SyncEventDatabase:
         num_created = 0
         for event in events:
             record = event.create_event_record()
+            record.group = self.group
             db.session.add(record)
             num_created += 1
         else:
