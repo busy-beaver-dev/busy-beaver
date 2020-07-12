@@ -66,6 +66,9 @@ test-pdb:
 test-skipvcr: ## run non-vcr tests
 	docker-compose exec app pytest -m 'not vcr'
 
+test-curr: ## run all tests marked as `current`
+	docker-compose exec app pytest -m 'current'
+
 lint: ## run flake8 linter
 	docker-compose exec app flake8
 
