@@ -1,12 +1,7 @@
 import logging
 from typing import List, NamedTuple
 
-from .decorators import limit_to
 from .toolbox import make_slack_response
-from busy_beaver.apps.events.upcoming_events import (
-    generate_next_event_message,
-    generate_upcoming_events_message,
-)
 from busy_beaver.apps.github_integration.oauth.workflow import (
     connect_github_to_slack,
     disconnect_github_from_slack,
@@ -15,7 +10,10 @@ from busy_beaver.apps.github_integration.oauth.workflow import (
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     create_link_to_login_to_settings,
 )
-from busy_beaver.config import FULL_INSTALLATION_WORKSPACE_IDS, MEETUP_GROUP_NAME
+from busy_beaver.apps.upcoming_events.upcoming_events import (
+    generate_next_event_message,
+    generate_upcoming_events_message,
+)
 from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation, SlackUser
 from busy_beaver.toolbox import EventEmitter
@@ -23,6 +21,7 @@ from busy_beaver.toolbox import EventEmitter
 logger = logging.getLogger(__name__)
 slash_command_dispatcher = EventEmitter()
 
+# TODO make this look nicer
 HELP_TEXT = (
     "`/busybeaver next`\t\t Retrieve next event\n"
     "`/busybeaver events`\t\t Retrieve list of upcoming event\n"
@@ -83,16 +82,28 @@ def create_url_attachment(url, text):
 # Upcoming Event Schedule
 #########################
 @slash_command_dispatcher.on("next")
-@limit_to(workspace_ids=FULL_INSTALLATION_WORKSPACE_IDS)
 def next_event(**data):
-    attachment = generate_next_event_message(MEETUP_GROUP_NAME)
+    installation = data["installation"]
+    upcoming_events_config = installation.upcoming_events_config
+    if not upcoming_events_config:
+        return make_slack_response(text="Feature not configured.")
+    if not upcoming_events_config.enabled:
+        return make_slack_response(text="This feature has been disabled.")
+
+    attachment = generate_next_event_message(upcoming_events_config)
     return make_slack_response(attachments=attachment)
 
 
 @slash_command_dispatcher.on("events")
-@limit_to(workspace_ids=FULL_INSTALLATION_WORKSPACE_IDS)
 def upcoming_events(**data):
-    blocks = generate_upcoming_events_message(MEETUP_GROUP_NAME, count=5)
+    installation = data["installation"]
+    upcoming_events_config = installation.upcoming_events_config
+    if not upcoming_events_config:
+        return make_slack_response(text="Feature not configured.")
+    if not upcoming_events_config.enabled:
+        return make_slack_response(text="This feature has been disabled.")
+
+    blocks = generate_upcoming_events_message(upcoming_events_config, count=5)
     return make_slack_response(blocks=blocks)
 
 

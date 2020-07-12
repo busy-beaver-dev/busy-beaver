@@ -9,7 +9,6 @@ from busy_beaver.apps.slack_integration.slash_command import (
     relink_github,
     upcoming_events,
 )
-from busy_beaver.config import FULL_INSTALLATION_WORKSPACE_IDS
 from busy_beaver.models import GitHubSummaryUser
 
 pytest_plugins = ("tests._utilities.fixtures.slack",)
@@ -154,24 +153,12 @@ def test_disconnect_command_registered_user(
 # Upcoming Event Schedule
 #########################
 @pytest.mark.end2end
-def test_command_next_workspace_not_allowed(
-    session, factory, generate_slash_command_request
-):
-    factory.Event.create_batch(size=10)
-    data = generate_slash_command_request("next", team_id="not allowed")
-
-    result = next_event(**data)
-
-    assert "command not supported" in result["text"].lower()
-
-
-@pytest.mark.end2end
-def test_command_next_workspace_allowed(
-    session, factory, generate_slash_command_request
-):
-    factory.Event.create_batch(size=10)
-    workspace_id = FULL_INSTALLATION_WORKSPACE_IDS[0]
-    data = generate_slash_command_request("next", team_id=workspace_id)
+def test_command_next(session, factory, generate_slash_command_request):
+    group = factory.UpcomingEventsGroup()
+    install = group.configuration.slack_installation
+    factory.Event.create_batch(size=10, group=group)
+    data = generate_slash_command_request("next", team_id=install.workspace_id)
+    data["installation"] = install
 
     result = next_event(**data)
 
@@ -182,24 +169,12 @@ def test_command_next_workspace_allowed(
 
 
 @pytest.mark.end2end
-def test_command_events_workspace_not_allowed(
-    session, factory, generate_slash_command_request
-):
-    factory.Event.create_batch(size=10)
-    data = generate_slash_command_request("events", team_id="not_allowed")
-
-    result = upcoming_events(**data)
-
-    assert "command not supported" in result["text"].lower()
-
-
-@pytest.mark.end2end
-def test_command_events_workspace_allowed(
-    session, factory, generate_slash_command_request
-):
-    factory.Event.create_batch(size=10)
-    workspace_id = FULL_INSTALLATION_WORKSPACE_IDS[0]
-    data = generate_slash_command_request("events", team_id=workspace_id)
+def test_command_events(session, factory, generate_slash_command_request):
+    group = factory.UpcomingEventsGroup()
+    install = group.configuration.slack_installation
+    factory.Event.create_batch(size=10, group=group)
+    data = generate_slash_command_request("events", team_id=install.workspace_id)
+    data["installation"] = install
 
     result = upcoming_events(**data)
 
