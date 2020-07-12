@@ -10,9 +10,10 @@ from tests._utilities import FakeSlackClient
 
 @pytest.mark.unit
 def test_generate_next_event(session, factory):
-    factory.Event.create_batch(size=1)
+    group = factory.UpcomingEventsGroup()
+    factory.Event.create_batch(size=1, group=group)
 
-    result = generate_next_event_message("ChiPy")
+    result = generate_next_event_message(group.configuration)
 
     assert "ChiPy" in result["title"]
     assert "http://meetup.com/_ChiPy_/event/blah" in result["title_link"]
@@ -21,9 +22,10 @@ def test_generate_next_event(session, factory):
 
 @pytest.mark.unit
 def test_generate_upcoming_events_message(session, factory):
-    factory.Event.create_batch(size=10)
+    group = factory.UpcomingEventsGroup()
+    factory.Event.create_batch(size=10, group=group)
 
-    result = generate_upcoming_events_message("ChiPy", count=1)
+    result = generate_upcoming_events_message(group.configuration, count=1)
 
     assert len(result) == 3 + 1 * 3  # sections: 3 in the header, each block is 3
 
@@ -41,8 +43,10 @@ def test_cli_post_upcoming_events_message_to_slack(
     mocker, runner, session, factory, patched_slack
 ):
     # Arrange
-    factory.SlackInstallation(workspace_id="T093FC1RC")
-    factory.Event.create_batch(size=10)
+    installation = factory.SlackInstallation(workspace_id="T093FC1RC")
+    config = factory.UpcomingEventsConfiguration(slack_installation=installation)
+    group = factory.UpcomingEventsGroup(meetup_urlname="ChiPy", configuration=config)
+    factory.Event.create_batch(size=10, group=group)
 
     # Act
     runner.invoke(
