@@ -26,5 +26,5 @@ spec:
             - "--group_name"
             - "_ChiPy_"
             - "--count"
-            - "5"
+            - "3"
             env: {{- include "busybeaver.env_vars" . | indent 12 }}

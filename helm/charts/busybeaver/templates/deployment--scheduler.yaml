@@ -24,7 +24,7 @@ spec:
         args: ["scheduler"]
         resources:
           limits:
-            memory: "64Mi"
+            memory: "128Mi"
             cpu: "100m"
         env:
           {{- include "busybeaver.env_vars" . | indent 10 }}
