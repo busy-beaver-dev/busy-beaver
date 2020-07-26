@@ -1,21 +1,9 @@
 import logging
 
-from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.extensions import db
 from busy_beaver.models import UpcomingEventsConfiguration
 
 logger = logging.getLogger(__name__)
-
-
-# TODO need to update
-ACTIVE_MESSAGE = (
-    "Confirmed; I will post daily summaries at {time}.\n\n"
-    "GitHub Summary feature is active! :tada: \n\n"
-    "You can use the following text to publicize the bot:\n"
-    "> Busy Beaver is a community engagement bot that shares daily "
-    "sumarries of public GitHub activity for registered users. "
-    "Find out what everybody's working on in <#{channel}>!"
-)
 
 
 def create_or_update_upcoming_events_configuration(
@@ -40,8 +28,4 @@ def create_or_update_upcoming_events_configuration(
     db.session.add(config)
     db.session.commit()
 
-    channel = config.channel
-    slack = SlackClient(installation.bot_access_token)
-    slack.dm(
-        ACTIVE_MESSAGE.format(time=str(post_time), channel=channel), user_id=slack_id
-    )
+    # TODO let the user know what it looks like with a button that will show them
