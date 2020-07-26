@@ -41,7 +41,10 @@ class SlackClient:
 
     def get_bot_channels(self) -> List[str]:
         result = self.client.users_conversations()
-        return [(channel["name"], channel["id"]) for channel in result["channels"]]
+        all_bot_channels = [
+            (channel["id"], channel["name"]) for channel in result["channels"]
+        ]
+        return sorted(all_bot_channels, key=lambda record: record[1])
 
     def is_admin(self, user_id):
         try:

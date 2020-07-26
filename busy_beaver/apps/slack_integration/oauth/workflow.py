@@ -113,8 +113,9 @@ ACTIVE_MESSAGE = (
 )
 
 
-def save_configuration(installation, time_to_post, timezone_to_post, slack_id):
+def save_configuration(installation, channel, time_to_post, timezone_to_post, slack_id):
     config = installation.github_summary_config
+    config.channel = channel
     config.summary_post_time = time_to_post
     config.summary_post_timezone = timezone_to_post
     db.session.add(config)

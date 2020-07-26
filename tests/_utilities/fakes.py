@@ -39,6 +39,10 @@ class FakeSlackClient:
         self.mock(*args, **kwargs)
         return self.members
 
+    def get_bot_channels(self, *args, **kwargs):
+        self.mock(*args, **kwargs)
+        return []
+
     def is_admin(self, *args, **kwargs):
         self.mock(*args, **kwargs)
         return self._is_admin

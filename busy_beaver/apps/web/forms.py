@@ -13,6 +13,8 @@ TZ_CHOICES = sorted(
 
 
 class GitHubSummaryConfigurationForm(FlaskForm):
+    channel = SelectField(label="Channel")
+
     summary_post_time = TimeField(
         "When to post GitHub Summary?", validators=[DataRequired()]
     )

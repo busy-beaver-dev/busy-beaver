@@ -42,10 +42,11 @@ class SlackInstallationOnboardUserStateMachine(StateMachine):
         conditions=[has_github_summary_configuration],
     )
     def save_configuration_to_database(
-        self, summary_post_time, summary_post_timezone, slack_id
+        self, channel, summary_post_time, summary_post_timezone, slack_id
     ):
         save_configuration(
             self.slack_installation,
+            channel=channel,
             time_to_post=summary_post_time,
             timezone_to_post=summary_post_timezone,
             slack_id=slack_id,

@@ -71,11 +71,13 @@ def github_summary_settings():
         raise NotAuthorized("Need to be an admin to access")
 
     form = GitHubSummaryConfigurationForm()
+    form.channel.choices = slack.get_bot_channels()
     if form.validate_on_submit():
         logger.info("Trying to change config settings")
 
         installation_fsm = SlackInstallationOnboardUserStateMachine(installation)
         installation_fsm.save_configuration_to_database(
+            channel=form.data["channel"],
             summary_post_time=form.data["summary_post_time"],
             summary_post_timezone=form.data["summary_post_timezone"],
             slack_id=current_user.slack_id,
@@ -91,16 +93,12 @@ def github_summary_settings():
     try:
         form.summary_post_time.data = config.summary_post_time
         form.summary_post_timezone.data = config.summary_post_timezone.zone
+        form.channel.data = config.channel
     except AttributeError:
         pass
 
-    channel = config.channel
-    channel_info = slack.channel_details(channel)
     return render_template(
-        "github_summary_settings.html",
-        form=form,
-        channel=channel_info["name"],
-        enabled=config.enabled,
+        "github_summary_settings.html", form=form, enabled=config.enabled
     )
 
 
