@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, time, timedelta
 
 import factory
 
@@ -16,8 +16,12 @@ def UpcomingEventsConfiguration(session):
             sqlalchemy_session = session
 
         enabled = True
-        channel = "announcements"
         slack_installation = factory.SubFactory(SlackInstallation(session))
+        channel = "announcements"
+        post_day_of_week = "Monday"
+        post_time = time(9, 00)
+        post_timezone = "America/Chicago"
+        post_num_events = 3
 
     return _EventFactory
 
