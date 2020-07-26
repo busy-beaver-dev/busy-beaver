@@ -97,7 +97,10 @@ def github_summary_settings():
     channel = config.channel
     channel_info = slack.channel_details(channel)
     return render_template(
-        "set_time.html", form=form, channel=channel_info["name"], enabled=config.enabled
+        "github_summary_settings.html",
+        form=form,
+        channel=channel_info["name"],
+        enabled=config.enabled,
     )
 
 
