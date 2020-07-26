@@ -33,7 +33,7 @@ def _next_event_attachment(event: EventDetails) -> dict:
     """Make a Slack attachment for the event."""
     return {
         "mrkdwn_in": ["text", "pretext"],
-        "pretext": "*Next ChiPy Event:*",
+        "pretext": "*Next Event:*",
         "title": event.name,
         "title_link": event.url,
         "fallback": f"{event.name}: {event.url}",
