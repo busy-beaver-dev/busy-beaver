@@ -102,7 +102,7 @@ def github_summary_settings():
 @web_bp.route("/settings/github-summary/toggle")
 @login_required
 def toggle_github_summary_config_view():
-    logger.info("Hit GitHub Summary Settings page")
+    logger.info("Toggling Github Summary enabled state")
     installation = current_user.installation
     slack = SlackClient(installation.bot_access_token)
 
@@ -159,3 +159,23 @@ def upcoming_events_settings():
         enabled = False
 
     return render_template("upcoming_events_settings.html", form=form, enabled=enabled)
+
+
+@web_bp.route("/settings/upcoming-events/toggle")
+@login_required
+def toggle_upcoming_events_config_view():
+    logger.info("Toggling Upcoming Events enabled state")
+    installation = current_user.installation
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    config = installation.upcoming_events_config
+    if not config:
+        return jsonify({"error": "Need to enter post time and timezone"})
+    config.toggle_configuration_enabled_status()
+    db.session.add(config)
+    db.session.commit()
+    return redirect(url_for("web.upcoming_events_settings"))

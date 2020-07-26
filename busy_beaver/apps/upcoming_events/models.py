@@ -66,7 +66,7 @@ class UpcomingEventsConfiguration(BaseModel):
     )
     groups = db.relationship("UpcomingEventsGroup", back_populates="configuration")
 
-    def toggle_enabled(self):
+    def toggle_configuration_enabled_status(self):
         machine = UpcomingEventsEnabledStateMachine(self)
         try:
             machine.toggle()

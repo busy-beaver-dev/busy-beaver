@@ -4,7 +4,7 @@
 {% block container %}
 <h1>Configure Upcoming Events</h1>
 
-<p>Enabled: {{ enabled }}</p>
+<p>Enabled: {{ enabled }} (<a href="{{ url_for('web.toggle_upcoming_events_config_view') }}">toggle</a>)</p>
 
 <form method="POST" action="{{ url_for('web.upcoming_events_settings') }}">
   {{ form.csrf_token }}
