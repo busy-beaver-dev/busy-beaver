@@ -1,9 +1,20 @@
 from finite_state_machine import StateMachine, transition
 from finite_state_machine.exceptions import ConditionNotMet
+from sqlalchemy_utils import ChoiceType, TimezoneType
 
 from busy_beaver.common.models import BaseModel
 from busy_beaver.exceptions import StateMachineError
 from busy_beaver.extensions import db
+
+WEEKDAYS = [
+    ("Sunday",) * 2,
+    ("Monday",) * 2,
+    ("Tuesday",) * 2,
+    ("Wednesday",) * 2,
+    ("Thursday",) * 2,
+    ("Friday",) * 2,
+    ("Saturday",) * 2,
+]
 
 
 class UpcomingEventsEnabledStateMachine(StateMachine):
@@ -43,7 +54,11 @@ class UpcomingEventsConfiguration(BaseModel):
         db.ForeignKey("slack_installation.id", name="fk_installation_id"),
         nullable=False,
     )
-    channel = db.Column(db.String(20), nullable=True)
+    channel = db.Column(db.String(20), nullable=False)
+    post_day_of_week = db.Column(ChoiceType(WEEKDAYS), nullable=False)
+    post_time = db.Column(db.Time, nullable=False)
+    post_timezone = db.Column(TimezoneType(backend="pytz"), nullable=False)
+    post_num_events = db.Column(db.Integer, nullable=False)
 
     # Relationships
     slack_installation = db.relationship(
