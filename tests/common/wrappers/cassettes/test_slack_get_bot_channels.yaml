@@ -1,0 +1,46 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Content-Type:
+      - application/x-www-form-urlencoded;charset=utf-8
+      User-Agent:
+      - Python/3.8.1 slackclient/2.5.0 Linux/4.19.76-linuxkit
+      authorization:
+      - DUMMY
+    method: GET
+    uri: https://www.slack.com/api/users.conversations
+  response:
+    body:
+      string: '{"ok":true,"channels":[{"id":"C5GQNTS07","name":"general","is_channel":true,"is_group":false,"is_im":false,"created":1495325664,"is_archived":false,"is_general":true,"unlinked":0,"name_normalized":"general","is_shared":false,"parent_conversation":null,"creator":"U5FTQ3QRZ","is_ext_shared":false,"is_org_shared":false,"shared_team_ids":["T5G0FCMNW"],"pending_shared":[],"pending_connected_team_ids":[],"is_pending_ext_shared":false,"is_private":false,"is_mpim":false,"topic":{"value":"Company-wide
+        announcements and work-based matters","creator":"","last_set":0},"purpose":{"value":"This
+        channel is for team-wide communication and announcements. All team members
+        are in this channel.","creator":"","last_set":0},"previous_names":[]},{"id":"CEWD83Y74","name":"busy-beaver","is_channel":true,"is_group":false,"is_im":false,"created":1545106792,"is_archived":false,"is_general":false,"unlinked":0,"name_normalized":"busy-beaver","is_shared":false,"parent_conversation":null,"creator":"U5FTQ3QRZ","is_ext_shared":false,"is_org_shared":false,"shared_team_ids":["T5G0FCMNW"],"pending_shared":[],"pending_connected_team_ids":[],"is_pending_ext_shared":false,"is_private":false,"is_mpim":false,"topic":{"value":"","creator":"","last_set":0},"purpose":{"value":"","creator":"","last_set":0},"previous_names":[]},{"id":"CFLDREQNB","name":"bot-testing","is_channel":true,"is_group":false,"is_im":false,"created":1548120312,"is_archived":false,"is_general":false,"unlinked":0,"name_normalized":"bot-testing","is_shared":false,"parent_conversation":null,"creator":"U5FTQ3QRZ","is_ext_shared":false,"is_org_shared":false,"shared_team_ids":["T5G0FCMNW"],"pending_shared":[],"pending_connected_team_ids":[],"is_pending_ext_shared":false,"is_private":false,"is_mpim":false,"topic":{"value":"","creator":"","last_set":0},"purpose":{"value":"","creator":"","last_set":0},"previous_names":[]},{"id":"C011PJ0E2LV","name":"announcements","is_channel":true,"is_group":false,"is_im":false,"created":1586652922,"is_archived":false,"is_general":false,"unlinked":0,"name_normalized":"announcements","is_shared":false,"parent_conversation":null,"creator":"U5FTQ3QRZ","is_ext_shared":false,"is_org_shared":false,"shared_team_ids":["T5G0FCMNW"],"pending_shared":[],"pending_connected_team_ids":[],"is_pending_ext_shared":false,"is_private":false,"is_mpim":false,"topic":{"value":"","creator":"","last_set":0},"purpose":{"value":"","creator":"","last_set":0},"previous_names":[]},{"id":"C012CETB9QQ","name":"at-chicagopython","is_channel":true,"is_group":false,"is_im":false,"created":1586794609,"is_archived":false,"is_general":false,"unlinked":0,"name_normalized":"at-chicagopython","is_shared":false,"parent_conversation":null,"creator":"U5FTQ3QRZ","is_ext_shared":false,"is_org_shared":false,"shared_team_ids":["T5G0FCMNW"],"pending_shared":[],"pending_connected_team_ids":[],"is_pending_ext_shared":false,"is_private":false,"is_mpim":false,"topic":{"value":"","creator":"","last_set":0},"purpose":{"value":"","creator":"","last_set":0},"previous_names":[]}],"response_metadata":{"next_cursor":""}}'
+    headers:
+      Access-Control-Allow-Headers: slack-route, x-slack-version-ts, x-b3-traceid,
+        x-b3-spanid, x-b3-parentspanid, x-b3-sampled, x-b3-flags
+      Access-Control-Allow-Origin: '*'
+      Access-Control-Expose-Headers: x-slack-req-id, retry-after
+      Cache-Control: private, no-cache, no-store, must-revalidate
+      Content-Encoding: gzip
+      Content-Length: '578'
+      Content-Type: application/json; charset=utf-8
+      Date: Sun, 26 Jul 2020 13:39:11 GMT
+      Expires: Mon, 26 Jul 1997 05:00:00 GMT
+      Pragma: no-cache
+      Server: Apache
+      Vary: Accept-Encoding
+      referrer-policy: no-referrer
+      strict-transport-security: max-age=31536000; includeSubDomains; preload
+      x-accepted-oauth-scopes: channels:read,groups:read,mpim:read,im:read,read
+      x-content-type-options: nosniff
+      x-oauth-scopes: app_mentions:read,channels:history,channels:join,channels:read,chat:write,commands,emoji:read,groups:read,im:history,im:read,im:write,mpim:history,mpim:read,mpim:write,reactions:read,reactions:write,team:read,usergroups:read,users.profile:read,users:read,users:write
+      x-slack-backend: r
+      x-slack-req-id: 3ac2ccfbe610a7024e4a5740bfc56cbf
+      x-via: haproxy-www-dssj,haproxy-edge-iad-nb3p
+      x-xss-protection: '0'
+    status:
+      code: 200
+      message: OK
+    url: https://www.slack.com/api/users.conversations
+version: 1
