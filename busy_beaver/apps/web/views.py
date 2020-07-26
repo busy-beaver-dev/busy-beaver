@@ -5,7 +5,7 @@ from flask.views import View
 from flask_login import current_user, login_required, logout_user
 
 from .blueprint import web_bp
-from .forms import GitHubSummaryConfigurationForm
+from .forms import GitHubSummaryConfigurationForm, UpcomingEventsConfigurationForm
 from busy_beaver.apps.slack_integration.oauth.state_machine import (
     SlackInstallationOnboardUserStateMachine,
 )
@@ -118,3 +118,35 @@ def toggle_github_summary_config_view():
     db.session.add(config)
     db.session.commit()
     return redirect(url_for("web.github_summary_settings"))
+
+
+@web_bp.route("/settings/upcoming-events", methods=("GET", "POST"))
+@login_required
+def upcoming_events_settings():
+    logger.info("Hit Upcoming Events Settings page")
+    installation = current_user.installation
+    config = installation.upcoming_events_config
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    form = UpcomingEventsConfigurationForm()
+    form.channel.choices = slack.get_bot_channels()
+
+    channel = config.channel
+    channel_info = slack.channel_details(channel)
+
+    # load default
+    try:
+        form.channel.data = config.channel
+    except AttributeError:
+        pass
+
+    return render_template(
+        "upcoming_events_settings.html",
+        form=form,
+        channel=channel_info["name"],
+        enabled=config.enabled,
+    )
