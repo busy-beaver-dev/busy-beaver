@@ -6,7 +6,9 @@ from flask_login import current_user, login_required, logout_user
 
 from .blueprint import web_bp
 from .forms import GitHubSummaryConfigurationForm, UpcomingEventsConfigurationForm
-from busy_beaver.apps.slack_integration.oauth.workflow import save_configuration
+from busy_beaver.apps.slack_integration.oauth.workflow import (
+    create_or_update_configuration,
+)
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import NotAuthorized
 from busy_beaver.extensions import db
@@ -61,7 +63,6 @@ def logout():
 def github_summary_settings():
     logger.info("Hit GitHub Summary Settings page")
     installation = current_user.installation
-    config = installation.github_summary_config
     slack = SlackClient(installation.bot_access_token)
 
     is_admin = slack.is_admin(current_user.slack_id)
@@ -72,8 +73,7 @@ def github_summary_settings():
     form.channel.choices = slack.get_bot_channels()
     if form.validate_on_submit():
         logger.info("Attempt to save GitHub Summary settings")
-        # TODO create or update
-        save_configuration(
+        create_or_update_configuration(
             installation,
             channel=form.data["channel"],
             summary_post_time=form.data["summary_post_time"],
@@ -85,15 +85,15 @@ def github_summary_settings():
 
     # load default
     try:
+        config = installation.github_summary_config
         form.summary_post_time.data = config.summary_post_time
         form.summary_post_timezone.data = config.summary_post_timezone.zone
         form.channel.data = config.channel
+        enabled = config.enabled
     except AttributeError:
-        pass
+        enabled = False
 
-    return render_template(
-        "github_summary_settings.html", form=form, enabled=config.enabled
-    )
+    return render_template("github_summary_settings.html", form=form, enabled=enabled)
 
 
 @web_bp.route("/settings/github-summary/toggle")

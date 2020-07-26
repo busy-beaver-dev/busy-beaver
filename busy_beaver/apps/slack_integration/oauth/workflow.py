@@ -4,7 +4,7 @@ from typing import NamedTuple
 from busy_beaver.clients import slack_install_oauth, slack_signin_oauth
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.extensions import db
-from busy_beaver.models import SlackInstallation, SlackUser
+from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation, SlackUser
 
 logger = logging.getLogger(__name__)
 
@@ -99,9 +99,12 @@ ACTIVE_MESSAGE = (
 )
 
 
-def save_configuration(installation, channel, time_to_post, timezone_to_post, slack_id):
-    # TODO create or update
+def create_or_update_configuration(
+    installation, channel, time_to_post, timezone_to_post, slack_id
+):
     config = installation.github_summary_config
+    if config is None:
+        config = GitHubSummaryConfiguration()
     config.channel = channel
     config.summary_post_time = time_to_post
     config.summary_post_timezone = timezone_to_post

@@ -51,7 +51,6 @@ else:
         scope="test-scope",
         workspace_id=workspace_id,
         workspace_name="Development Environment",
-        state="active",
     )
 db.session.add(installation)
 db.session.commit()

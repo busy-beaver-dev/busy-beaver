@@ -78,10 +78,11 @@ def member_joined_channel_handler(data):
     installation = SlackInstallation.query.filter_by(workspace_id=workspace_id).first()
 
     # Handle if new user joins channel
-    user_joins_github_summary_channel = (
-        installation.github_summary_config.channel == channel
-        and installation.state == "active"
-    )
+    config = installation.github_summary_config
+    if not config:
+        return None
+
+    user_joins_github_summary_channel = (config.channel == channel) and config.enabled
     if user_joins_github_summary_channel:
         slack = SlackClient(installation.bot_access_token)
         slack.post_ephemeral_message(
