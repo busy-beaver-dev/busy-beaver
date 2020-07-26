@@ -9,10 +9,11 @@
 <form method="POST" action="{{ url_for('web.upcoming_events_settings') }}">
   {{ form.csrf_token }}
 
-  {{ render_form_row([form.channel, form.post_num_events], col_map={'channel': 'col-md-7', 'post_num_events': 'col-md-4'}) }}
+  {{ render_form_row([form.channel], col_map={'channel': 'col-md-4'}) }}
+  {{ render_form_row([form.post_num_events], col_map={'post_num_events': 'col-md-4'}) }}
   {{ render_form_row(
       [form.post_day_of_week, form.post_time, form.post_timezone],
-      col_map={'post_day_of_week': 'col-md-3', 'post_time': 'col-md-3', 'post_timezone': 'col-md-5'}
+      col_map={'post_day_of_week': 'col-md-3', 'post_time': 'col-md-2', 'post_timezone': 'col-md-5'}
     )
   }}
   <input type="submit" value="Go">

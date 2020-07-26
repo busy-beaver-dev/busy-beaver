@@ -24,9 +24,7 @@ WEEKDAYS = [
 class GitHubSummaryConfigurationForm(FlaskForm):
     channel = SelectField(label="Channel")
 
-    summary_post_time = TimeField(
-        "When to post GitHub Summary?", validators=[DataRequired()]
-    )
+    summary_post_time = TimeField("Time to post", validators=[DataRequired()])
     summary_post_timezone = SelectField(
         label="Timezone", choices=TZ_CHOICES, default="UTC"
     )
