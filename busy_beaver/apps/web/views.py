@@ -108,6 +108,8 @@ def toggle_github_summary_config_view():
         raise NotAuthorized("Need to be an admin to access")
 
     config = installation.github_summary_config
+    if not config:
+        return jsonify({"error": "Need to enter post time and timezone"})
     config.toggle_configuration_enabled_status()
     db.session.add(config)
     db.session.commit()
