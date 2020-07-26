@@ -42,6 +42,12 @@ def test_slack_get_channel_members__channel_does_not_exist(slack: SlackClient):
 
 
 @pytest.mark.vcr()
+def test_slack_get_bot_channels(slack: SlackClient):
+    channels = slack.get_bot_channels()
+    assert ("C5GQNTS07", "general") in channels
+
+
+@pytest.mark.vcr()
 def test_slack_post_ephemeral_message_success(slack: SlackClient):
     # Act
     result = slack.post_ephemeral_message(

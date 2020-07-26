@@ -1,23 +1,24 @@
 import logging
 
-from finite_state_machine.exceptions import TransitionNotAllowed
-
 from .blocks import AppHome
 from .slash_command import HELP_TEXT
-from busy_beaver.apps.slack_integration.oauth.state_machine import (
-    SlackInstallationOnboardUserStateMachine,
-)
-from busy_beaver.apps.slack_integration.oauth.workflow import (
-    GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE,
-)
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.extensions import db
-from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation, SlackUser
+from busy_beaver.models import SlackInstallation, SlackUser
 from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
 subscription_dispatch = EventEmitter()
 event_dispatch = EventEmitter()
+
+
+GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE = (
+    "Welcome to <#{channel}>! I'm Busy Beaver. "
+    "I post daily summaries of public GitHub activity "
+    "in this channel.\n\n"
+    "To connect your GitHub account and share activity, "
+    "please register using `/busybeaver connect`."
+)
 
 
 def process_event_subscription_callback(data):
@@ -76,32 +77,12 @@ def member_joined_channel_handler(data):
 
     installation = SlackInstallation.query.filter_by(workspace_id=workspace_id).first()
 
-    # handle when bot is invited to channel
-    bot_invited_to_channel = user_id == installation.bot_user_id
-    if bot_invited_to_channel:
-        try:
-            installation_fsm = SlackInstallationOnboardUserStateMachine(installation)
-            installation_fsm.send_initial_configuration_request(channel)
-        except TransitionNotAllowed:
-            # bot invited to channel when there is already a record
-            # invalid start state
-            # TODO always store new channels somewhere
-            return None
-
-        github_summary_config = GitHubSummaryConfiguration(channel=channel)
-        github_summary_config.slack_installation = installation
-        db.session.add(github_summary_config)
-
-        installation.state = installation_fsm.state
-        db.session.add(installation)
-        db.session.commit()
+    # Handle if new user joins channel
+    config = installation.github_summary_config
+    if not config:
         return None
 
-    # Handle if new user joins channel
-    user_joins_github_summary_channel = (
-        installation.github_summary_config.channel == channel
-        and installation.state == "active"
-    )
+    user_joins_github_summary_channel = (config.channel == channel) and config.enabled
     if user_joins_github_summary_channel:
         slack = SlackClient(installation.bot_access_token)
         slack.post_ephemeral_message(

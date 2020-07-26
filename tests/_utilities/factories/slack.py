@@ -21,8 +21,6 @@ def SlackInstallation(session):
         workspace_id = "SC234sdfsde"
         workspace_name = "ChiPy"
 
-        state = "active"
-
     return _SlackInstallationFactory
 
 

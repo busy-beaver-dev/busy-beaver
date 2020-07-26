@@ -1,12 +1,8 @@
 import pytest
-import responses
 
 from busy_beaver.apps.slack_integration.blocks import AppHome
 from busy_beaver.apps.slack_integration.event_subscription import app_home_handler
-from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
-    SlackInstallationOAuthFlow,
-)
-from busy_beaver.models import SlackInstallation, SlackUser
+from busy_beaver.models import SlackUser
 from tests._utilities import FakeSlackClient
 
 pytest_plugins = ("tests._utilities.fixtures.slack",)
@@ -96,62 +92,7 @@ def test_slack_callback_user_dms_bot_reply(
 
 
 @pytest.mark.end2end
-@responses.activate
-def test_slack_onboarding_install(client, session, patch_slack):
-    # Arrange
-    # Step 1 -- User goes to 3rd party website and authenticates app
-    # Step 2 -- Create response to send back during token exchange
-    patched_slack = patch_slack("busy_beaver.apps.slack_integration.oauth.workflow")
-    responses.add(
-        responses.POST,
-        SlackInstallationOAuthFlow.TOKEN_URL,
-        json={
-            "ok": True,
-            "access_token": "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy",
-            "token_type": "bot",
-            "scope": "commands,incoming-webhook",
-            "bot_user_id": "U0KRQLJ9H",
-            "app_id": "A0KRD7HC3",
-            "team": {"name": "Slack Softball Team", "id": "T9TK3CUKW"},
-            "enterprise": {"name": "slack-sports", "id": "E12345678"},
-            "authed_user": {
-                "id": "U1234",
-                "scope": "chat:write",
-                "access_token": "xoxp-1234",
-                "token_type": "user",
-            },
-        },
-    )
-
-    # Act -- oauth callback and token exchange
-    state = ""
-    code = "1234"
-    qs = f"state={state}&code={code}"
-    callback_url = f"/slack/installation-callback?{qs}"
-    client.get(callback_url)
-
-    # Assert -- confirm info in database is as expected
-    installation = SlackInstallation.query.first()
-    assert installation.access_token == "xoxp-1234"
-    assert installation.scope == "commands,incoming-webhook"
-    assert installation.workspace_name == "Slack Softball Team"
-    assert installation.workspace_id == "T9TK3CUKW"
-    assert installation.authorizing_user_id == "U1234"
-    assert installation.bot_user_id == "U0KRQLJ9H"
-    assert (
-        installation.bot_access_token
-        == "xoxb-17653672481-19874698323-pdFZKVeTuE8sk7oOcBrzbqgy"
-    )
-    assert installation.state == "user_welcomed"
-
-    # Assert -- check if welcome message was sent
-    args, kwargs = patched_slack.mock.call_args
-    assert "I recommend creating `#busy-beaver`" in args[0]
-    assert "U1234" in kwargs["user_id"]
-
-
-@pytest.mark.end2end
-def test_user_joins_github_summary_channel(
+def test_user_joins_github_summary_channel_with_feature_enabled(
     client, session, factory, patch_slack, create_slack_headers
 ):
     # Arrange
@@ -163,12 +104,13 @@ def test_user_joins_github_summary_channel(
     channel = "busy-beaver"
     installation = factory.SlackInstallation(
         authorizing_user_id=authorizing_user_id,
-        state="active",
         workspace_id=workspace_id,
         workspace_name="Test",
         bot_user_id=bot_id,
     )
-    factory.GitHubSummaryConfiguration(channel=channel, slack_installation=installation)
+    factory.GitHubSummaryConfiguration(
+        enabled=True, channel=channel, slack_installation=installation
+    )
 
     # Act -- event_subscription callback
     data = {
@@ -187,6 +129,44 @@ def test_user_joins_github_summary_channel(
     args, kwargs = patched_slack.mock.call_args
     assert "/busybeaver connect" in args[0]
     assert kwargs["user_id"] == authorizing_user_id
+
+
+@pytest.mark.end2end
+def test_user_joins_github_summary_channel_with_feature_disabled(
+    client, session, factory, patch_slack, create_slack_headers
+):
+    # Arrange
+    patched_slack = patch_slack("busy_beaver.apps.slack_integration.event_subscription")
+    # Create installation in database
+    workspace_id = "TXXXXXXXXX"
+    authorizing_user_id = "alysivji"
+    bot_id = "test_bot"
+    channel = "busy-beaver"
+    installation = factory.SlackInstallation(
+        authorizing_user_id=authorizing_user_id,
+        workspace_id=workspace_id,
+        workspace_name="Test",
+        bot_user_id=bot_id,
+    )
+    factory.GitHubSummaryConfiguration(
+        enabled=False, channel=channel, slack_installation=installation
+    )
+
+    # Act -- event_subscription callback
+    data = {
+        "type": "event_callback",
+        "team_id": workspace_id,
+        "event": {
+            "type": "member_joined_channel",
+            "user": authorizing_user_id,
+            "channel": channel,
+        },
+    }
+    headers = create_slack_headers(100_000_000, data)
+    client.post("/slack/event-subscription", headers=headers, json=data)
+
+    # Assert -- check that we did not send anything
+    assert patched_slack.mock.call_count == 0
 
 
 @pytest.mark.unit

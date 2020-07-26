@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block container %}
+<h1>Configure Upcoming Events</h1>
+
+
+<h2>Configuration Settings</h2>
+<p>Enabled: {{ enabled }}</p>
+
+<form method="POST" action="{{ url_for('web.upcoming_events_settings') }}">
+  {{ form.csrf_token }}
+  {{ form.channel.label }} {{ form.channel() }}
+  <br>
+  {{ form.day_of_week.label }} {{ form.day_of_week() }}
+  <br>
+  {{ form.post_time.label }} {{ form.post_time(size=20) }}
+  <br>
+  {{ form.post_timezone.label }} {{ form.post_timezone() }}
+</form>
+{% endblock %}

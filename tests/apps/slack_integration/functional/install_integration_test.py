@@ -1,12 +1,10 @@
-from datetime import time
-
 import pytest
 import responses
 
 from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
     SlackInstallationOAuthFlow,
 )
-from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation
+from busy_beaver.models import SlackInstallation
 from tests._utilities import FakeSlackClient
 
 
@@ -69,75 +67,23 @@ def test_slack_oauth_flow_first_time_installation(
     assert installation.bot_user_id == "U0KRQLJ9H"
     assert installation.bot_access_token == bot_access_token
 
-    # ---
-    # Step 2 -- Use invites bot to room
-    # Arrange
-    channel = "busy-beaver"
-    data = {
-        "type": "event_callback",
-        "team_id": installation.workspace_id,
-        "event": {
-            "type": "member_joined_channel",
-            "channel_type": "im",
-            "user": installation.bot_user_id,
-            "channel": channel,
-        },
-    }
-    headers = create_slack_headers(100_000_000, data)
-
-    # Act -- event_subscription callback
-    client.post("/slack/event-subscription", headers=headers, json=data)
-
-    # Assert -- confirm info in database is as expected
-    installation = SlackInstallation.query.first()
-    assert installation.state == "config_requested"
-
-    github_summary_config = GitHubSummaryConfiguration.query.first()
-    assert github_summary_config.channel == channel
-
-    # Assert -- check if config request set
-    args, kwargs = patched_slack.mock.call_args
-    assert "settings/github-summary|Configure when to post messages" in args[0]
+    # Assert -- message sent to user who installed
+    post_message_args = patched_slack.mock.call_args_list[-1]
+    args, kwargs = post_message_args
+    assert "`/busybeaver settings` to configure Busy Beaver" in args[0]
     assert kwargs["user_id"] == authorizing_user_id
-
-    # ---
-    # Step 3 -- Update GitHub Summary configuration
-    # Arrange
-    slack_user = factory.SlackUser(installation=installation)
-    logged_in_client = login_client(slack_user)
-    patched_slack = patch_slack(
-        "busy_beaver.apps.web.views", is_admin=True, details={"name": "busy_beaver"}
-    )
-
-    # Act
-    data = {
-        "summary_post_time": "14:00",
-        "summary_post_timezone": "America/Chicago",
-        "csrf_token": "token",
-    }
-    result = logged_in_client.post("/settings/github-summary", data=data)
-
-    # Assert
-    assert result.status_code
-
-    installation = SlackInstallation.query.first()
-    assert installation.state == "active"
-    assert installation.github_summary_config.summary_post_time == time(14, 00)
-    assert (
-        installation.github_summary_config.summary_post_timezone.zone
-        == "America/Chicago"
-    )
 
 
 @pytest.mark.end2end
 @responses.activate
 def test_slack_oauth_flow_reinstallation(client, session, factory, patch_slack):
     # Arrange
-    patch_slack("busy_beaver.apps.slack_integration.oauth.workflow")
+    patched_slack = patch_slack("busy_beaver.apps.slack_integration.oauth.workflow")
 
     # Create installation in database
     workspace_id = "T9TK3CUKW"
     workspace_name = "Slack Softball Team"
+    authorizing_user_id = "abc"
     installation = factory.SlackInstallation(
         workspace_id=workspace_id, workspace_name=workspace_name
     )
@@ -158,7 +104,7 @@ def test_slack_oauth_flow_reinstallation(client, session, factory, patch_slack):
             "team": {"name": workspace_name, "id": workspace_id},
             "enterprise": {"name": "slack-sports", "id": "E12345678"},
             "authed_user": {
-                "id": "U1234",
+                "id": authorizing_user_id,
                 "scope": "chat:write",
                 "access_token": "xoxp-1234",
                 "token_type": "user",
@@ -177,6 +123,12 @@ def test_slack_oauth_flow_reinstallation(client, session, factory, patch_slack):
     assert installation.scope == "commands,incoming-webhook"
     assert installation.workspace_name == workspace_name
     assert installation.workspace_id == workspace_id
-    assert installation.authorizing_user_id == "U1234"
+    assert installation.authorizing_user_id == authorizing_user_id
     assert installation.bot_user_id == "U0KRQLJ9H"
     assert installation.bot_access_token == bot_access_token
+
+    # Assert -- message sent to user who installed
+    post_message_args = patched_slack.mock.call_args_list[-1]
+    args, kwargs = post_message_args
+    assert "`/busybeaver settings` to configure Busy Beaver" in args[0]
+    assert kwargs["user_id"] == authorizing_user_id

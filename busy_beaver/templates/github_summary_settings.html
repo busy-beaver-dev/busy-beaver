@@ -6,11 +6,10 @@
 
 <h2>Configuration Settings</h2>
 <p>Enabled: {{ enabled }} (<a href="{{ url_for('web.toggle_github_summary_config_view') }}">toggle</a>)</p>
-<p>Channel: {{ channel }}</p>
 
-<h3>Update Settings</h3>
 <form method="POST" action="{{ url_for('web.github_summary_settings') }}">
   {{ form.csrf_token }}
+  {{ form.channel.label }} {{ form.channel() }}
   <br>
   {{ form.summary_post_time.label }} {{ form.summary_post_time(size=20) }}
   <br>

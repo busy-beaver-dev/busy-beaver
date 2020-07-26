@@ -1,18 +1,14 @@
 import logging
 
-from finite_state_machine.exceptions import InvalidStartState
 from flask import jsonify, redirect, request, url_for
 from flask.views import MethodView
 from flask_login import login_user
 
-from busy_beaver.apps.slack_integration.oauth.state_machine import (
-    SlackInstallationOnboardUserStateMachine,
-)
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     process_slack_installation_callback,
     process_slack_sign_in_callback,
+    send_welcome_message,
 )
-from busy_beaver.extensions import db
 
 logger = logging.getLogger(__name__)
 
@@ -24,26 +20,7 @@ class SlackAppInstallationCallbackResource(MethodView):
         logger.info("Slack Workspace Installation")
         callback_url = request.url
         installation = process_slack_installation_callback(callback_url)
-
-        slack_installation_fsm = SlackInstallationOnboardUserStateMachine(installation)
-        try:
-            slack_installation_fsm.welcome_user()
-        except InvalidStartState:
-            pass
-        else:
-            installation.state = slack_installation_fsm.state
-            db.session.add(installation)
-            db.session.commit()
-
-        try:
-            slack_installation_fsm.save_new_slack_installation_information()
-        except InvalidStartState:
-            pass
-        else:
-            installation.state = slack_installation_fsm.state
-            db.session.add(installation)
-            db.session.commit()
-
+        send_welcome_message(installation)
         # TODO take them an actual page
         return jsonify({"Installation": "successful"})
 

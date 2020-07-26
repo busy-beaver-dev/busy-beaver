@@ -3,9 +3,8 @@ from typing import NamedTuple
 
 from busy_beaver.clients import slack_install_oauth, slack_signin_oauth
 from busy_beaver.common.wrappers import SlackClient
-from busy_beaver.config import BASE_URL
 from busy_beaver.extensions import db
-from busy_beaver.models import SlackInstallation, SlackUser
+from busy_beaver.models import GitHubSummaryConfiguration, SlackInstallation, SlackUser
 
 logger = logging.getLogger(__name__)
 
@@ -80,8 +79,7 @@ ONBOARDING_MESSAGE = (
     "Hi <@{slack_id}>! :wave:\n\n"
     "I'm here to help engage tech-focused Slack communities.\n"
     "Thank you for taking part in our beta program. :pray:\n\n"
-    ":zap: To get started `/invite` me to a public channel\n"
-    ":bulb: I recommend creating `#busy-beaver`"
+    ":zap: `/busybeaver settings` to configure Busy Beaver\n"
 )
 
 
@@ -91,21 +89,9 @@ def send_welcome_message(installation: SlackInstallation):
     slack.dm(ONBOARDING_MESSAGE.format(slack_id=user_id), user_id=user_id)
 
 
-CONFIRMED_MESSAGE = (
-    "Thanks for the invite! I will post daily summaries in <#{channel}>\n\n"
-    f"<{BASE_URL}/settings/github-summary|Configure when to post messages>"
-)
-
-
-def send_configuration_message(installation: SlackInstallation, channel):
-    slack = SlackClient(installation.bot_access_token)
-    user_id = installation.authorizing_user_id
-    slack.dm(CONFIRMED_MESSAGE.format(channel=channel), user_id=user_id)
-
-
 ACTIVE_MESSAGE = (
     "Confirmed; I will post daily summaries at {time}.\n\n"
-    "Busy Beaver is now active! :tada: \n\n"
+    "GitHub Summary feature is active! :tada: \n\n"
     "You can use the following text to publicize the bot:\n"
     "> Busy Beaver is a community engagement bot that shares daily "
     "sumarries of public GitHub activity for registered users. "
@@ -113,37 +99,23 @@ ACTIVE_MESSAGE = (
 )
 
 
-def save_configuration(installation, time_to_post, timezone_to_post, slack_id):
+def create_or_update_configuration(
+    installation, channel, summary_post_time, summary_post_timezone, slack_id
+):
     config = installation.github_summary_config
-    config.summary_post_time = time_to_post
-    config.summary_post_timezone = timezone_to_post
+    if config is None:
+        config = GitHubSummaryConfiguration()
+        config.slack_installation = installation
+        config.enabled = True
+    config.channel = channel
+    config.summary_post_time = summary_post_time
+    config.summary_post_timezone = summary_post_timezone
     db.session.add(config)
     db.session.commit()
 
     channel = config.channel
     slack = SlackClient(installation.bot_access_token)
     slack.dm(
-        ACTIVE_MESSAGE.format(time=str(time_to_post), channel=channel), user_id=slack_id
+        ACTIVE_MESSAGE.format(time=str(summary_post_time), channel=channel),
+        user_id=slack_id,
     )
-
-
-REINSTALL_MESSAGE = (
-    "Thank you for reinstalling! I will post daily summaries in <#{channel}>\n\n"
-    f"<{BASE_URL}/settings/github-summary|Configure when to post messages>"
-)
-
-
-def reinstallation(installation):
-    slack = SlackClient(installation.bot_access_token)
-    channel = installation.github_summary_config.channel
-    slack_id = installation.authorizing_user_id
-    slack.dm(REINSTALL_MESSAGE.format(channel=channel), user_id=slack_id)
-
-
-GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE = (
-    "Welcome to <#{channel}>! I'm Busy Beaver. "
-    "I post daily summaries of public GitHub activity "
-    "in this channel.\n\n"
-    "To connect your GitHub account and share activity, "
-    "please register using `/busybeaver connect`."
-)

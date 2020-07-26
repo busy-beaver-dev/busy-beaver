@@ -39,6 +39,13 @@ class SlackClient:
             raise ValueError("Channel not found")
         return result["members"]
 
+    def get_bot_channels(self) -> List[str]:
+        result = self.client.users_conversations()
+        all_bot_channels = [
+            (channel["id"], channel["name"]) for channel in result["channels"]
+        ]
+        return sorted(all_bot_channels, key=lambda record: record[1])
+
     def is_admin(self, user_id):
         try:
             result = self.client.users_info(user=user_id)

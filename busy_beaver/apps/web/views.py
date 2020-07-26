@@ -5,9 +5,9 @@ from flask.views import View
 from flask_login import current_user, login_required, logout_user
 
 from .blueprint import web_bp
-from .forms import GitHubSummaryConfigurationForm
-from busy_beaver.apps.slack_integration.oauth.state_machine import (
-    SlackInstallationOnboardUserStateMachine,
+from .forms import GitHubSummaryConfigurationForm, UpcomingEventsConfigurationForm
+from busy_beaver.apps.slack_integration.oauth.workflow import (
+    create_or_update_configuration,
 )
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import NotAuthorized
@@ -63,7 +63,6 @@ def logout():
 def github_summary_settings():
     logger.info("Hit GitHub Summary Settings page")
     installation = current_user.installation
-    config = installation.github_summary_config
     slack = SlackClient(installation.bot_access_token)
 
     is_admin = slack.is_admin(current_user.slack_id)
@@ -71,34 +70,30 @@ def github_summary_settings():
         raise NotAuthorized("Need to be an admin to access")
 
     form = GitHubSummaryConfigurationForm()
+    form.channel.choices = slack.get_bot_channels()
     if form.validate_on_submit():
-        logger.info("Trying to change config settings")
-
-        installation_fsm = SlackInstallationOnboardUserStateMachine(installation)
-        installation_fsm.save_configuration_to_database(
+        logger.info("Attempt to save GitHub Summary settings")
+        create_or_update_configuration(
+            installation,
+            channel=form.data["channel"],
             summary_post_time=form.data["summary_post_time"],
             summary_post_timezone=form.data["summary_post_timezone"],
             slack_id=current_user.slack_id,
         )
-        installation.state = installation_fsm.state
-        db.session.add(installation)
-        db.session.commit()
-
-        logger.info("Changed successfully")
+        logger.info("GitHub Summary settings changed successfully")
         return jsonify({"message": "Settings changed successfully"})
 
     # load default
     try:
+        config = installation.github_summary_config
         form.summary_post_time.data = config.summary_post_time
         form.summary_post_timezone.data = config.summary_post_timezone.zone
+        form.channel.data = config.channel
+        enabled = config.enabled
     except AttributeError:
-        pass
+        enabled = False
 
-    channel = config.channel
-    channel_info = slack.channel_details(channel)
-    return render_template(
-        "set_time.html", form=form, channel=channel_info["name"], enabled=config.enabled
-    )
+    return render_template("github_summary_settings.html", form=form, enabled=enabled)
 
 
 @web_bp.route("/settings/github-summary/toggle")
@@ -113,7 +108,41 @@ def toggle_github_summary_config_view():
         raise NotAuthorized("Need to be an admin to access")
 
     config = installation.github_summary_config
+    if not config:
+        return jsonify({"error": "Need to enter post time and timezone"})
     config.toggle_configuration_enabled_status()
     db.session.add(config)
     db.session.commit()
     return redirect(url_for("web.github_summary_settings"))
+
+
+@web_bp.route("/settings/upcoming-events", methods=("GET", "POST"))
+@login_required
+def upcoming_events_settings():
+    logger.info("Hit Upcoming Events Settings page")
+    installation = current_user.installation
+    config = installation.upcoming_events_config
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    form = UpcomingEventsConfigurationForm()
+    form.channel.choices = slack.get_bot_channels()
+
+    channel = config.channel
+    channel_info = slack.channel_details(channel)
+
+    # load default
+    try:
+        form.channel.data = config.channel
+    except AttributeError:
+        pass
+
+    return render_template(
+        "upcoming_events_settings.html",
+        form=form,
+        channel=channel_info["name"],
+        enabled=config.enabled,
+    )
