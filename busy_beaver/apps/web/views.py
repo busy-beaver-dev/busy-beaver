@@ -6,9 +6,7 @@ from flask_login import current_user, login_required, logout_user
 
 from .blueprint import web_bp
 from .forms import GitHubSummaryConfigurationForm, UpcomingEventsConfigurationForm
-from busy_beaver.apps.slack_integration.oauth.state_machine import (
-    SlackInstallationOnboardUserStateMachine,
-)
+from busy_beaver.apps.slack_integration.oauth.workflow import save_configuration
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import NotAuthorized
 from busy_beaver.extensions import db
@@ -73,20 +71,16 @@ def github_summary_settings():
     form = GitHubSummaryConfigurationForm()
     form.channel.choices = slack.get_bot_channels()
     if form.validate_on_submit():
-        logger.info("Trying to change config settings")
-
-        installation_fsm = SlackInstallationOnboardUserStateMachine(installation)
-        installation_fsm.save_configuration_to_database(
+        logger.info("Attempt to save GitHub Summary settings")
+        # TODO create or update
+        save_configuration(
+            installation,
             channel=form.data["channel"],
             summary_post_time=form.data["summary_post_time"],
             summary_post_timezone=form.data["summary_post_timezone"],
             slack_id=current_user.slack_id,
         )
-        installation.state = installation_fsm.state
-        db.session.add(installation)
-        db.session.commit()
-
-        logger.info("Changed successfully")
+        logger.info("GitHub Summary settings changed successfully")
         return jsonify({"message": "Settings changed successfully"})
 
     # load default
