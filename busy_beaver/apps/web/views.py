@@ -9,6 +9,9 @@ from .forms import GitHubSummaryConfigurationForm, UpcomingEventsConfigurationFo
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     create_or_update_configuration,
 )
+from busy_beaver.apps.upcoming_events.workflow import (
+    create_or_update_upcoming_events_configuration,
+)
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import NotAuthorized
 from busy_beaver.extensions import db
@@ -130,19 +133,29 @@ def upcoming_events_settings():
 
     form = UpcomingEventsConfigurationForm()
     form.channel.choices = slack.get_bot_channels()
-
-    channel = config.channel
-    channel_info = slack.channel_details(channel)
+    if form.validate_on_submit():
+        logger.info("Attempt to save Upcoming Events settings")
+        create_or_update_upcoming_events_configuration(
+            installation,
+            channel=form.data["channel"],
+            post_day_of_week=form.data["post_day_of_week"],
+            post_time=form.data["post_time"],
+            post_timezone=form.data["post_timezone"],
+            post_num_events=form.data["post_num_events"],
+            slack_id=current_user.slack_id,
+        )
+        logger.info("Upcoming Events settings changed successfully")
+        return jsonify({"message": "Settings changed successfully"})
 
     # load default
     try:
         form.channel.data = config.channel
+        form.post_day_of_week.data = config.post_day_of_week
+        form.post_time.data = config.post_time
+        form.post_timezone.data = config.post_timezone.zone
+        form.post_num_events.data = config.post_num_events
+        enabled = config.enabled
     except AttributeError:
-        pass
+        enabled = False
 
-    return render_template(
-        "upcoming_events_settings.html",
-        form=form,
-        channel=channel_info["name"],
-        enabled=config.enabled,
-    )
+    return render_template("upcoming_events_settings.html", form=form, enabled=enabled)
