@@ -29,7 +29,6 @@ class SlackInstallation(BaseModel):
     scope = db.Column(db.String(800), nullable=False)
     workspace_id = db.Column(db.String(20), index=True, nullable=False)
     workspace_name = db.Column(db.String(255), nullable=False)
-    state = db.Column(db.String(20), nullable=False, default="installed")
 
     auth_response = db.Column("auth_response", db.JSON)
 
