@@ -1,4 +1,4 @@
-from typing import Dict, List, NamedTuple
+from typing import Dict, List, NamedTuple, Optional
 
 from .requests_client import RequestsClient, Response
 from busy_beaver.exceptions import NoMeetupEventsFound, UnexpectedStatusCode
@@ -50,12 +50,11 @@ class MeetupClient:
         default_headers = {"Authorization": f"Bearer {oauth_token}"}
         self.client = RequestsClient(headers=default_headers, raise_for_status=False)
 
-    def does_group_exist(self, group_name):
+    def get_urlname(self, group_name: str) -> Optional[str]:
         url = BASE_URL + f"/{group_name}"
         resp: Response = self.client.get(url)
         if resp.status_code == 200:
-            return True
-        return False
+            return resp.json["urlname"]
 
     def get_events(self, group_name: str, count: int = 1) -> List[EventDetails]:
         url = BASE_URL + f"/{group_name}/events"

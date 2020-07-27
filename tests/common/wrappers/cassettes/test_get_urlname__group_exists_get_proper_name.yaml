@@ -1,0 +1,89 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - BusyBeaver
+      authorization:
+      - DUMMY
+    method: GET
+    uri: https://api.meetup.com/_ChiPY_
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA6VWXW/jNhD8K6xemgCOJct2Yhlu0PSKO9w11wRNgj40hUBLlMVEIgWSsus75L93
+        Vh++xC5Q4Pzgr+Vydji7HPmrJ1NvPpqFs0kUjgae4qXw5t67XN5u5wwfCV/pHy27yTKZSF6w263L
+        tWIPVhj2wei68gaeddzVFtt44uRaIFJI9YzfuXOVnfv+ZrMZlkK4uhomuvTjBj72kViboivZBRFL
+        hU2MrJzUCvFFdbmwFVeX73WtUpEyqVgYBONBz+6QEjtZ+M2WBWe5EdlPjw0TEElyWW2H2qwePZYU
+        3FosEVeZSZE+epf7aQufd9VPB+zqtyvWkGQnldEKdBLQodyzSohTJi3TSjCdMZcLttGmSKFcqa1j
+        rTAM21aGl6VUK1Zwtar5SjBbiUZZqZwwAskrOoNlG+lyptc41GgwDYIeoxTlUhjLuEpZydUWBQwh
+        Y6dcSV1jpahLJYe9BktzufCry0e1U/KmNtgKHTOdIB+8iXAn4+0rjtcdxyG7z8GNcbyamhu+xSbN
+        VsI1RDABWxxgrYu1SIfsM3qN/bbZoCuhKJcXBSvEWhR2yHYMTq61rk5Z2W8AkAGkY+dVCTUbYiEK
+        3Oe1sSmKQF1gGDq2gj7IJNxUZhkIKscKnXCaHKpNA8NSvVEOr35chuyOyLpaoXmZNowzg2M2fdMo
+        ZwhfOciikqJOSQYNtn2XftcGZXd86fCdcPe10wYptleevZH+thDcCmYET9DW2pEkSUvpDJPGlfyC
+        tv5cNWA0e5SQSosOQZYKJ9LGYtagZwUOtZJOCkh5ZZ8ZXxIg0fykl5b9ISCGAdlu3n7YkSDdlfjH
+        9QfAkEE9EnlJk0fjS+oOaQNuYgK2TpBBTEZRFAXh6DwIAsSl27YuQfTpGisHEW1B2fHBaqJpnWIP
+        d2QOaFGB0yKzXYg7C3i4u3qz3PfyG9iAfbxGihGYdBUi3rkP7W5WnrRUcalTCtDgIbSWVi5l0ZKq
+        6mUhE6rCnTefjIazGVVEibPZxfB8MvC6++XNp9E06H/GFd/GmQBqhgaLgbfrmDf/2lpoMBoHYTAL
+        dx56lfKS/YIhR7Wl1ET2ZeBtcvpGplHW6tlirbnucZVrp3uwyTiMgnEUXQy8XK5gYTbec1QrktqI
+        zlRJAZk01trAWL8ZYT/zIz/1e4Qd6PCpEisUbnKPAMYsHIK6vC6XR4C2+w9htxVp2mSSnrhKMZ4d
+        /1+DNH8W2z19J1E0Go1nk+P0vfA5OM++KdzDHq9wD91ovA/7/Rr3sJ3KB8DHqOxkKb7AQZqL7L8T
+        ZAkFUMhv4hayk98LL0bhRRiFM+/tPw72p1j+KtbMZ3i/wTPw7uOH5tHWGPJ7PLCfW8c1+kkkjn3m
+        Ck+nsmW7RQeMXVetq6DJQcsJd3ManU9n+NMQNO5VuyTWWWYFks5GszaMA8BsxEqTT7U0x5Mdu3uR
+        5GQ1OZy3C7kuhEj8OuuFPMPxeB8Nx/1PgL0K+3DdEO0mdwqfGUWT6LjJDX2BSXjlDT3s8ZPbQzeT
+        uw/7/ZPbw3aTewB8zOT2rYplCt//azz5++XlXy0bzKwZCwAA
+    headers:
+      Accept-Ranges:
+      - bytes
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '1176'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Mon, 27 Jul 2020 21:39:49 GMT
+      ETag:
+      - '"a71edff98d4a8b814f50a7df01a99ef1-gzip"'
+      Server:
+      - Apache/2.4.39 (Unix) OpenSSL/1.1.1c
+      Vary:
+      - Accept-Encoding,User-Agent,Accept-Language
+      Via:
+      - 1.1 varnish
+      X-Accepted-OAuth-Scopes:
+      - ageless, basic
+      X-Cache:
+      - MISS
+      X-Cache-Hits:
+      - '0'
+      X-Meetup-Request-ID:
+      - ab2ab89e-f3ce-4ae1-b838-61fe83de32cd
+      X-Meetup-server:
+      - ip-10-192-23-104
+      X-OAuth-Scopes:
+      - basic
+      X-RateLimit-Limit:
+      - '30'
+      X-RateLimit-Remaining:
+      - '29'
+      X-RateLimit-Reset:
+      - '10'
+      X-Served-By:
+      - cache-chi21178-CHI
+      X-Timer:
+      - S1595885989.022795,VS0,VE185
+    status:
+      code: 200
+      message: OK
+version: 1

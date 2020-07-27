@@ -61,6 +61,8 @@ class AddNewGroupConfigurationForm(FlaskForm):
         if matching_group:
             raise ValidationError("Group already added")
 
-        group_exists = meetup.does_group_exist(group_to_add)
-        if not group_exists:
+        group_name = meetup.get_urlname(group_to_add)
+        if not group_name:
             raise ValidationError("Group does not exist")
+
+        field.data = group_name
