@@ -84,6 +84,12 @@ class UpcomingEventsGroup(BaseModel):
 
     __tablename__ = "upcoming_events_group"
 
+    __table_args__ = (
+        db.UniqueConstraint(
+            "config_id", "meetup_urlname", name="unique_group_per_config"
+        ),
+    )
+
     def __repr__(self):  # pragma: no cover
         return f"<UpcomingEventsGroup: {self.meetup_urlname}>"
 
@@ -95,7 +101,7 @@ class UpcomingEventsGroup(BaseModel):
         ),
         nullable=False,
     )
-    meetup_urlname = db.Column(db.String(100), nullable=False)
+    meetup_urlname = db.Column(db.String(100), nullable=False, index=True)
 
     # Relationships
     configuration = db.relationship(
