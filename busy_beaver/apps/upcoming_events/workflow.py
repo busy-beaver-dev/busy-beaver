@@ -1,7 +1,7 @@
 import logging
 
 from busy_beaver.extensions import db
-from busy_beaver.models import UpcomingEventsConfiguration
+from busy_beaver.models import UpcomingEventsConfiguration, UpcomingEventsGroup
 
 logger = logging.getLogger(__name__)
 
@@ -29,3 +29,11 @@ def create_or_update_upcoming_events_configuration(
     db.session.commit()
 
     # TODO let the user know what it looks like with a button that will show them
+
+
+def add_new_group_to_configuration(upcoming_events_config, meetup_urlname):
+    group = UpcomingEventsGroup()
+    group.configuration = upcoming_events_config
+    group.meetup_urlname = meetup_urlname
+    db.session.add(group)
+    db.session.commit()

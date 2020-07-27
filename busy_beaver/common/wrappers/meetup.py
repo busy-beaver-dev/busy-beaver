@@ -48,7 +48,14 @@ class MeetupClient:
 
     def __init__(self, oauth_token: str):
         default_headers = {"Authorization": f"Bearer {oauth_token}"}
-        self.client = RequestsClient(headers=default_headers)
+        self.client = RequestsClient(headers=default_headers, raise_for_status=False)
+
+    def does_group_exist(self, group_name):
+        url = BASE_URL + f"/{group_name}"
+        resp: Response = self.client.get(url)
+        if resp.status_code == 200:
+            return True
+        return False
 
     def get_events(self, group_name: str, count: int = 1) -> List[EventDetails]:
         url = BASE_URL + f"/{group_name}/events"

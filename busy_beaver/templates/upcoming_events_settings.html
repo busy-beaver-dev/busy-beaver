@@ -18,4 +18,25 @@
   }}
   <input type="submit" value="Submit" class="btn btn-primary">
 </form>
+
+<br><br>
+
+<h4>Groups</h4>
+
+<ul>
+  {% for field in groups %}
+  <!--
+  TODO remove should have a pop up window, are you sure?
+  This will delete all records
+-->
+  <li>{{ field }} (<a href="">remove</a>)</li>
+  {% endfor %}
+
+  <li>
+    <a href="{{ url_for('web.upcoming_events_add_new_group') }}">Add new group</a>
+  </li>
+</ul>
+
+<br><br>
+
 {% endblock %}

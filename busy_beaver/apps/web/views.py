@@ -5,11 +5,16 @@ from flask.views import View
 from flask_login import current_user, login_required, logout_user
 
 from .blueprint import web_bp
-from .forms import GitHubSummaryConfigurationForm, UpcomingEventsConfigurationForm
+from .forms import (
+    AddNewGroupConfigurationForm,
+    GitHubSummaryConfigurationForm,
+    UpcomingEventsConfigurationForm,
+)
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     create_or_update_configuration,
 )
 from busy_beaver.apps.upcoming_events.workflow import (
+    add_new_group_to_configuration,
     create_or_update_upcoming_events_configuration,
 )
 from busy_beaver.common.wrappers import SlackClient
@@ -154,11 +159,15 @@ def upcoming_events_settings():
         form.post_time.data = config.post_time
         form.post_timezone.data = config.post_timezone.zone
         form.post_num_events.data = config.post_num_events
+        groups = [group.meetup_urlname for group in config.groups]
         enabled = config.enabled
     except AttributeError:
         enabled = False
+        groups = []
 
-    return render_template("upcoming_events_settings.html", form=form, enabled=enabled)
+    return render_template(
+        "upcoming_events_settings.html", form=form, enabled=enabled, groups=groups
+    )
 
 
 @web_bp.route("/settings/upcoming-events/toggle")
@@ -179,3 +188,35 @@ def toggle_upcoming_events_config_view():
     db.session.add(config)
     db.session.commit()
     return redirect(url_for("web.upcoming_events_settings"))
+
+
+@web_bp.route("/settings/upcoming-events/group/add", methods=("GET", "POST"))
+@login_required
+def upcoming_events_add_new_group():
+    logger.info("Hit Upcoming Events Settings -- Add New Group page")
+    installation = current_user.installation
+    config = installation.upcoming_events_config
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    form = AddNewGroupConfigurationForm()
+    if form.validate_on_submit():
+        logger.info("Attempt to add new group")
+        add_new_group_to_configuration(
+            config, meetup_urlname=form.data["meetup_urlname"]
+        )
+        logger.info("New group added")
+        return jsonify({"message": "Group added successfully"})
+
+    # load default
+    try:
+        groups = [group.meetup_urlname for group in config.groups]
+    except AttributeError:
+        groups = []
+
+    return render_template(
+        "upcoming_events_add_new_group.html", form=form, groups=groups
+    )
