@@ -1,0 +1,70 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - BusyBeaver
+      authorization:
+      - DUMMY
+    method: GET
+    uri: https://api.meetup.com/adsfasdfeum3n4x
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA6tWSi0qyi8qVrKKrlZKzk9JVbJSSi/KLy2IB4sr6SjlphYXJ6aDxD3zyhJzMlMU
+        wPIKpUU5eYm5qQqJKcVpicUpaamlucZ5JhVKtbG1ALQjkmFVAAAA
+    headers:
+      Accept-Ranges:
+      - bytes
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '96'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Tue, 28 Jul 2020 23:45:01 GMT
+      ETag:
+      - '"c951d57d0685d272415e9e9c7d52eca5-gzip"'
+      Server:
+      - Apache/2.4.39 (Unix) OpenSSL/1.1.1c
+      Vary:
+      - Accept-Encoding,User-Agent,Accept-Language
+      Via:
+      - 1.1 varnish
+      X-Accepted-OAuth-Scopes:
+      - ageless, basic
+      X-Cache:
+      - MISS
+      X-Cache-Hits:
+      - '0'
+      X-Meetup-Request-ID:
+      - 18309b36-81e3-4ab8-bfae-de9345cef9e1
+      X-Meetup-server:
+      - ip-10-192-22-218
+      X-OAuth-Scopes:
+      - basic
+      X-RateLimit-Limit:
+      - '30'
+      X-RateLimit-Remaining:
+      - '28'
+      X-RateLimit-Reset:
+      - '10'
+      X-Served-By:
+      - cache-mdw17368-MDW
+      X-Timer:
+      - S1595979901.957166,VS0,VE51
+    status:
+      code: 404
+      message: Not Found
+version: 1
