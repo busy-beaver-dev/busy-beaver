@@ -21,19 +21,14 @@
 
 <br><br>
 
-<h4>Groups</h4>
+<h4>My Groups</h4>
 
 <ul>
   {% for field in groups %}
-  <!--
-  TODO remove should have a pop up window, are you sure?
-  This will delete all records
--->
-  <li>{{ field }} (<a href="">remove</a>)</li>
+  <li>{{ field }}</li>
   {% endfor %}
-
   <li>
-    <a href="{{ url_for('web.upcoming_events_add_new_group') }}">Add new group</a>
+    <a href="{{ url_for('web.upcoming_events_add_new_group') }}">Add / remove groups</a>
   </li>
 </ul>
 

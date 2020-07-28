@@ -2,7 +2,19 @@
 {% from "bootstrap/form.html" import render_field, render_form_row %}
 
 {% block container %}
-<h1>Add new group to Upcoming Events</h1>
+<h1>Upcoming Events -- Add / Remove Group</h1>
+
+<h4>My Groups</h4>
+
+<ul>
+  {% for group in groups %}
+  <li>{{ group.meetup_urlname }} (<a href="{{ url_for('web.upcoming_events_delete_group', id=group.id) }}">remove</a>)</li>
+  {% else %}
+  No Active Groups
+  {% endfor %}
+</ul>
+
+<hr>
 
 <p>
   In order to add a new group, you will need your Meetup
@@ -14,14 +26,6 @@
   you will need to enter <strong>_ChiPy_</strong>.
 </p>
 
-<h4>Current Active Groups</h4>
-
-<ul>
-  {% for field in groups %}
-  <li>{{ field }}</li>
-  {% endfor %}
-</ul>
-
 <form method="POST" action="{{ url_for('web.upcoming_events_add_new_group') }}">
   {{ form.csrf_token }}
 
@@ -29,5 +33,4 @@
 
   <input type="submit" value="Add New Group" class="btn btn-primary">
 </form>
-
 {% endblock %}

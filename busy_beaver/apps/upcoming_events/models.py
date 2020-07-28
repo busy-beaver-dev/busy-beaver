@@ -107,7 +107,9 @@ class UpcomingEventsGroup(BaseModel):
     configuration = db.relationship(
         "UpcomingEventsConfiguration", back_populates="groups"
     )
-    events = db.relationship("Event", back_populates="group")
+    events = db.relationship(
+        "Event", back_populates="group", cascade="all, delete", passive_deletes=True
+    )
 
 
 class Event(BaseModel):
@@ -121,7 +123,11 @@ class Event(BaseModel):
     # Attributes
     group_id = db.Column(
         db.Integer,
-        db.ForeignKey("upcoming_events_group.id", name="fk_upcoming_events_group_id"),
+        db.ForeignKey(
+            "upcoming_events_group.id",
+            name="fk_upcoming_events_group_id",
+            ondelete="cascade",
+        ),
         nullable=False,
     )
 

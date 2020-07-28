@@ -20,6 +20,7 @@ from busy_beaver.apps.upcoming_events.workflow import (
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import NotAuthorized
 from busy_beaver.extensions import db
+from busy_beaver.models import UpcomingEventsGroup
 
 logger = logging.getLogger(__name__)
 
@@ -190,7 +191,7 @@ def toggle_upcoming_events_config_view():
     return redirect(url_for("web.upcoming_events_settings"))
 
 
-@web_bp.route("/settings/upcoming-events/group/add", methods=("GET", "POST"))
+@web_bp.route("/settings/upcoming-events/group", methods=("GET", "POST"))
 @login_required
 def upcoming_events_add_new_group():
     logger.info("Hit Upcoming Events Settings -- Add New Group page")
@@ -213,10 +214,28 @@ def upcoming_events_add_new_group():
 
     # load default
     try:
-        groups = [group.meetup_urlname for group in config.groups]
+        groups = config.groups
     except AttributeError:
         groups = []
 
     return render_template(
         "upcoming_events_add_new_group.html", form=form, groups=groups
     )
+
+
+# TODO this is making a GET call
+@web_bp.route("/settings/upcoming-events/group/<int:id>/delete")
+@login_required
+def upcoming_events_delete_group(id):
+    logger.info("Hit Upcoming Events Settings -- Remove group view")
+    installation = current_user.installation
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    matching_group = UpcomingEventsGroup.query.get_or_404(id)
+    db.session.delete(matching_group)
+    db.session.commit()
+    return redirect(url_for("web.upcoming_events_add_new_group"))
