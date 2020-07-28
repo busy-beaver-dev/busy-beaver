@@ -172,3 +172,22 @@ class TestUpcomingEventsViews:
 
         config = UpcomingEventsConfiguration.query.get(config.id)
         assert config.enabled is False
+
+    @pytest.mark.end2end
+    def test_upcoming_events_delete(self, login_client, factory, patch_slack):
+        # Arrange
+        config = factory.UpcomingEventsConfiguration(enabled=True)
+        group = UpcomingEventsGroup(meetup_urlname="_ChiPy_", configuration=config)
+        slack_user = factory.SlackUser(installation=config.slack_installation)
+        client = login_client(user=slack_user)
+        patch_slack(is_admin=True)
+
+        # Act
+        rv = client.get(
+            f"/settings/upcoming-events/group/{group.id}/delete", follow_redirects=True
+        )
+
+        # Assert
+        assert rv.status_code == 200
+        groups = UpcomingEventsGroup.query.all()
+        assert len(groups) == 0
