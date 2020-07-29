@@ -1,5 +1,5 @@
 from flask_login import UserMixin
-from sqlalchemy_utils import EncryptedType
+from sqlalchemy_utils import EncryptedType, URLType
 from sqlalchemy_utils.types.encrypted.encrypted_type import AesEngine
 
 from busy_beaver.common.models import BaseModel
@@ -29,6 +29,7 @@ class SlackInstallation(BaseModel):
     scope = db.Column(db.String(800), nullable=False)
     workspace_id = db.Column(db.String(20), index=True, nullable=False)
     workspace_name = db.Column(db.String(255), nullable=False)
+    workspace_logo_url = db.Column(URLType, nullable=True)
 
     auth_response = db.Column("auth_response", db.JSON)
 

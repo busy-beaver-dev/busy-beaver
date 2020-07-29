@@ -6,6 +6,9 @@ from busy_beaver.models import UpcomingEventsConfiguration, UpcomingEventsGroup
 logger = logging.getLogger(__name__)
 
 
+###################
+# Updating Settings
+###################
 def create_or_update_upcoming_events_configuration(
     installation,
     channel,
