@@ -1,6 +1,10 @@
 import pytest
 
-from busy_beaver.models import UpcomingEventsConfiguration, UpcomingEventsGroup
+from busy_beaver.models import (
+    SlackInstallation,
+    UpcomingEventsConfiguration,
+    UpcomingEventsGroup,
+)
 from tests._utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.apps.web.views"
@@ -191,3 +195,24 @@ class TestUpcomingEventsViews:
         assert rv.status_code == 200
         groups = UpcomingEventsGroup.query.all()
         assert len(groups) == 0
+
+
+class TestUpdateWorkspaceLogoview:
+    @pytest.mark.end2end
+    def test_logo_settings(self, login_client, factory, patch_slack):
+        # Arrange
+        slack_user = factory.SlackUser()
+        client = login_client(user=slack_user)
+        patch_slack(is_admin=True)
+
+        # Act
+        rv = client.post(
+            "/settings/workspace",
+            data={"workspace_logo_url": "http://www.test.com"},
+            follow_redirects=True,
+        )
+
+        # Assert
+        assert rv.status_code == 200
+        installation = SlackInstallation.query.first()
+        assert installation.workspace_logo_url == "http://www.test.com"
