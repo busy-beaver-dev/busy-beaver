@@ -6,7 +6,7 @@ metadata:
     type: post-upcoming-events
     {{- include "busybeaver.labels" . | nindent 4 }}
 spec:
-  schedule: "0 14 * * 1"
+  schedule: "55 23 * * *"
   jobTemplate:
     spec:
       template:
