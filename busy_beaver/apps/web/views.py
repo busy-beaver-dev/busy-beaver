@@ -8,6 +8,7 @@ from .blueprint import web_bp
 from .forms import (
     AddNewGroupConfigurationForm,
     GitHubSummaryConfigurationForm,
+    LogoURLForm,
     UpcomingEventsConfigurationForm,
 )
 from busy_beaver.apps.slack_integration.oauth.workflow import (
@@ -67,6 +68,9 @@ def logout():
     return redirect(url_for("web.home"))
 
 
+################
+# GitHub Summary
+################
 @web_bp.route("/settings/github-summary", methods=("GET", "POST"))
 @login_required
 def github_summary_settings():
@@ -125,6 +129,9 @@ def toggle_github_summary_config_view():
     return redirect(url_for("web.github_summary_settings"))
 
 
+#################
+# Upcoming Events
+#################
 @web_bp.route("/settings/upcoming-events", methods=("GET", "POST"))
 @login_required
 def upcoming_events_settings():
@@ -239,3 +246,35 @@ def upcoming_events_delete_group(id):
     db.session.delete(matching_group)
     db.session.commit()
     return redirect(url_for("web.upcoming_events_add_new_group"))
+
+
+##########
+# Logo URL
+##########
+@web_bp.route("/settings/workspace", methods=("GET", "POST"))
+@login_required
+def logo_settings():
+    logger.info("Hit Workspace logo Settings page")
+    installation = current_user.installation
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    form = LogoURLForm()
+    if form.validate_on_submit():
+        logger.info("Attempt to save workspace logo")
+        installation.workspace_logo_url = form.data["workspace_logo_url"]
+        db.session.add(installation)
+        db.session.commit()
+        logger.info("Workspace logo saved successfully")
+        return jsonify({"message": "Settings changed successfully"})
+
+    # load default
+    try:
+        form.workspace_logo_url.data = installation.workspace_logo_url
+    except AttributeError:
+        pass
+
+    return render_template("workspace_settings.html", form=form)
