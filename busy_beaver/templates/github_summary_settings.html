@@ -1,20 +1,24 @@
 {% extends "base.html" %}
+{% from "bootstrap/form.html" import render_field, render_form_row %}
 
 {% block container %}
 <h1>Configure GitHub Summary</h1>
 
-
-<h2>Configuration Settings</h2>
 <p>Enabled: {{ enabled }} (<a href="{{ url_for('web.toggle_github_summary_config_view') }}">toggle</a>)</p>
 
 <form method="POST" action="{{ url_for('web.github_summary_settings') }}">
   {{ form.csrf_token }}
-  {{ form.channel.label }} {{ form.channel() }}
-  <br>
-  {{ form.summary_post_time.label }} {{ form.summary_post_time(size=20) }}
-  <br>
-  {{ form.summary_post_timezone.label }} {{ form.summary_post_timezone() }}
-  <br>
-  <input type="submit" value="Go">
+
+  {{ render_form_row(
+      [form.channel],
+      col_map={'channel': 'col-md-4', 'summary_post_time': 'col-md-3', 'summary_post_timezone': 'col-md-5'}
+    )
+  }}
+  {{ render_form_row(
+    [form.summary_post_time, form.summary_post_timezone],
+    col_map={'summary_post_time': 'col-md-2', 'summary_post_timezone': 'col-md-6'}
+  )
+}}
+  <input type="submit" value="Submit" class="btn btn-primary">
 </form>
 {% endblock %}

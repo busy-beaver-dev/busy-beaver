@@ -26,6 +26,18 @@ def test_meetup_get_events(meetup_client):
     assert "ActiveCampaign" in event.venue
 
 
+@pytest.mark.vcr()
+@pytest.mark.integration
+def test_get_urlname__group_exists_get_proper_name(meetup_client):
+    assert meetup_client.get_urlname("_ChiPY_") == "_ChiPy_"
+
+
+@pytest.mark.vcr()
+@pytest.mark.integration
+def test_get_urlname__group_does_not_exist(meetup_client):
+    assert meetup_client.get_urlname("lasdfjzxm") is None
+
+
 @pytest.fixture
 def patched_requests_client(mocker, patcher):
     class FakeRequestsClient:

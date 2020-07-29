@@ -69,7 +69,13 @@ if not installation.github_summary_config:
 # update events database
 if not installation.upcoming_events_config:
     config = UpcomingEventsConfiguration(
-        enabled=True, slack_installation=installation, channel=upcoming_events_channel
+        enabled=True,
+        slack_installation=installation,
+        channel=upcoming_events_channel,
+        post_day_of_week="Monday",
+        post_time=time(9, 00),
+        post_timezone="America/Chicago",
+        post_num_events=3,
     )
     group = UpcomingEventsGroup(meetup_urlname="_ChiPy_", configuration=config)
 

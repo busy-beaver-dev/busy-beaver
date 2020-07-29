@@ -21,7 +21,7 @@ class Response(NamedTuple):
 class RequestsClient:
     """Wrapper around requests to simplify interaction with JSON REST APIs"""
 
-    def __init__(self, headers: dict = None):
+    def __init__(self, headers: dict = None, raise_for_status: bool = True):
         _headers = dict(DEFAULT_HEADERS)
         if headers is not None:
             _headers.update(headers)
@@ -29,6 +29,7 @@ class RequestsClient:
         s = requests.Session()
         self.headers = _headers
         self.session = s
+        self.raise_for_status = raise_for_status
 
     def __repr__(self):  # pragma: no cover
         return "RequestsClient"
@@ -49,7 +50,8 @@ class RequestsClient:
             req_headers.update(headers_to_add)
 
         r = self.session.request(method, url, headers=req_headers, **kwargs)
-        r.raise_for_status()
+        if self.raise_for_status:
+            r.raise_for_status()
 
         try:
             resp = Response(status_code=r.status_code, headers=r.headers, json=r.json())

@@ -1,9 +1,20 @@
 from finite_state_machine import StateMachine, transition
 from finite_state_machine.exceptions import ConditionNotMet
+from sqlalchemy_utils import ChoiceType, TimezoneType
 
 from busy_beaver.common.models import BaseModel
 from busy_beaver.exceptions import StateMachineError
 from busy_beaver.extensions import db
+
+WEEKDAYS = [
+    ("Sunday",) * 2,
+    ("Monday",) * 2,
+    ("Tuesday",) * 2,
+    ("Wednesday",) * 2,
+    ("Thursday",) * 2,
+    ("Friday",) * 2,
+    ("Saturday",) * 2,
+]
 
 
 class UpcomingEventsEnabledStateMachine(StateMachine):
@@ -43,7 +54,11 @@ class UpcomingEventsConfiguration(BaseModel):
         db.ForeignKey("slack_installation.id", name="fk_installation_id"),
         nullable=False,
     )
-    channel = db.Column(db.String(20), nullable=True)
+    channel = db.Column(db.String(20), nullable=False)
+    post_day_of_week = db.Column(ChoiceType(WEEKDAYS), nullable=False)
+    post_time = db.Column(db.Time, nullable=False)
+    post_timezone = db.Column(TimezoneType(backend="pytz"), nullable=False)
+    post_num_events = db.Column(db.Integer, nullable=False)
 
     # Relationships
     slack_installation = db.relationship(
@@ -51,7 +66,7 @@ class UpcomingEventsConfiguration(BaseModel):
     )
     groups = db.relationship("UpcomingEventsGroup", back_populates="configuration")
 
-    def toggle_enabled(self):
+    def toggle_configuration_enabled_status(self):
         machine = UpcomingEventsEnabledStateMachine(self)
         try:
             machine.toggle()
@@ -69,6 +84,12 @@ class UpcomingEventsGroup(BaseModel):
 
     __tablename__ = "upcoming_events_group"
 
+    __table_args__ = (
+        db.UniqueConstraint(
+            "config_id", "meetup_urlname", name="unique_group_per_config"
+        ),
+    )
+
     def __repr__(self):  # pragma: no cover
         return f"<UpcomingEventsGroup: {self.meetup_urlname}>"
 
@@ -80,13 +101,15 @@ class UpcomingEventsGroup(BaseModel):
         ),
         nullable=False,
     )
-    meetup_urlname = db.Column(db.String(100), nullable=False)
+    meetup_urlname = db.Column(db.String(100), nullable=False, index=True)
 
     # Relationships
     configuration = db.relationship(
         "UpcomingEventsConfiguration", back_populates="groups"
     )
-    events = db.relationship("Event", back_populates="group")
+    events = db.relationship(
+        "Event", back_populates="group", cascade="all, delete", passive_deletes=True
+    )
 
 
 class Event(BaseModel):
@@ -100,7 +123,11 @@ class Event(BaseModel):
     # Attributes
     group_id = db.Column(
         db.Integer,
-        db.ForeignKey("upcoming_events_group.id", name="fk_upcoming_events_group_id"),
+        db.ForeignKey(
+            "upcoming_events_group.id",
+            name="fk_upcoming_events_group_id",
+            ondelete="cascade",
+        ),
         nullable=False,
     )
 
