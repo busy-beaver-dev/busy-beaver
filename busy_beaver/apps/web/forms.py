@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 import pytz
 from wtforms import ValidationError
 from wtforms.fields import IntegerField, SelectField, StringField
-from wtforms.validators import DataRequired, NumberRange
+from wtforms.validators import URL, DataRequired, NumberRange
 from wtforms_components import TimeField
 
 from busy_beaver.clients import meetup
@@ -66,3 +66,7 @@ class AddNewGroupConfigurationForm(FlaskForm):
             raise ValidationError("Group does not exist")
 
         field.data = group_name
+
+
+class LogoURLForm(FlaskForm):
+    workspace_logo_url = StringField("Logo URL", validators=[URL()])

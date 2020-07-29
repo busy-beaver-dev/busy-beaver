@@ -51,6 +51,7 @@ else:
         scope="test-scope",
         workspace_id=workspace_id,
         workspace_name="Development Environment",
+        workspace_logo_url="https://www.chipy.org/static/img/chipmunk.1927e65c68a7.png",
     )
 db.session.add(installation)
 db.session.commit()

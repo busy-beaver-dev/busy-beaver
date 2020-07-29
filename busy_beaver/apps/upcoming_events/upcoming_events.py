@@ -7,8 +7,7 @@ from busy_beaver.models import Event, UpcomingEventsConfiguration
 
 def generate_upcoming_events_message(config: UpcomingEventsConfiguration, count: int):
     events = _fetch_future_events_from_database(config, count)
-    # TODO: for multi-tenant we will need to use group_name to look up url
-    image_url = "https://www.chipy.org/static/img/chipmunk.1927e65c68a7.png"
+    image_url = config.slack_installation.workspace_logo_url
     return UpcomingEventList(events, image_url).to_dict()
 
 

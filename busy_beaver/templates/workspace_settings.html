@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% from "bootstrap/form.html" import render_form_row %}
+
+{% block container %}
+<h1>Configure Workspace</h1>
+
+<form method="POST" action="{{ url_for('web.logo_settings') }}">
+  {{ form.csrf_token }}
+  {{ render_form_row([form.workspace_logo_url], col_map={'workspace_logo_url': 'col-md-12'}) }}
+
+  <input type="submit" value="Submit" class="btn btn-primary">
+</form>
+
+<br><br>
+
+{% endblock %}
