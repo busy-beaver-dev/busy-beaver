@@ -49,7 +49,7 @@ def add_new_group_to_configuration(upcoming_events_config, meetup_urlname):
 # Post Upcoming Events
 ######################
 @rq.job
-def post_upcoming_events_message_to_slack(config_id: str):
+def post_upcoming_events_message(config_id: str):
     config = UpcomingEventsConfiguration.query.get(config_id)
     if not config.enabled:
         logger.warn("Upcoming Events Configuration is not enabled")

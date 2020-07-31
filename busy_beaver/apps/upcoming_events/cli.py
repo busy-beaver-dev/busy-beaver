@@ -6,7 +6,7 @@ import pytz
 
 from .blueprint import events_bp
 from .sync_database import sync_database_with_fetched_events
-from .workflow import post_upcoming_events_message_to_slack
+from .workflow import post_upcoming_events_message
 from busy_beaver.extensions import db
 from busy_beaver.models import Task, UpcomingEventsConfiguration
 
@@ -24,7 +24,7 @@ def sync_events_database_cli():
 @events_bp.cli.command(
     "queue_post_upcoming_events_jobs", help="Queue Upcoming Events jobs for tomorrow"
 )
-def queue_github_summary_jobs_for_tomorrow():
+def queue_upcoming_events_jobs_for_tomorrow():
     tomorrow = date.today() + timedelta(days=1)
     day_of_week = calendar.day_name[tomorrow.weekday()]
 
@@ -37,12 +37,10 @@ def queue_github_summary_jobs_for_tomorrow():
         if not time_to_post:
             continue
 
-        job = post_upcoming_events_message_to_slack.schedule(
-            time_to_post, config_id=config.id
-        )
+        job = post_upcoming_events_message.schedule(time_to_post, config_id=config.id)
         task = Task(
             job_id=job.id,
-            name="post_github_summary_message",
+            name="post_upcoming_events_message",
             task_state=Task.TaskState.SCHEDULED,
             time_to_post=time_to_post,
             data={"config_id": config.id},
