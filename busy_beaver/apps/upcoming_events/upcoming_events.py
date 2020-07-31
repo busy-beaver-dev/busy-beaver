@@ -5,8 +5,8 @@ from busy_beaver.common.wrappers.meetup import EventDetails
 from busy_beaver.models import Event, UpcomingEventsConfiguration
 
 
-def generate_upcoming_events_message(config: UpcomingEventsConfiguration, count: int):
-    events = _fetch_future_events_from_database(config, count)
+def generate_upcoming_events_message(config: UpcomingEventsConfiguration):
+    events = _fetch_future_events_from_database(config, count=config.post_num_events)
     image_url = config.slack_installation.workspace_logo_url
     return UpcomingEventList(events, image_url).to_dict()
 

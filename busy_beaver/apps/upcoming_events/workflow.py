@@ -58,6 +58,6 @@ def post_upcoming_events_message(config_id: str):
     installation = config.slack_installation
     slack = SlackClient(installation.bot_access_token)
 
-    blocks = generate_upcoming_events_message(config, config.post_num_events)
+    blocks = generate_upcoming_events_message(config)
     slack.post_message(blocks=blocks, channel=config.channel)
     set_task_progress(100)

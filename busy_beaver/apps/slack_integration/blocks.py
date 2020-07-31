@@ -25,9 +25,7 @@ class AppHome:
 
         if upcoming_events_config:
             blocks.extend([Divider(), Section("\n\n\n\n")])
-            blocks.extend(
-                generate_upcoming_events_message(upcoming_events_config, count=5)
-            )
+            blocks.extend(generate_upcoming_events_message(upcoming_events_config))
 
         self.blocks = blocks
 

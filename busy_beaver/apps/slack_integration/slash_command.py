@@ -103,7 +103,7 @@ def upcoming_events(**data):
     if not upcoming_events_config.enabled:
         return make_slack_response(text="This feature has been disabled.")
 
-    blocks = generate_upcoming_events_message(upcoming_events_config, count=5)
+    blocks = generate_upcoming_events_message(upcoming_events_config)
     return make_slack_response(blocks=blocks)
 
 

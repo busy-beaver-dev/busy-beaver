@@ -23,10 +23,11 @@ def test_generate_next_event(session, factory):
 
 @pytest.mark.unit
 def test_generate_upcoming_events_message(session, factory):
-    group = factory.UpcomingEventsGroup()
+    config = factory.UpcomingEventsConfiguration(post_num_events=1)
+    group = factory.UpcomingEventsGroup(configuration=config)
     factory.Event.create_batch(size=10, group=group)
 
-    result = generate_upcoming_events_message(group.configuration, count=1)
+    result = generate_upcoming_events_message(group.configuration)
 
     assert len(result) == 3 + 1 * 3  # sections: 3 in the header, each block is 3
 
@@ -39,7 +40,7 @@ def test_events_from_different_group_are_displayed_correct(session, factory):
     """
     # Arrange
     tomorrow = datetime.utcnow() + timedelta(days=1)
-    config = factory.UpcomingEventsConfiguration()
+    config = factory.UpcomingEventsConfiguration(post_num_events=5)
     group = factory.UpcomingEventsGroup(meetup_urlname="Group 1", configuration=config)
     factory.Event(group=group, name="First event", start_epoch=tomorrow.timestamp())
 
@@ -50,7 +51,7 @@ def test_events_from_different_group_are_displayed_correct(session, factory):
     factory.Event(group=group, name="Second event", start_epoch=next_week.timestamp())
 
     # Act
-    result = generate_upcoming_events_message(group.configuration, count=5)
+    result = generate_upcoming_events_message(group.configuration)
 
     # Assert
     first_event = result[3]
