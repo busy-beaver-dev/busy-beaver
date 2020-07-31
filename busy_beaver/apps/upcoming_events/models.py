@@ -55,10 +55,10 @@ class UpcomingEventsConfiguration(BaseModel):
         nullable=False,
     )
     channel = db.Column(db.String(20), nullable=False)
-    post_day_of_week = db.Column(ChoiceType(WEEKDAYS), nullable=False)
-    post_time = db.Column(db.Time, nullable=False)
-    post_timezone = db.Column(TimezoneType(backend="pytz"), nullable=False)
-    post_num_events = db.Column(db.Integer, nullable=False)
+    post_day_of_week = db.Column(ChoiceType(WEEKDAYS), nullable=True)
+    post_time = db.Column(db.Time, nullable=True)
+    post_timezone = db.Column(TimezoneType(backend="pytz"), nullable=True)
+    post_num_events = db.Column(db.Integer, nullable=True)
 
     # Relationships
     slack_installation = db.relationship(

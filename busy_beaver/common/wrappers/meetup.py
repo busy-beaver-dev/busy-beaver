@@ -1,7 +1,7 @@
 from typing import Dict, List, NamedTuple, Optional
 
 from .requests_client import RequestsClient, Response
-from busy_beaver.exceptions import NoMeetupEventsFound, UnexpectedStatusCode
+from busy_beaver.exceptions import UnexpectedStatusCode
 from busy_beaver.models import Event
 
 BASE_URL = "https://api.meetup.com"
@@ -66,7 +66,7 @@ class MeetupClient:
 
         events = resp.json
         if not events:
-            raise NoMeetupEventsFound
+            return []
 
         upcoming_events = []
         for event in events:

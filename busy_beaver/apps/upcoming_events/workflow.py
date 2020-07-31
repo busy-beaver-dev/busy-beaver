@@ -1,7 +1,10 @@
 import logging
 
-from busy_beaver.extensions import db
+from .upcoming_events import generate_upcoming_events_message
+from busy_beaver.clients import SlackClient
+from busy_beaver.extensions import db, rq
 from busy_beaver.models import UpcomingEventsConfiguration, UpcomingEventsGroup
+from busy_beaver.toolbox import set_task_progress
 
 logger = logging.getLogger(__name__)
 
@@ -40,3 +43,21 @@ def add_new_group_to_configuration(upcoming_events_config, meetup_urlname):
     group.meetup_urlname = meetup_urlname
     db.session.add(group)
     db.session.commit()
+
+
+######################
+# Post Upcoming Events
+######################
+@rq.job
+def post_upcoming_events_message(config_id: str):
+    config = UpcomingEventsConfiguration.query.get(config_id)
+    if not config.enabled:
+        logger.warn("Upcoming Events Configuration is not enabled")
+        return
+
+    installation = config.slack_installation
+    slack = SlackClient(installation.bot_access_token)
+
+    blocks = generate_upcoming_events_message(config, config.post_num_events)
+    slack.post_message(blocks=blocks, channel=config.channel)
+    set_task_progress(100)

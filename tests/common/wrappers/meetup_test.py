@@ -5,7 +5,6 @@ import pytest
 from busy_beaver.common.wrappers.meetup import EventDetails, MeetupClient
 from busy_beaver.common.wrappers.requests_client import Response
 from busy_beaver.config import MEETUP_API_KEY
-from busy_beaver.exceptions import NoMeetupEventsFound
 
 MODULE_TO_TEST = "busy_beaver.common.wrappers.meetup"
 
@@ -94,8 +93,9 @@ def test_venue_not_specified_returns_tbd(patched_requests_client):
 def test_no_events_found_raises_exception(patched_requests_client):
     patched_requests_client(events=[])
 
-    with pytest.raises(NoMeetupEventsFound):
-        MeetupClient("API_KEY").get_events("ChiPy", count=10)
+    events = MeetupClient("API_KEY").get_events("ChiPy", count=10)
+
+    assert len(events) == 0
 
 
 @pytest.mark.integration

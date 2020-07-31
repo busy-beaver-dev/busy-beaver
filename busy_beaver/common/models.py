@@ -74,6 +74,7 @@ class Task(BaseModel):
         ChoiceType(TaskState.STATES), default=TaskState.INITIAL_STATE, index=True
     )
     data = db.Column(db.JSON)
+    time_to_post = db.Column(db.String(20), nullable=True)
 
     def get_rq_job(self):
         try:

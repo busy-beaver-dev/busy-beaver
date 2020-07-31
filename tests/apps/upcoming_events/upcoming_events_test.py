@@ -2,9 +2,6 @@ from datetime import datetime, timedelta
 
 import pytest
 
-from busy_beaver.apps.upcoming_events.cli import (
-    post_upcoming_events_message_to_slack_cli,
-)
 from busy_beaver.apps.upcoming_events.upcoming_events import (
     generate_next_event_message,
     generate_upcoming_events_message,
@@ -69,34 +66,3 @@ def patched_slack(patcher):
     return patcher(
         "busy_beaver.apps.upcoming_events.cli", namespace="SlackClient", replacement=obj
     )
-
-
-@pytest.mark.integration
-def test_cli_post_upcoming_events_message_to_slack(
-    mocker, runner, session, factory, patched_slack
-):
-    # Arrange
-    installation = factory.SlackInstallation(workspace_id="T093FC1RC")
-    config = factory.UpcomingEventsConfiguration(slack_installation=installation)
-    group = factory.UpcomingEventsGroup(meetup_urlname="ChiPy", configuration=config)
-    factory.Event.create_batch(size=10, group=group)
-
-    # Act
-    runner.invoke(
-        post_upcoming_events_message_to_slack_cli,
-        [
-            "--workspace",
-            "T093FC1RC",
-            "--channel",
-            "announcements",
-            "--group_name",
-            "ChiPy",
-            "--count",
-            4,
-        ],
-    )
-
-    # Assert
-    post_message_args = patched_slack.mock.call_args_list[-1]
-    args, kwargs = post_message_args
-    assert len(kwargs["blocks"]) == 15  # sections: 3 in the header, each block is 3

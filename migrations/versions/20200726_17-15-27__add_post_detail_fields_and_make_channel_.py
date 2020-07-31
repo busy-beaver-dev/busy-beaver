@@ -35,23 +35,23 @@ def upgrade():
         sa.Column(
             "post_day_of_week",
             sqlalchemy_utils.types.choice.ChoiceType(choices=WEEKDAYS),
-            nullable=False,
+            nullable=True,
         ),
     )
     op.add_column(
         "upcoming_events_configuration",
-        sa.Column("post_num_events", sa.Integer(), nullable=False),
+        sa.Column("post_num_events", sa.Integer(), nullable=True),
     )
     op.add_column(
         "upcoming_events_configuration",
-        sa.Column("post_time", sa.Time(), nullable=False),
+        sa.Column("post_time", sa.Time(), nullable=True),
     )
     op.add_column(
         "upcoming_events_configuration",
         sa.Column(
             "post_timezone",
             sqlalchemy_utils.types.timezone.TimezoneType(backend="pytz"),
-            nullable=False,
+            nullable=True,
         ),
     )
     op.alter_column(

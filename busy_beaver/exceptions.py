@@ -18,10 +18,6 @@ class EventEmitterEventNotRegistered(EventEmitterException):
     pass
 
 
-class NoMeetupEventsFound(BusyBeaverException):
-    pass
-
-
 class NotFound(BusyBeaverException):
     status_code = 404
 
