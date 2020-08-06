@@ -7,11 +7,14 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
+<a href="https://slack.com/oauth/v2/authorize?response_type=code&client_id=795376369155.506256439575&redirect_uri=https%3A%2F%2Fapp.busybeaverbot.com%2Fslack%2Finstallation-callback&scope=app_mentions%3Aread+channels%3Ahistory+channels%3Ajoin+channels%3Aread+chat%3Awrite+commands+emoji%3Aread+groups%3Aread+im%3Ahistory+im%3Aread+im%3Awrite+mpim%3Ahistory+mpim%3Aread+mpim%3Awrite+reactions%3Aread+reactions%3Awrite+team%3Aread+usergroups%3Aread+users.profile%3Aread+users%3Aread+users%3Awrite&state=gRDlCeK5MLXQHsDOXYjaf44tbewwKt">
+<img alt=""Add to Slack"" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
+
 Chicago Python's Community Engagement Slack bot.
 
 ## Introduction
 
-With over four thousand members, the [Chicago Python Users Group](https://www.chipy.org/) (ChiPy) is one of the largest Python communities in the world. Slack has become the primary method of communication amongst our members in-between events. We developed an open-source Slack bot, codename: Busy Beaver, to increase community engagement.
+With over six thousand members, the [Chicago Python Users Group](https://www.chipy.org/) (ChiPy) is one of the largest Python communities in the world. Slack has become the primary method of communication amongst our members in-between events. We developed an open-source Slack bot, codename: Busy Beaver, to increase community engagement.
 
 We released Busy Beaver on Jan 10th, 2019 at the Chicago Python `__main__` Meeting. [Slides](http://bit.ly/busy-beaver) and [video recording](https://www.youtube.com/watch?v=7dBESR_x7Kc) from the release announcement are available online.
 
