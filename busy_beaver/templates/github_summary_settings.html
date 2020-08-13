@@ -2,23 +2,50 @@
 {% from "bootstrap/form.html" import render_field, render_form_row %}
 
 {% block container %}
-<h1>Configure GitHub Summary</h1>
+<h3>Configure GitHub Summary</h3>
 
-<p>Enabled: {{ enabled }} (<a href="{{ url_for('web.toggle_github_summary_config_view') }}">toggle</a>)</p>
+<p>
+  Busy Beaver integrates with GitHub to provide insights into
+  public GitHub activity for users that register with the bot.
+</p>
+
+<p>
+  Users can register using the <code>/busybeaver connect</code>
+  slash command.
+</p>
+
+<p>
+  <code>/invite</code> Busy Beaver and configure when you would like
+  the summary to be posted.
+</p>
+
+<hr>
+
+<p>
+  Currently this feature is {{ 'enabled' if enabled else 'disabled' }}.
+  (<a href="{{ url_for('web.toggle_github_summary_config_view') }}">toggle status</a>)
+</p>
 
 <form method="POST" action="{{ url_for('web.github_summary_settings') }}">
   {{ form.csrf_token }}
 
   {{ render_form_row(
-      [form.channel],
-      col_map={'channel': 'col-md-4', 'summary_post_time': 'col-md-3', 'summary_post_timezone': 'col-md-5'}
+      [form.summary_post_time, form.summary_post_timezone],
+      col_map={'summary_post_time': 'col-md-2', 'summary_post_timezone': 'col-md-6'}
     )
   }}
+
   {{ render_form_row(
-    [form.summary_post_time, form.summary_post_timezone],
-    col_map={'summary_post_time': 'col-md-2', 'summary_post_timezone': 'col-md-6'}
-  )
-}}
+    [form.channel],
+    col_map={'channel': 'col-md-4', 'summary_post_time': 'col-md-3', 'summary_post_timezone': 'col-md-5'}
+    )
+  }}
+  <small>
+    Don't see your channel here? <code>/invite</code> Busy Beaver and refresh this page.
+  </small>
+
+  <br><br>
+
   <input type="submit" value="Submit" class="btn btn-primary">
 </form>
 {% endblock %}
