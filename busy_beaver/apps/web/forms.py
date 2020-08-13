@@ -46,7 +46,7 @@ class UpcomingEventsConfigurationForm(FlaskForm):
 
 
 class AddNewGroupConfigurationForm(FlaskForm):
-    meetup_urlname = StringField("Unique URL identifer", validators=[DataRequired()])
+    meetup_urlname = StringField("URL identifer", validators=[DataRequired()])
 
     def validate_meetup_urlname(form, field):
         group_to_add = field.data
