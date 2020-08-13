@@ -9,13 +9,13 @@
 </p>
 
 <ul>
-  <li><a href="/settings/workspace">Workspace Configuration</a></li>
+  <li><a href="{{ url_for("web.organization_settings") }}">Workspace Configuration</a></li>
   <p>Organization information (name, logo, etc).</p>
 
-  <li><a href="/settings/upcoming-events">Upcoming Events Settings</a></li>
+  <li><a href="{{ url_for("web.upcoming_events_settings") }}">Upcoming Events Settings</a></li>
   <p>Integrate your organization's event calendar into Busy Beaver.</p>
 
-  <li><a href="/settings/github-summary">GitHub Summary Settings</a></li>
+  <li><a href="{{ url_for("web.github_summary_settings") }}">GitHub Summary Settings</a></li>
   <p>
     Tech-focused organizations can use Busy Beaver to share daily summaries
     of public GitHub activity for registered users.

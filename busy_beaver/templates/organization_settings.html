@@ -12,8 +12,10 @@
 
 <!-- TODO add user specified name to workspace -->
 
-<form method="POST" action="{{ url_for('web.logo_settings') }}">
+<form method="POST" action="{{ url_for('web.organization_settings') }}">
   {{ form.csrf_token }}
+  {{ render_form_row([form.organization_name], col_map={'organization_name': 'col-md-6'}) }}
+
   {{ render_form_row([form.workspace_logo_url], col_map={'workspace_logo_url': 'col-md-12'}) }}
 
   <input type="submit" value="Submit" class="btn btn-primary">

@@ -68,5 +68,6 @@ class AddNewGroupConfigurationForm(FlaskForm):
         field.data = group_name
 
 
-class LogoURLForm(FlaskForm):
+class OrganizationSettingsForm(FlaskForm):
+    organization_name = StringField("Organization Name", validators=[DataRequired()])
     workspace_logo_url = StringField("Logo URL", validators=[URL()])

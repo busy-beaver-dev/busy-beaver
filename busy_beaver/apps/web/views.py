@@ -8,7 +8,7 @@ from .blueprint import web_bp
 from .forms import (
     AddNewGroupConfigurationForm,
     GitHubSummaryConfigurationForm,
-    LogoURLForm,
+    OrganizationSettingsForm,
     UpcomingEventsConfigurationForm,
 )
 from busy_beaver.apps.slack_integration.oauth.workflow import (
@@ -251,10 +251,10 @@ def upcoming_events_delete_group(id):
 ##########
 # Logo URL
 ##########
-@web_bp.route("/settings/workspace", methods=("GET", "POST"))
+@web_bp.route("/settings/organization", methods=("GET", "POST"))
 @login_required
-def logo_settings():
-    logger.info("Hit Workspace logo Settings page")
+def organization_settings():
+    logger.info("Hit Organization Settings page")
     installation = current_user.installation
     slack = SlackClient(installation.bot_access_token)
 
@@ -262,9 +262,10 @@ def logo_settings():
     if not is_admin:
         raise NotAuthorized("Need to be an admin to access")
 
-    form = LogoURLForm()
+    form = OrganizationSettingsForm()
     if form.validate_on_submit():
-        logger.info("Attempt to save workspace logo")
+        logger.info("Attempt to save organization info logo")
+        installation.organization_name = form.data["organization_name"]
         installation.workspace_logo_url = form.data["workspace_logo_url"]
         db.session.add(installation)
         db.session.commit()
@@ -273,8 +274,9 @@ def logo_settings():
 
     # load default
     try:
+        form.organization_name.data = installation.organization_name
         form.workspace_logo_url.data = installation.workspace_logo_url
     except AttributeError:
         pass
 
-    return render_template("workspace_settings.html", form=form)
+    return render_template("organization_settings.html", form=form)
