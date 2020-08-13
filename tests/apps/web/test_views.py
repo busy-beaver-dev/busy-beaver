@@ -207,12 +207,16 @@ class TestUpdateWorkspaceLogoview:
 
         # Act
         rv = client.post(
-            "/settings/workspace",
-            data={"workspace_logo_url": "http://www.test.com"},
+            "/settings/organization",
+            data={
+                "organization_name": "Chicago Python",
+                "workspace_logo_url": "http://www.test.com",
+            },
             follow_redirects=True,
         )
 
         # Assert
         assert rv.status_code == 200
         installation = SlackInstallation.query.first()
+        assert installation.organization_name == "Chicago Python"
         assert installation.workspace_logo_url == "http://www.test.com"
