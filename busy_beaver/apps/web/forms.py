@@ -41,7 +41,7 @@ class UpcomingEventsConfigurationForm(FlaskForm):
     post_time = TimeField("Time to post", validators=[DataRequired()])
     post_timezone = SelectField(label="Timezone", choices=TZ_CHOICES, default="UTC")
     post_num_events = IntegerField(
-        label="Number of messages to post", validators=[NumberRange(min=1)]
+        label="Number of events to show", validators=[NumberRange(min=1)]
     )
 
 
