@@ -7,9 +7,6 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-red.svg)](https://opensource.org/licenses/MIT)
 [![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
-<a href="https://slack.com/oauth/v2/authorize?response_type=code&client_id=795376369155.506256439575&redirect_uri=https%3A%2F%2Fapp.busybeaverbot.com%2Fslack%2Finstallation-callback&scope=app_mentions%3Aread+channels%3Ahistory+channels%3Ajoin+channels%3Aread+chat%3Awrite+commands+emoji%3Aread+groups%3Aread+im%3Ahistory+im%3Aread+im%3Awrite+mpim%3Ahistory+mpim%3Aread+mpim%3Awrite+reactions%3Aread+reactions%3Awrite+team%3Aread+usergroups%3Aread+users.profile%3Aread+users%3Aread+users%3Awrite&state=gRDlCeK5MLXQHsDOXYjaf44tbewwKt">
-<img alt=""Add to Slack"" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
-
 Chicago Python's Community Engagement Slack bot.
 
 ## Introduction
@@ -41,46 +38,15 @@ Users sign up for an account by `DM`ing the bot with the phrase: `connect`. The 
 
 Busy Beaver retweets posts made to the [@ChicagoPython Twitter account](https://twitter.com/ChicagoPython) in the `#at-chicagopython` channel on the [ChiPy Slack](https://chipy.slack.com/).
 
-## Roadmap
+### Roadmap
 
 We are currently working on additional features to improve ChiPy community engagement. Please join the conversation in `#busy-beaver-meta` on the [ChiPy Slack](https://chipy.slack.com/).
+
+## Installing
+
+<a href="https://slack.com/oauth/v2/authorize?response_type=code&client_id=795376369155.506256439575&redirect_uri=https%3A%2F%2Fapp.busybeaverbot.com%2Fslack%2Finstallation-callback&scope=app_mentions%3Aread+channels%3Ahistory+channels%3Ajoin+channels%3Aread+chat%3Awrite+commands+emoji%3Aread+groups%3Aread+im%3Ahistory+im%3Aread+im%3Awrite+mpim%3Ahistory+mpim%3Aread+mpim%3Awrite+reactions%3Aread+reactions%3Awrite+team%3Aread+usergroups%3Aread+users.profile%3Aread+users%3Aread+users%3Awrite&state=gRDlCeK5MLXQHsDOXYjaf44tbewwKt">
+<img alt=""Add to Slack"" height="40" width="139" src="https://platform.slack-edge.com/img/add_to_slack.png" srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" /></a>
 
 ## Contributing
 
 Busy Beaver is always looking for new contributors! Previous open source experience is not required! Please see [CONTRIBUTING.md](CONTRIBUTING.md).
-
-## Development Notes
-
-Busy Beaver is an open source project where all artificats (code, Docker image, etc) are online. We use the [Twelve-Factor Application Methodology](https://12factor.net) for building services to design the CICD process and to keep information secure.
-
-### Web Application Stack
-
-- [PostgreSQL](https://www.postgresql.org/)
-- [SQLAlchemy](https://www.sqlalchemy.org/)
-- [Flask](http://flask.pocoo.org/)
-- [flask-sqlalchemy](http://flask-sqlalchemy.pocoo.org/)
-- [flask-migrate](https://flask-migrate.readthedocs.io/en/latest/)
-- [requests](https://github.com/requests/requests)
-
-### Tests
-
-- [pytest](https://github.com/pytest-dev/pytest)
-- [vcr.py](https://github.com/kevin1024/vcrpy)
-- [pytest-vcr](https://github.com/ktosiek/pytest-vcr)
-- [pytest-freezegun](https://github.com/ktosiek/pytest-freezegun)
-
-`vcr.py` records cassettes of requests and responses for new tests, and replays them for previously written tests. Make sure to [filter credentials](https://vcrpy.readthedocs.io/en/latest/advanced.html#filter-information-from-http-headers)
-
-### Deployment
-
-- [Helm](https://helm.sh/)
-- [Kubernetes](https://kubernetes.io/)
-- [Docker](https://hub.docker.com/search/?type=edition&offering=community)
-- [DigitalOcean](https://www.digitalocean.com)
-
-### Services
-
-We are grateful to the following organizations for providing free services to open source projects:
-
-- [GitHub](https://github.com)
-- [DockerHub](https://hub.docker.com)

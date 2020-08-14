@@ -2,10 +2,20 @@
 {% from "bootstrap/form.html" import render_form_row %}
 
 {% block container %}
-<h1>Configure Workspace</h1>
+<h3>Organization Settings</h3>
 
-<form method="POST" action="{{ url_for('web.logo_settings') }}">
+<p>
+  Customize Busy Beaver for your organization.
+</p>
+
+<hr>
+
+<!-- TODO add user specified name to workspace -->
+
+<form method="POST" action="{{ url_for('web.organization_settings') }}">
   {{ form.csrf_token }}
+  {{ render_form_row([form.organization_name], col_map={'organization_name': 'col-md-6'}) }}
+
   {{ render_form_row([form.workspace_logo_url], col_map={'workspace_logo_url': 'col-md-12'}) }}
 
   <input type="submit" value="Submit" class="btn btn-primary">

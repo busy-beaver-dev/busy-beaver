@@ -2,9 +2,11 @@
 {% from "bootstrap/form.html" import render_field, render_form_row %}
 
 {% block container %}
-<h1>Upcoming Events -- Add / Remove Group</h1>
+<h3>Upcoming Events -- Add / Remove Group</h3>
 
-<h4>My Groups</h4>
+<hr>
+
+<h6>My Groups</h6>
 
 <ul>
   {% for group in groups %}
@@ -17,13 +19,12 @@
 <hr>
 
 <p>
-  In order to add a new group, you will need your Meetup
-  group's unique URL identifer.
+  To add a new group, you will need your Meetup group's unique URL identifer.
 </p>
 
 <p>
   If your Meetup group URL is https://www.meetup.com/_ChiPy_/,
-  you will need to enter <strong>_ChiPy_</strong>.
+  enter <code>_ChiPy_</code>.
 </p>
 
 <form method="POST" action="{{ url_for('web.upcoming_events_add_new_group') }}">

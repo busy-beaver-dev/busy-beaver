@@ -41,12 +41,12 @@ class UpcomingEventsConfigurationForm(FlaskForm):
     post_time = TimeField("Time to post", validators=[DataRequired()])
     post_timezone = SelectField(label="Timezone", choices=TZ_CHOICES, default="UTC")
     post_num_events = IntegerField(
-        label="Number of messages to post", validators=[NumberRange(min=1)]
+        label="Number of events to show", validators=[NumberRange(min=1)]
     )
 
 
 class AddNewGroupConfigurationForm(FlaskForm):
-    meetup_urlname = StringField("Unique URL identifer", validators=[DataRequired()])
+    meetup_urlname = StringField("URL identifer", validators=[DataRequired()])
 
     def validate_meetup_urlname(form, field):
         group_to_add = field.data
@@ -68,5 +68,6 @@ class AddNewGroupConfigurationForm(FlaskForm):
         field.data = group_name
 
 
-class LogoURLForm(FlaskForm):
+class OrganizationSettingsForm(FlaskForm):
+    organization_name = StringField("Organization Name", validators=[DataRequired()])
     workspace_logo_url = StringField("Logo URL", validators=[URL()])

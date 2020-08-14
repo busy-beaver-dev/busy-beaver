@@ -7,7 +7,9 @@ Busy Beaver welcomes any, and all, contributions. Every little bit helps!
 <!-- TOC -->
 
 - [Architecture Overview](#architecture-overview)
-  - [GitHub Activity Workflow](#github-activity-workflow)
+  - [Application Stack](#application-stack)
+  - [Deployment](#deployment)
+  - [Services](#services)
 - [Development Environment](#development-environment)
   - [Slack Integration](#slack-integration)
   - [Setting up Development Environment](#setting-up-development-environment)
@@ -36,27 +38,39 @@ Busy Beaver is a Python application with a Slack frontend. The application consi
 
 While the application is currently a monolith, it is built with Service-Oriented Architecture (SOA) in mind. API endpoints are implemented using Flask blueprints and services are integrated using the Adapter / Facade pattern.
 
-Busy Beaver tasks are kicked off through `curl` requests scheduled via CRON.
+Busy Beaver tasks are kicked off via CRON jobs that schedule tasks to be run on async workers.
 
-### GitHub Activity Workflow
+### Application Stack
 
-The following diagram shows a high-level workflow of the GitHub activity features:
-<img src="docs/diagrams/architecture.png" width=800 />
+- [PostgreSQL](https://www.postgresql.org/)
+- [SQLAlchemy](https://www.sqlalchemy.org/)
+- [Flask](http://flask.pocoo.org/)
+- [flask-sqlalchemy](http://flask-sqlalchemy.pocoo.org/)
+- [flask-migrate](https://flask-migrate.readthedocs.io/en/latest/)
+- [requests](https://github.com/requests/requests)
 
-> When a Slack user chats "connect" to the bot user via direct message, the server receives the event details and generates a unique `state` identifier. The server logs the Slack user and identifier to our server database. The bot user chats a GitHub URL containing our GitHub app's `client_id` and the `state` identifier. The URL leads the user to a validation page in which they log in to GitHub and approve access to basic public information. Upon approval, the GitHub user's details and `state` identifier are sent to another server endpoint. The server updates the Slack user record with GitHub user details by using the `state` identifier as a common key.
+#### Tests
 
-#### GitHub Events
+- [pytest](https://github.com/pytest-dev/pytest)
+- [vcr.py](https://github.com/kevin1024/vcrpy)
+- [pytest-vcr](https://github.com/ktosiek/pytest-vcr)
+- [pytest-freezegun](https://github.com/ktosiek/pytest-freezegun)
 
-Busy Beaver currently supports the following GitHub public events:
+`vcr.py` records cassettes of requests and responses for new tests, and replays them for previously written tests. Make sure to [filter credentials](https://vcrpy.readthedocs.io/en/latest/advanced.html#filter-information-from-http-headers)
 
-- [CreateEvent](https://developer.github.com/v3/activity/events/types/#createevent) `ref_type` repository
-- [ForkEvent](https://developer.github.com/v3/activity/events/types/#forkevent)
-- [IssuesEvent](https://developer.github.com/v3/activity/events/types/#issuesevent) `action` opened
-- [PublicEvent](https://developer.github.com/v3/activity/events/types/#publicevent)
-- [PullRequestEvent](https://developer.github.com/v3/activity/events/types/#pullrequestevent) `action` opened
-- [PushEvent](https://developer.github.com/v3/activity/events/types/#pushevent)
-- [ReleaseEvent](https://developer.github.com/v3/activity/events/types/#releaseevent)
-- [WatchEvent](https://developer.github.com/v3/activity/events/types/#watchevent) `action` started
+### Deployment
+
+- [Helm](https://helm.sh/)
+- [Kubernetes](https://kubernetes.io/)
+- [Docker](https://hub.docker.com/search/?type=edition&offering=community)
+- [DigitalOcean](https://www.digitalocean.com)
+
+### Services
+
+We are grateful to the following organizations for providing free services to open source projects:
+
+- [GitHub](https://github.com)
+- [DockerHub](https://hub.docker.com)
 
 ## Development Environment
 
