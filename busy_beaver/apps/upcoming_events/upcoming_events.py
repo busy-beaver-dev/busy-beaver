@@ -13,9 +13,9 @@ def generate_upcoming_events_message(config: UpcomingEventsConfiguration):
 
 
 def generate_next_event_message(config: UpcomingEventsConfiguration):
-    event = _fetch_future_events_from_database(config, count=1)
-    if event:
-        return _next_event_attachment(event)
+    event_list = _fetch_future_events_from_database(config, count=1)
+    if event_list:
+        return _next_event_attachment(event_list[0])
     else:
         return {
             "mrkdwn_in": ["text", "pretext"],
