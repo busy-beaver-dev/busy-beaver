@@ -18,6 +18,7 @@ def UpcomingEventsConfiguration(session):
         enabled = True
         slack_installation = factory.SubFactory(SlackInstallation(session))
         channel = "announcements"
+        post_cron_enabled = True
         post_day_of_week = "Monday"
         post_time = time(9, 00)
         post_timezone = "America/Chicago"

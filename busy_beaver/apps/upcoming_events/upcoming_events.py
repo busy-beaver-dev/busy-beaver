@@ -6,14 +6,23 @@ from busy_beaver.models import Event, UpcomingEventsConfiguration
 
 
 def generate_upcoming_events_message(config: UpcomingEventsConfiguration):
+    # if 0 upcoming events
     events = _fetch_future_events_from_database(config, count=config.post_num_events)
     image_url = config.slack_installation.workspace_logo_url
     return UpcomingEventList(events, image_url).to_dict()
 
 
 def generate_next_event_message(config: UpcomingEventsConfiguration):
-    event = _fetch_future_events_from_database(config, count=1)[0]
-    return _next_event_attachment(event)
+    event_list = _fetch_future_events_from_database(config, count=1)
+    if event_list:
+        return _next_event_attachment(event_list[0])
+    else:
+        return {
+            "mrkdwn_in": ["text", "pretext"],
+            "pretext": "*Next Event:*",
+            "text": "No upcoming events scheduled",
+            "color": "#008952",
+        }
 
 
 def _fetch_future_events_from_database(config, count):
@@ -30,12 +39,16 @@ def _fetch_future_events_from_database(config, count):
 
 def _next_event_attachment(event: EventDetails) -> dict:
     """Make a Slack attachment for the event."""
+    text = (
+        f"*<!date^{event.start_epoch}^{{time}} "
+        f"{{date_long}}|no date>* at {event.venue}"
+    )
     return {
         "mrkdwn_in": ["text", "pretext"],
         "pretext": "*Next Event:*",
         "title": event.name,
         "title_link": event.url,
         "fallback": f"{event.name}: {event.url}",
-        "text": f"*<!date^{event.start_epoch}^{{time}} {{date_long}}|no date>* at {event.venue}",
+        "text": text,
         "color": "#008952",
     }

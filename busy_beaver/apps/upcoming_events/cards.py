@@ -6,12 +6,14 @@ from busy_beaver.toolbox.slack_block_kit import Context, Divider, Image, Section
 
 class UpcomingEventList:
     def __init__(self, events: List[EventDetails], image_url: str):
-        # TODO when we go multitenant, the image box will need to change
-        output = [
-            Image(image_url=image_url, alt_text="Logo"),
-            Section("*Upcoming Events*"),
-            Divider(),
-        ]
+        output = []
+        if image_url:
+            output.append(Image(image_url=image_url, alt_text="Logo"))
+        output.append(Section("*Upcoming Events*"))
+        output.append(Divider())
+
+        if len(events) == 0:
+            output.append(Section("No events scheduled"))
 
         for event_details in events:
             output.extend(UpcomingEvent(event_details))

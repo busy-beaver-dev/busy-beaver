@@ -40,6 +40,29 @@ class UpcomingEventsEnabledStateMachine(StateMachine):
             self.enable_feature()
 
 
+class PostCRONEnabledStateMachine(StateMachine):
+    initial_state = False
+
+    def __init__(self, config):
+        self.config = config
+        self.state = config.post_cron_enabled
+        super().__init__()
+
+    @transition(source=False, target=True)
+    def enable(self):
+        pass
+
+    @transition(source=True, target=False)
+    def disable(self):
+        pass
+
+    def toggle(self):
+        if self.state:
+            self.disable()
+        else:
+            self.enable()
+
+
 class UpcomingEventsConfiguration(BaseModel):
     __tablename__ = "upcoming_events_configuration"
 
@@ -54,7 +77,10 @@ class UpcomingEventsConfiguration(BaseModel):
         db.ForeignKey("slack_installation.id", name="fk_installation_id"),
         nullable=False,
     )
+
+    # Scheduled post fields
     channel = db.Column(db.String(20), nullable=False)
+    post_cron_enabled = db.Column(db.Boolean, default=False, nullable=False)
     post_day_of_week = db.Column(ChoiceType(WEEKDAYS), nullable=True)
     post_time = db.Column(db.Time, nullable=True)
     post_timezone = db.Column(TimezoneType(backend="pytz"), nullable=True)
@@ -73,6 +99,14 @@ class UpcomingEventsConfiguration(BaseModel):
         except ConditionNotMet as e:
             raise StateMachineError(f"Condition failed: {e.condition.__name__}")
         self.enabled = machine.state
+
+    def toggle_post_cron_enabled_status(self):
+        machine = PostCRONEnabledStateMachine(self)
+        try:
+            machine.toggle()
+        except ConditionNotMet as e:
+            raise StateMachineError(f"Condition failed: {e.condition.__name__}")
+        self.post_cron_enabled = machine.state
 
 
 class UpcomingEventsGroup(BaseModel):
