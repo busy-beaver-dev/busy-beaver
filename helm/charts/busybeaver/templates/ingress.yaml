@@ -9,6 +9,10 @@ spec:
   tls:
     - hosts:
       - {{ .Values.ingress.host }}
+      {{ if eq .Values.environment "production"}}
+      - busybeaverbot.com
+      - www.busybeaverbot.com
+      {{ end }}
       secretName: {{ include "busybeaver.fullname" . }}-tls
   rules:
   - host: {{ .Values.ingress.host }}
@@ -17,3 +21,17 @@ spec:
       - backend:
           serviceName: {{ include "busybeaver.fullname" . }}-web
           servicePort: 80
+{{ if eq .Values.environment "production"}}
+  - host: busybeaverbot.com
+    http:
+      paths:
+      - backend:
+          serviceName: {{ include "busybeaver.fullname" . }}-web
+          servicePort: 80
+  - host: www.busybeaverbot.com
+    http:
+      paths:
+      - backend:
+          serviceName: {{ include "busybeaver.fullname" . }}-web
+          servicePort: 80
+{{ end }}
