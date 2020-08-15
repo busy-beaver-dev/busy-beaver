@@ -181,6 +181,7 @@ def upcoming_events_settings():
     except AttributeError:
         enabled = False
         groups = []
+        post_cron_enabled = False
 
     return render_template(
         "upcoming_events_settings.html",

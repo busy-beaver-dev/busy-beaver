@@ -21,6 +21,11 @@ def SlackInstallation(session):
         workspace_id = "SC234sdfsde"
         workspace_name = "ChiPy"
 
+        organization_name = "Chicago Python"
+        workspace_logo_url = (
+            "https://www.chipy.org/static/img/chipmunk.1927e65c68a7.png"
+        )
+
     return _SlackInstallationFactory
 
 
