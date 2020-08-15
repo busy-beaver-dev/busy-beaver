@@ -159,8 +159,9 @@ class TestUpcomingEventsViews:
         assert len(groups) == 1
 
     @pytest.mark.end2end
+    @pytest.mark.parametrize("start_state,end_state", [(True, False), (False, True)])
     def test_upcoming_events_toggle_enabled_status(
-        self, login_client, factory, patch_slack
+        self, login_client, factory, patch_slack, start_state, end_state
     ):
         # Arrange
         config = factory.UpcomingEventsConfiguration(enabled=True)
@@ -195,6 +196,28 @@ class TestUpcomingEventsViews:
         assert rv.status_code == 200
         groups = UpcomingEventsGroup.query.all()
         assert len(groups) == 0
+
+    @pytest.mark.end2end
+    @pytest.mark.parametrize("start_state,end_state", [(True, False), (False, True)])
+    def test_toggle_post_cron_view(
+        self, login_client, factory, patch_slack, start_state, end_state
+    ):
+        # Arrange
+        config = factory.UpcomingEventsConfiguration(post_cron_enabled=start_state)
+        slack_user = factory.SlackUser(installation=config.slack_installation)
+        client = login_client(user=slack_user)
+        patch_slack(is_admin=True)
+
+        # Act
+        rv = client.get(
+            "/settings/upcoming-events/post-cron/toggle", follow_redirects=True
+        )
+
+        # Assert
+        assert rv.status_code == 200
+
+        config = UpcomingEventsConfiguration.query.get(config.id)
+        assert config.post_cron_enabled is end_state
 
 
 class TestUpdateWorkspaceLogoview:

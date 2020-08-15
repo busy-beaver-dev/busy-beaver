@@ -169,12 +169,17 @@ def upcoming_events_settings():
         form.post_num_events.data = config.post_num_events
         groups = [group.meetup_urlname for group in config.groups]
         enabled = config.enabled
+        post_cron_enabled = config.post_cron_enabled
     except AttributeError:
         enabled = False
         groups = []
 
     return render_template(
-        "upcoming_events_settings.html", form=form, enabled=enabled, groups=groups
+        "upcoming_events_settings.html",
+        form=form,
+        enabled=enabled,
+        post_cron_enabled=post_cron_enabled,
+        groups=groups,
     )
 
 
@@ -193,6 +198,26 @@ def toggle_upcoming_events_config_view():
     if not config:
         return jsonify({"error": "Need to enter post time and timezone"})
     config.toggle_configuration_enabled_status()
+    db.session.add(config)
+    db.session.commit()
+    return redirect(url_for("web.upcoming_events_settings"))
+
+
+@web_bp.route("/settings/upcoming-events/post-cron/toggle")
+@login_required
+def toggle_post_cron_view():
+    logger.info("Toggling post CRON task enabled state")
+    installation = current_user.installation
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    config = installation.upcoming_events_config
+    if not config:
+        return jsonify({"error": "Need to enter post time and timezone"})
+    config.toggle_post_cron_enabled_status()
     db.session.add(config)
     db.session.commit()
     return redirect(url_for("web.upcoming_events_settings"))

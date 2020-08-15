@@ -16,7 +16,7 @@
 <hr>
 
 <p>
-  Currently this feature is {{ 'enabled' if enabled else 'disabled' }}.
+  Upcoming events feature is {{ 'enabled' if enabled else 'disabled' }}.
   (<a href="{{ url_for('web.toggle_upcoming_events_config_view') }}">toggle status</a>)
 </p>
 
@@ -42,6 +42,11 @@
     Configure Busy Beaver to post weekly messages in a designated channel
     to let your users know when events are happening!
   </p>
+
+  Periodic task is {{ 'scheduled' if post_cron_enabled else 'not scheduled' }}.
+  (<a href="{{ url_for('web.toggle_post_cron_view') }}">toggle</a>)
+
+  <br><br>
 
   {{ render_form_row(
       [form.post_day_of_week, form.post_time, form.post_timezone],
