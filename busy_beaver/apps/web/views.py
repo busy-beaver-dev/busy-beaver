@@ -18,6 +18,7 @@ from busy_beaver.apps.upcoming_events.workflow import (
     add_new_group_to_configuration,
     create_or_update_upcoming_events_configuration,
 )
+from busy_beaver.clients import slack_signin_oauth
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import NotAuthorized
 from busy_beaver.extensions import db
@@ -44,8 +45,15 @@ web_bp.add_url_rule(
     "/", view_func=RenderTemplateView.as_view("home", template_name="index.html")
 )
 web_bp.add_url_rule(
-    "/login", view_func=RenderTemplateView.as_view("login", template_name="login.html")
+    "/privacy",
+    view_func=RenderTemplateView.as_view("privacy", template_name="privacy.html"),
 )
+
+
+@web_bp.route("/login")
+def login():
+    auth_url = slack_signin_oauth.generate_authentication_tuple().url
+    return render_template("login.html", auth_url=auth_url)
 
 
 class RenderTemplateLoginRequiredView(RenderTemplateView):
