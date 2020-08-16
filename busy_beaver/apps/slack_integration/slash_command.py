@@ -122,6 +122,12 @@ def link_github(**data):
     slack_user = data["user"]
     installation = data["installation"]
 
+    github_summary_config = installation.github_summary_config
+    if not github_summary_config:
+        return make_slack_response(text="Feature not configured.")
+    if not github_summary_config.enabled:
+        return make_slack_response(text="This feature has been disabled.")
+
     text, url = connect_github_to_slack(installation, slack_user)
     attachment = create_url_attachment(url, text="Associate GitHub Profile")
     return make_slack_response(text=text, attachments=attachment)
@@ -133,6 +139,12 @@ def relink_github(**data):
     slack_user = data["user"]
     installation = data["installation"]
 
+    github_summary_config = installation.github_summary_config
+    if not github_summary_config:
+        return make_slack_response(text="Feature not configured.")
+    if not github_summary_config.enabled:
+        return make_slack_response(text="This feature has been disabled.")
+
     text, url = relink_github_to_slack(installation, slack_user)
     attachment = create_url_attachment(url, text="Associate GitHub Profile")
     return make_slack_response(text=text, attachments=attachment)
@@ -143,6 +155,12 @@ def disconnect_github(**data):
     logger.info("Disconnecting GitHub account.")
     slack_user = data["user"]
     installation = data["installation"]
+
+    github_summary_config = installation.github_summary_config
+    if not github_summary_config:
+        return make_slack_response(text="Feature not configured.")
+    if not github_summary_config.enabled:
+        return make_slack_response(text="This feature has been disabled.")
 
     text, _ = disconnect_github_from_slack(installation, slack_user)
     return make_slack_response(text=text)
