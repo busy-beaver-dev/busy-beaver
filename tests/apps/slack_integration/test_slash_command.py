@@ -89,10 +89,10 @@ def test_slack_command_creates_user_record_in_database(
 def test_command_help(session, factory, generate_slash_command_request):
     github_summary_config = factory.GitHubSummaryConfiguration()
     install = github_summary_config.slack_installation
-    new_user = "new_user"
-    slack_user = factory.SlackUser(slack_id=new_user, installation=install)
+    user = "user"
+    slack_user = factory.SlackUser(slack_id=user, installation=install)
     data = generate_slash_command_request(
-        "help", user_id=new_user, team_id=install.workspace_id
+        "help", user_id=user, team_id=install.workspace_id
     )
     data["user"] = slack_user
     data["installation"] = install
