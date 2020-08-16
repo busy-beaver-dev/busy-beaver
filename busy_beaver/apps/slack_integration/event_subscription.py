@@ -1,7 +1,7 @@
 import logging
 
 from .blocks import AppHome
-from .slash_command import HELP_TEXT
+from .interactors import generate_help_text
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation, SlackUser
@@ -64,7 +64,8 @@ def message_handler(data):
 
         logger.info("[Busy Beaver] Slack -- Unknown command")
         slack = SlackClient(installation.bot_access_token)
-        slack.post_message(HELP_TEXT, channel=data["event"]["channel"])
+        help_text = generate_help_text(installation)
+        slack.post_message(help_text, channel=data["event"]["channel"])
 
     return None
 
