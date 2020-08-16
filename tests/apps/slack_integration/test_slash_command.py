@@ -14,7 +14,7 @@ from busy_beaver.models import GitHubSummaryUser, SlackUser
 pytest_plugins = ("tests._utilities.fixtures.slack",)
 
 
-##################
+###################
 # Integration Tests
 ###################
 @pytest.mark.integration
