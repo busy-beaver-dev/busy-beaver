@@ -1,7 +1,8 @@
 import logging
 from typing import List, NamedTuple
 
-from .toolbox import make_slack_response
+from .interactors import generate_help_text, make_slack_response
+from .models import SlackInstallation, SlackUser
 from busy_beaver.apps.github_integration.oauth.workflow import (
     connect_github_to_slack,
     disconnect_github_from_slack,
@@ -15,21 +16,10 @@ from busy_beaver.apps.upcoming_events.upcoming_events import (
     generate_upcoming_events_message,
 )
 from busy_beaver.extensions import db
-from busy_beaver.models import SlackInstallation, SlackUser
 from busy_beaver.toolbox import EventEmitter
 
 logger = logging.getLogger(__name__)
 slash_command_dispatcher = EventEmitter()
-
-# TODO make this look nicer
-HELP_TEXT = (
-    "`/busybeaver next`\t\t Retrieve next event\n"
-    "`/busybeaver events`\t\t Retrieve list of upcoming event\n"
-    "`/busybeaver connect`\t\t Connect GitHub Account\n"
-    "`/busybeaver reconnect`\t\t Connect to difference GitHub Account\n"
-    "`/busybeaver disconnect`\t\t Disconenct GitHub Account\n"
-    "`/busybeaver help`\t\t Display help text"
-)
 
 
 class Command(NamedTuple):
@@ -112,7 +102,9 @@ def upcoming_events(**data):
 ########################
 @slash_command_dispatcher.on("help")
 def display_help_text(**data):
-    return make_slack_response(text=HELP_TEXT)
+    installation = data["installation"]
+    help_text = generate_help_text(installation)
+    return make_slack_response(text=help_text)
 
 
 @slash_command_dispatcher.on("not_found")
