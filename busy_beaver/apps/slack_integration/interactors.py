@@ -37,7 +37,7 @@ def generate_help_text(installation: SlackInstallation):
         if github_summary_config.enabled:
             help_text += (
                 "`/busybeaver connect`: Connect GitHub Account\n"
-                "`/busybeaver reconnect`: Connect to difference GitHub Account\n"
+                "`/busybeaver reconnect`: Connect to different GitHub Account\n"
                 "`/busybeaver disconnect`: Disconenct GitHub Account\n"
             )
 
