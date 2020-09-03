@@ -50,11 +50,12 @@ LOGGING_CONFIG = {
         },
     },
     "handlers": {
-        "console": {"class": "logging.StreamHandler", "formatter": "standard"}
+        "console": {"class": "logging.StreamHandler", "formatter": "standard"},
+        "console_json": {"class": "logging.StreamHandler", "formatter": "json"},
     },
     "loggers": {
         "busy_beaver": {
-            "handlers": ["console"] if IN_PRODUCTION else ["console"],
+            "handlers": ["console_json"] if IN_PRODUCTION else ["console"],
             "level": "INFO" if IN_PRODUCTION else "DEBUG",
         }
     },
