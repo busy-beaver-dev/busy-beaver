@@ -4,14 +4,11 @@ help: ## This help
 	@echo "Makefile for managing application:\n"
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-pull-upstream: ## pull from upstream master
-	git pull upstream master
-
+###################
+# Local Development
+###################
 build: ## rebuild containers
 	docker-compose build
-
-changelog:  ## create changelog since release v="version"
-	python scripts/generate_changelog.py --version $(v)
 
 up: ## start local dev environment; run migrations; populate database
 	docker-compose up -d
@@ -30,6 +27,12 @@ attach: ## attach to webserver process for debugging purposes
 attach-worker: ## attach to worker process for debugging purposes
 	docker attach `docker-compose ps -q worker`
 
+requirements: ## generate requirements.txt using piptools
+	pip-compile --output-file=requirements.txt requirements.in
+
+###################
+# Database Commands
+###################
 migration: ## create migration m="message"
 	docker-compose exec app flask db migrate -m "$(m)"
 
@@ -48,9 +51,9 @@ dropdb:  ## drop all tables in development database
 populate-db:  ## populate database
 	docker-compose exec app python scripts/dev/populate_database.py
 
-requirements: ## generate requirements.txt using piptools
-	pip-compile --output-file=requirements.txt requirements.in
-
+#########
+# Testing
+#########
 test: ## run tests
 	docker-compose exec app pytest $(args)
 
@@ -75,9 +78,9 @@ lint: ## run flake8 linter
 logs: ## attach to logs
 	docker-compose logs
 
-debug: ## attach to app container for debugging
-	docker attach `docker-compose ps -q app`
-
+#######
+# Shell
+#######
 shell: ## log into into app container -- bash-shell
 	docker-compose exec app bash
 
@@ -90,5 +93,17 @@ devshell:  ## open ipython shell with application context
 flaskcli:  ## use flask cli to run commands args='args'te
 	docker-compose exec app flask $(args)
 
+shell-redis:  ## log into redis container -- rediscli
+	docker-compose exec redis redis-cli
+
+###############
+# Miscellaneous
+###############
+changelog:  ## create changelog since release v="version"
+	python scripts/generate_changelog.py --version $(v)
+
 ngrok: ## start ngrok to forward port
 	ngrok http 5000
+
+pull-upstream: ## pull from upstream master
+	git pull upstream master
