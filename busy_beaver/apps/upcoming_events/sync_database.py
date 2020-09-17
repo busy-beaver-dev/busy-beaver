@@ -9,7 +9,6 @@ against the set of future events in the database:
 
 from datetime import datetime
 import logging
-import time
 from typing import List, NamedTuple
 
 from busy_beaver.clients import meetup
@@ -28,7 +27,7 @@ def sync_database_with_fetched_events(group: UpcomingEventsGroup):
         if event.start_time >= now
     ]
 
-    current_epoch_time = int(time.time())
+    current_epoch_time = int(now.timestamp())
     database_events = (
         Event.query.filter_by(group=group)
         .filter(Event.start_epoch > current_epoch_time)
