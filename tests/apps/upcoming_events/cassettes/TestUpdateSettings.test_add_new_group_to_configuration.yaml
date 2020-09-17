@@ -1,0 +1,127 @@
+interactions:
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - BusyBeaver
+      authorization:
+      - DUMMY
+    method: GET
+    uri: https://api.meetup.com/_ChiPy_/events?page=5
+  response:
+    body:
+      string: !!binary |
+        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
+    headers:
+      Accept-Ranges:
+      - bytes
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '3063'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Thu, 17 Sep 2020 21:51:11 GMT
+      ETag:
+      - '"ee7f668605c896eba91375d909ece5b8-gzip"'
+      Link:
+      - <https://api.meetup.com/_ChiPy_/events?page=5&scroll=since%3A2020-11-05T17%3A00%3A00.000-06%3A00>;
+        rel="next"
+      Server:
+      - Apache/2.4.39 (Unix) OpenSSL/1.1.1c
+      Vary:
+      - Accept-Encoding,User-Agent,Accept-Language
+      Via:
+      - 1.1 varnish
+      X-Accepted-OAuth-Scopes:
+      - ageless, basic
+      X-Cache:
+      - MISS
+      X-Cache-Hits:
+      - '0'
+      X-Meetup-Request-ID:
+      - 5213d8a3-f9f7-449a-a8e6-8ad32079ebb1
+      X-Meetup-server:
+      - ip-10-192-2-80
+      X-OAuth-Scopes:
+      - basic
+      X-RateLimit-Limit:
+      - '30'
+      X-RateLimit-Remaining:
+      - '29'
+      X-RateLimit-Reset:
+      - '10'
+      X-Served-By:
+      - cache-pwk4979-PWK
+      X-Timer:
+      - S1600379471.856769,VS0,VE151
+      X-Total-Count:
+      - '15'
+    status:
+      code: 200
+      message: OK
+version: 1
