@@ -6,6 +6,8 @@ metadata:
   labels:
     type: worker-deploy
     {{- include "busybeaver.labels" . | nindent 4 }}
+  annotations:
+    timestamp: "{{ date "20200907150405" .Release.Time }}"
 spec:
   replicas: {{ .Values.app.workerReplicaCount }}
   selector:

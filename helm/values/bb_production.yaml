@@ -1,7 +1,9 @@
 # Default values for busybeaver.
 
 environment: production
-secretName: busybeaver-production
+namespace: busybeaver-production
+serviceAccount: busybeaver-production-sa
+secretName: bb-prd-terraform-secrets
 workspaceId: T093FC1RC
 
 app:
@@ -14,4 +16,4 @@ ingress:
 
 queue:
   name: bb-queue-production
-  dns: bb-queue-production-redis-master.default.svc.cluster.local
+  dns: bb-queue-production-redis-master.busybeaver-production.svc.cluster.local
