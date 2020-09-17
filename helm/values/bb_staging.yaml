@@ -1,7 +1,9 @@
 # Default values for busybeaver.
 
 environment: staging
-secretName: busybeaver-staging
+namespace: busybeaver-staging
+serviceAccount: busybeaver-staging-sa
+secretName: bb-stg-terraform-secrets
 workspaceId: TKT910ZU0
 
 app:
@@ -14,4 +16,4 @@ ingress:
 
 queue:
   name: bb-queue-staging
-  dns: bb-queue-staging-redis-master.default.svc.cluster.local
+  dns: bb-queue-staging-redis-master.busybeaver-staging.svc.cluster.local

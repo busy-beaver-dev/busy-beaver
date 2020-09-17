@@ -2,9 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "{{ include "busybeaver.fullname" . }}-web"
+  namespace: "{{ include "busybeaver.namespace" . }}"
   labels:
     type: web-deploy
     {{- include "busybeaver.labels" . | nindent 4 }}
+  annotations:
+    timestamp: "{{ date "20200907150405" .Release.Time }}"
 spec:
   replicas: {{ .Values.app.webReplicaCount }}
   selector:
@@ -36,3 +39,5 @@ spec:
             port: {{ .Values.app.port }}
           initialDelaySeconds: 10
           periodSeconds: 5
+      serviceAccountName: {{ include "busybeaver.serviceAccountName" . }}
+      automountServiceAccountToken: false

@@ -2,9 +2,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "{{ include "busybeaver.fullname" . }}-scheduler"
+  namespace: "{{ include "busybeaver.namespace" . }}"
   labels:
     type: scheduler-deploy
     {{- include "busybeaver.labels" . | nindent 4 }}
+  annotations:
+    timestamp: "{{ date "20200907150405" .Release.Time }}"
 spec:
   replicas: 1
   selector:
@@ -28,3 +31,5 @@ spec:
             cpu: "100m"
         env:
           {{- include "busybeaver.env_vars" . | indent 10 }}
+      serviceAccountName: {{ include "busybeaver.serviceAccountName" . }}
+      automountServiceAccountToken: false

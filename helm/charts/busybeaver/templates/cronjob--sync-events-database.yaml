@@ -2,6 +2,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: "{{ include "busybeaver.fullname" . }}--sync-events-database"
+  namespace: "{{ include "busybeaver.namespace" . }}"
   labels:
     type: sync-events-database
     {{- include "busybeaver.labels" . | nindent 4 }}
@@ -20,3 +21,5 @@ spec:
             args:
             - "sync_events_database"
             env: {{- include "busybeaver.env_vars" . | indent 12 }}
+          serviceAccountName: {{ include "busybeaver.serviceAccountName" . }}
+          automountServiceAccountToken: false
