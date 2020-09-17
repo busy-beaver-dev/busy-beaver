@@ -15,93 +15,6 @@ interactions:
       authorization:
       - DUMMY
     method: GET
-    uri: https://api.meetup.com/_CHIPY_
-  response:
-    body:
-      string: !!binary |
-        H4sIAAAAAAAAA6VV72/bNhD9Vzh9WQM4+mXXsYwsWFpgw7p0CZbk0zIItERJbCRSICl7bpH/fe9k
-        yU3tAQPqD0bi4927x3fH5y+ezL1ltIgXsySOJp7ijfCW3vtK3m2XDH8yXuofLbstCplJXrO7rau0
-        Yo9WGPar0V3rTTzruOssynjm5FogUkv1jO+Vc61dBsFms/EbIVzX+plugrSHTwMkdqYeWg5BxHJh
-        MyNbJ7VC/LK9urQtV1e/6E7lImdSsTgMp5OR3TEl9uYy6EsuOauMKH566pmASFbJdutrUz55LKu5
-        tTgirrKQIn/yrg7TLgM+dD+bsOvfr1lPkr1pjVagk4EO5Z63QpwxaZlWgumCuUqwjTZ1DuUabR3b
-        CcNQVhreNFKVrOaq7HgpmG1Fr6xUThiB5JLuYNlGuorpNS4VTd6G4YjRiGYljGVc5azhaosGhpBR
-        KUupO5zUXaOkP2qwMleXQXv1pPZK3nYGpdCx0BnywZsIDzLeveJ4M3D02UMFbozj0/fc8C2KNCuF
-        64lgA7a4wFrXa5H77CNmjXrbF+hWKMrldc1qsRa19dmewZsbrdsz1owFADKAdGzeNlCzJxajwUPV
-        GZujCdQFhqFrK+iDTMLNZVGAoHKs1hmnzaHetDAs1xvl8BnXxWf3RNZ1CsMrtGGcGVyzn5tGO0P4
-        ykEWldVdTjJosB2n9Ic2aLvnS5cfhHvonDZIsaPy7Bvp72rBrWBG8Axj7RxJku0onWPTuJKfMdaf
-        2x6Mdo8ScmkxIcjS4kbaWOwa9GzBoVPSSQEpr+0z4ysCJJof9MqyPwXEMCA77NsPexKkuxL/uPEC
-        WDKoRyKvaPNofUldnwrwEjOwdYIMYhYlSRLG0TwMQ8Sl2+5cgujTM1YOItqastOj00zTOcUe78kc
-        MKIat0Xm7iAdLODx/vqb43GWX8Em7LcbpBiBTVcx4oP7UHV/8klLlTY6pwAtHkJraeVK1jtSbbeq
-        ZUZduPOWs8hfLKgjWpwvLvz5bOIN78tbzsM4Gb+mLd+mhQBqgQGLibefmLf8srPQMJqGcbiI9x56
-        nfOGvcOSo9tKaiL7MvE2Ff1HptF06tnirH/uaVtpp0ew2TROwmmSXEy8SpawMJseOKoVWWfEYKqk
-        gMx6a+1hbNCvcFAESZAHI8Ie1P/UihKN+9wTgLELx6Cu6prVCaC7+mPYbUua9pmkJ55Sit+O/+9B
-        mj+L7YG+sySJoulidpq+FwEH58VXhUfY0xUeoXuND2G/X+MRdlD5CPgUlZ1sxGc4SP+Qg/eCLKEG
-        CvlNuoMc5Pfii2k0v4jihbd/LYOJ3uBHtWLv4DvP/W9a78Qfb25beilbaGzsut35hrecRruueH3Q
-        KZnPF2HY+1PnslQXhRVIOo920RAUYSei1OREOyLT2b7/g8gqMpMK3jqE3BBCJH2d9UKu4Hh6iBYn
-        8X8CHHQ4hBvWZL+bb+EkUTJLTtvNOBCY9avXP8KevpsjdL+bh7Dfv5sj7LCbR8Cn7OY4qlTmcPa/
-        prO/X17+BeTlw0D7CgAA
-    headers:
-      Accept-Ranges:
-      - bytes
-      Connection:
-      - keep-alive
-      Content-Encoding:
-      - gzip
-      Content-Length:
-      - '1155'
-      Content-Type:
-      - application/json; charset=utf-8
-      Date:
-      - Thu, 17 Sep 2020 22:02:59 GMT
-      ETag:
-      - '"9360d527d559feb12455e85872bf2b16-gzip"'
-      Server:
-      - Apache/2.4.39 (Unix) OpenSSL/1.1.1c
-      Vary:
-      - Accept-Encoding,User-Agent,Accept-Language
-      Via:
-      - 1.1 varnish
-      X-Accepted-OAuth-Scopes:
-      - ageless, basic
-      X-Cache:
-      - MISS
-      X-Cache-Hits:
-      - '0'
-      X-Meetup-Request-ID:
-      - c02cb75a-bcaa-4675-82d1-c9ea82c2641c
-      X-Meetup-server:
-      - ip-10-192-12-17
-      X-OAuth-Scopes:
-      - basic
-      X-RateLimit-Limit:
-      - '30'
-      X-RateLimit-Remaining:
-      - '29'
-      X-RateLimit-Reset:
-      - '10'
-      X-Served-By:
-      - cache-pwk4928-PWK
-      X-Timer:
-      - S1600380179.297428,VS0,VE99
-    status:
-      code: 200
-      message: OK
-- request:
-    body: null
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      Connection:
-      - keep-alive
-      Content-Type:
-      - application/json
-      User-Agent:
-      - BusyBeaver
-      authorization:
-      - DUMMY
-    method: GET
     uri: https://api.meetup.com/_ChiPy_/events?page=5
   response:
     body:
@@ -172,7 +85,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Thu, 17 Sep 2020 22:02:59 GMT
+      - Thu, 17 Sep 2020 21:51:11 GMT
       ETag:
       - '"ee7f668605c896eba91375d909ece5b8-gzip"'
       Link:
@@ -191,21 +104,21 @@ interactions:
       X-Cache-Hits:
       - '0'
       X-Meetup-Request-ID:
-      - b6533b76-1999-4f1f-97dd-ef5d09b479c4
+      - 5213d8a3-f9f7-449a-a8e6-8ad32079ebb1
       X-Meetup-server:
-      - ip-10-192-23-135
+      - ip-10-192-2-80
       X-OAuth-Scopes:
       - basic
       X-RateLimit-Limit:
       - '30'
       X-RateLimit-Remaining:
-      - '28'
+      - '29'
       X-RateLimit-Reset:
       - '10'
       X-Served-By:
-      - cache-pwk4928-PWK
+      - cache-pwk4979-PWK
       X-Timer:
-      - S1600380179.426418,VS0,VE98
+      - S1600379471.856769,VS0,VE151
       X-Total-Count:
       - '15'
     status:

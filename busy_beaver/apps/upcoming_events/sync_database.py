@@ -7,8 +7,8 @@ against the set of future events in the database:
     - if event is in the database => update
 """
 
+from datetime import datetime
 import logging
-import time
 from typing import List, NamedTuple
 
 from busy_beaver.clients import meetup
@@ -20,9 +20,14 @@ logger = logging.getLogger(__name__)
 
 
 def sync_database_with_fetched_events(group: UpcomingEventsGroup):
-    fetched_events = meetup.get_events(group.meetup_urlname, count=20)
+    now = datetime.now()
+    current_epoch_time = int(now.timestamp())
+    fetched_events = [
+        event
+        for event in meetup.get_events(group.meetup_urlname, count=20)
+        if event.start_epoch >= current_epoch_time
+    ]
 
-    current_epoch_time = int(time.time())
     database_events = (
         Event.query.filter_by(group=group)
         .filter(Event.start_epoch > current_epoch_time)

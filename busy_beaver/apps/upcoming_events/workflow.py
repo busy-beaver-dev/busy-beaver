@@ -1,7 +1,7 @@
 import logging
 
 from .upcoming_events import generate_upcoming_events_message
-from busy_beaver.clients import SlackClient
+from busy_beaver.clients import SlackClient, meetup
 from busy_beaver.extensions import db, rq
 from busy_beaver.models import UpcomingEventsConfiguration, UpcomingEventsGroup
 from busy_beaver.toolbox import set_task_progress
@@ -37,12 +37,39 @@ def create_or_update_upcoming_events_configuration(
     # TODO let the user know what it looks like with a button that will show them
 
 
-def add_new_group_to_configuration(upcoming_events_config, meetup_urlname):
+def add_new_group_to_configuration(
+    installation, upcoming_events_config, meetup_urlname
+):
     group = UpcomingEventsGroup()
-    group.configuration = upcoming_events_config
     group.meetup_urlname = meetup_urlname
+    if not upcoming_events_config:
+        config = UpcomingEventsConfiguration()
+        config.slack_installation = installation
+        config.enabled = True
+        config.post_num_events = 1
+        group.configuration = config
+    else:
+        group.configuration = upcoming_events_config
+
     db.session.add(group)
     db.session.commit()
+    _add_events_to_database.queue(group.id)
+
+
+@rq.job
+def _add_events_to_database(group_id: int):
+    group = UpcomingEventsGroup.query.get(group_id)
+    events = meetup.get_events(group.meetup_urlname, count=5)
+
+    num_created = 0
+    for event in events:
+        record = event.create_event_record()
+        record.group = group
+        db.session.add(record)
+        num_created += 1
+    else:
+        db.session.commit()
+        logger.info("{0} events saved to the database".format(num_created))
 
 
 ######################

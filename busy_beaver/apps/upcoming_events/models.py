@@ -40,6 +40,10 @@ class UpcomingEventsEnabledStateMachine(StateMachine):
             self.enable_feature()
 
 
+def no_channel_value_in_database(machine):
+    return machine.config.channel
+
+
 class PostCRONEnabledStateMachine(StateMachine):
     initial_state = False
 
@@ -48,7 +52,7 @@ class PostCRONEnabledStateMachine(StateMachine):
         self.state = config.post_cron_enabled
         super().__init__()
 
-    @transition(source=False, target=True)
+    @transition(source=False, target=True, conditions=[no_channel_value_in_database])
     def enable(self):
         pass
 
@@ -79,7 +83,7 @@ class UpcomingEventsConfiguration(BaseModel):
     )
 
     # Scheduled post fields
-    channel = db.Column(db.String(20), nullable=False)
+    channel = db.Column(db.String(20), nullable=True)
     post_cron_enabled = db.Column(db.Boolean, default=False, nullable=False)
     post_day_of_week = db.Column(ChoiceType(WEEKDAYS), nullable=True)
     post_time = db.Column(db.Time, nullable=True)

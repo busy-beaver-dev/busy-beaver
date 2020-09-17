@@ -170,18 +170,28 @@ def upcoming_events_settings():
 
     # load default
     try:
+        groups = [group.meetup_urlname for group in config.groups]
+    except AttributeError:
+        groups = []
+
+    try:
+        enabled = config.enabled
+    except AttributeError:
+        enabled = False
+
+    try:
+        post_cron_enabled = config.post_cron_enabled
+    except AttributeError:
+        post_cron_enabled = False
+
+    try:
         form.channel.data = config.channel
         form.post_day_of_week.data = config.post_day_of_week
         form.post_time.data = config.post_time
-        form.post_timezone.data = config.post_timezone.zone
         form.post_num_events.data = config.post_num_events
-        groups = [group.meetup_urlname for group in config.groups]
-        enabled = config.enabled
-        post_cron_enabled = config.post_cron_enabled
+        form.post_timezone.data = config.post_timezone.zone
     except AttributeError:
-        enabled = False
-        groups = []
-        post_cron_enabled = False
+        pass
 
     return render_template(
         "upcoming_events_settings.html",
@@ -248,7 +258,7 @@ def upcoming_events_add_new_group():
     if form.validate_on_submit():
         logger.info("Attempt to add new group")
         add_new_group_to_configuration(
-            config, meetup_urlname=form.data["meetup_urlname"]
+            installation, config, meetup_urlname=form.data["meetup_urlname"]
         )
         logger.info("New group added")
         return jsonify({"message": "Group added successfully"})
