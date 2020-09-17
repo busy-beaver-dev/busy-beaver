@@ -2,6 +2,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: "{{ include "busybeaver.fullname" . }}--cron--queue-upcoming-events"
+  namespace: "{{ include "busybeaver.namespace" . }}"
   labels:
     type: post-upcoming-events
     {{- include "busybeaver.labels" . | nindent 4 }}
@@ -20,3 +21,5 @@ spec:
             args:
             - "queue_post_upcoming_events_jobs"
             env: {{- include "busybeaver.env_vars" . | indent 12 }}
+          serviceAccountName: {{ include "busybeaver.serviceAccountName" . }}
+          automountServiceAccountToken: false

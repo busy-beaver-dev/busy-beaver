@@ -2,6 +2,7 @@ apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: "{{ include "busybeaver.fullname" . }}--cron--poll-twitter"
+  namespace: "{{ include "busybeaver.namespace" . }}"
   labels:
     type: poll-twitter
     {{- include "busybeaver.labels" . | nindent 4 }}
@@ -24,3 +25,5 @@ spec:
             - "--channel_name"
             - "at-chicagopython"
             env: {{- include "busybeaver.env_vars" . | indent 12 }}
+          serviceAccountName: {{ include "busybeaver.serviceAccountName" . }}
+          automountServiceAccountToken: false

@@ -50,6 +50,17 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
+Create the name of the service account to use
+*/}}
+{{- define "busybeaver.serviceAccountName" -}}
+{{- default .Values.serviceAccount -}}
+{{- end -}}
+
+{{- define "busybeaver.namespace" -}}
+{{- default .Values.namespace -}}
+{{- end -}}
+
+{{/*
 Environment Variables
 */}}
 {{- define "busybeaver.env_vars" }}

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: "{{ include "busybeaver.fullname" . }}-workers"
+  namespace: "{{ include "busybeaver.namespace" . }}"
   labels:
     type: worker-deploy
     {{- include "busybeaver.labels" . | nindent 4 }}
@@ -35,3 +36,5 @@ spec:
               - ./scripts/check_worker_box.sh
           initialDelaySeconds: 10
           periodSeconds: 10
+      serviceAccountName: {{ include "busybeaver.serviceAccountName" . }}
+      automountServiceAccountToken: false
