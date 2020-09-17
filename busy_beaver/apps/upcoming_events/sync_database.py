@@ -7,6 +7,7 @@ against the set of future events in the database:
     - if event is in the database => update
 """
 
+from datetime import datetime
 import logging
 import time
 from typing import List, NamedTuple
@@ -20,7 +21,12 @@ logger = logging.getLogger(__name__)
 
 
 def sync_database_with_fetched_events(group: UpcomingEventsGroup):
-    fetched_events = meetup.get_events(group.meetup_urlname, count=20)
+    now = datetime.now()
+    fetched_events = [
+        event
+        for event in meetup.get_events(group.meetup_urlname, count=20)
+        if event.start_time >= now
+    ]
 
     current_epoch_time = int(time.time())
     database_events = (
