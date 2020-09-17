@@ -19,27 +19,27 @@ interactions:
   response:
     body:
       string: !!binary |
-        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
+        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
+        prO/X17+BeTlw0D7CgAA
     headers:
       Accept-Ranges:
       - bytes
@@ -48,13 +48,13 @@ interactions:
       Content-Encoding:
       - gzip
       Content-Length:
-      - '1176'
+      - '1155'
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Tue, 28 Jul 2020 23:45:00 GMT
+      - Thu, 17 Sep 2020 22:02:59 GMT
       ETag:
-      - '"55bb082be8efc29f67db9d01b0329cd4-gzip"'
+      - '"9360d527d559feb12455e85872bf2b16-gzip"'
       Server:
       - Apache/2.4.39 (Unix) OpenSSL/1.1.1c
       Vary:
@@ -68,9 +68,9 @@ interactions:
       X-Cache-Hits:
       - '0'
       X-Meetup-Request-ID:
-      - 6f572c26-a724-4158-8a45-a570e9a3c682
+      - c02cb75a-bcaa-4675-82d1-c9ea82c2641c
       X-Meetup-server:
-      - ip-10-192-2-57
+      - ip-10-192-12-17
       X-OAuth-Scopes:
       - basic
       X-RateLimit-Limit:
@@ -80,9 +80,134 @@ interactions:
       X-RateLimit-Reset:
       - '10'
       X-Served-By:
-      - cache-mdw17359-MDW
+      - cache-pwk4928-PWK
       X-Timer:
-      - S1595979901.727363,VS0,VE89
+      - S1600380179.297428,VS0,VE99
+    status:
+      code: 200
+      message: OK
+- request:
+    body: null
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      User-Agent:
+      - BusyBeaver
+      authorization:
+      - DUMMY
+    method: GET
+    uri: https://api.meetup.com/_ChiPy_/events?page=5
+  response:
+    body:
+      string: !!binary |
+        H4sIAAAAAAAAA+1a+28bNxL+V1j90Aegt2xZ8qU5+JGmTpzYjRQUxeUgULuUljV3uVmSUrZF//f7
+        htyV5FeSxrjDAXESJN5dcjjv+WaYf/3ZiArBrYgbh7398fhg2Bv0DrrdbrMRu4JbqbPG4WDY7fpX
+        Eqsa/YNBb3jQ648azUbGU4FXl6VNdMbOXRYl7Bj0rlheCCMya9ir84vcYGmMQ2YymxlRSGFmObdW
+        FCC+4MqIZsNYbp0BLZdHOpXZElusJOo9nD4eDkcVD0pHXM2IGvHS7Xdb3XGrv9eov4RNjV7/sNvF
+        S5fHlXQgM9jv9vfGnoyz0UwvFkbYxmGrF4jj9ZpLq6Sxs0i7DJ/wqgS3hVnl9atBr9lYiczhlD+9
+        RvrDcXeI3xt1XGRKZoIJrLJgoRC5zDLioZLVEypKrKy5ln+IeFa9nlVUGn9B4WamPbFZIHZoCwcC
+        y0K7nI7f2m6vNx6Pu32ScsvISSIvy0OGfyK+1N8ZdrFYyEhyxSqLvYU12HNPLVi3N+qP9sZ9iPi7
+        hrFSHRMdnYuMWOXgYK/XHpG6et3hqNfb7w/2SAYYsjU6aA8H4GI8GI2He6M9fHCFqliZeV5moLJO
+        NJ6jROapy67MNRXQT8HnGhXTTXZ23gjuQWT8w1Z/znj9LsMWkc3eTiq/+UNntP7tpHMCxRVckTqh
+        ySu8TKzNzWGns16v26kQ1uVt+FynYrHjVW06Gz/vkPcKExUyr3h7kj+9w+WlYXMeXX3DXkB1zBm2
+        0AXjTPklPIuZErzImBHGgAzDn2niChPzsskmIrcincMa/T2btJ908qcMp/wq2FoqxeaCGYtDKDCY
+        TXCSZ5JZzbQr2G/aTR3WRAmHo6lD9oSzpBCLH99dk7XUzmKZF3bNbZT8c/WjO1GrlVq8+PBev2uw
+        SHFjsItYiWMRv2s8/RsEnnT405rzFv2qH46eP3t9evRkXnSeUlzuszxlLWhN8zjixkI2XiBVQCOV
+        JPXSXtevnHJ1VS0KXxDb/sMzA1tTBDAB/ZLd7zz/VORKl6wkXZ0k3M41TnOGlHly1jk59UTnJfsV
+        upY8ZUeF5KbefA5VF3wp2KlYIZUhs/HIykgYBit7kpn4YEn3RJfF/qyUXKjJQnyyXOaCoji4BLxR
+        ZnQ2+YQVEAE/e0JRzdtcYKFg3FkN8YLRxQ5pMjz0saQvoJgXOnYROWebvT6/xMKVUAjawrCIZzg0
+        cl67RGTLp1/jqREja10UJVzUGMbnsDOkWxQwTgHCjnjJSMkrWejMC8cinS3ksioStbKOpT702jzW
+        cHXaA2EN7ANdnWil07nkTbDuYomXz5SILAjKiD3LIIxAbaj0YnJBiYqyAu09lUtpkbe2O6Bd6ChF
+        xIgP5PdL4cmSOHTWHwJBN8VfWIp9bzMJKxppS/pKeljwyCk86gU75ZazSSRFFok2OwuehnPTEuor
+        wBQp54o4w96zzArFuGE/SaHiDd9NIpqxVK+wEda5gJcoQRuO9VJb3mZHCxQ8ts9KZAHvO9USkJpo
+        5UiLcDzkRQsRwUUMBcSB2FKQvQQMSvvA1lWm10rEkBnsv+LYhHpzTuml1h/JNOfINU1WCJ9WA6lL
+        uLITWxW9EbmbKxk12ToRMPPZxji7WqlS2TqRYHhR6NSrkEc8FqnkjDwN9rLQcZOhSoDP312ahxPv
+        EI5OP4LrwzrwiaUkLsO2oD9yVU3xFryYhDyqQkFnxstHbg4yR9BSpNvsxBUFTK9KCEDGYtyy5yjl
+        fE763frBK15cCR9QO4YTXoFBb2JFrgS/oxc7cRRiIqQA7+woColez6yeLWQWzzx2+Ru5EttX0si5
+        VPBJbA1WwNvUlwHgo3K2EKLCDH81r+O0Qb/bHY1HN3DauLuL05arBNFbzqNsHs0b1zEBO1JLXUib
+        pGxy9vyB6Kzi5x501gNA691CZ6Ob6Oy6TF+OznqP6OyrQGfXvPtOhHb26vLizfTo9ZS9vpg+O2Q/
+        Uekl6JTqzCbfVRAKeW+Lseg4X1KDi3xfiFQj25c/tAHVtp+JUUJ7lDDvwlq0rv27tG0jO6TJssUR
+        bi0jlzsQi4jIhbyGse7fuAutTl1RIwKUY+vgMDdEIe8Isr6Q1kgsi4XucOR1zQqN7E2Hh8IaNOLV
+        zHJCOZQEl4CVKJcBL+iYTkOJVUpQld1RtPF6yTbnmhzZDFSRvOcEiSll0nlI74gtXUEuomoSFNaY
+        iCMSY2lhG1Qi1YbsVaGsaRYCQAPiCQ+uiWUkLqRuSF3bw4u0y7epSo7ZAOlr+Y59T4/00w9kRg6R
+        Yhkq5CTADl/l0cHaEH5UjWJpgKJC8akhIKRSpMFsiff1CeYb9jNf+XpCjMiYuSxGCbHY6Z1rsbPW
+        k4up0m6RFrGUMZnmusAeoDNfW2kfVC+XvsTPBSVo0F/YNTRJduD2net3e2ODMl2ylGdlbTtJwqyk
+        WBto872ThOagKw2FAeHl1zkiUuCA1IR/tpohxKmVlwvhmDt/fIUOgD/nSkCaNUjUmvKlGkaHIQmE
+        kqoIx1ScW40HBFD7jh5hiOIAcP9qN9woyZnqa4++wkIb1Lv5sI8Pk60T+kxcfxzQrglBu40gNd9+
+        xSic+mbjb9/yNP/HbZ+qFntyJ0obj8HIp30QfhIb3B/jD4MENLrpHow/CglCS9sdDW7CgdksRU8y
+        m2103mqxi8hq35Ciij8QIfR7400NvxshjD4HIXgRx8MHIoT9R4DwNQCEja/fCQ4q9mpF1gBAoYPZ
+        mbRQT16Hwa0QuTF7Ofn7sxexar1wb6et+fNfvmz2skPg1uyl+nV/ev3U+KVKcZ8Ysdw4Znp0/nKy
+        edCkU6gFBo9EvDPUQsliSmvfU1NriQrHr1AjmyxXAl0rM26eIosjQefaIOwAYfg9mvVJtK2LZafC
+        A6ZjdS4j0wm7RecTqOvziGwU/CWN346hHpblD/qD4WDUvZHlD/rXs3x/v78/9DPxa1k+dPQo7Jvh
+        /FGGphpN86mgvpya9G8BjwvxzQMT/mDQ7320Jex/Vks42hv2KOc/sCXce8z4X0fGr/z+zow/3U7N
+        62x/Ttl+4rN9ALgPzOfJ6cuRmoqXb8a/fVk+3yHwf5LPL6ARy9WVOdxMeAuehXHZhatg9hmwsfcC
+        6rHRNJlDNi2EYMecJr+3ckw9bZ9YkUPJUrCXkga59QlbcotADgB7IWj+mIk1W/OSTMVzJGYeJWiu
+        jMupvaGzeHVWvMlnNcRv+k6rbnhJJEYJDZ2ZMMEhqDlBn4JXLatbXjkOfSkFn29rfK9KRHCU77k/
+        5Ipn1UgSJ6EoVIyBAeoH/HxTvnfozo5STXCCGh7G4xW6OrTa4EneI6rv2JClLQ91opqk52gmC4QS
+        jNak1gr0Sl9LnRELp0i8OfXYYtOn1h0SQ970Za19a1J/0wyhJb42/d3OT88Fj2m2+gKhkomCN73K
+        eAGR6T5CBN+jjhn9KEuEyo1vF4m+qUfviO6VIG5jRzMc4j70wMJnuzDH9ZcAIkJDrLzBq6uUun0M
+        JGADqk5ZVF2toO+0GjKgi70sxEpqZ4gznElDYXIQkm0iMonFWxEtCghJ9Ta3gCH1KNz4K5cwAab0
+        oFV1pZfBxcJ8GEIRF36UzBaOfq5EiMrgcWgmQ2cvyBzUTdOUnFGersjFki8zbeoBNBZRkqLHVNDF
+        htf7gkvlqM8/DjdDlOxpSc3xjogwdhgo7IzujfZFJNeAGiWj6s8LupS03h47lyNoZWto7G+nuFsm
+        1m+nQX2wSiK4QjxUxDhNxS+5271jae+mlE3GggOvW5NfzhmEihWMSJzh+UhFiUjLOi1ME8SwYb/B
+        m4rWK47Uubld+hkh5u+qEprzpxwBad4r3gLhIKZHjV53iE14G53m49bfWVQ1lCJUhrK1ueS7neSX
+        iHk39+nZlmnrw3vdqc/6BJ78yM7drL4JQO+H28sRKPQYhkvgwPlderwDPqN0ethW4+hwzbgpeAiG
+        gKp92vsYpgb3c2nbqqxGE0YuW9Ei/4jA9+x4EFreKYP/w2uSfJ78V69J9ob97v3/iaXXa3X3H3RN
+        EqDkZ2Li7iMk/hog8TXnfrwlebwlebwlebwl+apuSf79H1GTM47iKgAA
+    headers:
+      Accept-Ranges:
+      - bytes
+      Connection:
+      - keep-alive
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '3063'
+      Content-Type:
+      - application/json; charset=utf-8
+      Date:
+      - Thu, 17 Sep 2020 22:02:59 GMT
+      ETag:
+      - '"ee7f668605c896eba91375d909ece5b8-gzip"'
+      Link:
+      - <https://api.meetup.com/_ChiPy_/events?page=5&scroll=since%3A2020-11-05T17%3A00%3A00.000-06%3A00>;
+        rel="next"
+      Server:
+      - Apache/2.4.39 (Unix) OpenSSL/1.1.1c
+      Vary:
+      - Accept-Encoding,User-Agent,Accept-Language
+      Via:
+      - 1.1 varnish
+      X-Accepted-OAuth-Scopes:
+      - ageless, basic
+      X-Cache:
+      - MISS
+      X-Cache-Hits:
+      - '0'
+      X-Meetup-Request-ID:
+      - b6533b76-1999-4f1f-97dd-ef5d09b479c4
+      X-Meetup-server:
+      - ip-10-192-23-135
+      X-OAuth-Scopes:
+      - basic
+      X-RateLimit-Limit:
+      - '30'
+      X-RateLimit-Remaining:
+      - '28'
+      X-RateLimit-Reset:
+      - '10'
+      X-Served-By:
+      - cache-pwk4928-PWK
+      X-Timer:
+      - S1600380179.426418,VS0,VE98
+      X-Total-Count:
+      - '15'
     status:
       code: 200
       message: OK

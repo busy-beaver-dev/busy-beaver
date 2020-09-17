@@ -21,13 +21,13 @@ logger = logging.getLogger(__name__)
 
 def sync_database_with_fetched_events(group: UpcomingEventsGroup):
     now = datetime.now()
+    current_epoch_time = int(now.timestamp())
     fetched_events = [
         event
         for event in meetup.get_events(group.meetup_urlname, count=20)
-        if event.start_time >= now
+        if event.start_epoch >= current_epoch_time
     ]
 
-    current_epoch_time = int(now.timestamp())
     database_events = (
         Event.query.filter_by(group=group)
         .filter(Event.start_epoch > current_epoch_time)
