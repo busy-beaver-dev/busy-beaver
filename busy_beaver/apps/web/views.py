@@ -248,7 +248,7 @@ def upcoming_events_add_new_group():
     if form.validate_on_submit():
         logger.info("Attempt to add new group")
         add_new_group_to_configuration(
-            config, meetup_urlname=form.data["meetup_urlname"]
+            installation, config, meetup_urlname=form.data["meetup_urlname"]
         )
         logger.info("New group added")
         return jsonify({"message": "Group added successfully"})

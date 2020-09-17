@@ -79,7 +79,7 @@ class UpcomingEventsConfiguration(BaseModel):
     )
 
     # Scheduled post fields
-    channel = db.Column(db.String(20), nullable=False)
+    channel = db.Column(db.String(20), nullable=True)
     post_cron_enabled = db.Column(db.Boolean, default=False, nullable=False)
     post_day_of_week = db.Column(ChoiceType(WEEKDAYS), nullable=True)
     post_time = db.Column(db.Time, nullable=True)

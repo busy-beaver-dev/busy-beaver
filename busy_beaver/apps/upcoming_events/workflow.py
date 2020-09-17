@@ -37,10 +37,20 @@ def create_or_update_upcoming_events_configuration(
     # TODO let the user know what it looks like with a button that will show them
 
 
-def add_new_group_to_configuration(upcoming_events_config, meetup_urlname):
+def add_new_group_to_configuration(
+    installation, upcoming_events_config, meetup_urlname
+):
     group = UpcomingEventsGroup()
-    group.configuration = upcoming_events_config
     group.meetup_urlname = meetup_urlname
+    if not upcoming_events_config:
+        config = UpcomingEventsConfiguration()
+        config.slack_installation = installation
+        config.enabled = True
+        config.post_num_events = 1
+        group.configuration = config
+    else:
+        group.configuration = upcoming_events_config
+
     db.session.add(group)
     db.session.commit()
 
