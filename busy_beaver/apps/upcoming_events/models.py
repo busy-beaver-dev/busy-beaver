@@ -40,6 +40,10 @@ class UpcomingEventsEnabledStateMachine(StateMachine):
             self.enable_feature()
 
 
+def no_channel_value_in_database(machine):
+    return machine.config.channel
+
+
 class PostCRONEnabledStateMachine(StateMachine):
     initial_state = False
 
@@ -48,7 +52,7 @@ class PostCRONEnabledStateMachine(StateMachine):
         self.state = config.post_cron_enabled
         super().__init__()
 
-    @transition(source=False, target=True)
+    @transition(source=False, target=True, conditions=[no_channel_value_in_database])
     def enable(self):
         pass
 

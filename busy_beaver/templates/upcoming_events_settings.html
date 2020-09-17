@@ -16,7 +16,7 @@
 <hr>
 
 <p>
-  Upcoming events feature is {{ 'enabled' if enabled else 'disabled' }}.
+  Upcoming events feature is <strong>{{ 'enabled' if enabled else 'disabled' }}</strong>.
   (<a href="{{ url_for('web.toggle_upcoming_events_config_view') }}">toggle status</a>)
 </p>
 
@@ -43,7 +43,7 @@
     to let your users know when events are happening!
   </p>
 
-  Periodic task is {{ 'scheduled' if post_cron_enabled else 'not scheduled' }}.
+  Periodic task is <strong>{{ 'scheduled' if post_cron_enabled else 'not scheduled' }}</strong>.
   (<a href="{{ url_for('web.toggle_post_cron_view') }}">toggle</a>)
 
   <br><br>
