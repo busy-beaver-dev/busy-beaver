@@ -47,11 +47,12 @@ services:
       - DATA_DIR=/tmp/localstack/data
       - AWS_ACCESS_KEY_ID=foo
       - AWS_SECRET_ACCESS_KEY=foo
+      - BUCKET_NAME=cdn
     ports:
       - "4566:4566"
     volumes:
       - localstack-data:/tmp/localstack/data
-
+      - ./scripts/dev:/tmp/dev_scripts
 
   # busy-beaver business logic
   app:

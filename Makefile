@@ -12,6 +12,7 @@ build: ## rebuild containers
 
 up: ## start local dev environment; run migrations; populate database
 	docker-compose up -d
+	make s3-bucket
 	make migrate-up
 	make populate-db
 
@@ -29,6 +30,9 @@ attach-worker: ## attach to worker process for debugging purposes
 
 requirements: ## generate requirements.txt using piptools
 	pip-compile --output-file=requirements.txt requirements.in
+
+s3-bucket: ## create s3 bucket in localstack
+	docker-compose exec -T localstack bash /tmp/dev_scripts/create_s3_bucket.sh
 
 ###################
 # Database Commands
