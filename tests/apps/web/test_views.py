@@ -224,7 +224,7 @@ class TestUpcomingEventsViews:
 
 class TestUpdateWorkspaceLogoview:
     @pytest.mark.end2end
-    def test_organization_settings(self, login_client, factory, patch_slack):
+    def test_organization_settings(self, s3, login_client, factory, patch_slack):
         # Arrange
         slack_user = factory.SlackUser()
         client = login_client(user=slack_user)
