@@ -1,6 +1,7 @@
 import uuid
 
 import boto3
+from botocore.exceptions import ClientError
 
 from busy_beaver.config import (
     DIGITALOCEAN_SPACES_BASE_URL,
@@ -12,10 +13,6 @@ from busy_beaver.config import (
 LOGO_FOLDER = "bb-logos"
 
 
-# TODO test this using LocalStack
-# test is to upload a file and then check to see if you can download
-# should be the same bytes
-# TODO rename this to BlobStorageClient
 class S3Client:
     def __init__(self, client_key, client_secret):
         session = boto3.session.Session()
@@ -26,6 +23,27 @@ class S3Client:
             aws_access_key_id=client_key,
             aws_secret_access_key=client_secret,
         )
+
+    def find_bucket(self, bucket):
+        try:
+            self.client.head_bucket(Bucket=bucket)
+        except ClientError:
+            return False
+        return True
+
+    def create_bucket(self, bucket):
+        try:
+            self.client.create_bucket(Bucket=bucket, ACL="public-read")
+        except ClientError:
+            return False
+        return True
+
+    def delete_bucket(self, bucket):
+        try:
+            self.client.delete_bucket(Bucket=bucket)
+        except ClientError:
+            return False
+        return True
 
     def upload_logo(self, filelike_object):
         extension = filelike_object.filename.split(".")[-1]
@@ -42,8 +60,8 @@ class S3Client:
                 "know something went wrong and try again"
             )
 
-        url = self._generate_url(filepath)
+        url = self._generate_url("sivdn", filepath)
         return url
 
-    def _generate_url(self, filepath):
-        return f"{DIGITALOCEAN_SPACES_BASE_URL}/{filepath}"
+    def _generate_url(self, bucket, filepath):
+        return f"{DIGITALOCEAN_SPACES_BASE_URL}/{bucket}/{filepath}"
