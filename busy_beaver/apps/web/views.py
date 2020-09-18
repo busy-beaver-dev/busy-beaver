@@ -18,7 +18,7 @@ from busy_beaver.apps.upcoming_events.workflow import (
     add_new_group_to_configuration,
     create_or_update_upcoming_events_configuration,
 )
-from busy_beaver.clients import slack_signin_oauth
+from busy_beaver.clients import s3, slack_signin_oauth
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import NotAuthorized
 from busy_beaver.extensions import db
@@ -292,9 +292,9 @@ def upcoming_events_delete_group(id):
     return redirect(url_for("web.upcoming_events_add_new_group"))
 
 
-##########
-# Logo URL
-##########
+#######################
+# Organization Settings
+#######################
 @web_bp.route("/settings/organization", methods=("GET", "POST"))
 @login_required
 def organization_settings():
@@ -310,7 +310,8 @@ def organization_settings():
     if form.validate_on_submit():
         logger.info("Attempt to save organization info logo")
         installation.organization_name = form.data["organization_name"]
-        installation.workspace_logo_url = form.data["workspace_logo_url"]
+        upload_url = s3.upload_logo(form.data["logo"])
+        installation.workspace_logo_url = upload_url
         db.session.add(installation)
         db.session.commit()
         logger.info("Workspace logo saved successfully")

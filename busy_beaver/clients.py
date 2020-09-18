@@ -8,8 +8,16 @@ Variables are assigned Singleton instances of each
 integration.
 """
 
-from .common.wrappers import GitHubClient, MeetupClient, SlackClient, TwitterClient
+from .common.wrappers import (
+    GitHubClient,
+    MeetupClient,
+    S3Client,
+    SlackClient,
+    TwitterClient,
+)
 from .config import (
+    DIGITALOCEAN_SPACES_KEY,
+    DIGITALOCEAN_SPACES_SECRET,
     GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET,
     GITHUB_OAUTH_TOKEN,
@@ -41,3 +49,5 @@ twitter = TwitterClient(
 slack_install_oauth = SlackInstallationOAuthFlow(SLACK_CLIENT_ID, SLACK_CLIENT_SECRET)
 slack_signin_oauth = SlackSignInOAuthFlow(SLACK_CLIENT_ID, SLACK_CLIENT_SECRET)
 github_oauth = GitHubOAuthFlow(GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET)
+
+s3 = S3Client(DIGITALOCEAN_SPACES_KEY, DIGITALOCEAN_SPACES_SECRET)

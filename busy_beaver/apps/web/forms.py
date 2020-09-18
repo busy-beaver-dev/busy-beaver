@@ -2,8 +2,8 @@ from flask_login import current_user
 from flask_wtf import FlaskForm
 import pytz
 from wtforms import ValidationError
-from wtforms.fields import IntegerField, SelectField, StringField
-from wtforms.validators import URL, DataRequired, NumberRange
+from wtforms.fields import FileField, IntegerField, SelectField, StringField
+from wtforms.validators import DataRequired, NumberRange
 from wtforms_components import TimeField
 
 from busy_beaver.clients import meetup
@@ -70,4 +70,4 @@ class AddNewGroupConfigurationForm(FlaskForm):
 
 class OrganizationSettingsForm(FlaskForm):
     organization_name = StringField("Organization Name", validators=[DataRequired()])
-    workspace_logo_url = StringField("Logo URL", validators=[URL()])
+    logo = FileField()
