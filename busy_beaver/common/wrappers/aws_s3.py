@@ -3,6 +3,7 @@ import uuid
 import boto3
 
 from busy_beaver.config import (
+    DIGITALOCEAN_SPACES_BASE_URL,
     DIGITALOCEAN_SPACES_ENDPOINT_URL,
     DIGITALOCEAN_SPACES_REGION_NAME,
 )
@@ -14,6 +15,7 @@ LOGO_FOLDER = "bb-logos"
 # TODO test this using LocalStack
 # test is to upload a file and then check to see if you can download
 # should be the same bytes
+# TODO rename this to BlobStorageClient
 class S3Client:
     def __init__(self, client_key, client_secret):
         session = boto3.session.Session()
@@ -44,5 +46,4 @@ class S3Client:
         return url
 
     def _generate_url(self, filepath):
-        BASE_URL = "https://sivdn.nyc3.cdn.digitaloceanspaces.com"
-        return f"{BASE_URL}/{filepath}"
+        return f"{DIGITALOCEAN_SPACES_BASE_URL}/{filepath}"
