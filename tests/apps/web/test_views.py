@@ -9,6 +9,7 @@ from busy_beaver.models import (
 )
 from tests._utilities import FakeSlackClient
 
+pytest_plugins = ("tests._utilities.fixtures.aws_s3",)
 MODULE_TO_TEST = "busy_beaver.apps.web.views"
 
 
