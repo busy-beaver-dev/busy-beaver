@@ -5,12 +5,11 @@ from botocore.exceptions import ClientError
 
 from busy_beaver.config import (
     DIGITALOCEAN_SPACES_BASE_URL,
+    DIGITALOCEAN_SPACES_BUCKET_NAME,
     DIGITALOCEAN_SPACES_ENDPOINT_URL,
     DIGITALOCEAN_SPACES_REGION_NAME,
+    LOGOS_FOLDER,
 )
-
-# TODO make this folder change depending on dev, staging and production
-LOGO_FOLDER = "bb-logos"
 
 
 class S3Client:
@@ -47,10 +46,13 @@ class S3Client:
 
     def upload_logo(self, filelike_object):
         extension = filelike_object.filename.split(".")[-1]
-        filepath = f"{LOGO_FOLDER}/{str(uuid.uuid4())}.{extension}"
+        filepath = f"{LOGOS_FOLDER}/{str(uuid.uuid4())}.{extension}"
 
         response = self.client.put_object(
-            Bucket="sivdn", Body=filelike_object, ACL="public-read", Key=filepath
+            Bucket=DIGITALOCEAN_SPACES_BUCKET_NAME,
+            Body=filelike_object,
+            ACL="public-read",
+            Key=filepath,
         )
 
         status_code = response["ResponseMetadata"]["HTTPStatusCode"]
@@ -60,8 +62,12 @@ class S3Client:
                 "know something went wrong and try again"
             )
 
-        url = self._generate_url("sivdn", filepath)
+        url = self._generate_url(filepath)
         return url
 
-    def _generate_url(self, bucket, filepath):
-        return f"{DIGITALOCEAN_SPACES_BASE_URL}/{bucket}/{filepath}"
+    def _generate_url(self, filepath):
+        return (
+            f"{DIGITALOCEAN_SPACES_BASE_URL}/"
+            f"{DIGITALOCEAN_SPACES_BUCKET_NAME}/"
+            f"{filepath}"
+        )
