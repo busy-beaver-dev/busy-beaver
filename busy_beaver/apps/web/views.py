@@ -310,7 +310,6 @@ def organization_settings():
     if form.validate_on_submit():
         logger.info("Attempt to save organization info logo")
         installation.organization_name = form.data["organization_name"]
-        # TODO test this with a stub
         upload_url = s3.upload_logo(form.data["logo"])
         installation.workspace_logo_url = upload_url
         db.session.add(installation)

@@ -1,3 +1,5 @@
+import io
+
 import pytest
 
 from busy_beaver.models import (
@@ -227,19 +229,22 @@ class TestUpdateWorkspaceLogoview:
         slack_user = factory.SlackUser()
         client = login_client(user=slack_user)
         patch_slack(is_admin=True)
+        logo_bytes = b"abcdefghijklmnopqrstuvwxyz"
+        logo_file = io.BytesIO(logo_bytes)
 
         # Act
         rv = client.post(
             "/settings/organization",
             data={
                 "organization_name": "Chicago Python",
-                "workspace_logo_url": "http://www.test.com",
+                "logo": (logo_file, "testfile.txt"),
             },
             follow_redirects=True,
+            content_type="multipart/form-data",
         )
 
         # Assert
         assert rv.status_code == 200
         installation = SlackInstallation.query.first()
         assert installation.organization_name == "Chicago Python"
-        assert installation.workspace_logo_url == "http://www.test.com"
+        assert ".txt" in installation.workspace_logo_url
