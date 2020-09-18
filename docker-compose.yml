@@ -39,7 +39,7 @@ services:
       - "9379:6379"
   # localstack running a fake S3
   localstack:
-    image: localstack/localstack:0.11.1
+    image: localstack/localstack:0.11.5
     environment:
       - EDGE_PORT=4566
       - DEFAULT_REGION=us-east-1
