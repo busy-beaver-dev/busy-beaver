@@ -1,4 +1,5 @@
 from flask import Flask, request
+from secure import SecureHeaders
 from whitenoise import WhiteNoise
 
 from .blueprints import (
@@ -44,8 +45,6 @@ def create_app(*, testing=False):
 
     bootstrap.init_app(app)
     login_manager.init_app(app)
-    # TODO figure out CSP headers and re-enable
-    # talisman.init_app(app)
 
     app.register_error_handler(NotAuthorized, handle_error)
     app.register_error_handler(OAuthError, handle_error)
@@ -68,5 +67,12 @@ def create_app(*, testing=False):
         """Keep request specific data in `_internal` dictionary"""
         if not getattr(request, "_internal", None):
             request._internal = {}
+
+    secure_headers = SecureHeaders()
+
+    @app.after_request
+    def set_secure_headers(response):
+        secure_headers.flask(response)
+        return response
 
     return app
