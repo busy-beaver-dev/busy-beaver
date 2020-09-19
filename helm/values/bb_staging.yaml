@@ -11,6 +11,11 @@ app:
   webReplicaCount: 1
   workerReplicaCount: 1
 
+image:
+  repository: alysivji/busy-beaver
+  version: clean-up-repo
+  pullPolicy: Always
+
 ingress:
   host: staging.busybeaverbot.com
 
