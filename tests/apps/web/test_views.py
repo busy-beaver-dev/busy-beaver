@@ -225,7 +225,7 @@ class TestUpcomingEventsViews:
 
 class TestUpdateOrganizationSettings:
     @pytest.mark.end2end
-    def test_change_organization_name(self, s3, login_client, factory, patch_slack):
+    def test_change_organization_name(self, login_client, factory, patch_slack):
         # Arrange
         installation = factory.SlackInstallation(workspace_name="ChiPy")
         slack_user = factory.SlackUser(installation=installation)
@@ -271,7 +271,7 @@ class TestUpdateOrganizationSettings:
         assert ".txt" in installation.workspace_logo_url
 
     @pytest.mark.end2end
-    def test_remove_organization_logo(self, s3, login_client, factory, patch_slack):
+    def test_remove_organization_logo(self, login_client, factory, patch_slack):
         # Arrange
         installation = factory.SlackInstallation(
             workspace_name="ChiPy",
