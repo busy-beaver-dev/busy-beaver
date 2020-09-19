@@ -64,7 +64,7 @@ jobs:
       DIGITALOCEAN_SPACES_REGION_NAME: us-east-1
       DIGITALOCEAN_SPACES_BUCKET_NAME: cdn
       DIGITALOCEAN_SPACES_BASE_URL: http://localstack:4566
-      LOGOS_FOLDER: bb-logos
+      LOGOS_FOLDER: busybeaver-workspace-logos
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
