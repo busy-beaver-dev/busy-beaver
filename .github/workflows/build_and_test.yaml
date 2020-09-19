@@ -39,6 +39,15 @@ jobs:
           --health-retries 5
       redis:
         image: redis:4.0-alpine
+      localstack:
+        image: localstack/localstack:0.11.5
+        env:
+          EDGE_PORT: 4566
+          DEFAULT_REGION: us-east-1
+          SERVICES: s3
+          DATA_DIR: /tmp/localstack/data
+          AWS_ACCESS_KEY_ID: foo
+          AWS_SECRET_ACCESS_KEY: foo
 
     container: python:3.8.1-buster
     env:
@@ -49,6 +58,13 @@ jobs:
       REDIS_URI: redis://redis:6379
       OAUTHLIB_INSECURE_TRANSPORT: 1
       OAUTHLIB_RELAX_TOKEN_SCOPE: 1
+      DIGITALOCEAN_SPACES_KEY: foo
+      DIGITALOCEAN_SPACES_SECRET: foo
+      DIGITALOCEAN_SPACES_ENDPOINT_URL: http://localstack:4566
+      DIGITALOCEAN_SPACES_REGION_NAME: us-east-1
+      DIGITALOCEAN_SPACES_BUCKET_NAME: cdn
+      DIGITALOCEAN_SPACES_BASE_URL: http://localstack:4566
+      LOGOS_FOLDER: busybeaver-workspace-logos
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies

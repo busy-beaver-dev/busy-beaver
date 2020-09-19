@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "bootstrap/form.html" import render_form_row %}
+{% from "bootstrap/form.html" import render_field, render_form_row %}
 
 {% block container %}
 <h3>Organization Settings</h3>
@@ -8,18 +8,42 @@
   Customize Busy Beaver for your organization.
 </p>
 
+<p>
+  You can update your organization name and add your logo
+  to brand messages from Busy Beaver.
+</p>
+
 <hr>
 
-<!-- TODO add user specified name to workspace -->
-
 <form method="POST" action="{{ url_for('web.organization_settings') }}">
-  {{ form.csrf_token }}
-  {{ render_form_row([form.organization_name], col_map={'organization_name': 'col-md-6'}) }}
-
-  {{ render_form_row([form.workspace_logo_url], col_map={'workspace_logo_url': 'col-md-12'}) }}
+  {{ name_form.csrf_token }}
+  {{ render_form_row([name_form.organization_name], col_map={'organization_name': 'col-md-6'}) }}
 
   <input type="submit" value="Submit" class="btn btn-primary">
 </form>
+
+<hr>
+
+{% if logo %}
+  <h6>Current Logo</h6>
+
+  <br>
+
+  <p>
+    <img src="{{ logo }}" />
+    <br>
+    <small>
+      <a href="{{ url_for('web.organization_settings_remove_logo') }}">remove</a>
+    </small>
+  </p>
+{% else %}
+  <form method="POST" action="{{ url_for('web.organization_settings_update_logo') }}" enctype="multipart/form-data">
+    {{ logo_form.csrf_token }}
+    {{ render_field(logo_form.logo) }}
+
+    <input type="submit" value="Submit" class="btn btn-primary">
+  </form>
+{% endif %}
 
 <br><br>
 

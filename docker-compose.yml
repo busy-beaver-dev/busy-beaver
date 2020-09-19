@@ -3,10 +3,11 @@ version: '3.6'
 volumes:
   pgdata:
   redis-data:
+  localstack-data:
 
 services:
+  # infrastructure
   db:
-    # infrastructure
     image: postgres:10.3-alpine
     environment:
       POSTGRES_DB: busy-beaver
@@ -36,6 +37,22 @@ services:
       - redis-data:/data
     ports:
       - "9379:6379"
+  # localstack running a fake S3
+  localstack:
+    image: localstack/localstack:0.11.5
+    environment:
+      - EDGE_PORT=4566
+      - DEFAULT_REGION=us-east-1
+      - SERVICES=s3
+      - DATA_DIR=/tmp/localstack/data
+      - AWS_ACCESS_KEY_ID=foo
+      - AWS_SECRET_ACCESS_KEY=foo
+      - BUCKET_NAME=cdn
+    ports:
+      - "4566:4566"
+    volumes:
+      - localstack-data:/tmp/localstack/data
+      - ./scripts/dev:/tmp/dev_scripts
 
   # busy-beaver business logic
   app:

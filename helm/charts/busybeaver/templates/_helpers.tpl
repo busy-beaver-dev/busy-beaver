@@ -172,4 +172,39 @@ Environment Variables
     secretKeyRef:
       name: {{ .Values.secretName }}
       key: twitter-consumer-secret
+- name: DIGITALOCEAN_SPACES_KEY
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secretName }}
+      key: do-spaces-key
+- name: DIGITALOCEAN_SPACES_SECRET
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secretName }}
+      key: do-spaces-secret
+- name: DIGITALOCEAN_SPACES_ENDPOINT_URL
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secretName }}
+      key: do-spaces-endpoint-url
+- name: DIGITALOCEAN_SPACES_REGION_NAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secretName }}
+      key: do-spaces-region-name
+- name: DIGITALOCEAN_SPACES_BUCKET_NAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secretName }}
+      key: do-spaces-bucket-name
+- name: DIGITALOCEAN_SPACES_BASE_URL
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secretName }}
+      key: do-spaces-base-url
+- name: LOGOS_FOLDER
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secretName }}
+      key: logos-folder
 {{- end }}

@@ -8,7 +8,8 @@ from .blueprint import web_bp
 from .forms import (
     AddNewGroupConfigurationForm,
     GitHubSummaryConfigurationForm,
-    OrganizationSettingsForm,
+    OrganizationLogoForm,
+    OrganizationNameForm,
     UpcomingEventsConfigurationForm,
 )
 from busy_beaver.apps.slack_integration.oauth.workflow import (
@@ -18,7 +19,7 @@ from busy_beaver.apps.upcoming_events.workflow import (
     add_new_group_to_configuration,
     create_or_update_upcoming_events_configuration,
 )
-from busy_beaver.clients import slack_signin_oauth
+from busy_beaver.clients import s3, slack_signin_oauth
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import NotAuthorized
 from busy_beaver.extensions import db
@@ -292,10 +293,10 @@ def upcoming_events_delete_group(id):
     return redirect(url_for("web.upcoming_events_add_new_group"))
 
 
-##########
-# Logo URL
-##########
-@web_bp.route("/settings/organization", methods=("GET", "POST"))
+#######################
+# Organization Settings
+#######################
+@web_bp.route("/settings/organization", methods=["GET", "POST"])
 @login_required
 def organization_settings():
     logger.info("Hit Organization Settings page")
@@ -306,21 +307,69 @@ def organization_settings():
     if not is_admin:
         raise NotAuthorized("Need to be an admin to access")
 
-    form = OrganizationSettingsForm()
+    name_form = OrganizationNameForm()
+    if name_form.validate_on_submit():
+        logger.info("Attempt to update organization name")
+        installation.organization_name = name_form.data["organization_name"]
+        db.session.add(installation)
+        db.session.commit()
+        logger.info("Organization name updated successfully")
+        return jsonify({"message": "Settings changed successfully"})
+
+    # load default
+    try:
+        name_form.organization_name.data = installation.organization_name
+    except AttributeError:
+        pass
+
+    logo_form = OrganizationLogoForm()
+    return render_template(
+        "organization_settings.html",
+        name_form=name_form,
+        logo_form=logo_form,
+        logo=installation.workspace_logo_url,
+    )
+
+
+@web_bp.route("/settings/organization/logo", methods=["POST"])
+@login_required
+def organization_settings_update_logo():
+    logger.info("Attemping to update organization logo")
+    installation = current_user.installation
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    form = OrganizationLogoForm()
     if form.validate_on_submit():
-        logger.info("Attempt to save organization info logo")
-        installation.organization_name = form.data["organization_name"]
-        installation.workspace_logo_url = form.data["workspace_logo_url"]
+        # TODO what file types are allowed?
+        logger.info("Attempt to save organization logo")
+        upload_url = s3.upload_logo(form.data["logo"])
+        installation.workspace_logo_url = upload_url
         db.session.add(installation)
         db.session.commit()
         logger.info("Workspace logo saved successfully")
         return jsonify({"message": "Settings changed successfully"})
 
-    # load default
-    try:
-        form.organization_name.data = installation.organization_name
-        form.workspace_logo_url.data = installation.workspace_logo_url
-    except AttributeError:
-        pass
+    return redirect(url_for("web.organization_settings"))
 
-    return render_template("organization_settings.html", form=form)
+
+# TODO it's a GET method doing the job of a POST, but not a big deal
+@web_bp.route("/settings/organization/logo/remove")
+@login_required
+def organization_settings_remove_logo():
+    logger.info("Attemping to remove organization logo")
+    installation = current_user.installation
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    installation.workspace_logo_url = None
+    db.session.add(installation)
+    db.session.commit()
+    logger.info("Workspace logo removed")
+    return jsonify({"message": "Settings changed successfully"})
