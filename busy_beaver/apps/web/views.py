@@ -1,6 +1,6 @@
 import logging
 
-from flask import jsonify, redirect, render_template, url_for
+from flask import flash, redirect, render_template, url_for
 from flask.views import View
 from flask_login import current_user, login_required, logout_user
 
@@ -103,7 +103,7 @@ def github_summary_settings():
             slack_id=current_user.slack_id,
         )
         logger.info("GitHub Summary settings changed successfully")
-        return jsonify({"message": "Settings changed successfully"})
+        flash("Settings saved", "success")
 
     # load default
     try:
@@ -131,7 +131,8 @@ def toggle_github_summary_config_view():
 
     config = installation.github_summary_config
     if not config:
-        return jsonify({"error": "Need to enter post time and timezone"})
+        flash("Need to enter post time and timezone", "error")
+        return redirect(url_for("web.github_summary_settings"))
     config.toggle_configuration_enabled_status()
     db.session.add(config)
     db.session.commit()
@@ -167,7 +168,7 @@ def upcoming_events_settings():
             slack_id=current_user.slack_id,
         )
         logger.info("Upcoming Events settings changed successfully")
-        return jsonify({"message": "Settings changed successfully"})
+        flash("Settings saved", "success")
 
     # load default
     try:
@@ -216,7 +217,8 @@ def toggle_upcoming_events_config_view():
 
     config = installation.upcoming_events_config
     if not config:
-        return jsonify({"error": "Need to enter post time and timezone"})
+        flash("Need to enter post time and timezone", "error")
+        return redirect(url_for("web.upcoming_events_settings"))
     config.toggle_configuration_enabled_status()
     db.session.add(config)
     db.session.commit()
@@ -236,7 +238,8 @@ def toggle_post_cron_view():
 
     config = installation.upcoming_events_config
     if not config:
-        return jsonify({"error": "Need to enter post time and timezone"})
+        flash("Need to enter post time and timezone", "error")
+        return redirect(url_for("web.upcoming_events_settings"))
     config.toggle_post_cron_enabled_status()
     db.session.add(config)
     db.session.commit()
@@ -262,7 +265,7 @@ def upcoming_events_add_new_group():
             installation, config, meetup_urlname=form.data["meetup_urlname"]
         )
         logger.info("New group added")
-        return jsonify({"message": "Group added successfully"})
+        flash("Settings changed", "success")
 
     # load default
     try:
@@ -314,7 +317,7 @@ def organization_settings():
         db.session.add(installation)
         db.session.commit()
         logger.info("Organization name updated successfully")
-        return jsonify({"message": "Settings changed successfully"})
+        flash("Organization name updated", "success")
 
     # load default
     try:
@@ -351,7 +354,7 @@ def organization_settings_update_logo():
         db.session.add(installation)
         db.session.commit()
         logger.info("Workspace logo saved successfully")
-        return jsonify({"message": "Settings changed successfully"})
+        flash("Logo uploaded", "success")
 
     return redirect(url_for("web.organization_settings"))
 
@@ -372,4 +375,6 @@ def organization_settings_remove_logo():
     db.session.add(installation)
     db.session.commit()
     logger.info("Workspace logo removed")
-    return jsonify({"message": "Settings changed successfully"})
+
+    flash("Logo removed", "success")
+    return redirect(url_for("web.organization_settings"))
