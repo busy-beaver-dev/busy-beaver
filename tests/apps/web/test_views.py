@@ -224,6 +224,19 @@ class TestUpcomingEventsViews:
 
 
 class TestUpdateOrganizationSettings:
+    @pytest.mark.unit
+    def test_load_organization_settings_page(self, login_client, factory, patch_slack):
+        # Arrange
+        slack_user = factory.SlackUser()
+        client = login_client(user=slack_user)
+        patch_slack(is_admin=True)
+
+        # Act
+        rv = client.get("/settings/organization")
+
+        # Assert
+        assert rv.status_code == 200
+
     @pytest.mark.end2end
     def test_change_organization_name(self, login_client, factory, patch_slack):
         # Arrange
