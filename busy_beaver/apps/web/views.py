@@ -347,7 +347,6 @@ def organization_settings_update_logo():
 
     form = OrganizationLogoForm()
     if form.validate_on_submit():
-        # TODO what file types are allowed?
         logger.info("Attempt to save organization logo")
         upload_url = s3.upload_logo(form.data["logo"])
         installation.workspace_logo_url = upload_url
@@ -355,6 +354,8 @@ def organization_settings_update_logo():
         db.session.commit()
         logger.info("Workspace logo saved successfully")
         flash("Logo uploaded", "success")
+    else:
+        flash("Can only upload PNG and JPG images", "error")
 
     return redirect(url_for("web.organization_settings"))
 

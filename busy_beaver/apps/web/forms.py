@@ -1,8 +1,9 @@
 from flask_login import current_user
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed, FileField, FileRequired
 import pytz
 from wtforms import ValidationError
-from wtforms.fields import FileField, IntegerField, SelectField, StringField
+from wtforms.fields import IntegerField, SelectField, StringField
 from wtforms.validators import DataRequired, NumberRange
 from wtforms_components import TimeField
 
@@ -73,4 +74,10 @@ class OrganizationNameForm(FlaskForm):
 
 
 class OrganizationLogoForm(FlaskForm):
-    logo = FileField("Upload Logo")
+    logo = FileField(
+        "Upload Logo",
+        validators=[
+            FileRequired(),
+            FileAllowed(["jpg", "png"], "PNG / JPG Images only!"),
+        ],
+    )
