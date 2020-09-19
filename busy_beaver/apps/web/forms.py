@@ -68,6 +68,9 @@ class AddNewGroupConfigurationForm(FlaskForm):
         field.data = group_name
 
 
-class OrganizationSettingsForm(FlaskForm):
+class OrganizationNameForm(FlaskForm):
     organization_name = StringField("Organization Name", validators=[DataRequired()])
-    logo = FileField()
+
+
+class OrganizationLogoForm(FlaskForm):
+    logo = FileField("Upload Logo")
