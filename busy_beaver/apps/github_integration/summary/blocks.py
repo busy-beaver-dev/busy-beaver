@@ -10,12 +10,6 @@ from busy_beaver.toolbox.slack_block_kit.elements import Image
 logger = logging.getLogger(__name__)
 
 
-no_activity_default = (
-    '"If code falls outside version control, and no one is around to read it, '
-    'does it make a sound?" - Zax Rosenberg'
-)
-
-
 class UserEvents(NamedTuple):
     user: GitHubSummaryUser
     events: GitHubUserEvents
