@@ -37,8 +37,6 @@
     </small>
   </p>
 {% else %}
-  <h6>Upload Logo</h6>
-
   <form method="POST" action="{{ url_for('web.organization_settings_update_logo') }}" enctype="multipart/form-data">
     {{ logo_form.csrf_token }}
     {{ render_field(logo_form.logo) }}

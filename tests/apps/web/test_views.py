@@ -223,23 +223,44 @@ class TestUpcomingEventsViews:
         assert config.post_cron_enabled is end_state
 
 
-class TestUpdateWorkspaceLogoview:
+class TestUpdateOrganizationSettings:
     @pytest.mark.end2end
-    def test_organization_settings(self, s3, login_client, factory, patch_slack):
+    def test_change_organization_name(self, s3, login_client, factory, patch_slack):
         # Arrange
-        slack_user = factory.SlackUser()
+        installation = factory.SlackInstallation(workspace_name="ChiPy")
+        slack_user = factory.SlackUser(installation=installation)
         client = login_client(user=slack_user)
         patch_slack(is_admin=True)
+
+        # Act
+        rv = client.post(
+            "/settings/organization",
+            data={"organization_name": "Chicago Python"},
+            follow_redirects=True,
+        )
+
+        # Assert
+        assert rv.status_code == 200
+        installation = SlackInstallation.query.first()
+        assert installation.organization_name == "Chicago Python"
+
+    @pytest.mark.end2end
+    def test_add_organization_logo(self, s3, login_client, factory, patch_slack):
+        # Arrange
+        installation = factory.SlackInstallation(
+            workspace_name="ChiPy", workspace_logo_url=None
+        )
+        slack_user = factory.SlackUser(installation=installation)
+        client = login_client(user=slack_user)
+        patch_slack(is_admin=True)
+
         logo_bytes = b"abcdefghijklmnopqrstuvwxyz"
         logo_file = io.BytesIO(logo_bytes)
 
         # Act
         rv = client.post(
-            "/settings/organization",
-            data={
-                "organization_name": "Chicago Python",
-                "logo": (logo_file, "testfile.txt"),
-            },
+            "/settings/organization/logo",
+            data={"logo": (logo_file, "testfile.txt")},
             follow_redirects=True,
             content_type="multipart/form-data",
         )
@@ -247,5 +268,23 @@ class TestUpdateWorkspaceLogoview:
         # Assert
         assert rv.status_code == 200
         installation = SlackInstallation.query.first()
-        assert installation.organization_name == "Chicago Python"
         assert ".txt" in installation.workspace_logo_url
+
+    @pytest.mark.end2end
+    def test_remove_organization_logo(self, s3, login_client, factory, patch_slack):
+        # Arrange
+        installation = factory.SlackInstallation(
+            workspace_name="ChiPy",
+            workspace_logo_url="http://www.google.com/images/image.jpg",
+        )
+        slack_user = factory.SlackUser(installation=installation)
+        client = login_client(user=slack_user)
+        patch_slack(is_admin=True)
+
+        # Act
+        rv = client.get("/settings/organization/logo/remove")
+
+        # Assert
+        assert rv.status_code == 200
+        installation = SlackInstallation.query.first()
+        assert installation.workspace_logo_url is None

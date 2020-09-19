@@ -73,4 +73,4 @@ class OrganizationNameForm(FlaskForm):
 
 
 class OrganizationLogoForm(FlaskForm):
-    logo = FileField()
+    logo = FileField("Upload Logo")
