@@ -23,7 +23,7 @@ from busy_beaver.clients import s3, slack_signin_oauth
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import NotAuthorized
 from busy_beaver.extensions import db
-from busy_beaver.models import UpcomingEventsGroup
+from busy_beaver.models import UpcomingEventsConfiguration, UpcomingEventsGroup
 
 logger = logging.getLogger(__name__)
 
@@ -261,11 +261,17 @@ def upcoming_events_add_new_group():
     form = AddNewGroupConfigurationForm()
     if form.validate_on_submit():
         logger.info("Attempt to add new group")
+        config_id = config.id
         add_new_group_to_configuration(
             installation, config, meetup_urlname=form.data["meetup_urlname"]
         )
         logger.info("New group added")
         flash("Settings changed", "success")
+        # PROOBLEM: when running tests, we run async workers synchronously
+        # this does not play nice with the SQLAlchemy Session
+        # WORKAROUND: adding a group is not something we do too often
+        # so let's just get the record again
+        config = UpcomingEventsConfiguration.query.get(config_id)
 
     # load default
     try:
