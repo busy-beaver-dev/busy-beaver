@@ -151,27 +151,6 @@ Environment Variables
     secretKeyRef:
       name: {{ .Values.secretName }}
       key: github-signing-secret
-# twitter
-- name: TWITTER_ACCESS_TOKEN_SECRET
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.secretName }}
-      key: twitter-access-token-secret
-- name: TWITTER_ACCESS_TOKEN
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.secretName }}
-      key: twitter-access-token
-- name: TWITTER_CONSUMER_KEY
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.secretName }}
-      key: twitter-consumer-key
-- name: TWITTER_CONSUMER_SECRET
-  valueFrom:
-    secretKeyRef:
-      name: {{ .Values.secretName }}
-      key: twitter-consumer-secret
 - name: DIGITALOCEAN_SPACES_KEY
   valueFrom:
     secretKeyRef:

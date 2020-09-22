@@ -7,7 +7,6 @@ References:
 
 import pytest
 
-from busy_beaver.common.wrappers import KeyValueStoreClient
 from busy_beaver.extensions import rq as _rq
 
 pytest_plugins = (
@@ -16,11 +15,6 @@ pytest_plugins = (
     "tests._utilities.fixtures.toolbox",
     "tests._utilities.fixtures.vcr",
 )
-
-
-@pytest.fixture
-def kv_store(session):
-    return KeyValueStoreClient()
 
 
 @pytest.fixture(scope="module")

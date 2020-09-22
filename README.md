@@ -34,10 +34,6 @@ Busy Beaver posts daily summaries of public GitHub activity for registered users
 
 Users sign up for an account by `DM`ing the bot with the phrase: `connect`. The bot requires users to sign into GitHub to ensure only authorized activity is posted in the channel.
 
-### Retweeter
-
-Busy Beaver retweets posts made to the [@ChicagoPython Twitter account](https://twitter.com/ChicagoPython) in the `#at-chicagopython` channel on the [ChiPy Slack](https://chipy.slack.com/).
-
 ### Roadmap
 
 We are currently working on additional features to improve ChiPy community engagement. Please join the conversation in `#busy-beaver-meta` on the [ChiPy Slack](https://chipy.slack.com/).

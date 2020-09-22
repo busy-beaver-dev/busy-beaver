@@ -15,10 +15,6 @@ For both staging and production apps
 - [ ] Set up event subscriptions and put them to the URL
   - [ ] WHAT EVENT SUBSCRIPTIONS DO WE NEED TO ENABLE
 
-## Notes
-
-- Workspace needs Twitter integration to expand Tweets
-
 ### App Details
 
 |Environment|Name|Workspace|workspace_id

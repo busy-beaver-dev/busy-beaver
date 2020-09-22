@@ -11,7 +11,6 @@ Material related to deploying Busy Beaver.
   - [Deployment Notes](#deployment-notes)
 - [Integration Notes](#integration-notes)
   - [GitHub](#github)
-  - [Twitter](#twitter)
   - [Meetup](#meetup)
   - [Sentry](#sentry)
 
@@ -52,12 +51,6 @@ There is a GitHub workflow that can be triggered to deploy the BusyBeaver using 
 For both staging and production apps in the `busy-beaver-dev` organization
 
 - [ ] update the callback URL
-
-### Twitter
-
-For both staging and production app
-
-- [ ] fetch application credentials and make into environment variables
 
 ### Meetup
 
