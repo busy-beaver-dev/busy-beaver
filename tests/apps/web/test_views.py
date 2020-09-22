@@ -307,7 +307,7 @@ class TestUpdateOrganizationSettings:
         client = login_client(user=slack_user)
         rv = client.post(
             "/settings/organization/logo",
-            data={"logo": (logo_file, f"testfile.txt")},
+            data={"logo": (logo_file, "testfile.txt")},
             follow_redirects=True,
             content_type="multipart/form-data",
         )
