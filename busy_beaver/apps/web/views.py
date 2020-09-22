@@ -1,6 +1,6 @@
 import logging
 
-from flask import jsonify, redirect, render_template, url_for
+from flask import flash, redirect, render_template, url_for
 from flask.views import View
 from flask_login import current_user, login_required, logout_user
 
@@ -23,7 +23,7 @@ from busy_beaver.clients import s3, slack_signin_oauth
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import NotAuthorized
 from busy_beaver.extensions import db
-from busy_beaver.models import UpcomingEventsGroup
+from busy_beaver.models import UpcomingEventsConfiguration, UpcomingEventsGroup
 
 logger = logging.getLogger(__name__)
 
@@ -103,7 +103,7 @@ def github_summary_settings():
             slack_id=current_user.slack_id,
         )
         logger.info("GitHub Summary settings changed successfully")
-        return jsonify({"message": "Settings changed successfully"})
+        flash("Settings saved", "success")
 
     # load default
     try:
@@ -131,7 +131,8 @@ def toggle_github_summary_config_view():
 
     config = installation.github_summary_config
     if not config:
-        return jsonify({"error": "Need to enter post time and timezone"})
+        flash("Need to enter post time and timezone", "error")
+        return redirect(url_for("web.github_summary_settings"))
     config.toggle_configuration_enabled_status()
     db.session.add(config)
     db.session.commit()
@@ -167,7 +168,7 @@ def upcoming_events_settings():
             slack_id=current_user.slack_id,
         )
         logger.info("Upcoming Events settings changed successfully")
-        return jsonify({"message": "Settings changed successfully"})
+        flash("Settings saved", "success")
 
     # load default
     try:
@@ -216,7 +217,8 @@ def toggle_upcoming_events_config_view():
 
     config = installation.upcoming_events_config
     if not config:
-        return jsonify({"error": "Need to enter post time and timezone"})
+        flash("Need to enter post time and timezone", "error")
+        return redirect(url_for("web.upcoming_events_settings"))
     config.toggle_configuration_enabled_status()
     db.session.add(config)
     db.session.commit()
@@ -236,7 +238,8 @@ def toggle_post_cron_view():
 
     config = installation.upcoming_events_config
     if not config:
-        return jsonify({"error": "Need to enter post time and timezone"})
+        flash("Need to enter post time and timezone", "error")
+        return redirect(url_for("web.upcoming_events_settings"))
     config.toggle_post_cron_enabled_status()
     db.session.add(config)
     db.session.commit()
@@ -258,11 +261,17 @@ def upcoming_events_add_new_group():
     form = AddNewGroupConfigurationForm()
     if form.validate_on_submit():
         logger.info("Attempt to add new group")
+        config_id = config.id
         add_new_group_to_configuration(
             installation, config, meetup_urlname=form.data["meetup_urlname"]
         )
         logger.info("New group added")
-        return jsonify({"message": "Group added successfully"})
+        flash("Settings changed", "success")
+        # PROOBLEM: when running tests, we run async workers synchronously
+        # this does not play nice with the SQLAlchemy Session
+        # WORKAROUND: adding a group is not something we do too often
+        # so let's just get the record again
+        config = UpcomingEventsConfiguration.query.get(config_id)
 
     # load default
     try:
@@ -314,7 +323,7 @@ def organization_settings():
         db.session.add(installation)
         db.session.commit()
         logger.info("Organization name updated successfully")
-        return jsonify({"message": "Settings changed successfully"})
+        flash("Organization name updated", "success")
 
     # load default
     try:
@@ -333,7 +342,7 @@ def organization_settings():
 
 @web_bp.route("/settings/organization/logo", methods=["POST"])
 @login_required
-def organization_settings_update_logo():
+def organization_settings_add_logo():
     logger.info("Attemping to update organization logo")
     installation = current_user.installation
     slack = SlackClient(installation.bot_access_token)
@@ -344,14 +353,15 @@ def organization_settings_update_logo():
 
     form = OrganizationLogoForm()
     if form.validate_on_submit():
-        # TODO what file types are allowed?
         logger.info("Attempt to save organization logo")
         upload_url = s3.upload_logo(form.data["logo"])
         installation.workspace_logo_url = upload_url
         db.session.add(installation)
         db.session.commit()
         logger.info("Workspace logo saved successfully")
-        return jsonify({"message": "Settings changed successfully"})
+        flash("Logo uploaded", "success")
+    else:
+        flash("Can only upload PNG and JPG images", "error")
 
     return redirect(url_for("web.organization_settings"))
 
@@ -372,4 +382,6 @@ def organization_settings_remove_logo():
     db.session.add(installation)
     db.session.commit()
     logger.info("Workspace logo removed")
-    return jsonify({"message": "Settings changed successfully"})
+
+    flash("Logo removed", "success")
+    return redirect(url_for("web.organization_settings"))

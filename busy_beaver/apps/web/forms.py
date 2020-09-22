@@ -1,8 +1,9 @@
 from flask_login import current_user
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileAllowed, FileField, FileRequired
 import pytz
 from wtforms import ValidationError
-from wtforms.fields import FileField, IntegerField, SelectField, StringField
+from wtforms.fields import IntegerField, SelectField, StringField
 from wtforms.validators import DataRequired, NumberRange
 from wtforms_components import TimeField
 
@@ -10,6 +11,7 @@ from busy_beaver.clients import meetup
 from busy_beaver.common.datetime_utilities import add_gmt_offset_to_timezone
 from busy_beaver.models import UpcomingEventsGroup
 
+ALLOWED_FILE_TYPES = ["jpg", "jpeg", "png"]
 TIMEZONES = [(pytz.timezone(tz), tz) for tz in pytz.common_timezones]
 TZ_CHOICES = sorted(
     add_gmt_offset_to_timezone(TIMEZONES), key=lambda x: int(x[1][3:5]), reverse=True
@@ -73,4 +75,10 @@ class OrganizationNameForm(FlaskForm):
 
 
 class OrganizationLogoForm(FlaskForm):
-    logo = FileField("Upload Logo")
+    logo = FileField(
+        "Upload Logo",
+        validators=[
+            FileRequired(),
+            FileAllowed(ALLOWED_FILE_TYPES, "PNG / JPG Images only!"),
+        ],
+    )
