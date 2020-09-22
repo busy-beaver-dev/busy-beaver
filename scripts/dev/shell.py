@@ -3,7 +3,6 @@ import os
 from busy_beaver import create_app
 from busy_beaver.common.wrappers import (
     GitHubClient,
-    KeyValueStoreClient,
     MeetupClient,
     SlackClient,
     YouTubeClient,
@@ -28,8 +27,6 @@ youtube = YouTubeClient(api_key=YOUTUBE_API_KEY)
 
 MEETUP_API_KEY = os.getenv("MEETUP_API_KEY")
 meetup = MeetupClient(MEETUP_API_KEY)
-
-kv = KeyValueStoreClient()
 
 # log to console
 display_text = "Busy Beaver Development Shell"

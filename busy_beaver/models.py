@@ -1,4 +1,4 @@
-from busy_beaver.common.models import BaseModel, KeyValueStore, Task  # noqa isort:skip
+from busy_beaver.common.models import BaseModel, Task  # noqa isort:skip
 
 from busy_beaver.apps.github_integration.models import (  # noqa
     GitHubSummaryConfiguration,

@@ -50,9 +50,6 @@ class SlackInstallation(BaseModel):
         uselist=False,
         lazy="joined",
     )
-    key_value_pairs = db.relationship(
-        "KeyValueStore", back_populates="slack_installation"
-    )
 
 
 class SlackUser(UserMixin, BaseModel):
