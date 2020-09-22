@@ -2,6 +2,7 @@ import io
 
 import pytest
 
+from busy_beaver.apps.web.forms import ALLOWED_FILE_TYPES
 from busy_beaver.models import (
     SlackInstallation,
     UpcomingEventsConfiguration,
@@ -258,9 +259,11 @@ class TestUpdateOrganizationSettings:
         assert installation.organization_name == "Chicago Python"
 
     @pytest.mark.end2end
-    # TODO add pytest.parametrize for all the allowed file types
-    # TODO add test for .txt filetype.... does not
-    def test_add_organization_logo(self, s3, login_client, factory, patch_slack):
+    @pytest.mark.parametrize("file_extension", ALLOWED_FILE_TYPES)
+    def test_add_organization_logo__allowed_file_extension(
+        self, file_extension, s3, login_client, factory, patch_slack
+    ):
+        """Try to upload a filetype that is allowed; image is saved"""
         # Arrange
         installation = factory.SlackInstallation(
             workspace_name="ChiPy", workspace_logo_url=None
@@ -275,7 +278,7 @@ class TestUpdateOrganizationSettings:
         client = login_client(user=slack_user)
         rv = client.post(
             "/settings/organization/logo",
-            data={"logo": (logo_file, "testfile.jpg")},
+            data={"logo": (logo_file, f"testfile.{file_extension}")},
             follow_redirects=True,
             content_type="multipart/form-data",
         )
@@ -283,7 +286,36 @@ class TestUpdateOrganizationSettings:
         # Assert
         assert rv.status_code == 200
         installation = SlackInstallation.query.first()
-        assert ".jpg" in installation.workspace_logo_url
+        assert f".{file_extension}" in installation.workspace_logo_url
+
+    @pytest.mark.end2end
+    def test_add_organization_logo__file_type_not_allowed(
+        self, s3, login_client, factory, patch_slack
+    ):
+        """Try to upload a filetype that is not allowed; image is not saved"""
+        # Arrange
+        installation = factory.SlackInstallation(
+            workspace_name="ChiPy", workspace_logo_url=None
+        )
+        slack_user = factory.SlackUser(installation=installation)
+        patch_slack(is_admin=True)
+
+        logo_bytes = b"abcdefghijklmnopqrstuvwxyz"
+        logo_file = io.BytesIO(logo_bytes)
+
+        # Act
+        client = login_client(user=slack_user)
+        rv = client.post(
+            "/settings/organization/logo",
+            data={"logo": (logo_file, f"testfile.txt")},
+            follow_redirects=True,
+            content_type="multipart/form-data",
+        )
+
+        # Assert
+        assert rv.status_code == 200
+        installation = SlackInstallation.query.first()
+        assert installation.workspace_logo_url is None
 
     @pytest.mark.end2end
     def test_remove_organization_logo(self, login_client, factory, patch_slack):

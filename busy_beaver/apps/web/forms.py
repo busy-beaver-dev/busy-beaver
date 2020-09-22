@@ -11,6 +11,7 @@ from busy_beaver.clients import meetup
 from busy_beaver.common.datetime_utilities import add_gmt_offset_to_timezone
 from busy_beaver.models import UpcomingEventsGroup
 
+ALLOWED_FILE_TYPES = ["jpg", "jpeg", "png"]
 TIMEZONES = [(pytz.timezone(tz), tz) for tz in pytz.common_timezones]
 TZ_CHOICES = sorted(
     add_gmt_offset_to_timezone(TIMEZONES), key=lambda x: int(x[1][3:5]), reverse=True
@@ -78,6 +79,6 @@ class OrganizationLogoForm(FlaskForm):
         "Upload Logo",
         validators=[
             FileRequired(),
-            FileAllowed(["jpg", "jpeg", "png"], "PNG / JPG Images only!"),
+            FileAllowed(ALLOWED_FILE_TYPES, "PNG / JPG Images only!"),
         ],
     )
