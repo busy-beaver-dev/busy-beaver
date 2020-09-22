@@ -13,6 +13,5 @@ Flask code is in `api` subfolders.
 |debug|Tools to help development and debug|
 |events|Find and post upcoming events|
 |github_integration|GitHub related-integration logic|
-|retweeter|Shares tweets by a given Twitter account in Slack|
 |slack_integration|Slack-related integration logic|
 |youtube_integration|YouTube related-itnegration logic (WIP)|

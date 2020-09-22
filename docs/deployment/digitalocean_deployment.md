@@ -10,8 +10,7 @@ Details about infrastructure set up on DigitalOcean.
   - [Prerequestites](#prerequestites)
   - [Setting up Staging Environment](#setting-up-staging-environment)
   - [Setting up Production Environment](#setting-up-production-environment)
-  - [Deploying App](#deploying-app)
-  - [Secrets Format](#secrets-format)
+  - [Secrets](#secrets)
 
 <!-- /TOC -->
 
@@ -42,32 +41,6 @@ helm install busybeaver-production ./busybeaver/ -f values/production.yaml
 helm upgrade busybeaver-production ./busybeaver/ -f values/production.yaml --set image.version=[version]
 ```
 
-### Secrets Format
+### Secrets
 
-All data values need to be `base64` encoded.
-
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: busybeaver-[staging|production]
-type: Opaque
-data:
-  db-uri:
-  cache-uri:
-  sentry-dsn:
-  secret-key:
-  slack-client-id:
-  slack-client-secret:
-  slack-botuser-oauth-token:
-  slack-signing-secret:
-  meetup-api-key:
-  github-client-id:
-  github-client-secret:
-  github-oauth-token:
-  github-signing-secret:
-  twitter-access-token-secret:
-  twitter-access-token:
-  twitter-consumer-key:
-  twitter-consumer-secret:
-```
+Secrets are loaded from AWS Secrets Manager into Kuberenetes using Terraform.

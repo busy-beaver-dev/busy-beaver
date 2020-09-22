@@ -8,13 +8,7 @@ Variables are assigned Singleton instances of each
 integration.
 """
 
-from .common.wrappers import (
-    GitHubClient,
-    MeetupClient,
-    S3Client,
-    SlackClient,
-    TwitterClient,
-)
+from .common.wrappers import GitHubClient, MeetupClient, S3Client, SlackClient
 from .config import (
     DIGITALOCEAN_SPACES_KEY,
     DIGITALOCEAN_SPACES_SECRET,
@@ -25,10 +19,6 @@ from .config import (
     SLACK_CLIENT_ID,
     SLACK_CLIENT_SECRET,
     SLACK_TOKEN,
-    TWITTER_ACCESS_TOKEN,
-    TWITTER_ACCESS_TOKEN_SECRET,
-    TWITTER_CONSUMER_KEY,
-    TWITTER_CONSUMER_SECRET,
 )
 from busy_beaver.apps.github_integration.oauth.oauth_flow import GitHubOAuthFlow
 from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
@@ -39,12 +29,6 @@ from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
 chipy_slack = SlackClient(SLACK_TOKEN)  # Default Workspace -- this is being phased out
 github = GitHubClient(GITHUB_OAUTH_TOKEN)
 meetup = MeetupClient(MEETUP_API_KEY)
-twitter = TwitterClient(
-    TWITTER_CONSUMER_KEY,
-    TWITTER_CONSUMER_SECRET,
-    TWITTER_ACCESS_TOKEN,
-    TWITTER_ACCESS_TOKEN_SECRET,
-)
 
 slack_install_oauth = SlackInstallationOAuthFlow(SLACK_CLIENT_ID, SLACK_CLIENT_SECRET)
 slack_signin_oauth = SlackSignInOAuthFlow(SLACK_CLIENT_ID, SLACK_CLIENT_SECRET)

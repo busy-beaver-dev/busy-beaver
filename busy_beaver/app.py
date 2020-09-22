@@ -2,14 +2,7 @@ from flask import Flask, request
 from secure import SecureHeaders
 from whitenoise import WhiteNoise
 
-from .blueprints import (
-    events_bp,
-    github_bp,
-    healthcheck_bp,
-    slack_bp,
-    twitter_bp,
-    web_bp,
-)
+from .blueprints import events_bp, github_bp, healthcheck_bp, slack_bp, web_bp
 from .common.oauth import OAuthError
 from .config import DATABASE_URI, REDIS_URI, SECRET_KEY
 from .exceptions import NotAuthorized, StateMachineError, ValidationError
@@ -55,7 +48,6 @@ def create_app(*, testing=False):
     app.register_blueprint(healthcheck_bp)
     app.register_blueprint(github_bp, url_prefix="/github", cli_group=None)
     app.register_blueprint(slack_bp, url_prefix="/slack")
-    app.register_blueprint(twitter_bp, cli_group=None)
     app.register_blueprint(web_bp)
 
     app.wsgi_app = WhiteNoise(

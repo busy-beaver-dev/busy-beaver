@@ -2,7 +2,6 @@ from .event import Event, UpcomingEventsConfiguration, UpcomingEventsGroup
 from .event_details import EventDetails
 from .github_summary_user import GitHubSummaryConfiguration, GitHubSummaryUser
 from .slack import SlackInstallation, SlackUser
-from .tweet import Tweet
 
 
 class FactoryManager:
@@ -13,7 +12,6 @@ class FactoryManager:
         GitHubSummaryUser,
         SlackInstallation,
         SlackUser,
-        Tweet,
         UpcomingEventsConfiguration,
         UpcomingEventsGroup,
     ]
