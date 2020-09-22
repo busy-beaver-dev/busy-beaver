@@ -336,7 +336,7 @@ def organization_settings():
 
 @web_bp.route("/settings/organization/logo", methods=["POST"])
 @login_required
-def organization_settings_update_logo():
+def organization_settings_add_logo():
     logger.info("Attemping to update organization logo")
     installation = current_user.installation
     slack = SlackClient(installation.bot_access_token)

@@ -64,10 +64,10 @@ class TestUpcomingEventsViews:
     def test_upcoming_events_get(self, login_client, factory, patch_slack):
         # Arrange
         slack_user = factory.SlackUser()
-        client = login_client(user=slack_user)
         patch_slack(is_admin=True)
 
         # Act
+        client = login_client(user=slack_user)
         rv = client.get("/settings/upcoming-events", follow_redirects=True)
 
         # Assert
@@ -79,10 +79,10 @@ class TestUpcomingEventsViews:
     ):
         # Arrange
         slack_user = factory.SlackUser()
-        client = login_client(user=slack_user)
         patch_slack(is_admin=True)
 
         # Act
+        client = login_client(user=slack_user)
         rv = client.get("/settings/upcoming-events/group", follow_redirects=True)
 
         # Assert
@@ -96,10 +96,10 @@ class TestUpcomingEventsViews:
         # Arrange
         config = factory.UpcomingEventsConfiguration(enabled=True)
         slack_user = factory.SlackUser(installation=config.slack_installation)
-        client = login_client(user=slack_user)
         patch_slack(is_admin=True)
 
         # Act
+        client = login_client(user=slack_user)
         rv = client.post(
             "/settings/upcoming-events/group",
             data={"meetup_urlname": "_CHIPY_"},
@@ -120,10 +120,10 @@ class TestUpcomingEventsViews:
         # Arrange
         config = factory.UpcomingEventsConfiguration(enabled=True)
         slack_user = factory.SlackUser(installation=config.slack_installation)
-        client = login_client(user=slack_user)
         patch_slack(is_admin=True)
 
         # Act
+        client = login_client(user=slack_user)
         rv = client.post(
             "/settings/upcoming-events/group",
             data={"meetup_urlname": "adsfasdfeum3n4x"},
@@ -145,10 +145,10 @@ class TestUpcomingEventsViews:
         config = factory.UpcomingEventsConfiguration(enabled=True)
         UpcomingEventsGroup(meetup_urlname="_ChiPy_", configuration=config)
         slack_user = factory.SlackUser(installation=config.slack_installation)
-        client = login_client(user=slack_user)
         patch_slack(is_admin=True)
 
         # Act
+        client = login_client(user=slack_user)
         rv = client.post(
             "/settings/upcoming-events/group",
             data={"meetup_urlname": "_ChiPy_"},
@@ -169,10 +169,10 @@ class TestUpcomingEventsViews:
         # Arrange
         config = factory.UpcomingEventsConfiguration(enabled=True)
         slack_user = factory.SlackUser(installation=config.slack_installation)
-        client = login_client(user=slack_user)
         patch_slack(is_admin=True)
 
         # Act
+        client = login_client(user=slack_user)
         rv = client.get("/settings/upcoming-events/toggle", follow_redirects=True)
 
         # Assert
@@ -187,10 +187,10 @@ class TestUpcomingEventsViews:
         config = factory.UpcomingEventsConfiguration(enabled=True)
         group = UpcomingEventsGroup(meetup_urlname="_ChiPy_", configuration=config)
         slack_user = factory.SlackUser(installation=config.slack_installation)
-        client = login_client(user=slack_user)
         patch_slack(is_admin=True)
 
         # Act
+        client = login_client(user=slack_user)
         rv = client.get(
             f"/settings/upcoming-events/group/{group.id}/delete", follow_redirects=True
         )
@@ -208,10 +208,10 @@ class TestUpcomingEventsViews:
         # Arrange
         config = factory.UpcomingEventsConfiguration(post_cron_enabled=start_state)
         slack_user = factory.SlackUser(installation=config.slack_installation)
-        client = login_client(user=slack_user)
         patch_slack(is_admin=True)
 
         # Act
+        client = login_client(user=slack_user)
         rv = client.get(
             "/settings/upcoming-events/post-cron/toggle", follow_redirects=True
         )
@@ -228,10 +228,10 @@ class TestUpdateOrganizationSettings:
     def test_load_organization_settings_page(self, login_client, factory, patch_slack):
         # Arrange
         slack_user = factory.SlackUser()
-        client = login_client(user=slack_user)
         patch_slack(is_admin=True)
 
         # Act
+        client = login_client(user=slack_user)
         rv = client.get("/settings/organization")
 
         # Assert
@@ -242,10 +242,10 @@ class TestUpdateOrganizationSettings:
         # Arrange
         installation = factory.SlackInstallation(workspace_name="ChiPy")
         slack_user = factory.SlackUser(installation=installation)
-        client = login_client(user=slack_user)
         patch_slack(is_admin=True)
 
         # Act
+        client = login_client(user=slack_user)
         rv = client.post(
             "/settings/organization",
             data={"organization_name": "Chicago Python"},
@@ -258,22 +258,24 @@ class TestUpdateOrganizationSettings:
         assert installation.organization_name == "Chicago Python"
 
     @pytest.mark.end2end
+    # TODO add pytest.parametrize for all the allowed file types
+    # TODO add test for .txt filetype.... does not
     def test_add_organization_logo(self, s3, login_client, factory, patch_slack):
         # Arrange
         installation = factory.SlackInstallation(
             workspace_name="ChiPy", workspace_logo_url=None
         )
         slack_user = factory.SlackUser(installation=installation)
-        client = login_client(user=slack_user)
         patch_slack(is_admin=True)
 
         logo_bytes = b"abcdefghijklmnopqrstuvwxyz"
         logo_file = io.BytesIO(logo_bytes)
 
         # Act
+        client = login_client(user=slack_user)
         rv = client.post(
             "/settings/organization/logo",
-            data={"logo": (logo_file, "testfile.txt")},
+            data={"logo": (logo_file, "testfile.jpg")},
             follow_redirects=True,
             content_type="multipart/form-data",
         )
@@ -281,7 +283,7 @@ class TestUpdateOrganizationSettings:
         # Assert
         assert rv.status_code == 200
         installation = SlackInstallation.query.first()
-        assert ".txt" in installation.workspace_logo_url
+        assert ".jpg" in installation.workspace_logo_url
 
     @pytest.mark.end2end
     def test_remove_organization_logo(self, login_client, factory, patch_slack):
@@ -291,11 +293,11 @@ class TestUpdateOrganizationSettings:
             workspace_logo_url="http://www.google.com/images/image.jpg",
         )
         slack_user = factory.SlackUser(installation=installation)
-        client = login_client(user=slack_user)
         patch_slack(is_admin=True)
 
         # Act
-        rv = client.get("/settings/organization/logo/remove")
+        client = login_client(user=slack_user)
+        rv = client.get("/settings/organization/logo/remove", follow_redirects=True)
 
         # Assert
         assert rv.status_code == 200

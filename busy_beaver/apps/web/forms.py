@@ -78,6 +78,6 @@ class OrganizationLogoForm(FlaskForm):
         "Upload Logo",
         validators=[
             FileRequired(),
-            FileAllowed(["jpg", "png"], "PNG / JPG Images only!"),
+            FileAllowed(["jpg", "jpeg", "png"], "PNG / JPG Images only!"),
         ],
     )

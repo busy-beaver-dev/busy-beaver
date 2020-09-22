@@ -37,7 +37,7 @@
     </small>
   </p>
 {% else %}
-  <form method="POST" action="{{ url_for('web.organization_settings_update_logo') }}" enctype="multipart/form-data">
+  <form method="POST" action="{{ url_for('web.organization_settings_add_logo') }}" enctype="multipart/form-data">
     {{ logo_form.csrf_token }}
     {{ render_field(logo_form.logo) }}
 
