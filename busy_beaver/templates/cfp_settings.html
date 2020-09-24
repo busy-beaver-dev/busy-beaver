@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% from "bootstrap/form.html" import render_field, render_form_row %}
+
+{% block container %}
+<h3>Call For Proposals Settings</h3>
+
+<p>
+  Busy Beaver posts open Call For Proposals (CFP) for your
+  organization and upcoming Python conferences.
+</p>
+
+<p>
+  Specify which channel you would like this posted in.
+
+  (TODO show example)
+</p>
+
+<hr>
+
+<form id="cfp-form" method="POST" action="{{ url_for('web.cfp_settings') }}" role="form">
+  {{ form.csrf_token }}
+
+  {{ render_form_row([form.channel], col_map={'channel': 'col-md-4'}) }}
+  <small>
+    Don't see your channel here? <code>/invite</code> Busy Beaver and refresh this page.
+  </small>
+
+  <hr>
+
+  <p>
+    Add your organization's open CFPs.
+  </p>
+
+  <a id="add" href="#">Add Event</a>
+
+  <br><br>
+
+  <div id="subforms-container">
+    {% for subform in form.internal_cfps %}
+    <div id="internal-cfp-{{ loop.index0 }}-form" class="subform" data-index="{{ loop.index0 }}">
+      {{ render_form_row([subform.event, subform.url], col_map={subform.event.id: 'col-md-3', subform.url.id: 'col-md-9'}) }}
+      <small>
+        <a class="remove" href="#">Remove</a>
+      </small>
+    </div>
+    {% endfor %}
+  </div>
+
+  <input type="submit" value="Submit" class="btn btn-primary">
+</form>
+
+{# hidden template used to generate new rows #}
+{% for subform in form.internal_cfps[:1] %}
+<div id="internal-cfp-_-form" class="is-hidden" data-index="_">
+  {{ render_form_row([subform.event, subform.url], col_map={subform.event.id: 'col-md-3', subform.url.id: 'col-md-9'}) }}
+  <small>
+    <a class="remove" href="#">Remove</a>
+  </small>
+</div>
+{% endfor %}
+
+<br><br>
+{% endblock %}
+
+{% block more_scripts %}
+<script>
+  /**
+   * Adjust the indices of form fields when removing items.
+   */
+  function adjustIndices(removedIndex) {
+    var $forms = $('.subform');
+
+    $forms.each(function (i) {
+      var $form = $(this);
+      var index = parseInt($form.data('index'));
+      var newIndex = index - 1;
+
+      if (index < removedIndex) {
+        // Skip
+        return true;
+      }
+
+      // Change ID in form itself
+      $form.attr('id', $form.attr('id').replace(index, newIndex));
+      $form.data('index', newIndex);
+
+      // Change IDs in form inputs
+      $form.find('input').each(function (j) {
+        var $item = $(this);
+        $item.attr('id', $item.attr('id').replace(index, newIndex));
+        $item.attr('name', $item.attr('name').replace(index, newIndex));
+      });
+    });
+  }
+
+  /**
+   * Remove a form.
+   */
+  function removeForm() {
+    var $removedForm = $(this).closest('.subform');
+    var removedIndex = parseInt($removedForm.data('index'));
+
+    $removedForm.remove();
+
+    // Update indices
+    adjustIndices(removedIndex);
+  }
+
+  /**
+   * Add a new form.
+   */
+  function addForm() {
+    var $templateForm = $('#internal-cfp-_-form');
+
+    if (!$templateForm) {
+      console.log('[ERROR] Cannot find template');
+      return;
+    }
+
+    // Get Last index
+    var $lastForm = $('.subform').last();
+
+    var newIndex = 0;
+
+    if ($lastForm.length > 0) {
+      newIndex = parseInt($lastForm.data('index')) + 1;
+    }
+
+    // Maximum of 10 subforms
+    if (newIndex > 10) {
+      console.log('[WARNING] Reached maximum number of elements');
+      return;
+    }
+
+    // Add elements
+    var $newForm = $templateForm.clone();
+
+    $newForm.attr('id', $newForm.attr('id').replace('0', newIndex));
+    $newForm.data('index', newIndex);
+
+    $newForm.find('input').each(function (idx) {
+      var $item = $(this);
+
+      $item.attr('id', $item.attr('id').replace('0', newIndex));
+      $item.attr('name', $item.attr('name').replace('0', newIndex));
+      // TODO: maybe zero out values?
+    });
+
+    // Append
+    $('#subforms-container').append($newForm);
+    $newForm.addClass('subform');
+    $newForm.removeClass('is-hidden');
+
+    $newForm.find('.remove').click(removeForm);
+  }
+
+
+  $(document).ready(function () {
+    $('#add').click(addForm);
+    $('.remove').click(removeForm);
+  });
+</script>
+
+<style>
+  .is-hidden {
+    display: none;
+  }
+</style>
+{% endblock %}

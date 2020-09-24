@@ -12,6 +12,7 @@ from .forms import (
     OrganizationNameForm,
     UpcomingEventsConfigurationForm,
 )
+from busy_beaver.apps.call_for_proposals.forms import CFPSettingsForm
 from busy_beaver.apps.slack_integration.oauth.workflow import (
     create_or_update_configuration,
 )
@@ -385,3 +386,68 @@ def organization_settings_remove_logo():
 
     flash("Logo removed", "success")
     return redirect(url_for("web.organization_settings"))
+
+
+####################
+# Call For Proposals
+####################
+@web_bp.route("/settings/call-for-proposals", methods=("GET", "POST"))
+@login_required
+def cfp_settings():
+    logger.info("Hit CFP Settings page")
+    installation = current_user.installation
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    # TODO: change from here
+    # TODO: make sure that when we load information; the values are correct
+    form = CFPSettingsForm()
+    form.channel.choices = slack.get_bot_channels()
+    if form.validate_on_submit():
+        logger.info("Attempt to save GitHub Summary settings")
+        create_or_update_configuration(
+            installation,
+            channel=form.data["channel"],
+            summary_post_time=form.data["summary_post_time"],
+            summary_post_timezone=form.data["summary_post_timezone"],
+            slack_id=current_user.slack_id,
+        )
+        logger.info("GitHub Summary settings changed successfully")
+        flash("Settings saved", "success")
+
+    # load default
+    # try:
+    #     config = installation.github_summary_config
+    #     form.summary_post_time.data = config.summary_post_time
+    #     form.summary_post_timezone.data = config.summary_post_timezone.zone
+    #     form.channel.data = config.channel
+    #     enabled = config.enabled
+    # except AttributeError:
+    #     enabled = False
+
+    return render_template("cfp_settings.html", form=form)
+
+
+@web_bp.route("/settings/call-for-proposalsy/toggle")
+@login_required
+def toggle_cfp_view():
+    logger.info("Toggling CFP enabled state")
+    installation = current_user.installation
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    # TODO: change from here
+    config = installation.github_summary_config
+    if not config:
+        flash("Need to enter post time and timezone", "error")
+        return redirect(url_for("web.github_summary_settings"))
+    config.toggle_configuration_enabled_status()
+    db.session.add(config)
+    db.session.commit()
+    return redirect(url_for("web.github_summary_settings"))
