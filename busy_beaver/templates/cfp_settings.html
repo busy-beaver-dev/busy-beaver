@@ -38,6 +38,7 @@
   <div id="subforms-container">
     {% for subform in form.internal_cfps %}
     <div id="internal-cfp-{{ loop.index0 }}-form" class="subform" data-index="{{ loop.index0 }}">
+      {{ subform.csrf_token }}
       {{ render_form_row([subform.event, subform.url], col_map={subform.event.id: 'col-md-3', subform.url.id: 'col-md-9'}) }}
       <small>
         <a class="remove" href="#">Remove</a>
@@ -50,8 +51,8 @@
 </form>
 
 {# hidden template used to generate new rows #}
-{% for subform in form.internal_cfps[:1] %}
-<div id="internal-cfp-_-form" class="is-hidden" data-index="_">
+{% for subform in template_form.internal_cfps[:1] %}
+<div id="template-internal-cfp-_-form" class="is-hidden" data-index="_">
   {{ render_form_row([subform.event, subform.url], col_map={subform.event.id: 'col-md-3', subform.url.id: 'col-md-9'}) }}
   <small>
     <a class="remove" href="#">Remove</a>
@@ -110,7 +111,7 @@
    * Add a new form.
    */
   function addForm() {
-    var $templateForm = $('#internal-cfp-_-form');
+    var $templateForm = $('#template-internal-cfp-_-form');
 
     if (!$templateForm) {
       console.log('[ERROR] Cannot find template');
@@ -135,15 +136,15 @@
     // Add elements
     var $newForm = $templateForm.clone();
 
-    $newForm.attr('id', $newForm.attr('id').replace('0', newIndex));
-    $newForm.data('index', newIndex);
+    $newForm.attr('id', $newForm.attr('id').replace('_', newIndex));
+    $newForm.attr('data-index', newIndex);
 
     $newForm.find('input').each(function (idx) {
       var $item = $(this);
 
       $item.attr('id', $item.attr('id').replace('0', newIndex));
       $item.attr('name', $item.attr('name').replace('0', newIndex));
-      // TODO: maybe zero out values?
+      $item.attr('value', '');
     });
 
     // Append

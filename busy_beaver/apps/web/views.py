@@ -1,6 +1,6 @@
 import logging
 
-from flask import flash, redirect, render_template, url_for
+from flask import flash, redirect, render_template, request, url_for
 from flask.views import View
 from flask_login import current_user, login_required, logout_user
 
@@ -12,9 +12,15 @@ from .forms import (
     OrganizationNameForm,
     UpcomingEventsConfigurationForm,
 )
-from busy_beaver.apps.call_for_proposals.forms import CFPSettingsForm
+from busy_beaver.apps.call_for_proposals.forms import (
+    CFPSettingsForm,
+    TemplateInternalCFPForm,
+)
+from busy_beaver.apps.call_for_proposals.workflows import (
+    create_or_update_call_for_proposals_configuration,
+)
 from busy_beaver.apps.slack_integration.oauth.workflow import (
-    create_or_update_configuration,
+    create_or_update_github_summary_configuration,
 )
 from busy_beaver.apps.upcoming_events.workflow import (
     add_new_group_to_configuration,
@@ -96,7 +102,7 @@ def github_summary_settings():
     form.channel.choices = slack.get_bot_channels()
     if form.validate_on_submit():
         logger.info("Attempt to save GitHub Summary settings")
-        create_or_update_configuration(
+        create_or_update_github_summary_configuration(
             installation,
             channel=form.data["channel"],
             summary_post_time=form.data["summary_post_time"],
@@ -402,33 +408,39 @@ def cfp_settings():
     if not is_admin:
         raise NotAuthorized("Need to be an admin to access")
 
-    # TODO: change from here
-    # TODO: make sure that when we load information; the values are correct
     form = CFPSettingsForm()
+    template_form = TemplateInternalCFPForm()
     form.channel.choices = slack.get_bot_channels()
     if form.validate_on_submit():
-        logger.info("Attempt to save GitHub Summary settings")
-        create_or_update_configuration(
+        logger.info("Attempt to save CFP Settings")
+
+        create_or_update_call_for_proposals_configuration(
             installation,
             channel=form.data["channel"],
-            summary_post_time=form.data["summary_post_time"],
-            summary_post_timezone=form.data["summary_post_timezone"],
-            slack_id=current_user.slack_id,
+            internal_cfps=form.internal_cfps.data,
         )
-        logger.info("GitHub Summary settings changed successfully")
+        logger.info("CFP settings changed successfully")
         flash("Settings saved", "success")
 
     # load default
-    # try:
-    #     config = installation.github_summary_config
-    #     form.summary_post_time.data = config.summary_post_time
-    #     form.summary_post_timezone.data = config.summary_post_timezone.zone
-    #     form.channel.data = config.channel
-    #     enabled = config.enabled
-    # except AttributeError:
-    #     enabled = False
+    try:
+        config = installation.cfp_config
+        enabled = config.enabled
+        form.channel.data = config.channel
+    except AttributeError:
+        enabled = False
 
-    return render_template("cfp_settings.html", form=form)
+    try:
+        internal_cfps = config.internal_cfps
+        for cfp in internal_cfps:
+            if request.method == "GET":
+                form.internal_cfps.append_entry(cfp)
+    except Exception:
+        pass
+
+    return render_template(
+        "cfp_settings.html", enabled=enabled, form=form, template_form=template_form
+    )
 
 
 @web_bp.route("/settings/call-for-proposalsy/toggle")

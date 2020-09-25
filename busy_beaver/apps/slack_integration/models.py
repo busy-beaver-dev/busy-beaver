@@ -50,6 +50,12 @@ class SlackInstallation(BaseModel):
         uselist=False,
         lazy="joined",
     )
+    cfp_config = db.relationship(
+        "CallForProposalsConfiguration",
+        back_populates="slack_installation",
+        uselist=False,
+        lazy="joined",
+    )
 
 
 class SlackUser(UserMixin, BaseModel):

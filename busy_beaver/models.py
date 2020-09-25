@@ -1,5 +1,8 @@
 from busy_beaver.common.models import BaseModel, Task  # noqa isort:skip
 
+from busy_beaver.apps.call_for_proposals.models import (  # noqa
+    CallForProposalsConfiguration,
+)
 from busy_beaver.apps.github_integration.models import (  # noqa
     GitHubSummaryConfiguration,
     GitHubSummaryUser,
