@@ -64,6 +64,20 @@ class Context(Block):
         self.output["elements"] = [{"type": "plain_text", "emoji": True, "text": text}]
 
 
+class ContextMarkdown(Block):
+    """Opinionated Context block wrapper for Markdown
+
+    https://api.slack.com/reference/block-kit/blocks#context
+    """
+
+    type = "context"
+
+    def __init__(self, text: str = "", block_id: str = ""):
+        super().__init__(block_id)
+        self.output["type"] = self.type
+        self.output["elements"] = [{"type": "mrkdwn", "text": text}]
+
+
 class Divider(Block):
     """Opinionated Divider block wrapper
 

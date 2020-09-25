@@ -2,7 +2,7 @@ from flask import Flask, request
 from secure import SecureHeaders
 from whitenoise import WhiteNoise
 
-from .blueprints import events_bp, github_bp, healthcheck_bp, slack_bp, web_bp
+from .blueprints import cfps_bp, events_bp, github_bp, healthcheck_bp, slack_bp, web_bp
 from .common.oauth import OAuthError
 from .config import DATABASE_URI, REDIS_URI, SECRET_KEY
 from .exceptions import NotAuthorized, StateMachineError, ValidationError
@@ -44,6 +44,7 @@ def create_app(*, testing=False):
     app.register_error_handler(ValidationError, handle_error)
     app.register_error_handler(StateMachineError, handle_error)
 
+    app.register_blueprint(cfps_bp, cli_group=None)
     app.register_blueprint(events_bp, cli_group=None)
     app.register_blueprint(healthcheck_bp)
     app.register_blueprint(github_bp, url_prefix="/github", cli_group=None)
