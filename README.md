@@ -34,6 +34,12 @@ Busy Beaver posts daily summaries of public GitHub activity for registered users
 
 Users sign up for an account by `DM`ing the bot with the phrase: `connect`. The bot requires users to sign into GitHub to ensure only authorized activity is posted in the channel.
 
+### Call For Proposals
+
+Busy Beaver posts open Call For Proposals (CFP) for your organization and upcoming Python conferences in a designated channel.
+
+Note: This feature is in beta. Please create an issue if you would like support for other conference types.
+
 ### Roadmap
 
 We are currently working on additional features to improve ChiPy community engagement. Please join the conversation in `#busy-beaver-meta` on the [ChiPy Slack](https://chipy.slack.com/).
