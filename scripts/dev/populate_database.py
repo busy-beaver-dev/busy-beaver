@@ -4,6 +4,7 @@ import os
 from busy_beaver import create_app
 from busy_beaver.extensions import db
 from busy_beaver.models import (
+    CallForProposalsConfiguration,
     GitHubSummaryConfiguration,
     SlackInstallation,
     UpcomingEventsConfiguration,
@@ -13,6 +14,7 @@ from tests._utilities.factories.event import Event as EventFactory
 
 # load config
 workspace_id = os.getenv("SLACK_DEV_WORKSPACE_ID", None)
+cfp_channel = os.getenv("SLACK_DEV_WORKSPACE_CFP_CHANNEL", None)
 github_summary_channel = os.getenv("SLACK_DEV_WORKSPACE_GITHUB_SUMMARY_CHANNEL", None)
 upcoming_events_channel = os.getenv("SLACK_DEV_WORKSPACE_UPCOMING_EVENTS_CHANNEL", None)
 bot_token = os.getenv("SLACK_BOTUSER_OAUTH_TOKEN", None)
@@ -83,6 +85,21 @@ if not installation.upcoming_events_config:
 
     create_event = EventFactory(db.session)
     create_event(name="_ChiPy_", group=group)
+
+    db.session.add(config)
+    db.session.commit()
+
+if not installation.cfp_config:
+    internal_cfps = [
+        {"event": "`__main__` Meeting", "url": "http://bit.ly/chipy-cfp"},
+        {"event": "Special Interest Groups", "url": "http://bit.ly/chipy-sig-cfp"},
+    ]
+    config = CallForProposalsConfiguration(
+        enabled=True,
+        slack_installation=installation,
+        channel=cfp_channel,
+        internal_cfps=internal_cfps,
+    )
 
     db.session.add(config)
     db.session.commit()

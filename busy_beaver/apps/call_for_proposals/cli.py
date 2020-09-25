@@ -62,8 +62,9 @@ class OpenCFPPost:
         return "\n".join(output)
 
     def as_blocks(self):
+        title = "*Upcoming Call For Proposal Deadlines*"
         output = [
-            Section(text=":calendar:  |  *Upcoming Deadlines*  |  :calendar:"),
+            Section(text=f":calendar:  |  {title}  |  :calendar:"),
             Section(text="*Conferences*"),
             ContextMarkdown(text=self.conference_cfp_text),
             Section(text="*Internal CFPs*"),
