@@ -396,6 +396,7 @@ def organization_settings_remove_logo():
 
 ####################
 # Call For Proposals
+# this is not tested... it's still a beta feature. let's not waste time
 ####################
 @web_bp.route("/settings/call-for-proposals", methods=("GET", "POST"))
 @login_required
