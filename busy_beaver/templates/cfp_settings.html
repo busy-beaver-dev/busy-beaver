@@ -2,7 +2,7 @@
 {% from "bootstrap/form.html" import render_field, render_form_row %}
 
 {% block container %}
-<h3>Call For Proposals Settings</h3>
+<h3>Configure Call For Proposals Feature</h3>
 
 <p>
   Busy Beaver posts open Call For Proposals (CFP) for your
@@ -16,6 +16,11 @@
 </p>
 
 <hr>
+
+<p>
+  Call For Proposals feature is <strong>{{ 'enabled' if enabled else 'disabled' }}</strong>.
+  (<a href="{{ url_for('web.toggle_cfp_enabled_status_view') }}">toggle status</a>)
+</p>
 
 <form id="cfp-form" method="POST" action="{{ url_for('web.cfp_settings') }}" role="form">
   {{ form.csrf_token }}

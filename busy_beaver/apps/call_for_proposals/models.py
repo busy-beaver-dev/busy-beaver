@@ -7,7 +7,7 @@ from busy_beaver.extensions import db
 
 
 def channel_selected(self):
-    return self.config.summary_post_time and self.config.summary_post_timezone
+    return self.config.channel is not None
 
 
 class CallForProposalsEnabledStateMachine(StateMachine):
@@ -27,10 +27,10 @@ class CallForProposalsEnabledStateMachine(StateMachine):
         pass
 
     def toggle(self):
-        if self.state:
-            self.enable_call_for_proposals_feature()
-        else:
+        if self.state is True:
             self.disable_call_for_proposals_feature()
+        else:
+            self.enable_call_for_proposals_feature()
 
 
 class CallForProposalsConfiguration(BaseModel):

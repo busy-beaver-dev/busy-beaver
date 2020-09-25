@@ -443,9 +443,9 @@ def cfp_settings():
     )
 
 
-@web_bp.route("/settings/call-for-proposalsy/toggle")
+@web_bp.route("/settings/call-for-proposals/toggle")
 @login_required
-def toggle_cfp_view():
+def toggle_cfp_enabled_status_view():
     logger.info("Toggling CFP enabled state")
     installation = current_user.installation
     slack = SlackClient(installation.bot_access_token)
@@ -454,12 +454,11 @@ def toggle_cfp_view():
     if not is_admin:
         raise NotAuthorized("Need to be an admin to access")
 
-    # TODO: change from here
-    config = installation.github_summary_config
+    config = installation.cfp_config
     if not config:
-        flash("Need to enter post time and timezone", "error")
-        return redirect(url_for("web.github_summary_settings"))
+        flash("Need to specify channel", "error")
+        return redirect(url_for("web.cfp_settings"))
     config.toggle_configuration_enabled_status()
     db.session.add(config)
     db.session.commit()
-    return redirect(url_for("web.github_summary_settings"))
+    return redirect(url_for("web.cfp_settings"))
