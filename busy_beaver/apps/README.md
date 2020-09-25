@@ -10,7 +10,7 @@ Flask code is in `api` subfolders.
 
 |Application|Description
 |---|---|
-|debug|Fetch and post upcoming Call For Proposals (CFPs)|
+|call_for_proposals|Fetch and post upcoming Call For Proposals (CFPs)|
 |debug|Tools to help development and debug|
 |events|Find and post upcoming events|
 |github_integration|GitHub related-integration logic|
