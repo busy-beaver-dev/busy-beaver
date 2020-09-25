@@ -13,6 +13,7 @@ def patched_slack(patcher):
 
 
 @pytest.mark.end2end
+@pytest.mark.vcr
 def test_post_upcoming_cfps(mocker, runner, factory, patched_slack):
     # Arrange
     config = factory.CallForProposalsConfiguration(enabled=True)
@@ -34,6 +35,7 @@ def test_post_upcoming_cfps(mocker, runner, factory, patched_slack):
 
 
 @pytest.mark.end2end
+@pytest.mark.vcr
 def test_post_upcoming_cfps_enabled(mocker, runner, factory, patched_slack):
     """Only post for configurations that are enabled
 
