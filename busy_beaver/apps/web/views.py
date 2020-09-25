@@ -1,6 +1,6 @@
 import logging
 
-from flask import flash, redirect, render_template, url_for
+from flask import flash, redirect, render_template, request, url_for
 from flask.views import View
 from flask_login import current_user, login_required, logout_user
 
@@ -12,8 +12,15 @@ from .forms import (
     OrganizationNameForm,
     UpcomingEventsConfigurationForm,
 )
+from busy_beaver.apps.call_for_proposals.forms import (
+    CFPSettingsForm,
+    TemplateInternalCFPForm,
+)
+from busy_beaver.apps.call_for_proposals.workflows import (
+    create_or_update_call_for_proposals_configuration,
+)
 from busy_beaver.apps.slack_integration.oauth.workflow import (
-    create_or_update_configuration,
+    create_or_update_github_summary_configuration,
 )
 from busy_beaver.apps.upcoming_events.workflow import (
     add_new_group_to_configuration,
@@ -95,7 +102,7 @@ def github_summary_settings():
     form.channel.choices = slack.get_bot_channels()
     if form.validate_on_submit():
         logger.info("Attempt to save GitHub Summary settings")
-        create_or_update_configuration(
+        create_or_update_github_summary_configuration(
             installation,
             channel=form.data["channel"],
             summary_post_time=form.data["summary_post_time"],
@@ -385,3 +392,74 @@ def organization_settings_remove_logo():
 
     flash("Logo removed", "success")
     return redirect(url_for("web.organization_settings"))
+
+
+####################
+# Call For Proposals
+# this is not tested... it's still a beta feature. let's not waste time
+####################
+@web_bp.route("/settings/call-for-proposals", methods=("GET", "POST"))
+@login_required
+def cfp_settings():
+    logger.info("Hit CFP Settings page")
+    installation = current_user.installation
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    form = CFPSettingsForm()
+    template_form = TemplateInternalCFPForm()
+    form.channel.choices = slack.get_bot_channels()
+    if form.validate_on_submit():
+        logger.info("Attempt to save CFP Settings")
+
+        create_or_update_call_for_proposals_configuration(
+            installation,
+            channel=form.data["channel"],
+            internal_cfps=form.internal_cfps.data,
+        )
+        logger.info("CFP settings changed successfully")
+        flash("Settings saved", "success")
+
+    # load default
+    try:
+        config = installation.cfp_config
+        enabled = config.enabled
+        form.channel.data = config.channel
+    except AttributeError:
+        enabled = False
+
+    try:
+        internal_cfps = config.internal_cfps
+        for cfp in internal_cfps:
+            if request.method == "GET":
+                form.internal_cfps.append_entry(cfp)
+    except Exception:
+        pass
+
+    return render_template(
+        "cfp_settings.html", enabled=enabled, form=form, template_form=template_form
+    )
+
+
+@web_bp.route("/settings/call-for-proposals/toggle")
+@login_required
+def toggle_cfp_enabled_status_view():
+    logger.info("Toggling CFP enabled state")
+    installation = current_user.installation
+    slack = SlackClient(installation.bot_access_token)
+
+    is_admin = slack.is_admin(current_user.slack_id)
+    if not is_admin:
+        raise NotAuthorized("Need to be an admin to access")
+
+    config = installation.cfp_config
+    if not config:
+        flash("Need to specify channel", "error")
+        return redirect(url_for("web.cfp_settings"))
+    config.toggle_configuration_enabled_status()
+    db.session.add(config)
+    db.session.commit()
+    return redirect(url_for("web.cfp_settings"))

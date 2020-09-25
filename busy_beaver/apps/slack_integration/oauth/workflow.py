@@ -89,6 +89,7 @@ def send_welcome_message(installation: SlackInstallation):
     slack.dm(ONBOARDING_MESSAGE.format(slack_id=user_id), user_id=user_id)
 
 
+# TODO show this in settings page
 ACTIVE_MESSAGE = (
     "Confirmed; I will post daily summaries at {time}.\n\n"
     "GitHub Summary feature is active! :tada: \n\n"
@@ -99,7 +100,7 @@ ACTIVE_MESSAGE = (
 )
 
 
-def create_or_update_configuration(
+def create_or_update_github_summary_configuration(
     installation, channel, summary_post_time, summary_post_timezone, slack_id
 ):
     config = installation.github_summary_config
