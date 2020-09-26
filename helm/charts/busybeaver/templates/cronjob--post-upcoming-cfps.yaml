@@ -1,0 +1,25 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: "{{ include "busybeaver.fullname" . }}--post-upcoming-cfps"
+  namespace: "{{ include "busybeaver.namespace" . }}"
+  labels:
+    type: sync-events-database
+    {{- include "busybeaver.labels" . | nindent 4 }}
+spec:
+  schedule: "0 12 * * 1"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: busybeaver--post-upcoming-cfps
+            image: {{ .Values.image.repository }}:{{ .Values.image.version }}
+            imagePullPolicy: {{ .Values.image.pullPolicy }}
+            command: ["flask"]
+            args:
+            - "post_upcoming_cfps"
+            env: {{- include "busybeaver.env_vars" . | indent 12 }}
+          serviceAccountName: {{ include "busybeaver.serviceAccountName" . }}
+          automountServiceAccountToken: false
