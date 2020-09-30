@@ -30,7 +30,7 @@ def generate_help_text(installation: SlackInstallation):
         if upcoming_events_config.enabled:
             help_text += (
                 "`/busybeaver next`: Retrieve next event\n"
-                "`/busybeaver events`: Retrieve list of upcoming event\n"
+                "`/busybeaver events`: Retrieve list of upcoming events\n"
             )
 
     if github_summary_config:
@@ -40,6 +40,8 @@ def generate_help_text(installation: SlackInstallation):
                 "`/busybeaver reconnect`: Connect to different GitHub Account\n"
                 "`/busybeaver disconnect`: Disconenct GitHub Account\n"
             )
+
+    # TODO if user is an admin, show them settings
 
     help_text += "`/busybeaver help`: Display help text"
     return help_text
