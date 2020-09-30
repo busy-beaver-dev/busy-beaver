@@ -107,7 +107,6 @@ def github_summary_settings():
             channel=form.data["channel"],
             summary_post_time=form.data["summary_post_time"],
             summary_post_timezone=form.data["summary_post_timezone"],
-            slack_id=current_user.slack_id,
         )
         logger.info("GitHub Summary settings changed successfully")
         flash("Settings saved", "success")
