@@ -10,8 +10,20 @@ from busy_beaver.apps.slack_integration.slash_command import (
     upcoming_events,
 )
 from busy_beaver.models import GitHubSummaryUser, SlackUser
+from tests._utilities import FakeSlackClient
 
 pytest_plugins = ("tests._utilities.fixtures.slack",)
+MODULE_TO_TEST = "busy_beaver.apps.slack_integration.interactors"
+
+
+@pytest.fixture
+def patch_slack(patcher):
+    def _patch_slack(*, is_admin=None):
+        obj = FakeSlackClient(is_admin=is_admin)
+        patcher(MODULE_TO_TEST, namespace="SlackClient", replacement=obj)
+        return obj
+
+    return _patch_slack
 
 
 ###################
@@ -19,11 +31,17 @@ pytest_plugins = ("tests._utilities.fixtures.slack",)
 ###################
 @pytest.mark.integration
 def test_slack_command_valid_command(
-    client, session, factory, create_slack_headers, generate_slash_command_request
+    client,
+    session,
+    factory,
+    create_slack_headers,
+    generate_slash_command_request,
+    patch_slack,
 ):
     installation = factory.SlackInstallation()
     data = generate_slash_command_request("help", team_id=installation.workspace_id)
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
+    patch_slack(is_admin=False)
 
     response = client.post("/slack/slash-command", headers=headers, data=data)
 
@@ -63,12 +81,18 @@ def test_slack_command_empty_command(
 
 @pytest.mark.integration
 def test_slack_command_creates_user_record_in_database(
-    client, session, factory, create_slack_headers, generate_slash_command_request
+    client,
+    session,
+    factory,
+    create_slack_headers,
+    generate_slash_command_request,
+    patch_slack,
 ):
     # Arrange
     installation = factory.SlackInstallation()
     data = generate_slash_command_request("help", team_id=installation.workspace_id)
     headers = create_slack_headers(100_000_000, data, is_json_data=False)
+    patch_slack(is_admin=False)
 
     # Act
     client.post("/slack/slash-command", headers=headers, data=data)
@@ -86,7 +110,7 @@ def test_slack_command_creates_user_record_in_database(
 # Miscellaneous Commands
 ########################
 @pytest.mark.unit
-def test_command_help(session, factory, generate_slash_command_request):
+def test_command_help(session, factory, generate_slash_command_request, patch_slack):
     github_summary_config = factory.GitHubSummaryConfiguration()
     install = github_summary_config.slack_installation
     user = "user"
@@ -96,6 +120,7 @@ def test_command_help(session, factory, generate_slash_command_request):
     )
     data["user"] = slack_user
     data["installation"] = install
+    patch_slack(is_admin=False)
 
     result = display_help_text(**data)
 
