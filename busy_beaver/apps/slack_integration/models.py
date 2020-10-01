@@ -16,9 +16,6 @@ class SlackInstallation(BaseModel):
         return f"<SlackInstallation: {self.workspace_name}>"
 
     # Attributes
-    access_token = db.Column(
-        EncryptedType(db.String, SECRET_KEY, AesEngine, "pkcs5"), nullable=False
-    )
     authorizing_user_id = db.Column(db.String(300), nullable=False)
     bot_access_token = db.Column(
         EncryptedType(db.String, SECRET_KEY, AesEngine, "pkcs5"), nullable=False

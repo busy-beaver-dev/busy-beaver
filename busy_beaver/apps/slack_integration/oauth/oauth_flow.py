@@ -16,7 +16,6 @@ logger = logging.getLogger(__name__)
 # Slack Installation
 ####################
 class SlackOAuthInfo(NamedTuple):
-    access_token: str
     authorizing_user_id: str
     bot_access_token: str
     bot_user_id: str
@@ -124,7 +123,6 @@ class SlackInstallationOAuthFlow(OAuthFlow):
 
         # TODO do this with marshmallow
         output = {}
-        output["access_token"] = oauth_json["authed_user"]["access_token"]
         output["scope"] = oauth_json["scope"]
         output["authorizing_user_id"] = oauth_json["authed_user"]["id"]
         output["workspace_id"] = oauth_json["team"]["id"]
