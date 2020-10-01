@@ -103,7 +103,8 @@ def upcoming_events(**data):
 @slash_command_dispatcher.on("help")
 def display_help_text(**data):
     installation = data["installation"]
-    help_text = generate_help_text(installation)
+    user_id = data["user_id"]
+    help_text = generate_help_text(installation, user_id)
     return make_slack_response(text=help_text)
 
 

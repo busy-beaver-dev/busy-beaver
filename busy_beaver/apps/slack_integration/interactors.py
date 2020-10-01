@@ -1,4 +1,5 @@
 from .models import SlackInstallation
+from busy_beaver.common.wrappers import SlackClient
 
 
 def make_slack_response(
@@ -12,7 +13,7 @@ def make_slack_response(
     }
 
 
-def generate_help_text(installation: SlackInstallation):
+def generate_help_text(installation: SlackInstallation, user_id: str) -> str:
     help_text = "Busy Beaver is a Community Engagement bot.\n\n"
     github_summary_config = installation.github_summary_config
     upcoming_events_config = installation.upcoming_events_config
@@ -41,7 +42,11 @@ def generate_help_text(installation: SlackInstallation):
                 "`/busybeaver disconnect`: Disconenct GitHub Account\n"
             )
 
-    # TODO if user is an admin, show them settings
+    # TODO test
+    slack = SlackClient(installation.bot_access_token)
+    is_admin = slack.is_admin(user_id)
+    if is_admin:
+        help_text += "`/busybeaver settings`: View/Modify Busy Beaver settings\n"
 
     help_text += "`/busybeaver help`: Display help text"
     return help_text
