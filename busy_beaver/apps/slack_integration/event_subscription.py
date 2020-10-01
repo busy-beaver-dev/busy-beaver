@@ -54,7 +54,7 @@ def event_callback_dispatcher(data):
 @event_dispatch.on("message")
 def message_handler(data):
     event = data["event"]
-    user_id = data["event"]["user"]
+    user_id = event["user"]
     if event.get("bot_id") or event.get("subtype") == "bot_message":
         return None
 
