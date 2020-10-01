@@ -50,7 +50,7 @@ class SlackClient:
         try:
             result = self.client.users_info(user=user_id)
         except SlackApiError:
-            raise ValueError("Channel not found")
+            raise ValueError("User not found")
         return result["user"]["is_admin"]
 
     def post_ephemeral_message(self, message, channel, user_id):
