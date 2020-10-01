@@ -1,7 +1,6 @@
 import logging
 
 from .blocks import AppHome
-from .interactors import generate_help_text
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.extensions import db
 from busy_beaver.models import SlackInstallation, SlackUser
@@ -51,25 +50,6 @@ def event_callback_dispatcher(data):
 ################
 # Event Handlers
 ################
-@event_dispatch.on("message")
-def message_handler(data):
-    event = data["event"]
-    if event.get("bot_id") or event.get("subtype") == "bot_message":
-        return None
-
-    user_messages_bot = event["channel_type"] == "im"
-    if user_messages_bot:
-        params = {"workspace_id": data["team_id"]}
-        installation = SlackInstallation.query.filter_by(**params).first()
-
-        logger.info("[Busy Beaver] Slack -- Unknown command")
-        slack = SlackClient(installation.bot_access_token)
-        help_text = generate_help_text(installation)
-        slack.post_message(help_text, channel=data["event"]["channel"])
-
-    return None
-
-
 @event_dispatch.on("member_joined_channel")
 def member_joined_channel_handler(data):
     workspace_id = data["team_id"]
