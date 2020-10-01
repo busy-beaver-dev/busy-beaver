@@ -71,3 +71,22 @@ class TestGenerateHelpText:
         assert "/busybeaver help" in help_text
         assert "/busybeaver connect" not in help_text
         assert "/busybeaver events" in help_text
+
+    @pytest.mark.unit
+    @pytest.mark.parametrize("is_admin, matches", [(False, False), (True, True)])
+    def test_show_settings_for_admins(
+        self, client, session, factory, patch_slack, is_admin, matches
+    ):
+        user = factory.SlackUser()
+        installation = user.installation
+        factory.GitHubSummaryConfiguration(
+            slack_installation=installation, enabled=False
+        )
+        factory.UpcomingEventsConfiguration(
+            slack_installation=installation, enabled=True
+        )
+        patch_slack(is_admin=is_admin)
+
+        help_text = generate_help_text(installation, user.slack_id)
+
+        assert ("/busybeaver settings" in help_text) is matches

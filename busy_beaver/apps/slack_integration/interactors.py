@@ -42,7 +42,6 @@ def generate_help_text(installation: SlackInstallation, user_id: str) -> str:
                 "`/busybeaver disconnect`: Disconenct GitHub Account\n"
             )
 
-    # TODO test
     slack = SlackClient(installation.bot_access_token)
     is_admin = slack.is_admin(user_id)
     if is_admin:
