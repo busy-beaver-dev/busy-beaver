@@ -1,6 +1,20 @@
 {% extends "base.html" %}
 {% from "bootstrap/form.html" import render_field, render_form_row %}
 
+{% block more_styles %}
+<style>
+  blockquote {
+    max-width: 600px;
+    margin: 10px 30px;
+    padding: 25px;
+    background: #f8fffe;
+    border: 1px solid #b0d2cb;
+    color: #0b4237;
+    box-sizing: border-box;
+  }
+</style>
+{% endblock %}
+
 {% block container %}
 <h3>Configure GitHub Summary Feature</h3>
 
@@ -25,6 +39,18 @@
   GitHub Summary feature is <strong>{{ 'enabled' if enabled else 'disabled' }}</strong>.
   (<a href="{{ url_for('web.toggle_github_summary_config_view') }}">toggle status</a>)
 </p>
+
+{% if enabled %}
+<p>You can use the following text to publicize the bot:</p>
+
+<blockquote>
+  Busy Beaver is a community engagement bot that shares daily sumarries of
+  public GitHub activity for registered users. Find out what everybody's
+  working on in #{{ dict(form.channel.choices).get(form.channel.data) }}!
+</blockquote>
+
+<hr>
+{% endif %}
 
 <form method="POST" action="{{ url_for('web.github_summary_settings') }}">
   {{ form.csrf_token }}

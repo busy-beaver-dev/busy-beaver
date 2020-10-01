@@ -54,6 +54,7 @@ def event_callback_dispatcher(data):
 @event_dispatch.on("message")
 def message_handler(data):
     event = data["event"]
+    user_id = event["user"]
     if event.get("bot_id") or event.get("subtype") == "bot_message":
         return None
 
@@ -64,7 +65,7 @@ def message_handler(data):
 
         logger.info("[Busy Beaver] Slack -- Unknown command")
         slack = SlackClient(installation.bot_access_token)
-        help_text = generate_help_text(installation)
+        help_text = generate_help_text(installation, user_id)
         slack.post_message(help_text, channel=data["event"]["channel"])
 
     return None

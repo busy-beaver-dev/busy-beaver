@@ -89,19 +89,8 @@ def send_welcome_message(installation: SlackInstallation):
     slack.dm(ONBOARDING_MESSAGE.format(slack_id=user_id), user_id=user_id)
 
 
-# TODO show this in settings page
-ACTIVE_MESSAGE = (
-    "Confirmed; I will post daily summaries at {time}.\n\n"
-    "GitHub Summary feature is active! :tada: \n\n"
-    "You can use the following text to publicize the bot:\n"
-    "> Busy Beaver is a community engagement bot that shares daily "
-    "sumarries of public GitHub activity for registered users. "
-    "Find out what everybody's working on in <#{channel}>!"
-)
-
-
 def create_or_update_github_summary_configuration(
-    installation, channel, summary_post_time, summary_post_timezone, slack_id
+    installation, channel, summary_post_time, summary_post_timezone
 ):
     config = installation.github_summary_config
     if config is None:
@@ -113,10 +102,3 @@ def create_or_update_github_summary_configuration(
     config.summary_post_timezone = summary_post_timezone
     db.session.add(config)
     db.session.commit()
-
-    channel = config.channel
-    slack = SlackClient(installation.bot_access_token)
-    slack.dm(
-        ACTIVE_MESSAGE.format(time=str(summary_post_time), channel=channel),
-        user_id=slack_id,
-    )
