@@ -26,6 +26,9 @@ def test_slack_oauth_flow_first_time_installation(
     patched_slack = patch_slack("busy_beaver.apps.slack_integration.oauth.workflow")
     authorizing_user_id = "abc"
     workspace_id = "T9TK3CUKW"
+    workspace_name = "Slack Softball Team"
+    bot_user_id = "U0KRQLJ9H"
+    scope = "app_mentions:read,channels:history"
 
     # Step 1 -- User installs app user Slack install link
     # Arrange
@@ -35,20 +38,17 @@ def test_slack_oauth_flow_first_time_installation(
         SlackInstallationOAuthFlow.TOKEN_URL,
         match_querystring=False,
         json={
-            "ok": True,
             "access_token": bot_access_token,
-            "token_type": "bot",
-            "scope": "commands,incoming-webhook",
-            "bot_user_id": "U0KRQLJ9H",
             "app_id": "A0KRD7HC3",
-            "team": {"name": "Slack Softball Team", "id": workspace_id},
-            "enterprise": {"name": "slack-sports", "id": "E12345678"},
-            "authed_user": {
-                "id": authorizing_user_id,
-                "scope": "chat:write",
-                "access_token": "xoxp-1234",
-                "token_type": "user",
-            },
+            "authed_user": {"id": authorizing_user_id},
+            "bot_user_id": bot_user_id,
+            "enterprise": None,
+            "ok": True,
+            "response_metadata": {"warnings": ["superfluous_charset"]},
+            "scope": scope,
+            "team": {"name": workspace_name, "id": workspace_id},
+            "token_type": "bot",
+            "warning": "superfluous_charset",
         },
     )
 
@@ -59,12 +59,11 @@ def test_slack_oauth_flow_first_time_installation(
     # Assert -- confirm info in database is as expected
     assert response.status_code == 200
     installation = SlackInstallation.query.first()
-    assert installation.access_token == "xoxp-1234"
-    assert installation.scope == "commands,incoming-webhook"
-    assert installation.workspace_name == "Slack Softball Team"
+    assert installation.scope == scope
+    assert installation.workspace_name == workspace_name
     assert installation.workspace_id == workspace_id
     assert installation.authorizing_user_id == authorizing_user_id
-    assert installation.bot_user_id == "U0KRQLJ9H"
+    assert installation.bot_user_id == bot_user_id
     assert installation.bot_access_token == bot_access_token
 
     # Assert -- message sent to user who installed
@@ -84,6 +83,8 @@ def test_slack_oauth_flow_reinstallation(client, session, factory, patch_slack):
     workspace_id = "T9TK3CUKW"
     workspace_name = "Slack Softball Team"
     authorizing_user_id = "abc"
+    bot_user_id = "U0KRQLJ9H"
+    scope = "app_mentions:read,channels:history"
     installation = factory.SlackInstallation(
         workspace_id=workspace_id, workspace_name=workspace_name
     )
@@ -95,20 +96,17 @@ def test_slack_oauth_flow_reinstallation(client, session, factory, patch_slack):
         responses.POST,
         SlackInstallationOAuthFlow.TOKEN_URL,
         json={
-            "ok": True,
             "access_token": bot_access_token,
-            "token_type": "bot",
-            "scope": "commands,incoming-webhook",
-            "bot_user_id": "U0KRQLJ9H",
             "app_id": "A0KRD7HC3",
+            "authed_user": {"id": authorizing_user_id},
+            "bot_user_id": bot_user_id,
+            "enterprise": None,
+            "ok": True,
+            "response_metadata": {"warnings": ["superfluous_charset"]},
+            "scope": scope,
             "team": {"name": workspace_name, "id": workspace_id},
-            "enterprise": {"name": "slack-sports", "id": "E12345678"},
-            "authed_user": {
-                "id": authorizing_user_id,
-                "scope": "chat:write",
-                "access_token": "xoxp-1234",
-                "token_type": "user",
-            },
+            "token_type": "bot",
+            "warning": "superfluous_charset",
         },
     )
 
@@ -119,12 +117,11 @@ def test_slack_oauth_flow_reinstallation(client, session, factory, patch_slack):
     # Assert -- information in database is as expected
     assert response.status_code == 200
     installation = SlackInstallation.query.first()
-    assert installation.access_token == "xoxp-1234"
-    assert installation.scope == "commands,incoming-webhook"
+    assert installation.scope == scope
     assert installation.workspace_name == workspace_name
     assert installation.workspace_id == workspace_id
     assert installation.authorizing_user_id == authorizing_user_id
-    assert installation.bot_user_id == "U0KRQLJ9H"
+    assert installation.bot_user_id == bot_user_id
     assert installation.bot_access_token == bot_access_token
 
     # Assert -- message sent to user who installed

@@ -16,9 +16,6 @@ class SlackInstallation(BaseModel):
         return f"<SlackInstallation: {self.workspace_name}>"
 
     # Attributes
-    access_token = db.Column(
-        EncryptedType(db.String, SECRET_KEY, AesEngine, "pkcs5"), nullable=False
-    )
     authorizing_user_id = db.Column(db.String(300), nullable=False)
     bot_access_token = db.Column(
         EncryptedType(db.String, SECRET_KEY, AesEngine, "pkcs5"), nullable=False
@@ -38,23 +35,29 @@ class SlackInstallation(BaseModel):
     workspace_logo_url = db.Column(URLType, nullable=True)
 
     # Relationships
+    slack_users = db.relationship(
+        "SlackUser", back_populates="installation", lazy="select", cascade="all, delete"
+    )
     github_summary_config = db.relationship(
         "GitHubSummaryConfiguration",
         back_populates="slack_installation",
         uselist=False,
         lazy="joined",
+        cascade="all, delete",
     )
     upcoming_events_config = db.relationship(
         "UpcomingEventsConfiguration",
         back_populates="slack_installation",
         uselist=False,
         lazy="joined",
+        cascade="all, delete",
     )
     cfp_config = db.relationship(
         "CallForProposalsConfiguration",
         back_populates="slack_installation",
         uselist=False,
         lazy="joined",
+        cascade="all, delete",
     )
 
 
@@ -65,7 +68,9 @@ class SlackUser(UserMixin, BaseModel):
 
     installation_id = db.Column(
         db.Integer,
-        db.ForeignKey("slack_installation.id", name="fk_installation_id"),
+        db.ForeignKey(
+            "slack_installation.id", name="fk_installation_id", ondelete="CASCADE"
+        ),
         index=True,
         nullable=False,
     )

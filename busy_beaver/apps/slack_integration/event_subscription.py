@@ -22,13 +22,13 @@ GITHUB_SUMMARY_CHANNEL_JOIN_MESSAGE = (
 
 
 def process_event_subscription_callback(data):
+    logger.info("Process Event Subscription webhook", extra={"type": data["type"]})
     return subscription_dispatch.emit(data["type"], default="not_found", data=data)
 
 
 #######################
 # Subscription Handlers
 #######################
-@subscription_dispatch.on("app_uninstalled")  # TODO
 @subscription_dispatch.on("not_found")
 @event_dispatch.on("not_found")
 def command_not_found(data):
@@ -44,7 +44,10 @@ def url_verification_handler(data):
 
 @subscription_dispatch.on("event_callback")
 def event_callback_dispatcher(data):
-    logger.info("[Busy Beaver] Slack -- Event Callback")
+    logger.info(
+        f"Process Event Callback -- {data['event']['type']}",
+        extra={"event_type": data["event"]["type"]},
+    )
     return event_dispatch.emit(data["event"]["type"], default="not_found", data=data)
 
 
@@ -135,3 +138,18 @@ def app_home_handler(data):
     slack = SlackClient(installation.bot_access_token)
     slack.display_app_home(user_id, view=app_home.to_dict())
     return None
+
+
+@event_dispatch.on("app_uninstalled")
+def app_uninstalled_handler(data):
+    workspace_id = data["team_id"]
+    installation = SlackInstallation.query.filter_by(workspace_id=workspace_id).first()
+
+    if not installation:
+        logger.error("Workspace not found", extra={"workspace_id": workspace_id})
+        return {}
+
+    db.session.delete(installation)
+    db.session.commit()
+
+    return {}

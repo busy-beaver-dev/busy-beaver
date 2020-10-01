@@ -44,7 +44,9 @@ class CallForProposalsConfiguration(BaseModel):
     enabled = db.Column(db.Boolean, default=False, nullable=False)
     installation_id = db.Column(
         db.Integer,
-        db.ForeignKey("slack_installation.id", name="fk_installation_id"),
+        db.ForeignKey(
+            "slack_installation.id", name="fk_installation_id", ondelete="CASCADE"
+        ),
         nullable=False,
     )
     channel = db.Column(db.String(20), nullable=False)
