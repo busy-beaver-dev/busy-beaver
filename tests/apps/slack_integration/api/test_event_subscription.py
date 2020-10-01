@@ -36,6 +36,61 @@ def test_slack_callback_url_verification(
     assert resp.json == {"challenge": challenge_code}
 
 
+@pytest.mark.integration
+def test_slack_callback_bot_message_is_ignored(
+    mocker, client, session, patch_slack, create_slack_headers
+):
+    """Bot get notified of its own DM replies to users... ignore"""
+    # Arrange
+    patched_slack = patch_slack("busy_beaver.apps.slack_integration.event_subscription")
+    data = {
+        "type": "unknown todo",
+        "event": {"type": "message", "subtype": "bot_message"},
+    }
+    headers = create_slack_headers(100_000_000, data)
+
+    # Act
+    resp = client.post("/slack/event-subscription", headers=headers, json=data)
+
+    # Assert
+    assert resp.status_code == 200
+    assert len(patched_slack.mock.mock_calls) == 0
+
+
+@pytest.mark.integration
+def test_slack_callback_user_dms_bot_reply(
+    mocker, client, session, factory, patch_slack, create_slack_headers
+):
+    """When user messages bot, reply with help text"""
+    # Arrange
+    patched_slack = patch_slack("busy_beaver.apps.slack_integration.event_subscription")
+    factory.SlackInstallation(workspace_id="team_id")
+    channel = 5
+    data = {
+        "type": "event_callback",
+        "team_id": "team_id",
+        "event": {
+            "type": "message",
+            "subtype": "not bot_message",
+            "channel_type": "im",
+            "text": "random",
+            "user": "random_user",
+            "channel": channel,
+        },
+    }
+    headers = create_slack_headers(100_000_000, data)
+
+    # Act
+    resp = client.post("/slack/event-subscription", headers=headers, json=data)
+
+    # Assert
+    assert resp.status_code == 200
+    assert len(patched_slack.mock.mock_calls) == 2
+    args, kwargs = patched_slack.mock.call_args
+    assert "/busybeaver help" in args[0]
+    assert kwargs["channel"] == channel
+
+
 @pytest.mark.end2end
 def test_user_joins_github_summary_channel_with_feature_enabled(
     client, session, factory, patch_slack, create_slack_headers
