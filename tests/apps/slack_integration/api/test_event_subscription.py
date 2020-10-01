@@ -2,7 +2,13 @@ import pytest
 
 from busy_beaver.apps.slack_integration.blocks import AppHome
 from busy_beaver.apps.slack_integration.event_subscription import app_home_handler
-from busy_beaver.models import SlackUser
+from busy_beaver.models import (
+    CallForProposalsConfiguration,
+    GitHubSummaryConfiguration,
+    SlackInstallation,
+    SlackUser,
+    UpcomingEventsConfiguration,
+)
 from tests._utilities import FakeSlackClient
 
 pytest_plugins = ("tests._utilities.fixtures.slack",)
@@ -47,7 +53,7 @@ class TestEventCallbackForDMs:
             "busy_beaver.apps.slack_integration.event_subscription"
         )
         data = {
-            "type": "unknown todo",
+            "type": "event_callback",
             "event": {"type": "message", "subtype": "bot_message"},
         }
         headers = create_slack_headers(100_000_000, data)
@@ -254,3 +260,36 @@ def test_user_opens_app_home_message_tab__does_nothing(
 
     # Assert
     assert patched_slack.mock.assert_not_called
+
+
+class TestAppUninstalledEventCallback:
+    @pytest.mark.integration
+    def test_uninstall_application(
+        self, client, session, factory, create_slack_headers
+    ):
+        # Arrange
+        workspace_id = "abc"
+        installation = factory.SlackInstallation(workspace_id=workspace_id)
+        factory.SlackUser(installation=installation)
+        factory.CallForProposalsConfiguration(slack_installation=installation)
+        factory.GitHubSummaryConfiguration(slack_installation=installation)
+        factory.UpcomingEventsConfiguration(slack_installation=installation)
+
+        data = {
+            "type": "event_callback",
+            "event": {"type": "app_uninstalled"},
+            "team_id": workspace_id,
+        }
+        headers = create_slack_headers(100_000_000, data)
+
+        # Act
+        resp = client.post("/slack/event-subscription", headers=headers, json=data)
+
+        # Assert
+        assert resp.status_code == 200
+
+        assert SlackInstallation.query.count() == 0
+        assert SlackUser.query.count() == 0
+        assert CallForProposalsConfiguration.query.count() == 0
+        assert UpcomingEventsConfiguration.query.count() == 0
+        assert GitHubSummaryConfiguration.query.count() == 0

@@ -45,7 +45,9 @@ class GitHubSummaryConfiguration(BaseModel):
     enabled = db.Column(db.Boolean, default=False, nullable=False)
     installation_id = db.Column(
         db.Integer,
-        db.ForeignKey("slack_installation.id", name="fk_installation_id"),
+        db.ForeignKey(
+            "slack_installation.id", name="fk_installation_id", ondelete="CASCADE"
+        ),
         nullable=False,
     )
     channel = db.Column(db.String(20), nullable=False)
@@ -80,7 +82,9 @@ class GitHubSummaryUser(BaseModel):
     config_id = db.Column(
         db.Integer,
         db.ForeignKey(
-            "github_summary_configuration.id", name="fk_github_summary_configuration_id"
+            "github_summary_configuration.id",
+            name="fk_github_summary_configuration_id",
+            ondelete="CASCADE",
         ),
         nullable=False,
     )

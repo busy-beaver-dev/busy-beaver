@@ -78,7 +78,9 @@ class UpcomingEventsConfiguration(BaseModel):
     enabled = db.Column(db.Boolean, default=False, nullable=False)
     installation_id = db.Column(
         db.Integer,
-        db.ForeignKey("slack_installation.id", name="fk_installation_id"),
+        db.ForeignKey(
+            "slack_installation.id", name="fk_installation_id", ondelete="CASCADE"
+        ),
         nullable=False,
     )
 
@@ -136,6 +138,7 @@ class UpcomingEventsGroup(BaseModel):
         db.ForeignKey(
             "upcoming_events_configuration.id",
             name="fk_upcoming_events_configuration_id",
+            ondelete="CASCADE",
         ),
         nullable=False,
     )

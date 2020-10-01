@@ -46,7 +46,6 @@ if installation:
     )
 else:
     installation = SlackInstallation(
-        access_token="access_token",
         authorizing_user_id=authorizing_user_id,
         bot_access_token=bot_token,
         bot_user_id=bot_user_id,
