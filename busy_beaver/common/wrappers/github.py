@@ -67,8 +67,7 @@ class GitHubClient:
 
         all_items = []
         for page_num in range(1, min(last_page, max_pages) + 1):
-            combined_params = self.params.copy()
-            combined_params.update({"page": page_num})
+            combined_params = self.params | {"page": page_num}
             resp = self.__get(url, params=combined_params)
             all_items.extend(resp.json)
 
@@ -80,8 +79,7 @@ class GitHubClient:
         page_num = 1
 
         while True:
-            combined_params = self.params.copy()
-            combined_params.update({"page": page_num})
+            combined_params = self.params | {"page": page_num}
             resp = self.__get(url, params=combined_params)
             all_items.extend(resp.json)
 
