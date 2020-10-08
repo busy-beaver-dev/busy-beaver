@@ -22,13 +22,11 @@ class RequestsClient:
     """Wrapper around requests to simplify interaction with JSON REST APIs"""
 
     def __init__(self, headers: dict = None, raise_for_status: bool = True):
-        _headers = dict(DEFAULT_HEADERS)
-        if headers is not None:
-            _headers.update(headers)
+        if headers is None:
+            headers = {}
 
-        s = requests.Session()
-        self.headers = _headers
-        self.session = s
+        self.session = requests.Session()
+        self.headers = DEFAULT_HEADERS | headers
         self.raise_for_status = raise_for_status
 
     def __repr__(self):  # pragma: no cover
@@ -44,11 +42,8 @@ class RequestsClient:
         return self._request("post", url, **kwargs)
 
     def _request(self, method: str, url: str, **kwargs) -> Response:
-        req_headers = dict(self.headers)
-        if "headers" in kwargs:
-            headers_to_add = kwargs.pop("headers")
-            req_headers.update(headers_to_add)
-
+        headers_to_add = kwargs.pop("headers", {})
+        req_headers = self.headers | headers_to_add
         r = self.session.request(method, url, headers=req_headers, **kwargs)
         if self.raise_for_status:
             r.raise_for_status()
