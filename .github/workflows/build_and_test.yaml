@@ -11,10 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.8
+    - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.9
     - name: Install dependencies
       run: pip install flake8 black isort
     - name: Sort imports
@@ -49,7 +49,7 @@ jobs:
           AWS_ACCESS_KEY_ID: foo
           AWS_SECRET_ACCESS_KEY: foo
 
-    container: python:3.8.1-buster
+    container: python:3.9.0-buster
     env:
       PYTHONPATH: .
       FLASK_APP: /app/busy_beaver/__init__.py
