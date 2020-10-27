@@ -51,6 +51,10 @@ class OpenCFPPost:
         for cfp in conference_cfps:
             line = CONFERENCE_TEMPLATE.format(**cfp._asdict())
             output.append(line)
+
+        if not output:
+            return "No upcoming CFPs found; check papercall.io"
+
         return "\n".join(output)
 
     @staticmethod
