@@ -1,7 +1,10 @@
+import inspect
+
 from flask import Flask, request
 from secure import SecureHeaders
 from whitenoise import WhiteNoise
 
+from . import models
 from .blueprints import cfps_bp, events_bp, github_bp, healthcheck_bp, slack_bp, web_bp
 from .common.oauth import OAuthError
 from .config import DATABASE_URI, REDIS_URI, SECRET_KEY
@@ -67,5 +70,14 @@ def create_app(*, testing=False):
     def set_secure_headers(response):
         secure_headers.flask(response)
         return response
+
+    @app.shell_context_processor
+    def create_shell_context():
+        context = {"app": app, "db": db, "rq": rq}
+
+        db_models = inspect.getmembers(models, lambda member: inspect.isclass(member))
+        for name, reference in db_models:
+            context[name] = reference
+        return context
 
     return app
