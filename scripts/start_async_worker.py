@@ -5,7 +5,7 @@ from sentry_sdk.integrations.rq import RqIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
 from busy_beaver.app import create_app
-from busy_beaver.config import LOGGING_CONFIG, SENTRY_DSN, SENTRY_ENV_FILTER
+from busy_beaver.config import ENVIRONMENT, LOGGING_CONFIG, SENTRY_DSN
 from busy_beaver.extensions import rq
 from busy_beaver.toolbox.rq import retry_failed_job
 
@@ -14,7 +14,7 @@ load_dict_config(LOGGING_CONFIG)
 if SENTRY_DSN:
     sentry_sdk.init(
         SENTRY_DSN,
-        environment=SENTRY_ENV_FILTER,
+        environment=ENVIRONMENT,
         integrations=[RqIntegration(), SqlalchemyIntegration()],
     )
 
