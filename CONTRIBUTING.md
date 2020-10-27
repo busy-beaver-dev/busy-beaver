@@ -109,7 +109,7 @@ An in-depth guide can be followed at <a href=docs/development-create-slack-bot/r
 
 ### Verify Installation
 
-1. `make dev-shell`
+1. `make flaskshell`
 1. Try sending a message to a channel for the development **Slack Workspace** with the command:
 
    ```python

@@ -7,7 +7,9 @@ def add(x, y):
 
 
 """
-make devshell
+# How to debug
+
+make flaskshell
 
 from datetime import timedelta
 from busy_beaver.apps.debug.workflows import add
