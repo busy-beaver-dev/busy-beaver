@@ -7,7 +7,8 @@ from whitenoise import WhiteNoise
 from . import models
 from .blueprints import cfps_bp, events_bp, github_bp, healthcheck_bp, slack_bp, web_bp
 from .common.oauth import OAuthError
-from .config import DATABASE_URI, REDIS_URI, SECRET_KEY
+from .common.wrappers import SlackClient
+from .config import DATABASE_URI, ENVIRONMENT, REDIS_URI, SECRET_KEY
 from .exceptions import NotAuthorized, StateMachineError, ValidationError
 from .extensions import bootstrap, db, login_manager, migrate, rq
 from .toolbox import make_response
@@ -78,6 +79,12 @@ def create_app(*, testing=False):
         db_models = inspect.getmembers(models, lambda member: inspect.isclass(member))
         for name, reference in db_models:
             context[name] = reference
+
+        # development environment should only have one slack instance
+        if ENVIRONMENT == "development":
+            installation = models.SlackInstallation.query.first()
+            context["slack"] = SlackClient(installation.bot_access_token)
+
         return context
 
     return app

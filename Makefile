@@ -91,8 +91,8 @@ shell: ## log into into app container -- bash-shell
 shell-db:  ## log into database container -- psql
 	docker-compose exec db psql -w --username "bbdev_user" --dbname "busy-beaver"
 
-devshell:  ## open ipython shell with application context
-	docker-compose exec app ipython -i scripts/dev/shell.py
+flaskshell:  ## open ipython shell with application context
+	docker-compose exec app flask shell
 
 flaskcli:  ## use flask cli to run commands args='args'te
 	docker-compose exec app flask $(args)

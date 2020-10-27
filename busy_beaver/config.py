@@ -1,6 +1,6 @@
 import os
 
-ENVIRONMENT = os.getenv("IN_PRODUCTION", "development")
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
 IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
 SENTRY_ENV_FILTER = "production" if IN_PRODUCTION else "staging"
 TASK_QUEUE_MAX_RETRIES = 1
