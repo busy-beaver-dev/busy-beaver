@@ -1,7 +1,6 @@
 -r requirements.txt
 black
 flake8
-ipython
 isort
 pdbpp
 pip-tools

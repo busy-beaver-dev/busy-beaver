@@ -7,11 +7,13 @@ finite-state-machine==0.2.0
 flask-login==0.5.0
 Flask-Migrate==2.5.2
 Flask-RQ2==18.3
+flask-shell-ipython==0.4.1
 Flask-SQLAlchemy==2.4.1
 Flask-WTF==0.14.3
 Flask==1.1.1
 gunicorn==20.0.4
 inflect==2.1.0
+ipython==7.18.1
 marshmallow==3.3.0
 psycopg2-binary==2.8.4
 python-dateutil==2.8.1
