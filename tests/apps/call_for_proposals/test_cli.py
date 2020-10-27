@@ -1,6 +1,6 @@
 import pytest
 
-from busy_beaver.apps.call_for_proposals.cli import post_upcoming_cfps
+from busy_beaver.apps.call_for_proposals.cli import OpenCFPPost, post_upcoming_cfps
 from tests._utilities import FakeSlackClient
 
 MODULE_TO_TEST = "busy_beaver.apps.call_for_proposals.cli"
@@ -12,7 +12,7 @@ def patched_slack(patcher):
     return patcher(MODULE_TO_TEST, namespace="SlackClient", replacement=obj)
 
 
-@pytest.mark.end2end
+@pytest.mark.unit
 @pytest.mark.vcr
 def test_post_upcoming_cfps(mocker, runner, factory, patched_slack):
     # Arrange
@@ -34,7 +34,7 @@ def test_post_upcoming_cfps(mocker, runner, factory, patched_slack):
     assert len(kwargs["blocks"]) == 5
 
 
-@pytest.mark.end2end
+@pytest.mark.unit
 @pytest.mark.vcr
 def test_post_upcoming_cfps_enabled(mocker, runner, factory, patched_slack):
     """Only post for configurations that are enabled
@@ -52,3 +52,14 @@ def test_post_upcoming_cfps_enabled(mocker, runner, factory, patched_slack):
 
     # Assert
     assert patched_slack.mock.call_count == 2
+
+
+@pytest.mark.unit
+@pytest.mark.vcr
+def test_post_no_open_cfps_found():
+    """When there are no open CFPs, let the user know)"""
+    # Act
+    result = OpenCFPPost._generate_conference_text(conference_cfps=[])
+
+    # Assert
+    assert "No upcoming CFPs found" in result
