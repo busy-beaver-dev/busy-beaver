@@ -64,6 +64,7 @@ services:
     depends_on: &app_depends_on
       - db
     environment: &app_env_vars
+      ENVIRONMENT: development
       PYTHONPATH: .
       BASE_URL: http://0.0.0.0:5000
       FLASK_APP: /app/busy_beaver/__init__.py

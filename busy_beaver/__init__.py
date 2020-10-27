@@ -5,7 +5,7 @@ import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
 from sentry_sdk.integrations.sqlalchemy import SqlalchemyIntegration
 
-from .config import LOGGING_CONFIG, SENTRY_DSN, SENTRY_ENV_FILTER
+from .config import ENVIRONMENT, LOGGING_CONFIG, SENTRY_DSN
 
 # observability
 load_dict_config(LOGGING_CONFIG)
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 if SENTRY_DSN:
     sentry_sdk.init(
         dsn=SENTRY_DSN,
-        environment=SENTRY_ENV_FILTER,
+        environment=ENVIRONMENT,
         integrations=[FlaskIntegration(), SqlalchemyIntegration()],
     )
 

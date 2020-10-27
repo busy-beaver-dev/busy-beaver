@@ -1,7 +1,7 @@
 import os
 
-IN_PRODUCTION = os.getenv("IN_PRODUCTION", False)
-SENTRY_ENV_FILTER = "production" if IN_PRODUCTION else "staging"
+ENVIRONMENT = os.getenv("ENVIRONMENT", "development")
+IN_PRODUCTION = ENVIRONMENT == "production"
 TASK_QUEUE_MAX_RETRIES = 1
 
 SECRET_KEY = os.getenv("SECRET_KEY", "abcdef").encode("utf-8")
