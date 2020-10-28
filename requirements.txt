@@ -6,6 +6,7 @@
 #
 aiohttp==3.5.4            # via slackclient
 alembic==1.3.2            # via -r requirements.in, flask-migrate
+appnope==0.1.0            # via ipython
 async-timeout==3.0.1      # via aiohttp
 attrs==19.1.0             # via aiohttp
 backcall==0.2.0           # via ipython
