@@ -22,7 +22,7 @@ coverage==5.3             # via pytest-cov
 croniter==0.3.30          # via rq-scheduler
 cryptography==3.2         # via -r requirements.in
 decorator==4.4.2          # via ipython, validators
-factory_boy==2.12.0       # via -r requirements.in
+factory_boy==3.1.0        # via -r requirements.in
 faker==1.0.7              # via factory-boy
 finite-state-machine==0.2.0  # via -r requirements.in
 flask-login==0.5.0        # via -r requirements.in
