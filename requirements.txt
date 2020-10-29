@@ -17,7 +17,7 @@ botocore==1.18.0          # via boto3, s3transfer
 certifi==2019.3.9         # via requests, sentry-sdk
 cffi==1.12.3              # via cryptography
 chardet==3.0.4            # via aiohttp, requests
-click==7.0                # via flask, flask-shell-ipython, rq
+click==7.1.2              # via -r requirements.in, flask, flask-shell-ipython, rq
 coverage==5.3             # via pytest-cov
 croniter==0.3.30          # via rq-scheduler
 cryptography==3.2         # via -r requirements.in
