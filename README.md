@@ -1,6 +1,6 @@
-# Busy Beaver
-
 <p align="center"><img src="assets/logo.png" alt="Busy Beaver Logo" width=300 /></p>
+
+# Busy Beaver
 
 ![build status](https://github.com/busy-beaver-dev/busy-beaver/workflows/build/badge.svg?branch=master&event=push)
 [![codecov](https://codecov.io/gh/busy-beaver-dev/busy-beaver/branch/master/graph/badge.svg)](https://codecov.io/gh/busy-beaver-dev/busy-beaver)
