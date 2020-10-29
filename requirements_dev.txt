@@ -4,4 +4,4 @@ flake8
 isort
 pdbpp
 pip-tools
-pre-commit==1.14.4
+pre-commit==2.8.1
