@@ -4,12 +4,7 @@ from dateutil.parser import parse as parse_dt
 import pytest
 import pytz
 
-from busy_beaver.common.wrappers.github import (
-    APINav,
-    GitHubClient,
-    create_github_navigation_panel,
-    page_from_url,
-)
+from busy_beaver.common.wrappers.github import APINav, GitHubClient, page_from_url
 from busy_beaver.config import GITHUB_OAUTH_TOKEN
 
 
@@ -78,7 +73,7 @@ def test_parsing_header_links():
     )
 
     # Act
-    links = create_github_navigation_panel(link_header)
+    links = APINav.parse_github_links(link_header)
 
     # Assert
     expected = APINav(
@@ -98,7 +93,7 @@ def test_parsing_header_links_empty():
     # Act
     # Assert
     with pytest.raises(ValueError):
-        create_github_navigation_panel(link_header)
+        APINav.parse_github_links(link_header)
 
 
 @pytest.mark.parametrize(
