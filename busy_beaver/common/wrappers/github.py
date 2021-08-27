@@ -60,7 +60,7 @@ class GitHubClient:
         headers = resp.headers
 
         try:
-            nav = create_github_navigation_panel(headers["Link"])
+            nav = ApiNav.parse_github_links(headers["Link"])
             last_page = page_from_url(nav.last_link)
         except KeyError:
             last_page = 1
@@ -87,7 +87,7 @@ class GitHubClient:
             if single_page_of_activity:
                 break
 
-            nav = create_github_navigation_panel(resp.headers["Link"])
+            nav = ApiNav.parse_github_links(resp.headers["Link"])
             last_page = page_from_url(nav.last_link)
             min_batch_timestamp = date_parse(resp.json[-1]["created_at"])
             keep_fetching = timestamp <= min_batch_timestamp and page_num < last_page
@@ -112,23 +112,6 @@ class GitHubClient:
         return resp
 
 
-def create_github_navigation_panel(links):
-    def all_links(links: str) -> Tuple[str, str]:
-        for link in links.split(", "):
-            dirty_url, dirty_type = link.split("; ")
-            cleaned_url = dirty_url.split("<")[1][:-1]
-            cleaned_type = dirty_type.split('="')[1][:-1]
-            yield GitHubLink(cleaned_type, cleaned_url)
-
-    links = {link.type_: link.url for link in all_links(links)}
-    return APINav(
-        first_link=links.get("first"),
-        last_link=links.get("last"),
-        next_link=links.get("next"),
-        prev_link=links.get("prev"),
-    )
-
-
 def filter_items_before(timestamp: datetime, items: list):
     """If event happened after timestamp, keep it"""
     keep_item = [date_parse(item["created_at"]) > timestamp for item in items]
@@ -148,11 +131,28 @@ def page_from_url(url: str) -> int:
     return int(params["page"][0])
 
 
-class APINav(NamedTuple):
+class ApiNav(NamedTuple):
     first_link: str = None
     last_link: str = None
     next_link: str = None
     prev_link: str = None
+
+    @classmethod
+    def parse_github_links(cls, links):
+        def all_links(links: str) -> Tuple[str, str]:
+            for link in links.split(", "):
+                dirty_url, dirty_type = link.split("; ")
+                cleaned_url = dirty_url.split("<")[1][:-1]
+                cleaned_type = dirty_type.split('="')[1][:-1]
+                yield GitHubLink(cleaned_type, cleaned_url)
+
+        links = {link.type_: link.url for link in all_links(links)}
+        return cls(
+            first_link=links.get("first"),
+            last_link=links.get("last"),
+            next_link=links.get("next"),
+            prev_link=links.get("prev"),
+        )
 
 
 class GitHubLink(NamedTuple):
