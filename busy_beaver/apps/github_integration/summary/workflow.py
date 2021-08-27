@@ -1,11 +1,12 @@
 from datetime import timedelta
 import logging
 import random
-from typing import List
+from typing import List, NamedTuple
 
 from sqlalchemy import and_
 
 from .blocks import GitHubSummaryPost
+from .summary import GitHubUserEvents
 from busy_beaver.common.wrappers import SlackClient
 from busy_beaver.exceptions import ValidationError
 from busy_beaver.extensions import rq
@@ -13,6 +14,11 @@ from busy_beaver.models import GitHubSummaryUser, SlackInstallation
 from busy_beaver.toolbox import set_task_progress, utc_now_minus
 
 logger = logging.getLogger(__name__)
+
+
+class UserEvents(NamedTuple):
+    user: GitHubSummaryUser
+    events: GitHubUserEvents
 
 
 @rq.job
@@ -40,9 +46,19 @@ def fetch_github_summary_post_to_slack(installation, boundary_dt):
     ).all()
     random.shuffle(users)
 
-    github_summary_post = GitHubSummaryPost(users, boundary_dt)
-    github_summary_post.create()
+    # TODO: make async
+    # take list of users, boundary date
+    # get a list of all their activity
+    all_user_events = []
+    for idx, user in enumerate(users):
+        logger.info("Compiling stats for {0}".format(user))
+        user_events = GitHubUserEvents(user, boundary_dt)
 
+        if len(user_events) > 0:
+            all_user_events.append(UserEvents(user, user_events))
+
+    # pass in users + activity into github summary post to format
+    github_summary_post = GitHubSummaryPost(all_user_events)
     slack.post_message(
         blocks=github_summary_post.as_blocks(),
         channel=channel,

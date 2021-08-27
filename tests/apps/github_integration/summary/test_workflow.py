@@ -50,7 +50,7 @@ def patched_github_user_events(mocker, patcher):
     def _wrapper(*, messages=None):
         obj = FakeGitHubUserEvents(summary_messages=messages)
         return patcher(
-            "busy_beaver.apps.github_integration.summary.blocks",
+            "busy_beaver.apps.github_integration.summary.workflow",
             namespace="GitHubUserEvents",
             replacement=obj,
         )
