@@ -40,11 +40,8 @@ def fetch_github_summary_post_to_slack(installation, boundary_dt):
     ).all()
     random.shuffle(users)
 
-    # TODO: make async
-    # take list of users, boundary date
-    # get a list of all their activity
-
-    # pass in users + activity into github summary post to format
+    github_summary_post = GitHubSummaryPost(users, boundary_dt)
+    github_summary_post.create()
 
     github_summary_post = GitHubSummaryPost(users, boundary_dt)
     slack.post_message(
