@@ -60,7 +60,7 @@ class GitHubClient:
         headers = resp.headers
 
         try:
-            nav = APINav.parse_github_links(headers["Link"])
+            nav = ApiNav.parse_github_links(headers["Link"])
             last_page = page_from_url(nav.last_link)
         except KeyError:
             last_page = 1
@@ -87,7 +87,7 @@ class GitHubClient:
             if single_page_of_activity:
                 break
 
-            nav = APINav.parse_github_links(resp.headers["Link"])
+            nav = ApiNav.parse_github_links(resp.headers["Link"])
             last_page = page_from_url(nav.last_link)
             min_batch_timestamp = date_parse(resp.json[-1]["created_at"])
             keep_fetching = timestamp <= min_batch_timestamp and page_num < last_page
@@ -131,7 +131,7 @@ def page_from_url(url: str) -> int:
     return int(params["page"][0])
 
 
-class APINav(NamedTuple):
+class ApiNav(NamedTuple):
     first_link: str = None
     last_link: str = None
     next_link: str = None

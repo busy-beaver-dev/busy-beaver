@@ -4,7 +4,7 @@ from dateutil.parser import parse as parse_dt
 import pytest
 import pytz
 
-from busy_beaver.common.wrappers.github import APINav, GitHubClient, page_from_url
+from busy_beaver.common.wrappers.github import ApiNav, GitHubClient, page_from_url
 from busy_beaver.config import GITHUB_OAUTH_TOKEN
 
 
@@ -62,40 +62,6 @@ def test_user_details(client):
     assert details["login"] == "alysivji"
 
 
-@pytest.mark.unit
-def test_parsing_header_links():
-    # Arrange
-    link_header = (
-        '<https://api.github.com/user/4369343/events/public?page=3>; rel="next", '
-        '<https://api.github.com/user/4369343/events/public?page=10>; rel="last", '
-        '<https://api.github.com/user/4369343/events/public?page=1>; rel="prev", '
-        '<https://api.github.com/user/4369343/events/public?page=1>; rel="first"'
-    )
-
-    # Act
-    links = APINav.parse_github_links(link_header)
-
-    # Assert
-    expected = APINav(
-        first_link="https://api.github.com/user/4369343/events/public?page=1",
-        prev_link="https://api.github.com/user/4369343/events/public?page=1",
-        next_link="https://api.github.com/user/4369343/events/public?page=3",
-        last_link="https://api.github.com/user/4369343/events/public?page=10",
-    )
-    assert links == expected
-
-
-@pytest.mark.unit
-def test_parsing_header_links_empty():
-    # Arrange
-    link_header = ""
-
-    # Act
-    # Assert
-    with pytest.raises(ValueError):
-        APINav.parse_github_links(link_header)
-
-
 @pytest.mark.parametrize(
     "url, expected_page_num",
     [
@@ -110,3 +76,36 @@ def test_page_from_url(url, expected_page_num):
 
     # Assert
     assert result == expected_page_num
+
+
+@pytest.mark.unit
+class TestApiNav:
+    def test_parsing_header_links(self):
+        # Arrange
+        link_header = (
+            '<https://api.github.com/user/4369343/events/public?page=3>; rel="next", '
+            '<https://api.github.com/user/4369343/events/public?page=10>; rel="last", '
+            '<https://api.github.com/user/4369343/events/public?page=1>; rel="prev", '
+            '<https://api.github.com/user/4369343/events/public?page=1>; rel="first"'
+        )
+
+        # Act
+        links = ApiNav.parse_github_links(link_header)
+
+        # Assert
+        expected = ApiNav(
+            first_link="https://api.github.com/user/4369343/events/public?page=1",
+            prev_link="https://api.github.com/user/4369343/events/public?page=1",
+            next_link="https://api.github.com/user/4369343/events/public?page=3",
+            last_link="https://api.github.com/user/4369343/events/public?page=10",
+        )
+        assert links == expected
+
+    def test_parsing_header_links_empty(self):
+        # Arrange
+        link_header = ""
+
+        # Act
+        # Assert
+        with pytest.raises(ValueError):
+            ApiNav.parse_github_links(link_header)
