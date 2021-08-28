@@ -164,7 +164,7 @@ class GitHubLink(NamedTuple):
 
 class AsyncGitHubClient:
     def __init__(self, oauth_token: str):
-        self.default_headers = {  # TODO: use this
+        self.headers = {  # TODO: use this
             "Accept": "application/vnd.github.v3+json",
             "Authorization": f"token {oauth_token}",
         }
@@ -175,26 +175,31 @@ class AsyncGitHubClient:
         return "AsyncGitHubAdapter"
 
     def get_activity_for_users(
-        self, users: List[str], start_dt: datetime, end_dt: datetime
+        self,
+        users: List[str],
+        start_dt: datetime,
+        end_dt: datetime,
     ) -> Dict[str, list]:
         """
         Entry point for clients;
         kicks off fetching user activity from GitHub API using asyncio
+
+        Is there a cleaner way to do this?
         """
-        users_str = ",".join(users)
-        task = self._get_activity_for_users(users_str, start_dt, end_dt)
+        task = self._get_activity_for_users(users, start_dt, end_dt)
         return asyncio.run(task)
 
     async def _get_activity_for_users(
         self,
-        users: str,
+        users: List[str],
         start_dt: datetime,
         end_dt: datetime,  # comma separated list
     ) -> Dict[str, list]:
         client = httpx.AsyncClient()
+        # client = httpx.AsyncClient(headers=self.headers, params=self.params)
         async with client:
             tasks = []
-            for user in users.split(","):
+            for user in users:
                 task = self._user_activity_during_range(client, user, start_dt, end_dt)
                 tasks.append(task)
 
