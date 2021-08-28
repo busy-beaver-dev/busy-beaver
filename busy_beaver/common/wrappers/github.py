@@ -1,5 +1,6 @@
 import asyncio
 from datetime import datetime
+import logging
 from typing import Dict, List, NamedTuple, Tuple
 import urllib
 
@@ -9,6 +10,7 @@ import httpx
 from .requests_client import RequestsClient, Response
 from busy_beaver.exceptions import UnexpectedStatusCode
 
+logger = logging.getLogger(__name__)
 BASE_URL = "https://api.github.com"
 
 
@@ -76,6 +78,7 @@ class AsyncGitHubClient:
         async with self._create_async_client() as client:
             tasks = []
             for user in users:
+                logger.info("Fetching GitHub activity", extra={"user": user})
                 task = self._user_activity_during_range(client, user, start_dt, end_dt)
                 tasks.append(task)
 
