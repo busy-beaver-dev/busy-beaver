@@ -30,7 +30,8 @@ def patched_slack(patcher):
 class TestPostGitHubSummaryMessage:
     @pytest.mark.vcr
     @pytest.mark.freeze_time("2021-08-28")
-    def test_active_users_have_summary_generated(
+    @pytest.mark.asyncio
+    async def test_active_users_have_summary_generated(
         self,
         session,
         factory,
@@ -53,7 +54,7 @@ class TestPostGitHubSummaryMessage:
         slack = patched_slack(members=[slack_user1, "user2"])
 
         # Act -- run function
-        post_github_summary_message(workspace_id=slack_installation.workspace_id)
+        await post_github_summary_message(workspace_id=slack_installation.workspace_id)
 
         # Assert -- message sent to slack has activity to report
         slack_adapter_initalize_args = slack.mock.call_args_list[0]
@@ -68,7 +69,8 @@ class TestPostGitHubSummaryMessage:
 
     @pytest.mark.vcr
     @pytest.mark.freeze_time("2021-08-28")
-    def test_inactive_users_results_in_no_activity_to_report(
+    @pytest.mark.asyncio
+    async def test_inactive_users_results_in_no_activity_to_report(
         self,
         session,
         factory,
@@ -91,7 +93,7 @@ class TestPostGitHubSummaryMessage:
         slack = patched_slack(members=["user78", "user34"])
 
         # Act -- run function
-        post_github_summary_message(workspace_id=slack_installation.workspace_id)
+        await post_github_summary_message(workspace_id=slack_installation.workspace_id)
 
         # Assert -- message sent to slack has no activity to report
         slack_adapter_initalize_args = slack.mock.call_args_list[0]

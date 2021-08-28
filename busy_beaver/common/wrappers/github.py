@@ -61,12 +61,6 @@ class AsyncGitHubClient:
         start_dt: datetime,
         end_dt: datetime,
     ) -> Dict[str, list]:
-        """
-        Entry point for clients;
-        kicks off fetching user activity from GitHub API using asyncio
-
-        Is there a cleaner way to do this?
-        """
         async with self._create_async_client() as client:
             tasks = []
             for user in users:

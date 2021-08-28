@@ -33,13 +33,18 @@ class TestGitHubClient:
 class TestAsyncGitHubClient:
     @pytest.mark.vcr()
     @pytest.mark.freeze_time("2021-08-28")
-    def test_get_activity_for_users(self, async_github_client):
+    @pytest.mark.asyncio
+    async def test_get_activity_for_users(self, async_github_client):
         # Arrange -- create 1 real github user, 1 fake user
         usernames = ["alysivji", "albcae324sdf"]
 
         # Arrange -- time period we are searching for
         start_dt, end_dt = generate_range_utc_now_minus(timedelta(days=1))
-        result = async_github_client.get_activity_for_users(usernames, start_dt, end_dt)
+
+        # Act
+        result = await async_github_client.get_activity_for_users(
+            usernames, start_dt, end_dt
+        )
 
         # Assert -- data was pulled for valid users
         assert result.keys() == set(["alysivji"])
