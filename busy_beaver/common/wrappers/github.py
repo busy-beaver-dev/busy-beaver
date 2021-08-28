@@ -40,9 +40,10 @@ class GitHubClient:
 
 class AsyncGitHubClient:
     def __init__(self, oauth_token: str):
-        self.headers = {  # TODO: use this
+        self.headers = {
             "Accept": "application/vnd.github.v3+json",
             "Authorization": f"token {oauth_token}",
+            "User-Agent": "BusyBeaver -- GitHub Client",
         }
         self.params = {"per_page": 30}
         self.nav = None
