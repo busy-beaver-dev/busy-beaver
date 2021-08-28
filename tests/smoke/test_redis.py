@@ -21,7 +21,7 @@ def test_async_task_called_like_regular_function(app, rq):
 
 
 @pytest.mark.smoke
-def test_run_async_task(app, rq):
+def test_run_regular_function_via_rq(app, rq):
     rq.job(add)
     job = add.queue(5, 2)
     assert job.result == 7
@@ -32,8 +32,19 @@ def exception_function():
 
 
 @pytest.mark.smoke
-def test_run_async_task_raising_exception(app, rq):
+def test_run_exception_function_via_rq(app, rq):
     rq.job(exception_function)
 
     with pytest.raises(ValueError):
         exception_function.queue()
+
+
+async def add_coroutine(x, y):
+    return x + y
+
+
+@pytest.mark.smoke
+def test_run_coroutine_via_rq(app, rq):
+    rq.job(add_coroutine)
+    job = add_coroutine.queue(5, 2)
+    assert job.result == 7

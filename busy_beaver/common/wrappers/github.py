@@ -21,8 +21,6 @@ class GitHubClient:
             "Authorization": f"token {oauth_token}",
         }
         self.client = RequestsClient(headers=default_headers)
-        self.params = {"per_page": 30}
-        self.nav = None
 
     def __repr__(self):  # pragma: no cover
         return "GitHubAdapter"
@@ -46,7 +44,6 @@ class AsyncGitHubClient:
             "User-Agent": "BusyBeaver -- GitHub Client",
         }
         self.params = {"per_page": 30}
-        self.nav = None
 
     def __repr__(self):  # pragma: no cover
         return "AsyncGitHubAdapter"
