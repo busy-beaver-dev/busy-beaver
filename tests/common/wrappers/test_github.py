@@ -1,8 +1,6 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
-from dateutil.parser import parse as parse_dt
 import pytest
-import pytz
 
 from busy_beaver.common.wrappers.github import (
     ApiNav,
@@ -25,46 +23,6 @@ def async_github_client():
 
 
 class TestGitHubClient:
-    @pytest.mark.vcr()
-    def test_all_user_stars(self, github_client):
-        starred_repos = github_client.all_user_stars(user="alysivji", max_pages=4)
-
-        assert len(starred_repos) == 120
-
-    @pytest.mark.vcr()
-    def test_all_user_activity_after(self, github_client):
-        # TODO don't like how I hardcoded date, think of more robust solution
-        vrcpy_timestamp = pytz.utc.localize(datetime(2018, 11, 24, 22, 55, 3, 767_521))
-        boundary_dt = vrcpy_timestamp - timedelta(days=1)
-        user_activity = github_client.user_activity_after(
-            user="alysivji", timestamp=boundary_dt
-        )
-
-        assert len(user_activity) >= 0
-
-    @pytest.mark.vcr()
-    @pytest.mark.freeze_time("2020-01-13")
-    def test_user_activity_during_range(self, github_client):
-        # Arrange
-        start_dt = pytz.utc.localize(datetime.utcnow())
-        end_dt = start_dt + timedelta(days=1)
-
-        # Act
-        user_activity = github_client.user_activity_during_range(
-            user="alysivji", start_dt=start_dt, end_dt=end_dt
-        )
-
-        # Assert
-        assert len(user_activity) >= 0
-        for event in user_activity:
-            assert start_dt <= parse_dt(event["created_at"]) <= end_dt
-
-    @pytest.mark.vcr()
-    def test_all_user_repos(self, github_client):
-        all_repos = github_client.all_user_repos("alysivji")
-
-        assert len(all_repos) >= 50
-
     @pytest.mark.vcr()
     def test_user_details(self, github_client):
         details = github_client.user_details()
