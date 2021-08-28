@@ -136,7 +136,7 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Sat, 28 Aug 2021 15:40:26 GMT
+      - Sat, 28 Aug 2021 15:44:57 GMT
       ETag:
       - W/"43495671f41364cd0776d3d608c8f8d3065d9b4e0683a7f4dc74ed843f82d33e"
       Last-Modified:
@@ -164,7 +164,7 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3; format=json
       X-GitHub-Request-Id:
-      - C55D:672D:15EE1D0:419A699:612A58EA
+      - C73C:1726:22856EF:4234F3D:612A59F9
       X-OAuth-Scopes:
       - ''
       X-Poll-Interval:
@@ -172,13 +172,13 @@ interactions:
       X-RateLimit-Limit:
       - '5000'
       X-RateLimit-Remaining:
-      - '4979'
+      - '4999'
       X-RateLimit-Reset:
-      - '1630165458'
+      - '1630169097'
       X-RateLimit-Resource:
       - core
       X-RateLimit-Used:
-      - '21'
+      - '1'
       X-XSS-Protection:
       - '0'
     http_version: HTTP/1.1
