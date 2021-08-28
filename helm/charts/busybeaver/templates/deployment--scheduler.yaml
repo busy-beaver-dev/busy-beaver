@@ -27,8 +27,8 @@ spec:
         args: ["scheduler"]
         resources:
           limits:
-            memory: "128Mi"
-            cpu: "100m"
+            memory: "256Mi"
+            cpu: "200m"
         env:
           {{- include "busybeaver.env_vars" . | indent 10 }}
       serviceAccountName: {{ include "busybeaver.serviceAccountName" . }}

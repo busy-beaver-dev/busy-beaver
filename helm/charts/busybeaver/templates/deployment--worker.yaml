@@ -27,8 +27,8 @@ spec:
         args: ["worker"]
         resources:
           limits:
-            memory: "256Mi"
-            cpu: "200m"
+            memory: "512Mi"
+            cpu: "500m"
         env:
           {{- include "busybeaver.env_vars" . | indent 10 }}
         readinessProbe:
