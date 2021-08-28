@@ -33,11 +33,11 @@ spec:
           {{- include "busybeaver.env_vars" . | indent 10 }}
         ports:
         - containerPort: {{ .Values.app.port }}
-        # readinessProbe:
-        #   httpGet:
-        #     path: /healthcheck
-        #     port: {{ .Values.app.port }}
-        #   initialDelaySeconds: 10
-        #   periodSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /healthcheck
+            port: {{ .Values.app.port }}
+          initialDelaySeconds: 10
+          periodSeconds: 5
       serviceAccountName: {{ include "busybeaver.serviceAccountName" . }}
       automountServiceAccountToken: false
