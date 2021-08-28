@@ -93,7 +93,7 @@ class TestPostGitHubSummaryMessage:
         # Act -- run function
         post_github_summary_message(workspace_id=slack_installation.workspace_id)
 
-        # Assert -- message sent to slack has activity to report
+        # Assert -- message sent to slack has no activity to report
         slack_adapter_initalize_args = slack.mock.call_args_list[0]
         args, kwargs = slack_adapter_initalize_args
         assert slack_installation.bot_access_token in args
