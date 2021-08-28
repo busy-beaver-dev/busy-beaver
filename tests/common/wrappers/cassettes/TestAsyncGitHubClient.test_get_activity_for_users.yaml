@@ -3,9 +3,11 @@ interactions:
     body: ''
     headers:
       accept:
-      - '*/*'
+      - application/vnd.github.v3+json
       accept-encoding:
       - gzip, deflate
+      authorization:
+      - DUMMY
       connection:
       - keep-alive
       host:
@@ -26,22 +28,24 @@ interactions:
         Sunset
       Content-Encoding:
       - gzip
-      Content-Length:
-      - '126'
       Content-Security-Policy:
       - default-src 'none'
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Sat, 28 Aug 2021 15:06:58 GMT
+      - Sat, 28 Aug 2021 15:26:02 GMT
       Referrer-Policy:
       - origin-when-cross-origin, strict-origin-when-cross-origin
       Server:
       - GitHub.com
       Strict-Transport-Security:
       - max-age=31536000; includeSubdomains; preload
+      Transfer-Encoding:
+      - chunked
       Vary:
       - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -49,17 +53,19 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3; format=json
       X-GitHub-Request-Id:
-      - F71C:2B1C:985B54:1662D8A:612A5112
+      - FF05:2CAD:A116B7:1764F28:612A558A
+      X-OAuth-Scopes:
+      - ''
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '53'
+      - '4981'
       X-RateLimit-Reset:
-      - '1630163416'
+      - '1630165458'
       X-RateLimit-Resource:
       - core
       X-RateLimit-Used:
-      - '7'
+      - '19'
       X-XSS-Protection:
       - '0'
     http_version: HTTP/1.1
@@ -68,9 +74,11 @@ interactions:
     body: ''
     headers:
       accept:
-      - '*/*'
+      - application/vnd.github.v3+json
       accept-encoding:
       - gzip, deflate
+      authorization:
+      - DUMMY
       connection:
       - keep-alive
       host:
@@ -80,7 +88,7 @@ interactions:
     method: GET
     uri: https://api.github.com/users/alysivji/events/public?page=1&per_page=30
   response:
-    content: '[{"id":"17750703342","type":"DeleteEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":183815453,"name":"alysivji/busy-beaver","url":"https://api.github.com/repos/alysivji/busy-beaver"},"payload":{"ref":"refactor/cleanup-github-client","ref_type":"branch","pusher_type":"user"},"public":true,"created_at":"2021-08-27T22:02:41Z"},{"id":"17750702779","type":"PushEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":158856915,"name":"busy-beaver-dev/busy-beaver","url":"https://api.github.com/repos/busy-beaver-dev/busy-beaver"},"payload":{"push_id":7815179368,"size":1,"distinct_size":1,"ref":"refs/heads/master","head":"2a30157b3ceac5895c5586cc91afe079cd3092fc","before":"16b34a546cf6b3718fee13d22df7e68bd54af9dc","commits":[{"sha":"2a30157b3ceac5895c5586cc91afe079cd3092fc","author":{"email":"alysivji@gmail.com","name":"Aly
+    content: '[{"id":"17754951976","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":145337588,"name":"agronholm/anyio","url":"https://api.github.com/repos/agronholm/anyio"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-28T15:16:20Z"},{"id":"17750703342","type":"DeleteEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":183815453,"name":"alysivji/busy-beaver","url":"https://api.github.com/repos/alysivji/busy-beaver"},"payload":{"ref":"refactor/cleanup-github-client","ref_type":"branch","pusher_type":"user"},"public":true,"created_at":"2021-08-27T22:02:41Z"},{"id":"17750702779","type":"PushEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":158856915,"name":"busy-beaver-dev/busy-beaver","url":"https://api.github.com/repos/busy-beaver-dev/busy-beaver"},"payload":{"push_id":7815179368,"size":1,"distinct_size":1,"ref":"refs/heads/master","head":"2a30157b3ceac5895c5586cc91afe079cd3092fc","before":"16b34a546cf6b3718fee13d22df7e68bd54af9dc","commits":[{"sha":"2a30157b3ceac5895c5586cc91afe079cd3092fc","author":{"email":"alysivji@gmail.com","name":"Aly
       Sivji"},"message":"Group GitHub API Navigation code (#354)","distinct":true,"url":"https://api.github.com/repos/busy-beaver-dev/busy-beaver/commits/2a30157b3ceac5895c5586cc91afe079cd3092fc"}]},"public":true,"created_at":"2021-08-27T22:02:37Z","org":{"id":47989901,"login":"busy-beaver-dev","gravatar_id":"","url":"https://api.github.com/orgs/busy-beaver-dev","avatar_url":"https://avatars.githubusercontent.com/u/47989901?"}},{"id":"17750702700","type":"PullRequestEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":158856915,"name":"busy-beaver-dev/busy-beaver","url":"https://api.github.com/repos/busy-beaver-dev/busy-beaver"},"payload":{"action":"closed","number":354,"pull_request":{"url":"https://api.github.com/repos/busy-beaver-dev/busy-beaver/pulls/354","id":721632845,"node_id":"MDExOlB1bGxSZXF1ZXN0NzIxNjMyODQ1","html_url":"https://github.com/busy-beaver-dev/busy-beaver/pull/354","diff_url":"https://github.com/busy-beaver-dev/busy-beaver/pull/354.diff","patch_url":"https://github.com/busy-beaver-dev/busy-beaver/pull/354.patch","issue_url":"https://api.github.com/repos/busy-beaver-dev/busy-beaver/issues/354","number":354,"state":"closed","locked":false,"title":"Group
       GitHub API Navigation code","user":{"login":"alysivji","id":4369343,"node_id":"MDQ6VXNlcjQzNjkzNDM=","avatar_url":"https://avatars.githubusercontent.com/u/4369343?v=4","gravatar_id":"","url":"https://api.github.com/users/alysivji","html_url":"https://github.com/alysivji","followers_url":"https://api.github.com/users/alysivji/followers","following_url":"https://api.github.com/users/alysivji/following{/other_user}","gists_url":"https://api.github.com/users/alysivji/gists{/gist_id}","starred_url":"https://api.github.com/users/alysivji/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/alysivji/subscriptions","organizations_url":"https://api.github.com/users/alysivji/orgs","repos_url":"https://api.github.com/users/alysivji/repos","events_url":"https://api.github.com/users/alysivji/events{/privacy}","received_events_url":"https://api.github.com/users/alysivji/received_events","type":"User","site_admin":false},"body":"###
       What does this do\r\n\r\n- collect like code inside of the `ApiNav` class\r\n\r\n###
@@ -181,10 +189,8 @@ interactions:
       is private\" data-url=\"https://github.com/busy-beaver-dev/busy-beaver/issues/343\"
       data-hovercard-type=\"pull_request\" data-hovercard-url=\"/busy-beaver-dev/busy-beaver/pull/343/hovercard\"
       href=\"https://github.com/busy-beaver-dev/busy-beaver/pull/343\">#343</a>)</li>\n</ul>","is_short_description_html_truncated":false}},"public":true,"created_at":"2021-08-27T14:31:27Z","org":{"id":47989901,"login":"busy-beaver-dev","gravatar_id":"","url":"https://api.github.com/orgs/busy-beaver-dev","avatar_url":"https://avatars.githubusercontent.com/u/47989901?"}},{"id":"17745529870","type":"CreateEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":158856915,"name":"busy-beaver-dev/busy-beaver","url":"https://api.github.com/repos/busy-beaver-dev/busy-beaver"},"payload":{"ref":"2.9.3","ref_type":"tag","master_branch":"master","description":"The
-      Chicago Python Community Engagement Slack bot","pusher_type":"user"},"public":true,"created_at":"2021-08-27T14:31:28Z","org":{"id":47989901,"login":"busy-beaver-dev","gravatar_id":"","url":"https://api.github.com/orgs/busy-beaver-dev","avatar_url":"https://avatars.githubusercontent.com/u/47989901?"}},{"id":"17744952073","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":63892846,"name":"samuelcolvin/arq","url":"https://api.github.com/repos/samuelcolvin/arq"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-27T13:54:54Z"},{"id":"17743225855","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":109504265,"name":"ropeladder/record-linkage-resources","url":"https://api.github.com/repos/ropeladder/record-linkage-resources"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-27T11:51:59Z"},{"id":"17743200296","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":399925954,"name":"aws-samples/serverless-rds-proxy-demo","url":"https://api.github.com/repos/aws-samples/serverless-rds-proxy-demo"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-27T11:49:56Z","org":{"id":8931462,"login":"aws-samples","gravatar_id":"","url":"https://api.github.com/orgs/aws-samples","avatar_url":"https://avatars.githubusercontent.com/u/8931462?"}},{"id":"17736272397","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":363744743,"name":"async-worker/aiologger","url":"https://api.github.com/repos/async-worker/aiologger"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-26T23:36:10Z","org":{"id":70868117,"login":"async-worker","gravatar_id":"","url":"https://api.github.com/orgs/async-worker","avatar_url":"https://avatars.githubusercontent.com/u/70868117?"}},{"id":"17736234858","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":72115546,"name":"qntln/aiodebug","url":"https://api.github.com/repos/qntln/aiodebug"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-26T23:31:00Z","org":{"id":21700810,"login":"qntln","gravatar_id":"","url":"https://api.github.com/orgs/qntln","avatar_url":"https://avatars.githubusercontent.com/u/21700810?"}},{"id":"17712576292","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":399495186,"name":"tiangolo/sqlmodel","url":"https://api.github.com/repos/tiangolo/sqlmodel"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-25T14:49:19Z"},{"id":"17662124805","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":82564779,"name":"aio-libs/async-lru","url":"https://api.github.com/repos/aio-libs/async-lru"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-21T18:25:37Z","org":{"id":7049303,"login":"aio-libs","gravatar_id":"","url":"https://api.github.com/orgs/aio-libs","avatar_url":"https://avatars.githubusercontent.com/u/7049303?"}},{"id":"17662051996","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":57056922,"name":"MagicStack/httptools","url":"https://api.github.com/repos/MagicStack/httptools"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-21T18:07:01Z","org":{"id":14324950,"login":"MagicStack","gravatar_id":"","url":"https://api.github.com/orgs/MagicStack","avatar_url":"https://avatars.githubusercontent.com/u/14324950?"}},{"id":"17638509656","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":181561553,"name":"aws-samples/aws-serverless-airline-booking","url":"https://api.github.com/repos/aws-samples/aws-serverless-airline-booking"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-19T16:26:16Z","org":{"id":8931462,"login":"aws-samples","gravatar_id":"","url":"https://api.github.com/orgs/aws-samples","avatar_url":"https://avatars.githubusercontent.com/u/8931462?"}},{"id":"17637377666","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":68553125,"name":"ChrisRackauckas/JupyterSite","url":"https://api.github.com/repos/ChrisRackauckas/JupyterSite"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-19T15:12:47Z"},{"id":"17619401528","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":396563048,"name":"okken/testandcode_transcripts","url":"https://api.github.com/repos/okken/testandcode_transcripts"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-18T13:44:12Z"}]'
+      Chicago Python Community Engagement Slack bot","pusher_type":"user"},"public":true,"created_at":"2021-08-27T14:31:28Z","org":{"id":47989901,"login":"busy-beaver-dev","gravatar_id":"","url":"https://api.github.com/orgs/busy-beaver-dev","avatar_url":"https://avatars.githubusercontent.com/u/47989901?"}},{"id":"17744952073","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":63892846,"name":"samuelcolvin/arq","url":"https://api.github.com/repos/samuelcolvin/arq"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-27T13:54:54Z"},{"id":"17743225855","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":109504265,"name":"ropeladder/record-linkage-resources","url":"https://api.github.com/repos/ropeladder/record-linkage-resources"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-27T11:51:59Z"},{"id":"17743200296","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":399925954,"name":"aws-samples/serverless-rds-proxy-demo","url":"https://api.github.com/repos/aws-samples/serverless-rds-proxy-demo"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-27T11:49:56Z","org":{"id":8931462,"login":"aws-samples","gravatar_id":"","url":"https://api.github.com/orgs/aws-samples","avatar_url":"https://avatars.githubusercontent.com/u/8931462?"}},{"id":"17736272397","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":363744743,"name":"async-worker/aiologger","url":"https://api.github.com/repos/async-worker/aiologger"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-26T23:36:10Z","org":{"id":70868117,"login":"async-worker","gravatar_id":"","url":"https://api.github.com/orgs/async-worker","avatar_url":"https://avatars.githubusercontent.com/u/70868117?"}},{"id":"17736234858","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":72115546,"name":"qntln/aiodebug","url":"https://api.github.com/repos/qntln/aiodebug"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-26T23:31:00Z","org":{"id":21700810,"login":"qntln","gravatar_id":"","url":"https://api.github.com/orgs/qntln","avatar_url":"https://avatars.githubusercontent.com/u/21700810?"}},{"id":"17712576292","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":399495186,"name":"tiangolo/sqlmodel","url":"https://api.github.com/repos/tiangolo/sqlmodel"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-25T14:49:19Z"},{"id":"17662124805","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":82564779,"name":"aio-libs/async-lru","url":"https://api.github.com/repos/aio-libs/async-lru"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-21T18:25:37Z","org":{"id":7049303,"login":"aio-libs","gravatar_id":"","url":"https://api.github.com/orgs/aio-libs","avatar_url":"https://avatars.githubusercontent.com/u/7049303?"}},{"id":"17662051996","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":57056922,"name":"MagicStack/httptools","url":"https://api.github.com/repos/MagicStack/httptools"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-21T18:07:01Z","org":{"id":14324950,"login":"MagicStack","gravatar_id":"","url":"https://api.github.com/orgs/MagicStack","avatar_url":"https://avatars.githubusercontent.com/u/14324950?"}},{"id":"17638509656","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":181561553,"name":"aws-samples/aws-serverless-airline-booking","url":"https://api.github.com/repos/aws-samples/aws-serverless-airline-booking"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-19T16:26:16Z","org":{"id":8931462,"login":"aws-samples","gravatar_id":"","url":"https://api.github.com/orgs/aws-samples","avatar_url":"https://avatars.githubusercontent.com/u/8931462?"}},{"id":"17637377666","type":"WatchEvent","actor":{"id":4369343,"login":"alysivji","display_login":"alysivji","gravatar_id":"","url":"https://api.github.com/users/alysivji","avatar_url":"https://avatars.githubusercontent.com/u/4369343?"},"repo":{"id":68553125,"name":"ChrisRackauckas/JupyterSite","url":"https://api.github.com/repos/ChrisRackauckas/JupyterSite"},"payload":{"action":"started"},"public":true,"created_at":"2021-08-19T15:12:47Z"}]'
     headers:
-      Accept-Ranges:
-      - bytes
       Access-Control-Allow-Origin:
       - '*'
       Access-Control-Expose-Headers:
@@ -193,7 +199,7 @@ interactions:
         X-Accepted-OAuth-Scopes, X-Poll-Interval, X-GitHub-Media-Type, Deprecation,
         Sunset
       Cache-Control:
-      - public, max-age=60, s-maxage=60
+      - private, max-age=60, s-maxage=60
       Content-Encoding:
       - gzip
       Content-Security-Policy:
@@ -201,11 +207,11 @@ interactions:
       Content-Type:
       - application/json; charset=utf-8
       Date:
-      - Sat, 28 Aug 2021 15:06:59 GMT
+      - Sat, 28 Aug 2021 15:26:02 GMT
       ETag:
-      - W/"49dd2846d9a9e5a84f4381ce29976f5e98a22114d8ad5fb0851926e75774ac17"
+      - W/"43495671f41364cd0776d3d608c8f8d3065d9b4e0683a7f4dc74ed843f82d33e"
       Last-Modified:
-      - Fri, 27 Aug 2021 22:02:41 GMT
+      - Sat, 28 Aug 2021 15:16:20 GMT
       Link:
       - <https://api.github.com/user/4369343/events/public?per_page=30&page=2>; rel="next",
         <https://api.github.com/user/4369343/events/public?per_page=30&page=3>; rel="last"
@@ -218,7 +224,10 @@ interactions:
       Transfer-Encoding:
       - chunked
       Vary:
-      - Accept, Accept-Encoding, Accept, X-Requested-With
+      - Accept, Authorization, Cookie, X-GitHub-OTP
+      - Accept-Encoding, Accept, X-Requested-With
+      X-Accepted-OAuth-Scopes:
+      - ''
       X-Content-Type-Options:
       - nosniff
       X-Frame-Options:
@@ -226,19 +235,21 @@ interactions:
       X-GitHub-Media-Type:
       - github.v3; format=json
       X-GitHub-Request-Id:
-      - F71B:4D90:1131F07:21B012C:612A5112
+      - FF04:4885:10D49AD:2212B66:612A558A
+      X-OAuth-Scopes:
+      - ''
       X-Poll-Interval:
       - '60'
       X-RateLimit-Limit:
-      - '60'
+      - '5000'
       X-RateLimit-Remaining:
-      - '52'
+      - '4980'
       X-RateLimit-Reset:
-      - '1630163416'
+      - '1630165458'
       X-RateLimit-Resource:
       - core
       X-RateLimit-Used:
-      - '8'
+      - '20'
       X-XSS-Protection:
       - '0'
     http_version: HTTP/1.1

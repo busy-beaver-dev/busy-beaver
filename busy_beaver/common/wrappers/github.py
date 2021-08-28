@@ -195,8 +195,7 @@ class AsyncGitHubClient:
         start_dt: datetime,
         end_dt: datetime,  # comma separated list
     ) -> Dict[str, list]:
-        client = httpx.AsyncClient()
-        # client = httpx.AsyncClient(headers=self.headers, params=self.params)
+        client = httpx.AsyncClient(headers=self.headers, params=self.params)
         async with client:
             tasks = []
             for user in users:
