@@ -3,7 +3,6 @@ FROM python:3.9.0-buster
 LABEL maintainer="Aly Sivji <alysivji@gmail.com>" \
     description="BusyBeaver -- Development image"
 
-ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONASYNCIODEBUG 1
 ENV PYTHONTRACEMALLOC 1

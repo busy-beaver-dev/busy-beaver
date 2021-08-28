@@ -1,11 +1,9 @@
 from datetime import timedelta
 import json
-from typing import List
 
 import pytest
 
 from busy_beaver.apps.github_integration.summary.workflow import (
-    fetch_github_summary_post_to_slack,
     post_github_summary_message,
 )
 from busy_beaver.toolbox import utc_now_minus
@@ -28,184 +26,79 @@ def patched_slack(patcher):
     return _wrapper
 
 
-@pytest.fixture
-def patched_github_user_events(mocker, patcher):
-    class FakeGitHubUserEvents:
-        def __init__(self, *, summary_messages: List[str]):
-            self.summary_messages = summary_messages
-            self.mock = mocker.MagicMock(side_effect=list(summary_messages))
+@pytest.mark.end2end
+class TestPostGitHubSummaryMessage:
+    @pytest.mark.vcr
+    @pytest.mark.freeze_time("2021-08-28")
+    def test_active_users_have_summary_generated(
+        self,
+        session,
+        factory,
+        patched_slack,
+    ):
+        # Arrange -- create GitHub Summary configuration
+        channel = "general"
+        github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
 
-        def generate_summary_text(self, *args, **kwargs):
-            return self.mock(*args, **kwargs)
-
-        def __call__(self, *args, **kwargs):
-            return self
-
-        def __repr__(self):
-            return "<FakeGitHubUserEvents>"
-
-        def __len__(self):
-            return len(self.summary_messages)
-
-    def _wrapper(*, messages=None):
-        obj = FakeGitHubUserEvents(summary_messages=messages)
-        return patcher(
-            "busy_beaver.apps.github_integration.summary.blocks",
-            namespace="GitHubUserEvents",
-            replacement=obj,
+        # Arrange -- create user registered for GitHub Summary feature
+        slack_user1 = "user1"
+        factory.GitHubSummaryUser(
+            slack_id=slack_user1,
+            github_username="alysivji",
+            configuration=github_summary_config,
         )
 
-    return _wrapper
+        # Arrange -- set up fake slack to return active users
+        slack_installation = github_summary_config.slack_installation
+        slack = patched_slack(members=[slack_user1, "user2"])
 
+        # Act -- run function
+        post_github_summary_message(workspace_id=slack_installation.workspace_id)
 
-@pytest.mark.unit
-def test_fetch_github_summary_post_to_slack_with_no_users(
-    session, factory, t_minus_one_day, patched_slack, patched_github_user_events
-):
-    # Arrange
-    channel = "general"
-    boundary_dt = t_minus_one_day
-    github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
-    slack_installation = github_summary_config.slack_installation
-    slack = patched_slack(members=["user1", "user2"])
-    patched_github_user_events(messages=["a", "b"])
+        # Assert -- message sent to slack has activity to report
+        slack_adapter_initalize_args = slack.mock.call_args_list[0]
+        args, kwargs = slack_adapter_initalize_args
+        assert slack_installation.bot_access_token in args
 
-    # Act
-    fetch_github_summary_post_to_slack(
-        installation=slack_installation, boundary_dt=boundary_dt
-    )
+        post_message_args = slack.mock.call_args_list[-1]
+        args, kwargs = post_message_args
+        assert f"<@{slack_user1}>" in json.dumps(kwargs["blocks"])  # check Slack handle
+        assert "alysivji" in json.dumps(kwargs["blocks"])  # check GitHub handle
+        assert "general" in kwargs["channel"]
 
-    # Assert
-    slack_adapter_initalize_args = slack.mock.call_args_list[0]
-    args, kwargs = slack_adapter_initalize_args
-    assert slack_installation.bot_access_token in args
+    @pytest.mark.vcr
+    @pytest.mark.freeze_time("2021-08-28")
+    def test_inactive_users_results_in_no_activity_to_report(
+        self,
+        session,
+        factory,
+        patched_slack,
+    ):
+        # Arrange -- create GitHub Summary configuration
+        channel = "general"
+        github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
 
-    post_message_args = slack.mock.call_args_list[-1]
-    args, kwargs = post_message_args
-    assert "No activity to report" in json.dumps(kwargs["blocks"])
-    assert "general" in kwargs["channel"]
+        # Arrange -- create user registered for GitHub Summary feature
+        slack_user1 = "user1"
+        factory.GitHubSummaryUser(
+            slack_id=slack_user1,
+            github_username="alysivji",
+            configuration=github_summary_config,
+        )
 
+        # Arrange -- set up fake slack to return active users
+        slack_installation = github_summary_config.slack_installation
+        slack = patched_slack(members=["user78", "user34"])
 
-@pytest.mark.unit
-def test_fetch_github_summary_post_to_slack_with_no_activity(
-    session, factory, t_minus_one_day, patched_slack, patched_github_user_events
-):
-    # Arrange
-    channel = "general"
-    boundary_dt = t_minus_one_day
-    github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
-    slack_installation = github_summary_config.slack_installation
-    factory.GitHubSummaryUser(
-        slack_id="user1",
-        github_username="github_user1",
-        configuration=slack_installation.github_summary_config,
-    )
-    slack = patched_slack(members=["user1", "user2"])
-    patched_github_user_events(messages=[])
+        # Act -- run function
+        post_github_summary_message(workspace_id=slack_installation.workspace_id)
 
-    # Act
-    fetch_github_summary_post_to_slack(
-        installation=slack_installation, boundary_dt=boundary_dt
-    )
+        # Assert -- message sent to slack has no activity to report
+        slack_adapter_initalize_args = slack.mock.call_args_list[0]
+        args, kwargs = slack_adapter_initalize_args
+        assert slack_installation.bot_access_token in args
 
-    # Assert
-    slack_adapter_initalize_args = slack.mock.call_args_list[0]
-    args, kwargs = slack_adapter_initalize_args
-    assert slack_installation.bot_access_token in args
-
-    post_message_args = slack.mock.call_args_list[-1]
-    args, kwargs = post_message_args
-    assert "No activity to report" in json.dumps(kwargs["blocks"])
-
-
-@pytest.mark.unit
-def test_fetch_github_summary_post_to_slack_with_activity(
-    session, factory, t_minus_one_day, patched_slack, patched_github_user_events
-):
-    # Arrange
-    channel = "general"
-    boundary_dt = t_minus_one_day
-    github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
-    slack_installation = github_summary_config.slack_installation
-    factory.GitHubSummaryUser(
-        slack_id="user1",
-        github_username="github_user1",
-        configuration=slack_installation.github_summary_config,
-    )
-    factory.GitHubSummaryUser(
-        slack_id="user2",
-        github_username="github_user2",
-        configuration=slack_installation.github_summary_config,
-    )
-    slack = patched_slack(members=["user1", "user2"])
-    patched_github_user_events(messages=["a", "b"])
-
-    # Act
-    fetch_github_summary_post_to_slack(
-        installation=slack_installation, boundary_dt=boundary_dt
-    )
-
-    # Assert
-    slack_adapter_initalize_args = slack.mock.call_args_list[0]
-    args, kwargs = slack_adapter_initalize_args
-    assert slack_installation.bot_access_token in args
-
-    post_message_args = slack.mock.call_args_list[-1]
-    args, kwargs = post_message_args
-    assert len(kwargs["blocks"]) == 6
-
-
-@pytest.mark.vcr()
-@pytest.mark.freeze_time("2019-03-31")
-@pytest.mark.integration
-def test_fetch_github_summary_post_to_slack(
-    session, factory, t_minus_one_day, patched_slack
-):
-    channel = "general"
-    github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
-    slack_installation = github_summary_config.slack_installation
-    factory.GitHubSummaryUser(
-        slack_id="user1",
-        github_username="alysivji",
-        configuration=slack_installation.github_summary_config,
-    )
-    slack = patched_slack(members=["user1", "user2"])
-
-    # Act
-    fetch_github_summary_post_to_slack(
-        installation=slack_installation, boundary_dt=t_minus_one_day
-    )
-
-    # Assert
-    slack_adapter_initalize_args = slack.mock.call_args_list[0]
-    args, kwargs = slack_adapter_initalize_args
-    assert slack_installation.bot_access_token in args
-
-    post_message_args = slack.mock.call_args_list[-1]
-    args, kwargs = post_message_args
-    assert "<@user1>" in json.dumps(kwargs["blocks"])
-
-
-@pytest.mark.end2end
-def test_post_github_summary_message(
-    session, factory, t_minus_one_day, patched_slack, patched_github_user_events
-):
-    # Arrange
-    channel = "general"
-    github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
-    slack_installation = github_summary_config.slack_installation
-    slack = patched_slack(members=["user1", "user2"])
-    patched_github_user_events(messages=["a", "b"])
-
-    # Act
-    post_github_summary_message(workspace_id=slack_installation.workspace_id)
-
-    # Assert
-    slack_adapter_initalize_args = slack.mock.call_args_list[0]
-    args, kwargs = slack_adapter_initalize_args
-    assert slack_installation.bot_access_token in args
-
-    post_message_args = slack.mock.call_args_list[-1]
-    args, kwargs = post_message_args
-    assert "No activity to report" in json.dumps(kwargs["blocks"])
-    assert "general" in kwargs["channel"]
+        post_message_args = slack.mock.call_args_list[-1]
+        args, kwargs = post_message_args
+        assert "no activity to report" in json.dumps(kwargs["blocks"]).lower()
+        assert "general" in kwargs["channel"]

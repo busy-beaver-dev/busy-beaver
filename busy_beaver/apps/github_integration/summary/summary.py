@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 from .event_list import (
     CommitsList,
     CreatedReposList,
@@ -10,14 +8,17 @@ from .event_list import (
     ReleasesPublishedList,
     StarredReposList,
 )
-from busy_beaver.clients import github
 from busy_beaver.models import GitHubSummaryUser
 
 
 class GitHubUserEvents:
-    def __init__(self, user: GitHubSummaryUser, boundary_dt: datetime):
+    def __init__(self, user: GitHubSummaryUser, classified_events: list):
         self.user = user
-        self.event_lists = [  # this is the order of summary output
+        self.classified_events = classified_events
+
+    @classmethod
+    def classify_events_by_type(cls, user: GitHubSummaryUser, events: list):
+        tracked_event_types = [  # this is the order of summary output
             ReleasesPublishedList(),
             CreatedReposList(),
             PublicizedReposList(),
@@ -28,22 +29,16 @@ class GitHubUserEvents:
             StarredReposList(),
         ]
 
-        self.username = user.github_username
-        start_dt = boundary_dt
-        end_dt = start_dt + timedelta(days=1)
-
-        timeline = github.user_activity_during_range(self.username, start_dt, end_dt)
-        for event in timeline:
-            for event_list in self.event_lists:
+        for event in events:
+            for event_list in tracked_event_types:
                 if event_list.matches_event(event):
                     event_list.append(event)
 
-    def __len__(self):
-        return sum(len(events) for events in self.event_lists)
+        return cls(user, tracked_event_types)
 
     def generate_summary_text(self):
         summary = ""
-        for event_list in self.event_lists:
+        for event_list in self.classified_events:
             summary += event_list.generate_summary_text()
 
         if not summary:

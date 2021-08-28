@@ -8,7 +8,13 @@ Variables are assigned Singleton instances of each
 integration.
 """
 
-from .common.wrappers import GitHubClient, MeetupClient, S3Client, SlackClient
+from .common.wrappers import (
+    AsyncGitHubClient,
+    GitHubClient,
+    MeetupClient,
+    S3Client,
+    SlackClient,
+)
 from .config import (
     DIGITALOCEAN_SPACES_KEY,
     DIGITALOCEAN_SPACES_SECRET,
@@ -28,6 +34,7 @@ from busy_beaver.apps.slack_integration.oauth.oauth_flow import (
 
 chipy_slack = SlackClient(SLACK_TOKEN)  # Default Workspace -- this is being phased out
 github = GitHubClient(GITHUB_OAUTH_TOKEN)
+github_async = AsyncGitHubClient(GITHUB_OAUTH_TOKEN)
 meetup = MeetupClient(MEETUP_API_KEY)
 
 slack_install_oauth = SlackInstallationOAuthFlow(SLACK_CLIENT_ID, SLACK_CLIENT_SECRET)
