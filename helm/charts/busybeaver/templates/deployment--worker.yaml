@@ -31,12 +31,5 @@ spec:
             cpu: "500m"
         env:
           {{- include "busybeaver.env_vars" . | indent 10 }}
-        # readinessProbe:
-        #   exec:
-        #     command:
-        #       - bash
-        #       - ./scripts/check_worker_box.sh
-        #   initialDelaySeconds: 10
-        #   periodSeconds: 10
       serviceAccountName: {{ include "busybeaver.serviceAccountName" . }}
       automountServiceAccountToken: false
