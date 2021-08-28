@@ -6,6 +6,7 @@ from whitenoise import WhiteNoise
 
 from . import models
 from .blueprints import cfps_bp, events_bp, github_bp, healthcheck_bp, slack_bp, web_bp
+from .clients import github_async
 from .common.oauth import OAuthError
 from .common.wrappers import SlackClient
 from .config import DATABASE_URI, ENVIRONMENT, REDIS_URI, SECRET_KEY
@@ -74,7 +75,7 @@ def create_app(*, testing=False):
 
     @app.shell_context_processor
     def create_shell_context():
-        context = {"app": app, "db": db, "rq": rq}
+        context = {"app": app, "db": db, "github": github_async, "rq": rq}
 
         db_models = inspect.getmembers(models, lambda member: inspect.isclass(member))
         for name, reference in db_models:

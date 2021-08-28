@@ -29,3 +29,8 @@ def make_response(
 
 def utc_now_minus(period: timedelta):
     return pytz.utc.localize(datetime.utcnow()) - period
+
+
+def generate_range_utc_now_minus(period: timedelta):
+    now = pytz.utc.localize(datetime.utcnow())
+    return (now - period, now)
