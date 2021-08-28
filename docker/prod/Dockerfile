@@ -3,9 +3,7 @@ FROM python:3.9.0-buster
 LABEL maintainer="Aly Sivji <alysivji@gmail.com>" \
     description="BusyBeaver -- Production image"
 
-ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
-ENV PYTHONTRACEMALLOC 1
 
 WORKDIR /app
 
