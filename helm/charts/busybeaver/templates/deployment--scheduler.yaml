@@ -25,10 +25,10 @@ spec:
         image: {{ .Values.image.repository }}:{{ .Values.image.version }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         args: ["scheduler"]
-        resources:
-          limits:
-            memory: "128Mi"
-            cpu: "100m"
+        # resources:
+        #   limits:
+        #     memory: "256Mi"
+        #     cpu: "200m"
         env:
           {{- include "busybeaver.env_vars" . | indent 10 }}
       serviceAccountName: {{ include "busybeaver.serviceAccountName" . }}

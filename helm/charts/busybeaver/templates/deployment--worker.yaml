@@ -25,18 +25,11 @@ spec:
         image: {{ .Values.image.repository }}:{{ .Values.image.version }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         args: ["worker"]
-        resources:
-          limits:
-            memory: "256Mi"
-            cpu: "200m"
+        # resources:
+        #   limits:
+        #     memory: "512Mi"
+        #     cpu: "500m"
         env:
           {{- include "busybeaver.env_vars" . | indent 10 }}
-        readinessProbe:
-          exec:
-            command:
-              - bash
-              - ./scripts/check_worker_box.sh
-          initialDelaySeconds: 10
-          periodSeconds: 10
       serviceAccountName: {{ include "busybeaver.serviceAccountName" . }}
       automountServiceAccountToken: false
