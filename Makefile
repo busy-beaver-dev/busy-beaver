@@ -31,6 +31,9 @@ attach-worker: ## attach to worker process for debugging purposes
 requirements: ## generate requirements.txt using piptools
 	pip-compile --output-file=requirements.txt requirements.in
 
+install:  ## install development requirements
+	pip install -r requirements_dev.txt
+
 s3-bucket: ## create s3 bucket in localstack
 	docker-compose exec -T localstack bash /tmp/dev_scripts/create_s3_bucket.sh
 

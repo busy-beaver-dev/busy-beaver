@@ -48,6 +48,10 @@ class AsyncGitHubClient:
     def __repr__(self):  # pragma: no cover
         return "AsyncGitHubAdapter"
 
+    def _create_async_client(self):
+        """Generate client used for making asynchronous requests"""
+        return httpx.AsyncClient(headers=self.headers, params=self.params)
+
     def get_activity_for_users(
         self,
         users: List[str],
@@ -69,8 +73,7 @@ class AsyncGitHubClient:
         start_dt: datetime,
         end_dt: datetime,  # comma separated list
     ) -> Dict[str, list]:
-        client = httpx.AsyncClient(headers=self.headers, params=self.params)
-        async with client:
+        async with self._create_async_client() as client:
             tasks = []
             for user in users:
                 task = self._user_activity_during_range(client, user, start_dt, end_dt)
