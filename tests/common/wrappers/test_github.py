@@ -4,13 +4,24 @@ from dateutil.parser import parse as parse_dt
 import pytest
 import pytz
 
-from busy_beaver.common.wrappers.github import ApiNav, GitHubClient, page_from_url
+from busy_beaver.common.wrappers.github import (
+    ApiNav,
+    AsyncGitHubClient,
+    GitHubClient,
+    page_from_url,
+)
 from busy_beaver.config import GITHUB_OAUTH_TOKEN
+from busy_beaver.toolbox import generate_range_utc_now_minus
 
 
 @pytest.fixture
 def github_client():
     yield GitHubClient(oauth_token=GITHUB_OAUTH_TOKEN)
+
+
+@pytest.fixture
+def async_github_client():
+    yield AsyncGitHubClient(oauth_token=GITHUB_OAUTH_TOKEN)
 
 
 class TestGitHubClient:
@@ -59,6 +70,24 @@ class TestGitHubClient:
         details = github_client.user_details()
 
         assert details["login"] == "alysivji"
+
+
+class TestAsyncGitHubClient:
+    @pytest.mark.vcr()
+    @pytest.mark.freeze_time("2021-08-28")
+    def test_get_activity_for_users(self, async_github_client):
+        # Arrange -- create 1 real github user, 1 fake user
+        usernames = ["alysivji", "albcae324sdf"]
+
+        # Arrange -- time period we are searching for
+        start_dt, end_dt = generate_range_utc_now_minus(timedelta(days=1))
+        result = async_github_client.get_activity_for_users(usernames, start_dt, end_dt)
+
+        # Assert -- data was pulled for valid users
+        assert result.keys() == set(["alysivji"])
+
+        # Assert -- user has github info
+        assert len(result["alysivji"]) > 0
 
 
 @pytest.mark.parametrize(
