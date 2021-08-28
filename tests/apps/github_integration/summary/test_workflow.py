@@ -186,26 +186,42 @@ def test_fetch_github_summary_post_to_slack(
     assert "<@user1>" in json.dumps(kwargs["blocks"])
 
 
-@pytest.mark.end2end
-def test_post_github_summary_message(
-    session, factory, t_minus_one_day, patched_slack, patched_github_user_events
-):
-    # Arrange
-    channel = "general"
-    github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
-    slack_installation = github_summary_config.slack_installation
-    slack = patched_slack(members=["user1", "user2"])
-    patched_github_user_events(messages=["a", "b"])
+class TestPostGitHubSummaryMessage:
+    @pytest.mark.vcr
+    @pytest.mark.end2end
+    def test_post_github_summary_message__inactive_users_have_no_activity_to_report(
+        self,
+        session,
+        factory,
+        t_minus_one_day,
+        patched_slack,
+        patched_github_user_events,
+    ):
+        # Arrange -- create GitHub Summary configuration
+        channel = "general"
+        github_summary_config = factory.GitHubSummaryConfiguration(channel=channel)
 
-    # Act
-    post_github_summary_message(workspace_id=slack_installation.workspace_id)
+        # Arrange -- create user registered for GitHub Summary feature
+        slack_user1 = "user1"
+        factory.GitHubSummaryUser(
+            slack_id=slack_user1,
+            github_username="alysivji",
+            configuration=github_summary_config,
+        )
 
-    # Assert
-    slack_adapter_initalize_args = slack.mock.call_args_list[0]
-    args, kwargs = slack_adapter_initalize_args
-    assert slack_installation.bot_access_token in args
+        # Arrange -- set up fake slack to return active users
+        slack_installation = github_summary_config.slack_installation
+        slack = patched_slack(members=["user1", "user2"])
 
-    post_message_args = slack.mock.call_args_list[-1]
-    args, kwargs = post_message_args
-    assert "No activity to report" in json.dumps(kwargs["blocks"])
-    assert "general" in kwargs["channel"]
+        # Act -- run function
+        post_github_summary_message(workspace_id=slack_installation.workspace_id)
+
+        # Assert -- message sent to slack has activity to report
+        slack_adapter_initalize_args = slack.mock.call_args_list[0]
+        args, kwargs = slack_adapter_initalize_args
+        assert slack_installation.bot_access_token in args
+
+        post_message_args = slack.mock.call_args_list[-1]
+        args, kwargs = post_message_args
+        assert "alysivji" in json.dumps(kwargs["blocks"])
+        assert "general" in kwargs["channel"]
