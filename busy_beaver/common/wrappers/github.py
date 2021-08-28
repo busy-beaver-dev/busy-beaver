@@ -186,7 +186,10 @@ class AsyncGitHubClient:
         return asyncio.run(task)
 
     async def _get_activity_for_users(
-        self, users: str, start_dt: datetime, end_dt: datetime  # comma separated list
+        self,
+        users: str,
+        start_dt: datetime,
+        end_dt: datetime,  # comma separated list
     ) -> Dict[str, list]:
         client = httpx.AsyncClient()
         async with client:
@@ -208,11 +211,17 @@ class AsyncGitHubClient:
         return user_activity_dict
 
     async def _user_activity_during_range(
-        self, client: httpx.AsyncClient, user: str, start_dt: datetime, end_dt: datetime
+        self,
+        client: httpx.AsyncClient,
+        user: str,
+        start_dt: datetime,
+        end_dt: datetime,
     ) -> List[Dict]:
         url = BASE_URL + f"/users/{user}/events/public"
         user_events = await self._get_items_after_timestamp(
-            client, url, timestamp=start_dt
+            client,
+            url,
+            timestamp=start_dt,
         )
 
         idx = 0
