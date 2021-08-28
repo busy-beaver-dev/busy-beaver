@@ -23,17 +23,17 @@ class UserEvents(NamedTuple):
 
 
 @rq.job
-def post_github_summary_message(workspace_id: str):
+async def post_github_summary_message(workspace_id: str):
     installation = SlackInstallation.query.filter_by(workspace_id=workspace_id).first()
     if not installation:
         raise ValidationError("workspace not found")
 
     start_dt, end_dt = generate_range_utc_now_minus(timedelta(days=1))
-    fetch_github_summary_post_to_slack(installation, start_dt, end_dt)
+    await fetch_github_summary_post_to_slack(installation, start_dt, end_dt)
     set_task_progress(100)
 
 
-def fetch_github_summary_post_to_slack(installation, start_dt, end_dt):
+async def fetch_github_summary_post_to_slack(installation, start_dt, end_dt):
     channel = installation.github_summary_config.channel
     slack = SlackClient(installation.bot_access_token)
 
@@ -51,7 +51,9 @@ def fetch_github_summary_post_to_slack(installation, start_dt, end_dt):
     # Step 2: get GitHub activity for users
     users_by_github_username = {user.github_username: user for user in users}
     usernames = users_by_github_username.keys()
-    activity_by_user = github_async.get_activity_for_users(usernames, start_dt, end_dt)
+    activity_by_user = await github_async.get_activity_for_users(
+        usernames, start_dt, end_dt
+    )
 
     # Step 3: classify activity by event type
     all_user_events = []
@@ -66,6 +68,7 @@ def fetch_github_summary_post_to_slack(installation, start_dt, end_dt):
         all_user_events.append(UserEvents(user, user_events))
 
     # Step 4: format message and post to Slack
+    # this does not need to be asynchronous since it posts results
     github_summary_post = GitHubSummaryPost(all_user_events)
     slack.post_message(
         blocks=github_summary_post.as_blocks(),

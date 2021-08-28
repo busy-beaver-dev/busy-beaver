@@ -21,8 +21,6 @@ class GitHubClient:
             "Authorization": f"token {oauth_token}",
         }
         self.client = RequestsClient(headers=default_headers)
-        self.params = {"per_page": 30}
-        self.nav = None
 
     def __repr__(self):  # pragma: no cover
         return "GitHubAdapter"
@@ -40,12 +38,12 @@ class GitHubClient:
 
 class AsyncGitHubClient:
     def __init__(self, oauth_token: str):
-        self.headers = {  # TODO: use this
+        self.headers = {
             "Accept": "application/vnd.github.v3+json",
             "Authorization": f"token {oauth_token}",
+            "User-Agent": "BusyBeaver -- GitHub Client",
         }
         self.params = {"per_page": 30}
-        self.nav = None
 
     def __repr__(self):  # pragma: no cover
         return "AsyncGitHubAdapter"
@@ -54,26 +52,11 @@ class AsyncGitHubClient:
         """Generate client used for making asynchronous requests"""
         return httpx.AsyncClient(headers=self.headers, params=self.params)
 
-    def get_activity_for_users(
+    async def get_activity_for_users(
         self,
         users: List[str],
         start_dt: datetime,
         end_dt: datetime,
-    ) -> Dict[str, list]:
-        """
-        Entry point for clients;
-        kicks off fetching user activity from GitHub API using asyncio
-
-        Is there a cleaner way to do this?
-        """
-        task = self._get_activity_for_users(users, start_dt, end_dt)
-        return asyncio.run(task)
-
-    async def _get_activity_for_users(
-        self,
-        users: List[str],
-        start_dt: datetime,
-        end_dt: datetime,  # comma separated list
     ) -> Dict[str, list]:
         async with self._create_async_client() as client:
             tasks = []
