@@ -5,6 +5,7 @@ LABEL maintainer="Aly Sivji <alysivji@gmail.com>" \
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONTRACEMALLOC 1
 
 WORKDIR /app
 
@@ -20,6 +21,6 @@ RUN groupadd -g 901 -r busybeaverdev \
     && useradd -g busybeaverdev -r -u 901 busybeaver_user \
     && mkdir /home/busybeaver_user \
     && chmod -R 755 /home/busybeaver_user
-USER busybeaver_user
+# USER busybeaver_user
 
 ENTRYPOINT [ "scripts/entrypoint.sh" ]
